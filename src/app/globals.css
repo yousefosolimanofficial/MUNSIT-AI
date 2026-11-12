@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+/*
+ * Phase 01: Tailwind CSS foundation only.
+ * Design tokens (colors, spacing, radius, typography) are added in Phase 02
+ * under src/design-system/ — do not add visual constants here.
+ */
