@@ -7,8 +7,19 @@ Single resume point. A new session starts by reading this file, the latest phase
 - **Next phase:** 02 — Design System implementation — **Not started** (needs user go-ahead)
 - **Latest report:** [phases/phase-01-report.md](phases/phase-01-report.md)
 - **Stack decision:** [decisions/ADR-001-frontend-stack.md](decisions/ADR-001-frontend-stack.md) (Approved by the user, 2026-11-12)
-- **Last commit:** initial commit `chore: initialize project (Phase 01)` on `main` (Phase 01 closed; run
-  `git log --oneline -1` for the hash). No remote, nothing pushed.
+- **Phase 01 commit:** `acf48c9` `chore: initialize project (Phase 01)` on `main`.
+- **Repository:** https://github.com/yousefosolimanofficial/MUNSIT-AI (public, default branch
+  `main`). GitHub's auto-generated initial commit was merged without force-push. Collaboration
+  setup: README §15 workflow, PR template, `CLAUDE.md`.
+
+## Team and module assignments
+
+| Developer | Role                                                         | Assigned modules                                      |
+| --------- | ------------------------------------------------------------ | ----------------------------------------------------- |
+| Yousef    | Frontend Lead — architecture, shared foundation, integration | Shared foundation (by role); modules not assigned yet |
+| Mariam    | Frontend Developer — assigned feature modules                | Not assigned yet                                      |
+
+Mariam's GitHub account is not yet added as a collaborator (username not provided).
 
 ## Phase status
 
@@ -47,7 +58,8 @@ None for Phase 02.
 - Node.js v24.22.3, pnpm 12.18.0 (Corepack), Git 2.55.0.windows.3, Windows 11.
 - `corepack enable` needs an elevated terminal on this machine; until then use `corepack pnpm …`.
 - Network to the npm registry is slow (~30–90 KiB/s); a cold install took ~40 minutes.
-- Logo assets for Phase 02: `D:\Graduation Project\Assets\` (originals, do not modify).
+- Logo assets for Phase 02 are kept outside the repository by the Frontend Lead (originals, do
+  not modify); they are added to `public/brand/` in Phase 02.
 
 ## Next action
 

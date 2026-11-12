@@ -69,7 +69,7 @@ Permanent fix (optional): run `corepack enable pnpm` once in an Administrator te
 2. **Corepack shims need admin** (see Environment).
 3. **Slow network** (~30–90 KiB/s): installs took ~40 minutes; the first install attempt was
    stopped and re-run non-interactively.
-4. **pnpm store** is at `D:\.pnpm-store\v11` (pnpm default for drive D:), outside the project.
+4. **pnpm store** uses the pnpm default location, outside the project.
 5. Folder skeleton from Roadmap §3 is documented in the README rather than created as empty
    folders (Git does not track empty directories; no placeholder files were requested).
 6. ESLint `jsx-a11y` runs with the subset bundled in `eslint-config-next`; a stricter
