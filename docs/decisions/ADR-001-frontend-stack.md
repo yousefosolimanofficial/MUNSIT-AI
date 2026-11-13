@@ -51,11 +51,28 @@ Versions are the ones resolved into `pnpm-lock.yaml`.
 | ----------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `next-intl` | 4.15.1  | i18n (Roadmap §2.2), approved by the user 2026-11-13. Exact pin. Build scripts of its transitive `@swc/core` and `@parcel/watcher` (message extractor, unused) are denied in `pnpm-workspace.yaml` |
 
+### Added in Phase 03 (development only)
+
+Approved by the user 2026-11-13. All are `devDependencies` with exact pins, never imported by
+production code (enforced by dependency-cruiser). Each direct version is the newest release that is
+at least 14 days old. The 59 transitive packages that are new were also resolved to releases at
+least 14 days old (a one-time `minimumReleaseAge` resolution; no setting is kept in the
+repository).
+
+| Package                       | Version | Reason                                                                                                                                                                                                                                  |
+| ----------------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@testing-library/react`      | 16.3.3  | Component tests: render and query by role and accessible name (Roadmap §8)                                                                                                                                                              |
+| `@testing-library/dom`        | 10.4.2  | Required peer of `@testing-library/react` 16                                                                                                                                                                                            |
+| `@testing-library/user-event` | 14.6.8  | Real keyboard and pointer interaction in component tests (14.6.9 and 14.6.10 were younger than 14 days)                                                                                                                                 |
+| `jsdom`                       | 30.1.3  | DOM environment for component tests, opted in per test file (`// @vitest-environment jsdom`); the global Vitest environment stays `node`. 31.0.1 was released on the day of review, so it was skipped. **Not used to measure contrast** |
+| `jest-axe`                    | 11.0.0  | Automated accessibility check per primitive in component tests (Roadmap Phase 03). No bundled types: a local declaration is used, because `@types/jest-axe` would pull `@types/jest` and `axe-core` 3.x. Depends on `axe-core` 4.12.1   |
+| `@axe-core/playwright`        | 4.14.0  | Accessibility scans of rendered pages in a real browser (E2E). Closes G-3. MPL-2.0. Peer `playwright-core` resolves to the installed 1.65.0. Depends on `axe-core` 4.14.0                                                               |
+
 ### Deferred to the phase that needs them (not installed)
 
 Radix UI primitives, `class-variance-authority`, `tailwind-merge` (Phase 03); TanStack Query, Zustand (when server/session state appears); React Hook Form + Zod
-(first form); Testing Library, jsdom, `jest-axe`, `@axe-core/playwright` (first component /
-screen tests); MSW (only if mock data is authorized).
+(first form); MSW (only if mock data is authorized). Testing Library, jsdom, `jest-axe` and
+`@axe-core/playwright` were added in Phase 03 (above).
 
 Deliberately excluded (Roadmap §2.2): Redux, GraphQL clients, animation libraries, CSS-in-JS
 runtimes, heavy component kits, charting libraries, rich-text engines, Storybook.
