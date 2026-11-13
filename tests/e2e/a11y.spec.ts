@@ -1,5 +1,5 @@
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./test";
 
 /**
  * Automated accessibility scan in a real browser (Roadmap §4 universal check; closes G-3).
