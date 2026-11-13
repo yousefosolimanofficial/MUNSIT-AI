@@ -1,0 +1,13 @@
+{
+  "fixture": {
+    "note": "DEV-ONLY fixture — not product copy",
+    "mixedNumber": "لديك {count, number} محاضرة جديدة",
+    "goal": "إنهاء المحاضرة {number}: <ltr>{title}</ltr>",
+    "statsLine": "التقدم: <ltr>{stats}</ltr>",
+    "statsLineControl": "التقدم: {stats}",
+    "stat": "محاضرة تمت دراستها",
+    "fieldLabel": "حقل تجريبي",
+    "switchToEnglish": "English",
+    "switchToArabic": "العربية"
+  }
+}
