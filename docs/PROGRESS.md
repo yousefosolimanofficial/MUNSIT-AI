@@ -3,12 +3,14 @@
 Single resume point. A new session starts by reading this file, the latest phase report, and
 [docs/references/MUNSIT_AI_Development_Roadmap_v1.0.md](references/MUNSIT_AI_Development_Roadmap_v1.0.md).
 
-- **Current phase:** 01 — Project initialization & tooling — **Done** (2026-11-12)
-- **Active phase:** 02 — Design System implementation + motion foundation — **Approved for Git
-  integration** (2026-11-13, branch `phase/02-design-system`); closure pending green CI and merge
+- **Current phase:** 02 — Design System implementation + motion foundation — **Done**
+  (2026-11-13), merged to `main` through PR #2 (rebase), final commit `79685af` (`79685af190bdbc6e207b1bf0682e14ddab6b2184`)
+- **Next phase:** 03 — Core UI primitives (Shared UI components) — planning
 - **Latest report:** [phases/phase-02-report.md](phases/phase-02-report.md) (Phase 01: [phases/phase-01-report.md](phases/phase-01-report.md))
 - **Stack decision:** [decisions/ADR-001-frontend-stack.md](decisions/ADR-001-frontend-stack.md) (Approved by the user, 2026-11-12)
 - **Phase 01 commit:** `acf48c9` `chore: initialize project (Phase 01)` on `main`.
+- **Phase 02 commit:** `79685af` `docs(phase-02): design values, progress and phase report` on
+  `main` (last of 7 Phase 02 commits, `c7455f2`..`79685af`; CI `check` green on PR #2 and on `main`).
 - **Repository:** https://github.com/yousefosolimanofficial/MUNSIT-AI (public, default branch
   `main`). GitHub's auto-generated initial commit was merged without force-push. Collaboration
   setup: README §15 workflow, PR template, `CLAUDE.md`.
@@ -25,31 +27,31 @@ works offline and delivers packages per [TEAM_COLLABORATION.md](TEAM_COLLABORATI
 
 ## Phase status
 
-| #   | Phase                               | Status                         |
-| --- | ----------------------------------- | ------------------------------ |
-| 01  | Project initialization & tooling    | Done                           |
-| 02  | Design System implementation        | Approved — awaiting CI + merge |
-| 03  | Core UI primitives                  | Not started                    |
-| 04  | Routing & navigation registry       | Not started                    |
-| 05  | Shared App Shell                    | Not started                    |
-| 06  | Shared states & overlay/guard infra | Not started                    |
-| 07  | Landing Page                        | Not started                    |
-| 08  | Authentication UI                   | Not started                    |
-| 09  | Dashboard                           | Not started                    |
-| 10  | Lecture Management                  | Not started                    |
-| 11  | Lecture Details                     | Not started                    |
-| 12  | Live Recording                      | Not started                    |
-| 13  | AI Virtual Tutor                    | Not started                    |
-| 14  | My Summaries                        | Not started                    |
-| 15  | AI Question Bank                    | Not started                    |
-| 16  | My Notes                            | Not started                    |
-| 17  | AI Flashcards                       | Not started                    |
-| 18  | Favorites                           | Not started                    |
-| 19  | My Folders                          | Not started                    |
-| 20  | Profile & Settings                  | Not started                    |
-| 21  | API integration                     | Not started                    |
-| 22  | Testing & hardening                 | Not started                    |
-| 23  | Deployment preparation              | Not started                    |
+| #   | Phase                               | Status      |
+| --- | ----------------------------------- | ----------- |
+| 01  | Project initialization & tooling    | Done        |
+| 02  | Design System implementation        | Done        |
+| 03  | Core UI primitives                  | Not started |
+| 04  | Routing & navigation registry       | Not started |
+| 05  | Shared App Shell                    | Not started |
+| 06  | Shared states & overlay/guard infra | Not started |
+| 07  | Landing Page                        | Not started |
+| 08  | Authentication UI                   | Not started |
+| 09  | Dashboard                           | Not started |
+| 10  | Lecture Management                  | Not started |
+| 11  | Lecture Details                     | Not started |
+| 12  | Live Recording                      | Not started |
+| 13  | AI Virtual Tutor                    | Not started |
+| 14  | My Summaries                        | Not started |
+| 15  | AI Question Bank                    | Not started |
+| 16  | My Notes                            | Not started |
+| 17  | AI Flashcards                       | Not started |
+| 18  | Favorites                           | Not started |
+| 19  | My Folders                          | Not started |
+| 20  | Profile & Settings                  | Not started |
+| 21  | API integration                     | Not started |
+| 22  | Testing & hardening                 | Not started |
+| 23  | Deployment preparation              | Not started |
 
 ## Open blockers
 
@@ -61,6 +63,7 @@ None for Phase 02.
 | --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | R-1 | Builds depended on Google Fonts at build time (`next/font/google`); failures observed on a slow network.                                                                              | **Resolved 2026-11-13** — fonts self-hosted with `next/font/local` (`src/design-system/fonts/`, OFL); build, dev server and E2E verified with the network blocked. |
 | I-1 | Phase 01 placeholder `/` heading uses `text-2xl font-bold`; `text-2xl` no longer exists (Tailwind scale removed in step 3), so the heading has no size. Not part of the final design. | Open — placeholder is replaced by the Landing page in Phase 07.                                                                                                    |
+| I-3 | Development-only React hydration mismatch warning during `pnpm test:e2e` on `/dev/tokens` (likely `tests/e2e/icons.spec.ts` styling cells before hydration). Tests pass.              | **Open — not resolved.** Tracked in GitHub issue #3; test-only fix planned before or early in Phase 03.                                                            |
 | I-2 | `UI/Navigation` (Cairo) has style name "ExtraBold" but weight 400 in Figma.                                                                                                           | NOT VERIFIED — confirm in Figma before any use.                                                                                                                    |
 
 ## Environment notes
@@ -93,20 +96,20 @@ numerals and English runs inside Arabic text (direction isolation). See R-1, I-1
 
 ## Next action
 
-User approval 2026-11-13: G-1 and G-2 approved; the six visual baselines in
-`tests/e2e/visual.spec.ts-snapshots/` approved after visual review; all Phase 02 implementation
-acceptance criteria passed in the completed audit (`docs/phases/phase-02-report.md`). Phase 02 is
-**approved for Git integration**.
+Phase 02 is **completed** (2026-11-13): all acceptance criteria passed, the six visual baselines
+were approved by the user, PR #2 was merged into `main` (final commit `79685af`) with CI `check`
+green, and `pnpm check` + `pnpm test:e2e` (74/74) passed on the merged commit. The hydration
+warning stays open in issue #3 (I-3).
 
-Now: commits on `phase/02-design-system` (report §J) → push → PR to `main` → CI `check`.
-Then, after the user approves the merge: merge → verify clean baseline → Mariam starter (report §I)
-→ Phase 03. Phase 02 is closed only after the merge; Phase 03 does not start before that.
+Next: Phase 03 — Core UI primitives. Prepare the Phase 03 plan and the first component contract
+(Button) for Mariam; no Phase 03 code before the plan is approved.
 
 ## Starter package gate (Mariam)
 
-Status 2026-11-13: `HEAD` = `e3d5e00` (Phase 01 + collaboration docs). **No Phase 02 file is in
-Git history** — a starter made now would contain none of Phase 02. Rule: no starter package until
-Phase 02 is approved, committed on `phase/02-design-system`, merged to `main` through a PR with a
-green CI `check` (clean checkout), and the starter is built from that merge commit. Verify the zip
-itself (contents list, extract to an empty folder, `pnpm install --frozen-lockfile`, `pnpm
-check`), never a working-tree copy.
+**Prepared and verified 2026-11-13** from `main` at `79685af` with `git archive`
+(`munsit-starter-79685af.zip`, plus `BASELINE_COMMIT.txt` and a `START_HERE.md` setup guide).
+Verified on the zip itself: contents equal the 180 tracked files, fonts/logos/baselines
+byte-identical to Git, no `node_modules`/`.next`/`.git`/`assets`/secrets (only `.env.example`);
+extracted to an empty folder, `pnpm install --frozen-lockfile` and `pnpm check` passed (388 tests,
+build). Logged in [TEAM_COLLABORATION.md §8](TEAM_COLLABORATION.md#8-delivery-log). A new starter
+is issued only when `main` changes in a way Mariam needs.
