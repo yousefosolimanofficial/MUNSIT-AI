@@ -7,6 +7,8 @@ const baseURL = `http://localhost:${PORT}`;
 // added for the cross-browser pass (latest two stable majors, ADR-001).
 export default defineConfig({
   testDir: "./tests/e2e",
+  // Sequential warm-up of the dev server before parallel workers (see the file for why).
+  globalSetup: "./tests/e2e/global-setup.ts",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
