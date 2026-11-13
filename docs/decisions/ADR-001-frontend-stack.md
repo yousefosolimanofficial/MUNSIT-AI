@@ -45,10 +45,15 @@ Versions are the ones resolved into `pnpm-lock.yaml`.
 | `@playwright/test`                                | 1.65.0                    | E2E smoke test (Chromium)                                                                                                                                                                                      |
 | `dependency-cruiser`                              | 18.7.2                    | Import-cycle and module-boundary enforcement (Roadmap §3)                                                                                                                                                      |
 
+### Added in Phase 02
+
+| Package     | Version | Reason                                                                                                                                                                                             |
+| ----------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `next-intl` | 4.15.1  | i18n (Roadmap §2.2), approved by the user 2026-11-13. Exact pin. Build scripts of its transitive `@swc/core` and `@parcel/watcher` (message extractor, unused) are denied in `pnpm-workspace.yaml` |
+
 ### Deferred to the phase that needs them (not installed)
 
-Radix UI primitives, `class-variance-authority`, `tailwind-merge` (Phase 03); `next-intl`
-(Phase 02); TanStack Query, Zustand (when server/session state appears); React Hook Form + Zod
+Radix UI primitives, `class-variance-authority`, `tailwind-merge` (Phase 03); TanStack Query, Zustand (when server/session state appears); React Hook Form + Zod
 (first form); Testing Library, jsdom, `jest-axe`, `@axe-core/playwright` (first component /
 screen tests); MSW (only if mock data is authorized).
 
