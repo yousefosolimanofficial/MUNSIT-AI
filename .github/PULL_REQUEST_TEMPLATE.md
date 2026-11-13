@@ -8,6 +8,13 @@
 - **In scope:**
 - **Out of scope:**
 
+## Delivery package (if this PR integrates one)
+
+- **Delivery:** <!-- munsit-delivery-<module>-<YYYYMMDD>-v<n>.zip, or "none" -->
+- **Baseline commit:** <!-- full hash from DELIVERY.md -->
+- **Checklist:** [ ] [FEATURE_DELIVERY_CHECKLIST.md](../docs/FEATURE_DELIVERY_CHECKLIST.md)
+  sections B–C completed
+
 ## Related modules
 
 <!-- Tick every area this PR touches. -->

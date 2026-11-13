@@ -181,7 +181,7 @@ Shown with the `corepack` prefix; drop it once `corepack enable pnpm` has been r
 ## 11. Project Structure
 
 ```
-.github/           pull request template
+.github/           pull request template, CI workflow (workflows/ci.yml)
 docs/
   references/      approved source documents (Handoff, Design System, Roadmap) — read-only
   decisions/       ADRs (ADR-001 frontend stack)
@@ -247,28 +247,43 @@ The full 23-phase frontend plan and its status are tracked in [docs/PROGRESS.md]
 
 ### Frontend team
 
-| Developer | Role                                                         |
-| --------- | ------------------------------------------------------------ |
-| Yousef    | Frontend Lead — architecture, shared foundation, integration |
-| Mariam    | Frontend Developer — assigned feature modules                |
+| Developer | Role                                                                     |
+| --------- | ------------------------------------------------------------------------ |
+| Yousef    | Frontend Lead — architecture, shared foundation, integration, publishing |
+| Mariam    | Frontend Developer — assigned feature modules (works offline)            |
 
-### Git workflow
+### Offline feature delivery
 
-- `main` is the stable integration branch. Nobody commits to it directly; all changes arrive
-  through Pull Requests.
-- Every feature or phase has its own branch, created from the latest `main`:
+Yousef is the **sole GitHub integrator and publisher**. Mariam is not a repository collaborator:
+she works on a local copy and hands her work to Yousef as a delivery package.
+
+1. Yousef issues a **starter package** (`git archive` of a recorded, verified commit).
+2. Mariam implements only her assigned modules and delivers changed files, a change manifest,
+   notes, real test results and screenshots. Shared, config and dependency needs are listed
+   separately as requests.
+3. Yousef reviews, integrates on a `delivery/<module>-v<n>` branch from the recorded baseline,
+   runs all checks, and either returns the delivery or merges it through a Pull Request.
+
+Full procedure: [docs/TEAM_COLLABORATION.md](docs/TEAM_COLLABORATION.md) · Checklist:
+[docs/FEATURE_DELIVERY_CHECKLIST.md](docs/FEATURE_DELIVERY_CHECKLIST.md)
+
+### Git workflow (repository)
+
+- `main` is the stable integration branch, protected by a ruleset: no direct pushes, no
+  force-push, no deletion; changes arrive only through Pull Requests (squash or rebase) with all
+  conversations resolved and the CI `check` job passing.
+- Branches, created from `main` (or from the delivery baseline for `delivery/…`):
   - `phase/<nn>-<topic>` — roadmap phases, e.g. `phase/02-design-system`
   - `feature/<module>-<topic>` — work inside one module, e.g. `feature/notes-editor`
   - `fix/<area>-<topic>` — bug fixes
+  - `delivery/<module>-v<n>` — integration of a delivery package
 - Commits follow [Conventional Commits](https://www.conventionalcommits.org/):
   `feat(dashboard): …`, `fix(shell): …`, `test(notes): …`, `docs(progress): …`,
   `chore(deps): …`. Dependency additions are separate `chore(deps)` commits that state the reason.
-- Open a Pull Request using the [template](.github/PULL_REQUEST_TEMPLATE.md). Every PR is
-  reviewed by the other developer before merging.
-- `corepack pnpm check` must pass before a PR is merged.
-- Do not modify another developer's assigned feature module. If shared code needs to change,
-  coordinate in the PR and move the shared piece into `src/shared`.
-- Never force-push to `main`.
+- Pull Requests use the [template](.github/PULL_REQUEST_TEMPLATE.md) and are reviewed by Yousef.
+- `corepack pnpm check` must pass before a PR is merged; GitHub Actions
+  ([ci.yml](.github/workflows/ci.yml)) runs it on every PR and the result is a required check.
+- Nobody overwrites another developer's assigned module or shared files without coordination.
 
 ## 16. Future Development
 
