@@ -28,6 +28,9 @@ yarn.lock
 .DS_Store
 Thumbs.db
 
+# original brand exports (local only; the served copies are committed in public/brand/)
+/assets/
+
 # editor
 .vscode/*
 !.vscode/extensions.json
