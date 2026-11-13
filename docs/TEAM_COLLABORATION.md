@@ -140,10 +140,25 @@ git diff baseline..work > delivery.patch
 - RTL / LTR:
 - Keyboard pass:
 
+## Screenshots
+
+<files in screenshots/: 1440 / 768 / 390, RTL and LTR, every variant and state>
+
 ## Known limitations
+
+## Integration instructions
+
+<files to add, where the work is wired (route, gallery section, registry), order of steps,
+anything Yousef must do on shared/config files>
 ```
 
 ### 5.3 Shared changes and dependencies
+
+**Phase 03 exception (agreed 2026-11-13):** for delegated shared components, Mariam's assigned
+paths are exactly the files named in the component contract (e.g. `src/shared/ui/Button.tsx`
+and `src/shared/ui/Button.test.tsx`, see `docs/phases/phase-03-plan.md`). The delivery name uses
+`shared-ui-<component>` as the module, e.g. `munsit-delivery-shared-ui-button-<YYYYMMDD>-v1.zip`,
+integrated on `delivery/shared-ui-button-v1`. Everything else below still applies.
 
 - A delivery's `files/` may only contain paths inside Mariam's assigned module folders and their
   tests.

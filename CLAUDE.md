@@ -71,14 +71,31 @@ app → features → shared / api / state / i18n / types / config / design-syste
 Module assignments are recorded in `docs/PROGRESS.md` when made. Do not edit a module owned by
 another developer without the user confirming coordination.
 
+**Temporary delegation (Phase 03, agreed by the user 2026-11-13).** Mariam may implement shared
+components, but only the exact files named in the approved component contract for each delivery.
+For example, the Button delivery covers `src/shared/ui/Button.tsx` and
+`src/shared/ui/Button.test.tsx`
+([docs/phases/phase-03-button-contract.md](docs/phases/phase-03-button-contract.md)).
+
+- **Ownership:** `src/shared` stays owned by Yousef. The delegation is per delivery, ends when that
+  delivery is integrated, and never covers any other shared, design-system, route, config or
+  dependency file.
+- **Integration:** Yousef reviews and integrates every delegated delivery.
+- **Feature modules:** ownership of feature modules is unchanged. They stay unassigned until the
+  user decides.
+
+Details are in [docs/phases/phase-03-plan.md](docs/phases/phase-03-plan.md) §3.
+
 ## Offline feature delivery
 
 Yousef is the sole GitHub integrator. Mariam has no repository access and works offline from a
 starter package. Full procedure: [docs/TEAM_COLLABORATION.md](docs/TEAM_COLLABORATION.md);
 checklist: [docs/FEATURE_DELIVERY_CHECKLIST.md](docs/FEATURE_DELIVERY_CHECKLIST.md).
 
-- **Working on Mariam's local copy:** change only her assigned module folders and their tests.
-  Never edit shared, config, route or dependency files — write them as requests in `DELIVERY.md`.
+- **Working on Mariam's local copy:** change only her assigned module folders and their tests,
+  or the exact files delegated by an approved component contract (see Folder ownership). Never
+  edit any other shared, config, route or dependency file — write them as requests in
+  `DELIVERY.md`.
   Never install packages. Keep the baseline commit hash in `DELIVERY.md`.
 - **Integrating a delivery (Yousef):** branch `delivery/<module>-v<n>` from the recorded baseline
   commit; apply the patch or the manifest-listed files only — never unzip or copy over the project
