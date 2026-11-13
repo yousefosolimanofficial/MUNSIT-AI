@@ -1,0 +1,13 @@
+{
+  "fixture": {
+    "note": "DEV-ONLY fixture — not product copy",
+    "mixedNumber": "You have {count, number} new lectures",
+    "goal": "Finish lecture {number}: <ltr>{title}</ltr>",
+    "statsLine": "Progress: <ltr>{stats}</ltr>",
+    "statsLineControl": "Progress: {stats}",
+    "stat": "Lectures studied",
+    "fieldLabel": "Test field",
+    "switchToEnglish": "English",
+    "switchToArabic": "العربية"
+  }
+}
