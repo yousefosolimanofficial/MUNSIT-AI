@@ -62,14 +62,31 @@ app → features → shared / api / state / i18n / types / config / design-syste
 
 ## Folder ownership
 
-| Area                                                                                                                                 | Owner                       |
-| ------------------------------------------------------------------------------------------------------------------------------------ | --------------------------- |
-| Tooling, config, `src/app` layouts, `src/design-system`, `src/shared`, `src/api`, `src/state`, `src/i18n`, `src/types`, `src/config` | Yousef (Frontend Lead)      |
-| `src/features/<module>` assigned to Mariam                                                                                           | Mariam (Frontend Developer) |
-| Unassigned feature modules                                                                                                           | Yousef until assigned       |
+| Area                                                                                                                                                            | Owner                       |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- |
+| Tooling, config, `package.json`, lockfile, `src/app`, `src/design-system`, `src/shared`, `src/api`, `src/state`, `src/i18n`, `src/types`, `src/config`, `docs/` | Yousef (Frontend Lead)      |
+| `src/features/<module>` assigned to Mariam (and its tests)                                                                                                      | Mariam (Frontend Developer) |
+| Unassigned feature modules                                                                                                                                      | Yousef until assigned       |
 
 Module assignments are recorded in `docs/PROGRESS.md` when made. Do not edit a module owned by
 another developer without the user confirming coordination.
+
+## Offline feature delivery
+
+Yousef is the sole GitHub integrator. Mariam has no repository access and works offline from a
+starter package. Full procedure: [docs/TEAM_COLLABORATION.md](docs/TEAM_COLLABORATION.md);
+checklist: [docs/FEATURE_DELIVERY_CHECKLIST.md](docs/FEATURE_DELIVERY_CHECKLIST.md).
+
+- **Working on Mariam's local copy:** change only her assigned module folders and their tests.
+  Never edit shared, config, route or dependency files — write them as requests in `DELIVERY.md`.
+  Never install packages. Keep the baseline commit hash in `DELIVERY.md`.
+- **Integrating a delivery (Yousef):** branch `delivery/<module>-v<n>` from the recorded baseline
+  commit; apply the patch or the manifest-listed files only — never unzip or copy over the project
+  root; confirm `git status` matches the manifest; commit the delivery separately from integration
+  fixes; rebase onto `main`; run all checks; merge only through a Pull Request.
+- **Packages** (starter or delivery) never contain `node_modules`, build output, caches, `.env`
+  files or credentials. Starter packages are made with `git archive` from a pushed, verified commit
+  and logged in `docs/TEAM_COLLABORATION.md`.
 
 ## Coding conventions
 
@@ -111,8 +128,12 @@ Edge, Firefox, Safari.
 ## Git workflow
 
 - `main` is the stable integration branch — never commit or force-push to it directly.
-- Branches: `phase/<nn>-<topic>`, `feature/<module>-<topic>`, `fix/<area>-<topic>`.
-- Open a PR with the template; the other developer reviews; merge only when checks pass.
+- Branches: `phase/<nn>-<topic>`, `feature/<module>-<topic>`, `fix/<area>-<topic>`,
+  `delivery/<module>-v<n>`.
+- Only Yousef pushes and merges. Open a PR with the template; merge only when the CI `check` job
+  (`.github/workflows/ci.yml`) passes and conversations are resolved, through the
+  `main-protection` ruleset. Never use the admin bypass for normal merges, and never weaken the
+  ruleset or CI without the user's decision.
 - Commit or push only when the user asks.
 
 ## Testing requirements

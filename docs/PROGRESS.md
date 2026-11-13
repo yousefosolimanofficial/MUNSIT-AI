@@ -19,7 +19,8 @@ Single resume point. A new session starts by reading this file, the latest phase
 | Yousef    | Frontend Lead — architecture, shared foundation, integration | Shared foundation (by role); modules not assigned yet |
 | Mariam    | Frontend Developer — assigned feature modules                | Not assigned yet                                      |
 
-Mariam's GitHub account is not yet added as a collaborator (username not provided).
+Yousef is the sole GitHub integrator and publisher. Mariam is not a repository collaborator; she
+works offline and delivers packages per [TEAM_COLLABORATION.md](TEAM_COLLABORATION.md).
 
 ## Phase status
 
