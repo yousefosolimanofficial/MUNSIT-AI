@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./test";
 
 test("root route loads with Arabic RTL document", async ({ page }) => {
   const response = await page.goto("/");

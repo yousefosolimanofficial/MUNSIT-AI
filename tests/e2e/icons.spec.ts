@@ -2,7 +2,9 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { expect, test, type Locator, type Page } from "@playwright/test";
+import type { Locator, Page } from "@playwright/test";
+
+import { expect, test } from "./test";
 
 /**
  * Official icon system (Phase 02 step 5) on the temporary /dev/tokens route.
@@ -71,6 +73,21 @@ const fixture = (name: string): string =>
  */
 const MAX_DIFF = 8;
 
+/**
+ * Paints a cell's background through an injected stylesheet keyed on its `data-testid`, instead
+ * of an inline `style`. Writing `el.style` on server-rendered markup can race React hydration:
+ * React then sees an attribute the server never sent and logs a hydration mismatch (issue #3).
+ * A stylesheet leaves the element's attributes untouched. Later rules win, so a cell can be
+ * repainted.
+ */
+async function paintBackground(page: Page, cell: Locator, color: string): Promise<void> {
+  const testId = await cell.getAttribute("data-testid");
+  if (!testId) throw new Error("cell has no data-testid");
+  await page.addStyleTag({
+    content: `[data-testid="${testId}"] { background: ${color} !important; }`,
+  });
+}
+
 /** Captures the icon on the fixture's background color (PNG, base64). */
 async function capture(page: Page, cell: Locator, fixtureName: string): Promise<string> {
   const bg = await page.evaluate(async (data) => {
@@ -83,9 +100,7 @@ async function capture(page: Page, cell: Locator, fixtureName: string): Promise<
     const [r, g, b] = c.getImageData(0, 0, 1, 1).data;
     return `rgb(${r}, ${g}, ${b})`;
   }, fixture(fixtureName));
-  await cell.evaluate((el, color) => {
-    (el as HTMLElement).style.background = color;
-  }, bg);
+  await paintBackground(page, cell, bg);
   const svg = cell.locator("svg");
   await svg.evaluate((el) => el.scrollIntoView({ block: "center" }));
   return (await svg.screenshot()).toString("base64");
@@ -142,9 +157,7 @@ async function compareWithFigma(
     return `rgb(${r}, ${g}, ${b})`;
   }, ref);
   const svg = cell.locator("svg");
-  await cell.evaluate((el, color) => {
-    (el as HTMLElement).style.background = color;
-  }, bg);
+  await paintBackground(page, cell, bg);
   await svg.evaluate((el) => el.scrollIntoView({ block: "center" }));
   const shot = (await svg.screenshot()).toString("base64");
 

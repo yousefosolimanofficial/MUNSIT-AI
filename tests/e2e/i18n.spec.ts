@@ -1,4 +1,6 @@
-import { expect, test, type Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
+
+import { expect, test } from "./test";
 
 /**
  * i18n / RTL-LTR foundation (Phase 02 step 6). Arabic `/` (default, RTL, unprefixed), English

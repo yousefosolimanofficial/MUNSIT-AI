@@ -1,4 +1,6 @@
-import { expect, test, type Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
+
+import { expect, test, waitForHydration } from "./test";
 
 /**
  * G-2: visual reference screenshots of the temporary /dev/tokens route (Roadmap Phase 02 tests).
@@ -25,8 +27,12 @@ const LOCALES = [
   { name: "en", path: "/en/dev/tokens", dir: "ltr" },
 ] as const;
 
-/** Lazy images below the fold never load on their own; load them all before capturing. */
+/**
+ * Lazy images below the fold never load on their own; load them all before capturing. React
+ * must have hydrated the images first, or changing `loading` is a hydration mismatch (#3).
+ */
 async function loadAllImages(page: Page): Promise<void> {
+  await waitForHydration(page, page.locator("main img"));
   await page.evaluate(() =>
     document.querySelectorAll("img").forEach((img) => {
       img.loading = "eager";
