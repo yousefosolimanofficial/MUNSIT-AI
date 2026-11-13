@@ -1,0 +1,102 @@
+/*
+ * MUNSIT AI — typography tokens (Phase 02).
+ *
+ * Source: Design System Reference §2.1 (`Dashboard/*`, application default), re-read from
+ * Figma 2026-11-13 on Dashboard Desktop 2211:74 and Mobile 2224:372 — identical values.
+ * Full extracted style catalog (Foundation, Landing, Auth) and source labels:
+ * docs/design-values.md §0.4. Landing and Auth styles become tokens in Phases 07 / 08.
+ *
+ * One Figma style = one utility: `text-dashboard-title-l` sets font-size, line-height,
+ * letter-spacing and font-weight together. Naming rule as colors: `Dashboard/Title L` →
+ * `--text-dashboard-title-l`.
+ *
+ * Families: every Cairo and Inter style uses `font-sans` (Inter first, Cairo for Arabic glyphs;
+ * see fonts.ts). `Dashboard/Meta` (Geist Mono) needs `font-mono` with its text utility.
+ * Effect: in a Cairo style, Arabic renders in Cairo and embedded Latin / numerals in Inter; in
+ * an Inter style, the same. This implements the reference rule "numerals and Latin terms inside
+ * Arabic UI use Inter" without per-run markup.
+ *
+ * Letter spacing is 0 for every `Dashboard/*` style. Never add tracking to Arabic text: it
+ * breaks the visual joining of Arabic letters.
+ */
+
+@theme static {
+  /* Families — Tailwind defaults (font-serif, system stacks) removed. */
+  --font-*: initial;
+  /* Face names pinned in fonts.ts (next/font/local). Inter has no Arabic glyphs → Arabic falls to
+     Cairo. "Cairo Fallback" (metric-adjusted local Arial) comes after Cairo, so it only covers
+     the first paint before Cairo loads; Inter and Geist Mono have no fallback face. */
+  --font-sans: "Inter", "Cairo", "Cairo Fallback", system-ui, sans-serif;
+  --font-mono: "Geist Mono", "Cairo", "Cairo Fallback", ui-monospace, monospace;
+
+  /* Only MUNSIT styles exist: Tailwind's text-xs…9xl, leading-* and tracking-* scales removed. */
+  --text-*: initial;
+  --leading-*: initial;
+  --tracking-*: initial;
+
+  /* Dashboard/Title L — Cairo Bold 700, 28/40 — page title */
+  --text-dashboard-title-l: 28px;
+  --text-dashboard-title-l--line-height: 40px;
+  --text-dashboard-title-l--letter-spacing: 0px;
+  --text-dashboard-title-l--font-weight: 700;
+
+  /* Dashboard/Title M — Cairo Bold 700, 20/30 — section title */
+  --text-dashboard-title-m: 20px;
+  --text-dashboard-title-m--line-height: 30px;
+  --text-dashboard-title-m--letter-spacing: 0px;
+  --text-dashboard-title-m--font-weight: 700;
+
+  /* Dashboard/Card Title — Cairo SemiBold 600, 16/24 — card heading */
+  --text-dashboard-card-title: 16px;
+  --text-dashboard-card-title--line-height: 24px;
+  --text-dashboard-card-title--letter-spacing: 0px;
+  --text-dashboard-card-title--font-weight: 600;
+
+  /* Dashboard/Body — Cairo Regular 400, 14/22 — body (document default, base.css) */
+  --text-dashboard-body: 14px;
+  --text-dashboard-body--line-height: 22px;
+  --text-dashboard-body--letter-spacing: 0px;
+  --text-dashboard-body--font-weight: 400;
+
+  /* Dashboard/Body Medium — Cairo Medium 500, 14/22 — nav labels (default / hover) */
+  --text-dashboard-body-medium: 14px;
+  --text-dashboard-body-medium--line-height: 22px;
+  --text-dashboard-body-medium--letter-spacing: 0px;
+  --text-dashboard-body-medium--font-weight: 500;
+
+  /* Dashboard/Button — Cairo SemiBold 600, 14/20 — buttons, active nav label */
+  --text-dashboard-button: 14px;
+  --text-dashboard-button--line-height: 20px;
+  --text-dashboard-button--letter-spacing: 0px;
+  --text-dashboard-button--font-weight: 600;
+
+  /* Dashboard/Caption — Cairo Regular 400, 12/18 — captions, mobile nav labels */
+  --text-dashboard-caption: 12px;
+  --text-dashboard-caption--line-height: 18px;
+  --text-dashboard-caption--letter-spacing: 0px;
+  --text-dashboard-caption--font-weight: 400;
+
+  /* Dashboard/Label EN — Inter Medium 500, 12/16 — English labels */
+  --text-dashboard-label-en: 12px;
+  --text-dashboard-label-en--line-height: 16px;
+  --text-dashboard-label-en--letter-spacing: 0px;
+  --text-dashboard-label-en--font-weight: 500;
+
+  /* Dashboard/Stat — Inter SemiBold 600, 28/34 — large numerals */
+  --text-dashboard-stat: 28px;
+  --text-dashboard-stat--line-height: 34px;
+  --text-dashboard-stat--letter-spacing: 0px;
+  --text-dashboard-stat--font-weight: 600;
+
+  /* Dashboard/Stat Small — Inter SemiBold 600, 16/22 — small numerals */
+  --text-dashboard-stat-small: 16px;
+  --text-dashboard-stat-small--line-height: 22px;
+  --text-dashboard-stat-small--letter-spacing: 0px;
+  --text-dashboard-stat-small--font-weight: 600;
+
+  /* Dashboard/Meta — Geist Mono Regular 400, 12/18 — metadata (use with font-mono) */
+  --text-dashboard-meta: 12px;
+  --text-dashboard-meta--line-height: 18px;
+  --text-dashboard-meta--letter-spacing: 0px;
+  --text-dashboard-meta--font-weight: 400;
+}

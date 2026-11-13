@@ -1,0 +1,76 @@
+/*
+ * MUNSIT AI — motion foundation (Phase 02).
+ *
+ * Tokens APPROVED by the user 2026-11-13 (docs/design-values.md §1.3). Figma defines no
+ * keyframe motion; durations and easing come only from here.
+ *
+ * Rules: CSS-first; animate `transform` and `opacity` only; hover effects only under
+ * `(hover: hover) and (pointer: fine)`; no continuous decorative animation.
+ *
+ * Utilities: `duration-fast|base|slow|flip`, `ease-standard`. A bare `transition` uses
+ * base + standard.
+ */
+
+@theme static {
+  --transition-duration-fast: 120ms;
+  --transition-duration-base: 200ms;
+  --transition-duration-slow: 320ms;
+  --transition-duration-flip: 400ms;
+
+  /* Only the approved curve exists; Tailwind's ease-in / ease-out / ease-in-out are removed. */
+  --ease-*: initial;
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Tailwind's default keyframe animations (spin, ping, pulse, bounce) are infinite and
+     off-system; they are removed. State animations are defined by their components. */
+  --animate-*: initial;
+
+  --default-transition-duration: var(--transition-duration-base);
+  --default-transition-timing-function: var(--ease-standard);
+}
+
+@layer base {
+  :root {
+    /*
+     * Multiply every motion distance by this: `translate: 0 calc(-4px * var(--motion-distance))`.
+     * Reduced motion sets it to 0, so components keep opacity fades but lose movement.
+     */
+    --motion-distance: 1;
+
+    /*
+     * Inline direction sign for horizontal motion: 1 in LTR, -1 in RTL.
+     * `translate: calc(16px * var(--motion-dir)) 0` moves toward inline-end in both directions.
+     * Prefer logical properties (inset-inline-*, margin-inline-*) for layout; use this only for
+     * transforms, which have no logical form.
+     */
+    --motion-dir: 1;
+  }
+
+  [dir="ltr"] {
+    --motion-dir: 1;
+  }
+
+  [dir="rtl"] {
+    --motion-dir: -1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :root {
+      --motion-distance: 0;
+    }
+
+    /*
+     * Safety net for any keyframe animation: it jumps to its end state and never loops.
+     * 1ms (not 0) keeps `animationend` firing for code that waits on it. Transitions are left
+     * alone so opacity and color changes stay soft; movement is removed via --motion-distance.
+     */
+    *,
+    *::before,
+    *::after {
+      animation-duration: 1ms !important;
+      animation-delay: 0ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
