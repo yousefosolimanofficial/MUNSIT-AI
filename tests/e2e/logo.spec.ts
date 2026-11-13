@@ -1,6 +1,8 @@
 import { createHash } from "node:crypto";
 
-import { expect, test, type Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
+
+import { expect, test } from "./test";
 
 /**
  * Official logo (Phase 02 step 4) on the temporary /dev/tokens route.
