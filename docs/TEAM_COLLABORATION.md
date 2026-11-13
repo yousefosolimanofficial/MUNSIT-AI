@@ -193,5 +193,6 @@ and the integrator's changes stay distinguishable.
 
 ## 8. Delivery log
 
-| Date | Type (starter / delivery) | Module | Version | Baseline / commit | Result |
-| ---- | ------------------------- | ------ | ------- | ----------------- | ------ |
+| Date       | Type (starter / delivery) | Module                                         | Version | Baseline / commit | Result                                                                                                                                                               |
+| ---------- | ------------------------- | ---------------------------------------------- | ------- | ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-11-13 | starter                   | none assigned at packaging (Phase 02 baseline) | v1      | `79685af`         | Verified on the zip: contents = tracked files + `BASELINE_COMMIT.txt` + `START_HERE.md`; `pnpm install --frozen-lockfile` and `pnpm check` passed in an empty folder |

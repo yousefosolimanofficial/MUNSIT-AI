@@ -1,12 +1,13 @@
 # Phase 02 — Design System implementation — Report
 
 - **Date:** 2026-11-13
-- **Branch:** `phase/02-design-system` (based on `e3d5e00`, Phase 01 + collaboration docs)
+- **Branch:** `phase/02-design-system` (based on `e3d5e00`), merged to `main` via PR #2 (rebase)
 - **Scope source:** Development Roadmap v1.0 §7 Phase 02; user approvals per step (2026-11-13).
-- **Result:** Implementation complete and fully tested. G-1 and G-2 implemented, passing and
-  **approved by the user** (2026-11-13); the six visual baselines are approved. All Phase 02
-  implementation acceptance criteria passed in the completed audit. **Approved for Git
-  integration**; final closure is pending a green CI `check` and the merge into `main`.
+- **Result:** **Completed (2026-11-13).** All Phase 02 acceptance criteria passed; G-1 and G-2
+  and the six visual baselines approved by the user. Merged into `main` through PR #2; final
+  commit `79685af` (`79685af190bdbc6e207b1bf0682e14ddab6b2184`). CI `check` green on the PR and on `main`;
+  `pnpm check` and `pnpm test:e2e` (74/74) passed on the merged commit. Open follow-up: hydration
+  warning, issue #3 (see F).
 
 ## A. Executive summary
 
@@ -104,20 +105,21 @@ auto-accepted (Roadmap §8).
 
 **Non-blocking (later phases / decisions):**
 
-| ID  | Item                                                                                     | When                                |
-| --- | ---------------------------------------------------------------------------------------- | ----------------------------------- |
-| G-3 | Automated a11y scan (`@axe-core/playwright`, deferred in ADR-001)                        | Phase 03, needs dependency approval |
-| G-4 | `docs/phases/phase-02-plan.md` was not written (scope tracked in PROGRESS + this report) | Process note                        |
-| O-1 | English UI copy reviewed per module (no copy invented)                                   | Each module phase                   |
-| O-2 | `PATCH /me/preferences` request/response contract                                        | Backend, before Phase 20/21         |
-| O-4 | `browserslist` targets (would keep `:dir()` native in LightningCSS)                      | Phase 03 / Phase 22                 |
-| I-1 | Phase 01 placeholder `/` heading has no size (`text-2xl` removed)                        | Replaced in Phase 07                |
-| I-2 | `UI/Navigation` style "ExtraBold" with weight 400 — NOT VERIFIED                         | Before any use                      |
-| —   | Firefox / WebKit run                                                                     | Phase 22                            |
-| —   | Space/Radius not Figma variables (HANDOFF values)                                        | Recorded                            |
-| —   | `slides` / `cards` icon source unconfirmed                                               | Designer confirmation               |
-| —   | Text / Muted only for large or disabled text                                             | Phase 03 component rules            |
-| —   | Dev-only Next warnings on `/dev/tokens` (logo LCP, Full logo narrowed at 320)            | Dev route only                      |
+| ID  | Item                                                                                                     | When                                |
+| --- | -------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+| G-3 | Automated a11y scan (`@axe-core/playwright`, deferred in ADR-001)                                        | Phase 03, needs dependency approval |
+| G-4 | `docs/phases/phase-02-plan.md` was not written (scope tracked in PROGRESS + this report)                 | Process note                        |
+| O-1 | English UI copy reviewed per module (no copy invented)                                                   | Each module phase                   |
+| O-2 | `PATCH /me/preferences` request/response contract                                                        | Backend, before Phase 20/21         |
+| O-4 | `browserslist` targets (would keep `:dir()` native in LightningCSS)                                      | Phase 03 / Phase 22                 |
+| I-1 | Phase 01 placeholder `/` heading has no size (`text-2xl` removed)                                        | Replaced in Phase 07                |
+| I-2 | `UI/Navigation` style "ExtraBold" with weight 400 — NOT VERIFIED                                         | Before any use                      |
+| —   | Firefox / WebKit run                                                                                     | Phase 22                            |
+| —   | Space/Radius not Figma variables (HANDOFF values)                                                        | Recorded                            |
+| —   | `slides` / `cards` icon source unconfirmed                                                               | Designer confirmation               |
+| —   | Text / Muted only for large or disabled text                                                             | Phase 03 component rules            |
+| I-3 | Dev-only React hydration mismatch during `pnpm test:e2e` on `/dev/tokens` — **not resolved**; tests pass | GitHub issue #3 (test-only fix)     |
+| —   | Dev-only Next warnings on `/dev/tokens` (logo LCP, Full logo narrowed at 320)                            | Dev route only                      |
 
 ## G. Dependencies
 
@@ -148,7 +150,11 @@ implemented and approved; Phase 03 starts after Phase 02 is merged into `main`.
 
 ## I. Mariam starter readiness
 
-Not ready yet — by design. Before Mariam receives a baseline:
+**Done 2026-11-13.** Starter `munsit-starter-79685af.zip` built with `git archive` from `main` at
+`79685af`, with `BASELINE_COMMIT.txt` and a `START_HERE.md` setup guide; verified on the zip
+itself (contents = tracked files, binaries byte-identical, nothing excluded leaked, `pnpm install
+--frozen-lockfile` + `pnpm check` passed in an empty folder). Logged in
+`docs/TEAM_COLLABORATION.md` §8. Procedure followed:
 
 1. User approves the six baselines and Phase 02 (G-1, G-2) — **done 2026-11-13**.
 2. Commit Phase 02 on `phase/02-design-system` (sequence in J), push, open the PR.
@@ -180,6 +186,10 @@ Git audit (2026-11-13): `git add --dry-run -A` lists **156 files to add (incl. t
    template (scope, acceptance checklist, results, screenshots at 3 widths AR/EN, known gaps).
 9. Merge only with CI `check` green and conversations resolved (rebase merge keeps the separate
    `chore(deps)` commit); tag `phase-02-done`; update `PROGRESS.md` with the merge commit.
+
+**Executed 2026-11-13:** steps 1–8 as listed (7 commits), PR #2, CI `check` green, rebase merge
+into `main` → `c7455f2`..`79685af`; `PROGRESS.md` updated by the Phase 02 closure PR. The
+`phase-02-done` tag was not created (not requested).
 
 ## Final acceptance checklist
 
