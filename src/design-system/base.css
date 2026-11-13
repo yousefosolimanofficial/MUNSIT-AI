@@ -1,0 +1,19 @@
+/*
+ * MUNSIT AI — document base (Phase 02). Dark only: no light palette exists (Design System
+ * Reference §0). Default text style is `Dashboard/Body`, the application default scale.
+ * Font family comes from Tailwind preflight (`html { font-family: var(--font-sans) }`).
+ */
+
+@layer base {
+  html {
+    color-scheme: dark;
+    background-color: var(--color-surface-void-black);
+    color: var(--color-text-primary);
+  }
+
+  body {
+    font-size: var(--text-dashboard-body);
+    line-height: var(--text-dashboard-body--line-height);
+    font-weight: var(--text-dashboard-body--font-weight);
+  }
+}

@@ -1,0 +1,73 @@
+/*
+ * MUNSIT AI — design tokens (Phase 02).
+ *
+ * Source of truth: docs/references/MUNSIT_AI_Design_System_Reference_v1.0.md.
+ * Source label and Figma-name → CSS-name mapping per value: docs/design-values.md.
+ *
+ * Naming: Figma "Group / Token Name" → `--color-group-token-name` (lowercase, camelCase split,
+ * words joined by "-"). Values are copied exactly; never edit a value here without updating the
+ * Design System Reference first. Translucent tints, radius 14/18 and component sizes are local
+ * component constants, NOT tokens — do not add them here.
+ *
+ * `static` emits every variable on :root even when no utility uses it, so plain CSS can rely on
+ * `var(--color-…)`. Each namespace reset (`--x-*: initial`) removes Tailwind's defaults, so only
+ * MUNSIT tokens exist as utilities (no `bg-red-500`, no default radius scale).
+ */
+
+@theme static {
+  /* ---------------------------------------------------------------- Colors (19, dark only) */
+  --color-*: initial;
+
+  /* Surface */
+  --color-surface-void-black: #040506;
+  --color-surface-ink: #07080a;
+  --color-surface-obsidian: #111214;
+  /* ColorSurface — approved as-is naming exception */
+  --color-color-surface-graphite: #1b1c1e;
+  --color-color-surface-ember-hush: #452324;
+  /* Text */
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #9c9c9d;
+  --color-text-muted: #6a6b6c;
+  --color-text-muted-readable: #8d8d8f;
+  /* Neutral */
+  --color-neutral-mist: #e6e6e6;
+  --color-neutral-iron: #454647;
+  --color-neutral-slate: #2f3031;
+  /* Accent */
+  --color-accent-electric-sky: #63a1ff;
+  --color-accent-cobalt-edge: #143ca3;
+  --color-accent-deep-space: #02193b;
+  --color-accent-info-blue: #56c2ff;
+  --color-accent-success-green: #59d499;
+  --color-accent-coral-pulse: #ff6363;
+  /* Semantic */
+  --color-semantic-warning: #ffb020;
+
+  /* ----------------------------------------- Spacing (HANDOFF; not verified as Figma variables) */
+  /* Named only. Tailwind's numeric scale (`--spacing` base) is kept for layout sizing. */
+  --spacing-xs: 4px;
+  --spacing-sm: 12px;
+  --spacing-md: 16px;
+  --spacing-lg: 20px;
+  --spacing-xl: 32px;
+
+  /* ------------------------------------------ Radius (HANDOFF; not verified as Figma variables) */
+  --radius-*: initial;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+}
+
+/*
+ * Page padding (HANDOFF local measurement, proposed as tokens by Roadmap Phase 02).
+ * Not Tailwind utilities: breakpoints are decided in Phase 05 (ADR), so the shell picks the
+ * right value then.
+ */
+:root {
+  --page-padding-desktop: 24px;
+  --page-padding-tablet: 24px;
+  --page-padding-mobile: 20px;
+}
