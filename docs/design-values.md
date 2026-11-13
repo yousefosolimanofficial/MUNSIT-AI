@@ -493,3 +493,23 @@ used for small readable text (e.g. 12 px metadata) — use Muted Readable there.
 surfaces (Obsidian 88%, Graphite 95%) sit over Void Black, so their effective colors are within
 the measured range. Not measured: text on accent fills (e.g. Void Black on Electric Sky buttons) —
 measured with the components in Phase 03.
+
+## 6. Button (Phase 03) — approved values and exceptions (2026-11-13)
+
+Source: Figma `Button` set `2210:89`, read 2026-11-13. Full spec:
+[phases/phase-03-button-contract.md](phases/phase-03-button-contract.md). Figma is not modified.
+
+| Item                        | Figma                                                        | Implemented value                                                    | Status                                                                                                                                |
+| --------------------------- | ------------------------------------------------------------ | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Hover shadow (Primary)      | Drop shadow `#63a1ff` 35%, offset 0/4, blur **18**, spread 0 | `0 4px 9px rgba(99,161,255,0.35)`, the Design System Reference value | APPROVED for the **Button only** (D-B1). Halving the Figma blur is **not** a project rule; every other shadow is reviewed on its own. |
+| Focus ring                  | Not designed                                                 | `:focus-visible`: outline 2px solid Electric Sky, offset 2px         | APPROVED (D-B2); applies to every Phase 03 primitive                                                                                  |
+| Secondary Pressed fill      | Electric Sky **24%**                                         | Electric Sky **20%** (border 55% and label Electric Sky unchanged)   | APPROVED **exception for WCAG AA** (D-B6). 24% gave 4.29:1 on Graphite; 20% gives at least 4.65:1 on every allowed surface            |
+| Secondary on Ember Hush     | —                                                            | **Not allowed**                                                      | APPROVED usage rule. Hover 4.18:1 and Pressed 3.91:1 fail there                                                                       |
+| Loading, icons, destructive | Not designed                                                 | Not in v1                                                            | D-B3, D-B4 out of v1; D-B5 deferred to Phase 06                                                                                       |
+
+**Allowed surfaces for the Button:** Void Black, Ink, Obsidian, Graphite, Obsidian 88% card and
+Graphite 95% card hover. Every label state measures at least 4.5:1 there (table in the contract,
+§12.2). This is enforced by `src/design-system/contrast.test.ts`, which uses WCAG arithmetic from
+the token values, no DOM. The rendered button is re-checked in Chromium at integration. Disabled
+states are exempt (WCAG 1.4.3). This closes the §5 note "text on accent fills: measured with the
+components in Phase 03" for the Button.

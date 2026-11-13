@@ -12,6 +12,7 @@ Process and details: [TEAM_COLLABORATION.md](TEAM_COLLABORATION.md).
 - [ ] Real results recorded for `typecheck`, `lint`, `format:check`, `test`, `build`
 - [ ] Screenshots at 1440 / 768 / 390 in RTL (and LTR if supported)
 - [ ] Known limitations and anything NOT VERIFIED against Figma written down
+- [ ] Integration instructions written (files, wiring, order of steps)
 - [ ] Package contains no `node_modules`, `.next`, caches, test output, `.env` files or credentials
 
 ## B. Intake (Yousef)

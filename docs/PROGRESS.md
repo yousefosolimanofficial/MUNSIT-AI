@@ -5,7 +5,9 @@ Single resume point. A new session starts by reading this file, the latest phase
 
 - **Current phase:** 02 — Design System implementation + motion foundation — **Done**
   (2026-11-13), merged to `main` through PR #2 (rebase), final commit `79685af` (`79685af190bdbc6e207b1bf0682e14ddab6b2184`)
-- **Next phase:** 03 — Core UI primitives (Shared UI components) — planning
+- **Active phase:** 03 — Core UI primitives (Shared UI components) — **Planning** (plan draft
+  [phases/phase-03-plan.md](phases/phase-03-plan.md), Button contract
+  [phases/phase-03-button-contract.md](phases/phase-03-button-contract.md); awaiting user approval)
 - **Latest report:** [phases/phase-02-report.md](phases/phase-02-report.md) (Phase 01: [phases/phase-01-report.md](phases/phase-01-report.md))
 - **Stack decision:** [decisions/ADR-001-frontend-stack.md](decisions/ADR-001-frontend-stack.md) (Approved by the user, 2026-11-12)
 - **Phase 01 commit:** `acf48c9` `chore: initialize project (Phase 01)` on `main`.
@@ -22,6 +24,14 @@ Single resume point. A new session starts by reading this file, the latest phase
 | Yousef    | Frontend Lead — architecture, shared foundation, integration | Shared foundation (by role); modules not assigned yet |
 | Mariam    | Frontend Developer — assigned feature modules                | Not assigned yet                                      |
 
+**Phase 03 assignment (agreed by the user, 2026-11-13).** Yousef: component requirements and
+architecture review, contracts, integration, quality assurance, GitHub management. Mariam:
+shared components **Button** (first delivery), **Input**, **Card**, **Badge**, and other shared
+components in later deliveries as assigned. `src/shared` stays Yousef-owned; Mariam is
+delegated only the files named in each component contract (e.g. `src/shared/ui/Button.tsx` and
+its test). **Feature-module ownership is unchanged** — modules remain unassigned until the user
+decides. Details: [phases/phase-03-plan.md](phases/phase-03-plan.md) §3.
+
 Yousef is the sole GitHub integrator and publisher. Mariam is not a repository collaborator; she
 works offline and delivers packages per [TEAM_COLLABORATION.md](TEAM_COLLABORATION.md).
 
@@ -31,7 +41,7 @@ works offline and delivers packages per [TEAM_COLLABORATION.md](TEAM_COLLABORATI
 | --- | ----------------------------------- | ----------- |
 | 01  | Project initialization & tooling    | Done        |
 | 02  | Design System implementation        | Done        |
-| 03  | Core UI primitives                  | Not started |
+| 03  | Core UI primitives                  | Planning    |
 | 04  | Routing & navigation registry       | Not started |
 | 05  | Shared App Shell                    | Not started |
 | 06  | Shared states & overlay/guard infra | Not started |
@@ -101,8 +111,12 @@ were approved by the user, PR #2 was merged into `main` (final commit `79685af`)
 green, and `pnpm check` + `pnpm test:e2e` (74/74) passed on the merged commit. The hydration
 warning stays open in issue #3 (I-3).
 
-Next: Phase 03 — Core UI primitives. Prepare the Phase 03 plan and the first component contract
-(Button) for Mariam; no Phase 03 code before the plan is approved.
+Phase 03 plan, role split, Button contract (final: D-B1–D-B6, Ember Hush rule) and the P-1
+dev-dependency list approved by the user (2026-11-13). Order: (1) issue #3 fix PR, (2) Phase 03
+docs PR, (3) `chore(deps)` PR, each with `pnpm check`, E2E and CI; merges only with the user's
+approval. Then starter v2 from the newest merge commit, verified in an empty folder, and the
+delivery package for Mariam. No Button or other component code before Mariam has the approved
+starter v2.
 
 ## Starter package gate (Mariam)
 
