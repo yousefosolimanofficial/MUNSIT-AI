@@ -5,9 +5,9 @@ Single resume point. A new session starts by reading this file, the latest phase
 
 - **Current phase:** 02 — Design System implementation + motion foundation — **Done**
   (2026-11-13), merged to `main` through PR #2 (rebase), final commit `79685af` (`79685af190bdbc6e207b1bf0682e14ddab6b2184`)
-- **Active phase:** 03 — Core UI primitives (Shared UI components) — **Planning** (plan draft
-  [phases/phase-03-plan.md](phases/phase-03-plan.md), Button contract
-  [phases/phase-03-button-contract.md](phases/phase-03-button-contract.md); awaiting user approval)
+- **Active phase:** 03 — Core UI primitives — **In progress**. Button V1 **done** (2026-11-14):
+  Mariam delivery integrated through PR #8 (rebase), commits `a1dc0f7`..`9eebeba`, CI green on
+  PR and `main`. Next: Input V1 — contract draft [phases/phase-03-input-contract.md](phases/phase-03-input-contract.md), awaiting user approval (D-I1–D-I4).
 - **Latest report:** [phases/phase-02-report.md](phases/phase-02-report.md) (Phase 01: [phases/phase-01-report.md](phases/phase-01-report.md))
 - **Stack decision:** [decisions/ADR-001-frontend-stack.md](decisions/ADR-001-frontend-stack.md) (Approved by the user, 2026-11-12)
 - **Phase 01 commit:** `acf48c9` `chore: initialize project (Phase 01)` on `main`.
@@ -41,7 +41,7 @@ works offline and delivers packages per [TEAM_COLLABORATION.md](TEAM_COLLABORATI
 | --- | ----------------------------------- | ----------- |
 | 01  | Project initialization & tooling    | Done        |
 | 02  | Design System implementation        | Done        |
-| 03  | Core UI primitives                  | Planning    |
+| 03  | Core UI primitives                  | In progress |
 | 04  | Routing & navigation registry       | Not started |
 | 05  | Shared App Shell                    | Not started |
 | 06  | Shared states & overlay/guard infra | Not started |
@@ -115,8 +115,11 @@ Phase 03 plan, role split, Button contract (final: D-B1–D-B6, Ember Hush rule)
 dev-dependency list approved by the user (2026-11-13). Order: (1) issue #3 fix PR, (2) Phase 03
 docs PR, (3) `chore(deps)` PR, each with `pnpm check`, E2E and CI; merges only with the user's
 approval. Then starter v2 from the newest merge commit, verified in an empty folder, and the
-delivery package for Mariam. No Button or other component code before Mariam has the approved
-starter v2.
+delivery package for Mariam.
+
+**2026-11-14:** Button V1 completed (PR #8, `9eebeba` on `main`, CI green). Next: the user
+approves the Input contract (D-I1–D-I4), then a starter from the newest `main` and the Input
+package for Mariam. No Input code before approval.
 
 ## Starter package gate (Mariam)
 
