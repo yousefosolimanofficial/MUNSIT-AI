@@ -8,7 +8,14 @@ import type { FullConfig } from "@playwright/test";
  * end of JSON input" in Next internals, observed 2026-11-13). Requesting every route once,
  * sequentially, completes the first compile without contention. Production builds are unaffected.
  */
-const ROUTES = ["/", "/en", "/dev/tokens", "/en/dev/tokens"];
+const ROUTES = [
+  "/",
+  "/en",
+  "/dev/tokens",
+  "/en/dev/tokens",
+  "/dev/components",
+  "/en/dev/components",
+];
 
 export default async function globalSetup(config: FullConfig): Promise<void> {
   const baseURL = config.projects[0]?.use.baseURL;
