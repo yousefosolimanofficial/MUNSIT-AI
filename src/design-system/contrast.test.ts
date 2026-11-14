@@ -92,7 +92,52 @@ describe.each(Object.entries(ALLOWED_SURFACES))("Button label on %s", (_, surfac
   });
 });
 
+/*
+ * Input V1 (docs/phases/phase-03-input-contract.md §7 and §12, decisions D-I2, D-I3 Option B and
+ * D-I4, approved by the user 2026-11-14). The field fill is Surface / Ink. A translucent border
+ * paints over the field's own Ink fill (background-clip: border-box), so it is composited on Ink
+ * and then compared with both sides of the boundary: the surrounding surface and the Ink fill.
+ */
+const ink = token("surface-ink");
+const INPUT_SURFACES: Record<string, Rgb> = {
+  "Void Black": voidBlack,
+  "Settings card (Obsidian 90% over Void)": over(token("surface-obsidian"), 0.9, voidBlack),
+  Obsidian: token("surface-obsidian"),
+  Graphite: token("color-surface-graphite"),
+};
+/** WCAG 1.4.11 non-text contrast (component boundary and focus indicator). */
+const NON_TEXT = 3;
+
+const INPUT_BORDERS: [string, Rgb][] = [
+  ["Default: Text / Muted (D-I3 Option B)", token("text-muted")],
+  ["Focused: Electric Sky 70% (D-I2)", over(electricSky, 0.7, ink)],
+  ["Error: Coral Pulse 70%", over(token("accent-coral-pulse"), 0.7, ink)],
+];
+
+describe.each(Object.entries(INPUT_SURFACES))("Input on %s", (_, surface) => {
+  it.each(INPUT_BORDERS)("%s border ≥ 3 against the surface and the Ink fill", (_s, border) => {
+    expect(contrast(border, surface)).toBeGreaterThanOrEqual(NON_TEXT);
+    expect(contrast(border, ink)).toBeGreaterThanOrEqual(NON_TEXT);
+  });
+
+  it("label (Text / Secondary) and error message (Coral Pulse) ≥ 4.5", () => {
+    expect(contrast(token("text-secondary"), surface)).toBeGreaterThanOrEqual(AA);
+    expect(contrast(token("accent-coral-pulse"), surface)).toBeGreaterThanOrEqual(AA);
+  });
+});
+
+describe("Input text inside the Ink field", () => {
+  it("value (Text / Primary) and placeholder (Text / Muted Readable, D-I4) ≥ 4.5", () => {
+    expect(contrast(token("text-primary"), ink)).toBeGreaterThanOrEqual(AA);
+    expect(contrast(token("text-muted-readable"), ink)).toBeGreaterThanOrEqual(AA);
+  });
+});
+
 describe("why the decisions exist (documents the approved exceptions)", () => {
+  it("the original Figma Input default border (Electric Sky 14%) fails 3:1 (D-I3)", () => {
+    expect(contrast(over(electricSky, 0.14, ink), ink)).toBeLessThan(NON_TEXT);
+  });
+
   it("the original Figma Secondary Pressed fill (24%) fails AA on Graphite", () => {
     const graphite = ALLOWED_SURFACES.Graphite as Rgb;
     expect(contrast(electricSky, over(electricSky, 0.24, graphite))).toBeLessThan(AA);
