@@ -55,6 +55,9 @@ const BASE_CLASSES = [
   BUTTON_HEIGHT,
   "px-lg rounded-md",
   "text-dashboard-button whitespace-nowrap",
+  // Integration decision (Yousef, 2026-11-14): pointer cursor when enabled; disabled keeps the
+  // browser default.
+  "enabled:cursor-pointer",
   "transition-[background-color,border-color,color,box-shadow] duration-base ease-standard",
   "enabled:active:duration-fast",
   FOCUS_RING,
