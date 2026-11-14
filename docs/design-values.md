@@ -513,3 +513,20 @@ Graphite 95% card hover. Every label state measures at least 4.5:1 there (table 
 the token values, no DOM. The rendered button is re-checked in Chromium at integration. Disabled
 states are exempt (WCAG 1.4.3). This closes the §5 note "text on accent fills: measured with the
 components in Phase 03" for the Button.
+
+## 7. Input (Phase 03) — approved values and exceptions (2026-11-14)
+
+Source: Figma `Settings / Profile Input` `2461:591`, read 2026-11-14. Full spec:
+[phases/phase-03-input-contract.md](phases/phase-03-input-contract.md). Figma is not modified.
+
+| Item           | Figma                                     | Implemented value                            | Status                                                                                                                     |
+| -------------- | ----------------------------------------- | -------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Default border | Electric Sky **14%** (1.19:1 on Ink)      | **Text / Muted** token (`border-text-muted`) | APPROVED **accessibility deviation** (D-I3 Option B): at least 3.19:1 against every surface and the Ink fill (WCAG 1.4.11) |
+| Focus          | Border Sky 70% + glow `0 0 6px 2px` @ 25% | Same, on `:focus-visible`                    | APPROVED (D-I2): at least 3.57:1; replaces the D-B2 outline for text fields only                                           |
+| Placeholder    | Not in the set                            | Text / Muted Readable token                  | APPROVED (D-I4): 6.05:1 on Ink                                                                                             |
+| Field fill     | Unbound literal `#07080a`                 | Surface / Ink token (same value)             | FIGMA                                                                                                                      |
+| Disabled       | Opacity 60%, border Sky 14%               | Same                                         | FIGMA; exempt from contrast                                                                                                |
+
+Surfaces measured: Void Black, the Settings card (Obsidian 90% over Void), Obsidian and Graphite.
+Enforced by `src/design-system/contrast.test.ts` (WCAG arithmetic from token values; translucent
+borders composited on the Ink fill). Rendered values are re-checked in Chromium at integration.

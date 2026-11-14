@@ -1,7 +1,7 @@
 # Component contract — Input (Phase 03, Mariam delivery 2)
 
-- **Status:** **Draft v2 — D-I1, D-I2 and D-I4 approved by the user (2026-11-14). D-I3 open**
-  (evidence in §12.2). The contract becomes final when D-I3 is decided. Mariam starts only after
+- **Status:** **Approved — final** (2026-11-14). D-I1 to D-I4 decided by the user (§12).
+  Mariam starts only after
   this contract is merged and she has received the new starter (§10).
 - **Figma:** file `Avyn9kL0drXepQyTXTLXXb`, component set `Settings / Profile Input` frame
   `2461:591` (page `14 — Profile & Settings`), read read-only via the Figma MCP on 2026-11-14.
@@ -61,17 +61,20 @@ Editing, Invalid email, Missing name, …).
 
 Tokens with opacity modifiers only. No literal hex values in the code.
 
-| State         | Fill                         | Border (1px)         | Effect                                   | Whole block                           |
-| ------------- | ---------------------------- | -------------------- | ---------------------------------------- | ------------------------------------- |
-| Default       | `bg-surface-ink` (`#07080a`) | Electric Sky **14%** | —                                        | —                                     |
-| Focused       | `bg-surface-ink`             | Electric Sky **70%** | Glow `0 0 6px 2px rgba(99,161,255,0.25)` | —                                     |
-| Error         | `bg-surface-ink`             | Coral Pulse **70%**  | —                                        | —                                     |
-| Error + focus | `bg-surface-ink`             | Coral Pulse **70%**  | same glow                                | — (not designed; keeps error visible) |
-| Disabled      | `bg-surface-ink`             | Electric Sky **14%** | none, never focused                      | opacity **60%** (label, field, value) |
+| State         | Fill                         | Border (1px)                                                 | Effect                                   | Whole block                           |
+| ------------- | ---------------------------- | ------------------------------------------------------------ | ---------------------------------------- | ------------------------------------- |
+| Default       | `bg-surface-ink` (`#07080a`) | **Text / Muted** (`border-text-muted`; D-I3, Figma: Sky 14%) | —                                        | —                                     |
+| Focused       | `bg-surface-ink`             | Electric Sky **70%**                                         | Glow `0 0 6px 2px rgba(99,161,255,0.25)` | —                                     |
+| Error         | `bg-surface-ink`             | Coral Pulse **70%**                                          | —                                        | —                                     |
+| Error + focus | `bg-surface-ink`             | Coral Pulse **70%**                                          | same glow                                | — (not designed; keeps error visible) |
+| Disabled      | `bg-surface-ink`             | Electric Sky **14%**                                         | none, never focused                      | opacity **60%** (label, field, value) |
 
 - Figma fills the field with the unbound literal `#07080a`, which is exactly Surface / Ink.
 - Glow: one named local constant `INPUT_FOCUS_GLOW` (like Button `PRIMARY_HOVER_SHADOW`).
-- The Default border is **subject to D-I3**. Implement 14% unless the user decides otherwise.
+- **Default border = Text / Muted** (`border-text-muted`): an intentional accessibility deviation
+  from Figma (Sky 14%, 1.19:1), approved as D-I3 Option B. Disabled keeps the Figma Sky 14% border
+  (disabled controls are exempt). Default and Focused stay distinct by hue (grey → Electric Sky)
+  and the glow; their two border colors are close in luminance (1.12:1), so the glow is required.
 - **Hover:** not designed, so none in v1.
 
 ## 5. Behavior
@@ -110,17 +113,18 @@ Tokens with opacity modifiers only. No literal hex values in the code.
   are the real ones: page Void Black and the Settings Group card (Obsidian 90% over Void =
   `#101113`), plus Obsidian and Graphite.
 
-| Pair                                    | Void / Card / Obsidian / Graphite | Result                 |
-| --------------------------------------- | --------------------------------- | ---------------------- |
-| Label Text / Secondary on surface       | 7.44 / 6.89 / 6.83 / 6.22         | AA                     |
-| Error message Coral on surface          | 7.01 / 6.49 / 6.44 / 5.86         | AA                     |
-| Value white on Ink                      | 20.04                             | AA                     |
-| Placeholder Muted Readable on Ink       | 6.05                              | AA (D-I4)              |
-| Focus border Sky 70% vs surface / Ink   | 4.21 / 4.12 / 4.09 / 3.88; 4.19   | ≥ 3 (D-I2)             |
-| Error border Coral 70% vs surface / Ink | 3.82 / 3.68 / 3.70 / 3.50; 3.80   | ≥ 3                    |
-| Default border Sky 14%                  | 1.18 / 1.23 / 1.23 / 1.26         | **< 3: D-I3**          |
-| Ink fill vs surface                     | 1.02 / 1.06 / 1.07 / 1.17         | **< 3: D-I3**          |
-| Disabled (opacity 60%)                  | —                                 | Exempt (1.4.3, 1.4.11) |
+| Pair                                         | Void / Card / Obsidian / Graphite | Result                         |
+| -------------------------------------------- | --------------------------------- | ------------------------------ |
+| Label Text / Secondary on surface            | 7.44 / 6.89 / 6.83 / 6.22         | AA                             |
+| Error message Coral on surface               | 7.01 / 6.49 / 6.44 / 5.86         | AA                             |
+| Value white on Ink                           | 20.04                             | AA                             |
+| Placeholder Muted Readable on Ink            | 6.05                              | AA (D-I4)                      |
+| Default border Text / Muted vs surface / Ink | 3.82 / 3.55 / 3.51 / 3.19; 3.75   | ≥ 3 (D-I3 Option B)            |
+| Focus border Sky 70% vs surface / Ink        | 4.27 / 3.97 / 3.93 / 3.57; 4.20   | ≥ 3 (D-I2)                     |
+| Error border Coral 70% vs surface / Ink      | 3.85 / 3.58 / 3.54 / 3.22; 3.79   | ≥ 3                            |
+| Figma default border Sky 14% (replaced)      | 1.21 / 1.12 / 1.11 / 1.01; 1.19   | fails, so replaced (D-I3)      |
+| Ink fill vs surface                          | 1.02 / 1.06 / 1.07 / 1.17         | boundary carried by the border |
+| Disabled (opacity 60%)                       | —                                 | Exempt (1.4.3, 1.4.11)         |
 
 ## 8. Motion
 
@@ -183,7 +187,7 @@ packages. Any other need goes in the requests table of `DELIVERY.md`.
    inputs without ids get unique ids.
 3. Error: message and icon rendered; `aria-invalid="true"`; `aria-describedby` has the message id
    and keeps a caller value. With no error, neither attribute is set and no message is rendered.
-4. Classes per state: default border 14%, `focus-visible:` border 70% plus glow, error Coral 70%,
+4. Classes per state: default `border-text-muted` (never Sky 14%), `focus-visible:` border 70% plus glow, error Coral 70%,
    disabled opacity 60%, placeholder `text-muted-readable`. No hex, no left/right utilities, no
    transform, and no plain `focus:` style.
 5. Typing updates an uncontrolled input. A controlled input calls `onChange`.
@@ -208,7 +212,15 @@ with no overflow.
 | D-I2 | **Approved:** Figma Focused state: Electric Sky border 70% + glow `0 0 6px 2px` at 25%, on `:focus-visible`, clearly visible with the keyboard and contrast-tested against the surroundings (§7). D-B2 stays for buttons. |
 | D-I4 | **Approved:** placeholder Text / Muted Readable through the existing token (`placeholder:text-text-muted-readable`), never hex. 6.05:1 on Ink, so it passes on every surface (the placeholder sits on the Ink fill).      |
 
-### 12.2 D-I3: Default field identification (open, evidence below)
+### 12.2 D-I3: Default field identification — **APPROVED: Option B** (2026-11-14)
+
+**Decision:** the Default border uses the existing Text / Muted token (`border-text-muted`). No new
+hex value and no token change. Focused (Electric Sky 70% + glow) and the placeholder (Text / Muted
+Readable) are unchanged. This is an intentional accessibility deviation from Figma, recorded in
+`docs/design-values.md` §7. Figma is not modified. It is enforced by
+`src/design-system/contrast.test.ts` (final ratios in §7, borders composited on the Ink fill).
+
+Evidence that led to the decision:
 
 **Measurements** (token values, WCAG arithmetic, real surroundings from `Settings Group`
 `2463:3514`: card `rgba(17,18,20,0.9)` over the page = `#101113`):
@@ -235,10 +247,9 @@ unchanged; nothing applied without approval):
 | B      | Text / Muted `#6a6b6c` (`border-text-muted`) | 3.19                                  | Neutral grey; blue stays reserved for Focus. Different hue from Figma.     |
 | C      | Keep 14% and require placeholder or value    | 1.18 (border); identification by text | No visual change, but it cannot be guaranteed for every empty field.       |
 
-**Recommendation:** **B.** It is the smallest token-only change that passes on every surface, and
-it keeps Focus (blue + glow) clearly different from Default. If the Figma look must stay, C with a
-rule that every Input has a placeholder is the fallback. Figma is not modified either way; the
-deviation is recorded in `docs/design-values.md`, like D-B6.
+**Chosen: B** (user, 2026-11-14). The option ratios above were computed before the decision with
+the border composited on the surface; the authoritative final values are in §7 (composited on the
+Ink fill, as rendered).
 
 ## 13. Acceptance checklist (Yousef at intake)
 
@@ -246,7 +257,8 @@ deviation is recorded in `docs/design-values.md`, like D-B6.
 - [ ] Native `<input>`, required visible label linked by `htmlFor`/`id`.
 - [ ] Height 46, padding-inline 14, radius 12, gap 6; label Caption / Text Secondary; value Body /
       Text Primary; placeholder token per D-I4.
-- [ ] State colors per §4 (Default border per D-I3) with tokens and opacity modifiers. No hex.
+- [ ] State colors per §4 with tokens and opacity modifiers; Default border `border-text-muted`
+      (D-I3), Disabled border Sky 14%. No hex.
 - [ ] Focus per D-I2 on `:focus-visible`. Error: Coral 70% border, message with a 14px `alert`
       icon, `aria-invalid`, `aria-describedby`. Disabled: native, opacity 60%.
 - [ ] No validation logic inside the component. No hover, no Password or Search input.
