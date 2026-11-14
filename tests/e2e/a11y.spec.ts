@@ -7,7 +7,14 @@ import { expect, test } from "./test";
  * compute. The Next.js development overlay is excluded: it is not part of the application.
  */
 
-const PAGES = ["/", "/en", "/dev/tokens", "/en/dev/tokens"] as const;
+const PAGES = [
+  "/",
+  "/en",
+  "/dev/tokens",
+  "/en/dev/tokens",
+  "/dev/components",
+  "/en/dev/components",
+] as const;
 const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 
 for (const path of PAGES) {
