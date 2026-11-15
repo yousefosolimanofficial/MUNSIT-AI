@@ -590,3 +590,22 @@ Plugin API. Full spec and decisions D-T1 to D-T6:
 | Focus-visible                                  | Not designed                                                            | Button D-B2 ring                                                                 | **Deviation** (D-T2)                    |
 | Selected-state cue                             | Color only                                                              | Active label `underline underline-offset-4`                                      | **Deviation** (D-T6)                    |
 | Filter row (Favorites, Folders, Question Bank) | 42 high, count pill; active count Sky on Sky 20% (4.18:1 on card)       | Not implemented: one shared list, not tabs; active count white when built (D-T5) | Deferred to the modules (contract §1.1) |
+
+## 11. Dialog (Phase 03) — Figma values and approved decisions (2026-11-15)
+
+Source: 20+ module dialog components (no shared Figma component), e.g. `2268:1824`, `2432:4308`,
+`2453:5502`, `2462:1490`, `2314:651`, read with the Plugin API. Full spec and decisions D-DL1 to
+D-DL6: [phases/phase-03-dialog-contract.md](phases/phase-03-dialog-contract.md). Figma is not
+modified.
+
+| Item     | Figma                                                                               | Implemented value                                                                 | Status                        |
+| -------- | ----------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ----------------------------- |
+| Shell    | Obsidian 98%, 1px Sky 18%, radius 24, padding 24, gap 14, shadow 0/16/40 black 50%  | `bg-surface-obsidian/98 border-accent-electric-sky/18 rounded-2xl p-[24px]` …     | FIGMA (majority, D-DL1)       |
+| Outliers | My Lectures: shadow 0/24/64 55%, scrim 62%, Coral 22% border, gaps 16/20, close 40  | Not kept                                                                          | D-DL1                         |
+| Scrim    | Void Black 66%, full viewport, no blur, "click to close"                            | `backdrop:bg-surface-void-black/66`                                               | FIGMA                         |
+| Header A | Icon tile 48 (radius 14, icon 22), title `Title M`, description `Body` Secondary    | as Figma; tones accent (Sky 12/30) and danger (Coral 12/30)                       | FIGMA                         |
+| Header B | Icon tile 44 (icon 20) · title block gap 4 · close 36, radius 10, White 4%, Sky 14% | as Figma; close label from the consumer                                           | FIGMA (D-DL5)                 |
+| Actions  | Row, gap 10, equal widths, primary at inline-start                                  | `flex gap-[10px] *:flex-1`                                                        | FIGMA                         |
+| Widths   | 420 / 440 / 480 / 520 / 560 / 640 (Desktop = Tablet); Mobile 350 (viewport − 40)    | `width` prop, default 480; `max-w-[calc(100vw_-_40px)]`; height ≤ viewport − 40   | FIGMA + D-DL2                 |
+| Motion   | Not designed                                                                        | Enter: opacity + scale 0.98 → 1, slow; exit: reverse, base; reduced: opacity only | **Approved addition** (D-DL4) |
+| Focus    | Not designed (guard annotation `2588:338`: trapped, restored, safe action focused)  | Native `showModal()` inertness; D-B2 ring on the close button                     | D-DL3                         |
