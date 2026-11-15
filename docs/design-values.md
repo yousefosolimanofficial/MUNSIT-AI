@@ -556,3 +556,19 @@ Recent Lecture Row (`2482:1484`, variants `Size=Wide|Compact` only): no prototyp
 on the set, its instances or descendants on any breakpoint, and no hover/pressed variant; its
 action is the inner Secondary Button "فتح". The row is a static `inset` surface (contract §4).
 Open: Settings shortcut links (`2463:3046`, radius 16, interactive), contract Q-1.
+
+## 9. Status Badge (Phase 03) — Figma values read 2026-11-15
+
+Source: component set `Status Badge` `2258:1026` (page 04 — My Lectures), read with the Plugin API.
+Full spec (D-BG1 and D-BG2 approved 2026-11-15):
+[phases/phase-03-badge-contract.md](phases/phase-03-badge-contract.md). Figma is not modified.
+
+| Item            | Figma                                                                | Implemented value                                | Status         |
+| --------------- | -------------------------------------------------------------------- | ------------------------------------------------ | -------------- |
+| Ready           | Success Green 12% fill, 26% border; label and dot Success Green      | `bg-accent-success-green/12` etc.                | FIGMA          |
+| Processing      | Electric Sky 12% fill, 26% border; label and dot Electric Sky        | `bg-accent-electric-sky/12` etc.                 | FIGMA          |
+| Pending         | White 6% fill, 12% border; label and dot Text / Secondary            | `bg-text-primary/6`, `border-text-primary/12`    | FIGMA          |
+| Failed          | Coral Pulse 12% fill, 26% border; label and dot Coral Pulse          | `bg-accent-coral-pulse/12` etc.                  | FIGMA (D-BG1)  |
+| Geometry        | Height 30, padding 5 / 10, gap 6, radius 8, 1px border, dot 6        | `py-[5px] px-[10px] gap-[6px] rounded-sm border` | FIGMA          |
+| Label           | `Dashboard/Caption` (Cairo Regular 12/18), single line; dot at start | `text-dashboard-caption whitespace-nowrap`       | FIGMA          |
+| Dashboard chips | Standalone frames (radius 8–10, height 24–28, no border)             | Not part of Badge V1                             | D-BG2 approved |
