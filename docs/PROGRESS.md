@@ -20,7 +20,12 @@ Single resume point. A new session starts by reading this file, the latest phase
   contract [phases/phase-03-dialog-contract.md](phases/phase-03-dialog-contract.md) final
   (D-DL1–D-DL6 approved; D-DL4 corrected to entrance + exit motion). Native `<dialog>`, gallery
   section and `tests/e2e/dev-components-dialog.spec.ts`; `pnpm check` and `test:e2e` green
-  locally. PR open against `main`; awaiting merge approval.
+  locally. Merged through PR #17 (rebase), `main` at `3f50973`.
+  Sheet V1 **approved by the user** (2026-11-16, Yousef, branch `feature/03-sheet-v1`):
+  contract [phases/phase-03-sheet-contract.md](phases/phase-03-sheet-contract.md) final
+  (D-SH1–D-SH6, normalizations N-1–N-5). Shared modal lifecycle
+  `src/shared/ui/internal/useModalDialog.ts` (Dialog adopts it, behavior unchanged) and the
+  approved Dialog keyboard-scroll fix. PR open against `main`; awaiting merge approval.
 - **Latest report:** [phases/phase-02-report.md](phases/phase-02-report.md) (Phase 01: [phases/phase-01-report.md](phases/phase-01-report.md))
 - **Stack decision:** [decisions/ADR-001-frontend-stack.md](decisions/ADR-001-frontend-stack.md) (Approved by the user, 2026-11-12)
 - **Phase 01 commit:** `acf48c9` `chore: initialize project (Phase 01)` on `main`.

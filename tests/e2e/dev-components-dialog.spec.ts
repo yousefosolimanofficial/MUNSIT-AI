@@ -321,6 +321,46 @@ for (const locale of LOCALES) {
       }
     });
 
+    test("keyboard scrolling: an overflowing body is a named Tab stop; focus returns", async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width: 390, height: 700 });
+      await load(page, locale.path);
+      const trigger = page.getByTestId("dialog-open-long");
+      await trigger.click();
+      const dialog = openDialog(page);
+      await settle(dialog);
+      const close = page.getByRole("button", { name: locale.close, exact: true });
+      await expect(close).toBeFocused(); // initial focus unchanged: first focusable
+      const body = dialog.getByRole("region", {
+        name: await dialog.getByRole("heading").innerText(),
+      });
+      await expect(body).toHaveAttribute("tabindex", "0");
+      await page.keyboard.press("Tab");
+      await expect(body).toBeFocused();
+      await page.keyboard.press("PageDown");
+      await expect.poll(() => body.evaluate((el) => el.scrollTop)).toBeGreaterThan(0);
+      await page.keyboard.press("Escape");
+      await expect(openDialog(page)).toHaveCount(0);
+      await expect(trigger).toBeFocused();
+    });
+
+    test("keyboard scrolling: a body that fits adds no Tab stop", async ({ page }) => {
+      await page.setViewportSize({ width: 1440, height: 1600 });
+      await load(page, locale.path);
+      await page.getByTestId("dialog-open-long").click();
+      const dialog = openDialog(page);
+      await settle(dialog);
+      const body = dialog.locator('[data-testid="dialog-long-body"]').locator("..");
+      expect(await body.evaluate((el) => el.scrollHeight <= el.clientHeight)).toBe(true);
+      await expect(body).not.toHaveAttribute("tabindex");
+      await expect(dialog.getByRole("region")).toHaveCount(0);
+      await page.keyboard.press("Tab"); // close → the next control is the Cancel action
+      await expect(
+        dialog.getByRole("button", { name: locale.dir === "rtl" ? "إلغاء" : "Cancel" }),
+      ).toBeFocused();
+    });
+
     for (const width of VIEWPORTS) {
       test(`${width}px: width capped to viewport − 40, long body scrolls, no overflow`, async ({
         page,

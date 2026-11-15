@@ -6,6 +6,7 @@ import type { IconName } from "@/design-system/icons/manifest";
 
 import { Icon } from "./Icon";
 import { useModalDialog } from "./internal/useModalDialog";
+import { useScrollableFocus } from "./internal/useScrollableFocus";
 
 /*
  * MUNSIT AI — Dialog (Phase 03, Dialog V1). Contract: docs/phases/phase-03-dialog-contract.md.
@@ -119,7 +120,14 @@ const CLOSE_CLASSES = [
 /** The exit ends with the panel's own opacity transition (§5.1). */
 const EXIT_PROPERTIES = ["opacity"] as const;
 
-const BODY_CLASSES = "min-h-0 flex-1 overflow-y-auto overscroll-contain";
+/**
+ * Focusable only while it overflows (keyboard scrolling, WCAG 2.1.1); the ring is inset so the
+ * panel's overflow never clips it.
+ */
+const BODY_CLASSES = [
+  "min-h-0 flex-1 overflow-y-auto overscroll-contain",
+  "focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-solid focus-visible:outline-accent-electric-sky",
+].join(" ");
 const ACTIONS_CLASSES = "flex shrink-0 gap-[10px] *:min-w-0 *:flex-1";
 
 /* ------------------------------------------------------------------ component */
@@ -146,6 +154,9 @@ export function Dialog({
     initialFocusRef,
     exitProperties: EXIT_PROPERTIES,
   });
+  const { ref: bodyRef, scrollable: bodyScrollable } = useScrollableFocus<HTMLDivElement>(
+    present && children !== undefined,
+  );
 
   const tile = (layoutClass: string, size: number) =>
     icon ? (
@@ -202,7 +213,17 @@ export function Dialog({
               </button>
             </div>
           )}
-          {children === undefined ? null : <div className={BODY_CLASSES}>{children}</div>}
+          {children === undefined ? null : (
+            <div
+              ref={bodyRef}
+              className={BODY_CLASSES}
+              {...(bodyScrollable
+                ? { tabIndex: 0, role: "region", "aria-labelledby": titleId }
+                : {})}
+            >
+              {children}
+            </div>
+          )}
           {actions === undefined ? null : <div className={ACTIONS_CLASSES}>{actions}</div>}
         </div>
       ) : null}
