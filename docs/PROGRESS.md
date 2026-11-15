@@ -10,7 +10,9 @@ Single resume point. A new session starts by reading this file, the latest phase
   PR and `main`. Input V1 **done** (2026-11-15): Mariam delivery integrated through PR #11
   (rebase), commits `374b68e`..`0f77aeb`, CI green on PR and `main`. Next: Card surfaces V1 —
   contract **final** [phases/phase-03-card-contract.md](phases/phase-03-card-contract.md)
-  (D-C1–D-C5 approved 2026-11-15), in documentation PR review.
+  (D-C1–D-C5 approved 2026-11-15), merged through PR #12 (`eb8185e`). Starter v4
+  (`munsit-starter-eb8185e.zip`) built and verified; awaiting the user's approval before the Card
+  assignment for Mariam.
 - **Latest report:** [phases/phase-02-report.md](phases/phase-02-report.md) (Phase 01: [phases/phase-01-report.md](phases/phase-01-report.md))
 - **Stack decision:** [decisions/ADR-001-frontend-stack.md](decisions/ADR-001-frontend-stack.md) (Approved by the user, 2026-11-12)
 - **Phase 01 commit:** `acf48c9` `chore: initialize project (Phase 01)` on `main`.
@@ -128,8 +130,13 @@ merge the contract PR, then starter v3 from the newest `main` and the Input pack
 22 integration tests added; `pnpm check` (530 tests, build) and `pnpm test:e2e` (117) passed on
 the PR head; dev routes 404 in production; gallery screenshots approved by the user (no visual
 baselines committed). Card contract final (D-C1–D-C5 approved; responsive Figma check, type-level
-static API verified with `tsc`, Recent Lecture Row confirmed non-interactive). Next: merge the
-documentation PR, then a clean starter v4 from the latest `main` and the Card package for Mariam.
+static API verified with `tsc`, Recent Lecture Row confirmed non-interactive). Merged through
+PR #12 (rebase, `eb8185e`, CI green on PR and `main`).
+
+**2026-11-15:** Starter v4 built from `main` at `eb8185e` with `git archive` and verified (TEAM_COLLABORATION
+§8): 196 tracked files byte-identical + `BASELINE_COMMIT.txt` + setup-only `START_HERE.md` (no task
+assigned); in an empty folder `pnpm install --frozen-lockfile` and `pnpm check` passed (530/530,
+build 8/8). Next: the user's approval of starter v4, then the Card V1 assignment for Mariam.
 
 ## Starter package gate (Mariam)
 
