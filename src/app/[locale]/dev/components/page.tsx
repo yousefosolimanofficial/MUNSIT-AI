@@ -8,6 +8,7 @@ import { Input } from "@/shared/ui/Input";
 import { Ltr } from "@/shared/ui/Ltr";
 
 import { DialogDemo } from "./_components/DialogDemo";
+import { SheetDemo } from "./_components/SheetDemo";
 
 /*
  * TEMPORARY internal component gallery (Phase 03, P-5). Not a product screen; English headings
@@ -23,6 +24,10 @@ import { DialogDemo } from "./_components/DialogDemo";
  *
  * Dialog: layout A (alertdialog, danger tile, safe action focused), layout B (close button) and
  * a long body for the overflow check. Interactive client demo in `_components/DialogDemo.tsx`.
+ *
+ * Sheet: title-only options sheet (its Delete row opens a dialog: Sheet → Dialog) and a sheet with
+ * description, actions and a long body. Client demo in `_components/SheetDemo.tsx`. Both overlay
+ * sections sit outside <main> (see below).
  */
 
 export const metadata: Metadata = {
@@ -220,6 +225,16 @@ export default async function DevComponentsPage() {
           Dialog · locale={locale} · Esc, scrim click and the close button close it
         </h2>
         <DialogDemo locale={locale === "en" ? "en" : "ar"} />
+      </section>
+      <section
+        data-testid="gallery-sheet"
+        aria-labelledby="gallery-sheet-title"
+        className="grid gap-md p-lg pt-0"
+      >
+        <h2 id="gallery-sheet-title" className="text-dashboard-title-m" lang="en">
+          Sheet · locale={locale} · Mobile bottom sheet; the options row opens a dialog
+        </h2>
+        <SheetDemo locale={locale === "en" ? "en" : "ar"} />
       </section>
     </>
   );
