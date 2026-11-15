@@ -609,3 +609,21 @@ modified.
 | Widths   | 420 / 440 / 480 / 520 / 560 / 640 (Desktop = Tablet); Mobile 350 (viewport − 40)    | `width` prop, default 480; `max-w-[calc(100vw_-_40px)]`; height ≤ viewport − 40   | FIGMA + D-DL2                 |
 | Motion   | Not designed                                                                        | Enter: opacity + scale 0.98 → 1, slow; exit: reverse, base; reduced: opacity only | **Approved addition** (D-DL4) |
 | Focus    | Not designed (guard annotation `2588:338`: trapped, restored, safe action focused)  | Native `showModal()` inertness; D-B2 ring on the close button                     | D-DL3                         |
+
+## 12. Sheet (Phase 03) — Figma values and normalizations (2026-11-16)
+
+Source: Mobile sheets `2236:972` (More Menu), `2236:919` / `2268:1823` (Upload), `2268:1863`
+(Filter), `2268:1890` (Options), `2454:9042` / `2454:9206` (Folders), `2453:7247` (Add Content),
+read with the Plugin API. Full spec, decisions D-SH1 to D-SH6 and normalizations N-1 to N-5:
+[phases/phase-03-sheet-contract.md](phases/phase-03-sheet-contract.md). Figma is not modified.
+
+| Item      | Figma                                                                              | Implemented value                                                           | Status                        |
+| --------- | ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------- | ----------------------------- |
+| Placement | Mobile only; bottom, full width (`y + h = 844`); tallest leaves 64 at the top      | `inset-x-0 bottom-0 w-full`; height ≤ viewport − 64; no breakpoint logic    | FIGMA + D-SH4                 |
+| Shell     | Obsidian 98%, 1px Sky 18%, radius 28/28/0/0, padding 12/20/28/20, shadow 24/64/55% | as Figma (majority); bottom padding + safe-area inset                       | FIGMA (N-1) + D-SH4           |
+| Scrim     | Void Black 66% (62% in My Lectures)                                                | `backdrop:bg-surface-void-black/66`                                         | N-1                           |
+| Grabber   | 40 × 4, radius 2; White 20% (22% Folders, Muted 60% More Menu)                     | White 20%, `aria-hidden`, no gesture                                        | D-SH2, D-SH3 (N-3)            |
+| Header    | Title M; More Menu close 40, radius 12, Sky 8% / 16%, `x` 18 at inline-end         | as More Menu; close button on every sheet                                   | D-SH3, N-2, N-4               |
+| Actions   | Row gap 12; primary fills, secondary hugs                                          | `flex gap-[12px]`; widths from the children                                 | FIGMA                         |
+| Motion    | Not designed                                                                       | Slide up 320 / down 200, scrim fade, `ease-standard`; reduced: opacity only | **Approved addition** (D-SH5) |
+| Body      | Not designed                                                                       | Focusable region while it overflows                                         | N-5 (WCAG 2.1.1)              |
