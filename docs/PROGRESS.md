@@ -16,6 +16,11 @@ Single resume point. A new session starts by reading this file, the latest phase
   PR #14 (rebase), commits on `main` up to `caac393`, CI green; contract
   [phases/phase-03-badge-contract.md](phases/phase-03-badge-contract.md) (D-BG1, D-BG2 approved).
   Gallery section and browser visual QA deferred until the Card V1 integration.
+  Dialog V1 **approved by the user** (2026-11-16, Yousef, branch `feature/03-dialog-v1`):
+  contract [phases/phase-03-dialog-contract.md](phases/phase-03-dialog-contract.md) final
+  (D-DL1–D-DL6 approved; D-DL4 corrected to entrance + exit motion). Native `<dialog>`, gallery
+  section and `tests/e2e/dev-components-dialog.spec.ts`; `pnpm check` and `test:e2e` green
+  locally. PR open against `main`; awaiting merge approval.
 - **Latest report:** [phases/phase-02-report.md](phases/phase-02-report.md) (Phase 01: [phases/phase-01-report.md](phases/phase-01-report.md))
 - **Stack decision:** [decisions/ADR-001-frontend-stack.md](decisions/ADR-001-frontend-stack.md) (Approved by the user, 2026-11-12)
 - **Phase 01 commit:** `acf48c9` `chore: initialize project (Phase 01)` on `main`.
