@@ -7,6 +7,8 @@ import { Button } from "@/shared/ui/Button";
 import { Input } from "@/shared/ui/Input";
 import { Ltr } from "@/shared/ui/Ltr";
 
+import { DialogDemo } from "./_components/DialogDemo";
+
 /*
  * TEMPORARY internal component gallery (Phase 03, P-5). Not a product screen; English headings
  * are developer notes. Returns 404 in production builds. Remove before Phase 22.
@@ -18,6 +20,9 @@ import { Ltr } from "@/shared/ui/Ltr";
  * Input: Default, Focused, Placeholder, Error, Disabled and Email (`dir="ltr"`) on the four
  * surfaces of Input contract §7. Focused is a live interaction state (`:focus-visible`): the
  * "focused" field is the one to Tab to.
+ *
+ * Dialog: layout A (alertdialog, danger tile, safe action focused), layout B (close button) and
+ * a long body for the overflow check. Interactive client demo in `_components/DialogDemo.tsx`.
  */
 
 export const metadata: Metadata = {
@@ -98,108 +103,124 @@ export default async function DevComponentsPage() {
   const copy = locale === "en" ? INPUT_COPY.en : INPUT_COPY.ar;
 
   return (
-    <main className="grid gap-xl p-lg">
-      <h1 className="text-dashboard-title-l" lang="en">
-        Dev · Components (temporary)
-      </h1>
-      <section data-testid="gallery-button" className="grid gap-md">
-        <h2 className="text-dashboard-title-m" lang="en">
-          Button · locale={locale} · hover, press and Tab to see interaction states
-        </h2>
-        {SURFACES.map((surface) => (
-          <div key={surface.id} className="rounded-lg bg-surface-void-black">
-            <div
-              data-testid={`surface-${surface.id}`}
-              className={`grid gap-sm rounded-lg border border-neutral-slate p-lg ${surface.className}`}
-            >
-              <h3 className="font-mono text-dashboard-meta text-text-secondary" lang="en">
-                {surface.label}
-              </h3>
-              <div className="flex flex-wrap gap-sm">
-                <Button data-testid={`btn-${surface.id}-primary`}>{label}</Button>
-                <Button data-testid={`btn-${surface.id}-primary-disabled`} disabled>
-                  {label}
-                </Button>
-                <Button data-testid={`btn-${surface.id}-secondary`} variant="secondary">
-                  {label}
-                </Button>
-                <Button
-                  data-testid={`btn-${surface.id}-secondary-disabled`}
-                  variant="secondary"
-                  disabled
-                >
-                  {label}
-                </Button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </section>
-      <section data-testid="gallery-input" className="grid gap-md">
-        <h2 className="text-dashboard-title-m" lang="en">
-          Input · locale={locale} · Tab to the &quot;focused&quot; field to see the focus state
-        </h2>
-        {INPUT_SURFACES.map((surface) => (
-          <div key={surface.id} className="rounded-lg bg-surface-void-black">
-            <div
-              data-testid={`input-surface-${surface.id}`}
-              className={`grid gap-sm rounded-lg border border-neutral-slate p-lg ${surface.className}`}
-            >
-              <h3 className="font-mono text-dashboard-meta text-text-secondary" lang="en">
-                {surface.label}
-              </h3>
-              <div className="flex flex-wrap gap-md">
-                <InputCell state="default">
-                  <Input
-                    data-testid={`input-${surface.id}-default`}
-                    label={copy.name}
-                    defaultValue={copy.value}
-                  />
-                </InputCell>
-                <InputCell state="focused (Tab here)">
-                  <Input
-                    data-testid={`input-${surface.id}-focused`}
-                    label={copy.name}
-                    defaultValue={copy.value}
-                  />
-                </InputCell>
-                <InputCell state="placeholder">
-                  <Input
-                    data-testid={`input-${surface.id}-placeholder`}
-                    label={copy.name}
-                    placeholder={copy.placeholder}
-                  />
-                </InputCell>
-                <InputCell state="error">
-                  <Input
-                    data-testid={`input-${surface.id}-error`}
-                    label={copy.name}
-                    error={copy.error}
-                  />
-                </InputCell>
-                <InputCell state="disabled">
-                  <Input
-                    data-testid={`input-${surface.id}-disabled`}
-                    label={copy.name}
-                    defaultValue={copy.value}
+    <>
+      <main className="grid gap-xl p-lg">
+        <h1 className="text-dashboard-title-l" lang="en">
+          Dev · Components (temporary)
+        </h1>
+        <section data-testid="gallery-button" className="grid gap-md">
+          <h2 className="text-dashboard-title-m" lang="en">
+            Button · locale={locale} · hover, press and Tab to see interaction states
+          </h2>
+          {SURFACES.map((surface) => (
+            <div key={surface.id} className="rounded-lg bg-surface-void-black">
+              <div
+                data-testid={`surface-${surface.id}`}
+                className={`grid gap-sm rounded-lg border border-neutral-slate p-lg ${surface.className}`}
+              >
+                <h3 className="font-mono text-dashboard-meta text-text-secondary" lang="en">
+                  {surface.label}
+                </h3>
+                <div className="flex flex-wrap gap-sm">
+                  <Button data-testid={`btn-${surface.id}-primary`}>{label}</Button>
+                  <Button data-testid={`btn-${surface.id}-primary-disabled`} disabled>
+                    {label}
+                  </Button>
+                  <Button data-testid={`btn-${surface.id}-secondary`} variant="secondary">
+                    {label}
+                  </Button>
+                  <Button
+                    data-testid={`btn-${surface.id}-secondary-disabled`}
+                    variant="secondary"
                     disabled
-                  />
-                </InputCell>
-                <InputCell state='email · dir="ltr"'>
-                  <Input
-                    data-testid={`input-${surface.id}-email`}
-                    label={copy.email}
-                    type="email"
-                    dir="ltr"
-                    autoComplete="email"
-                    defaultValue={SAMPLE_EMAIL}
-                  />
-                </InputCell>
+                  >
+                    {label}
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </section>
+        <section data-testid="gallery-input" className="grid gap-md">
+          <h2 className="text-dashboard-title-m" lang="en">
+            Input · locale={locale} · Tab to the &quot;focused&quot; field to see the focus state
+          </h2>
+          {INPUT_SURFACES.map((surface) => (
+            <div key={surface.id} className="rounded-lg bg-surface-void-black">
+              <div
+                data-testid={`input-surface-${surface.id}`}
+                className={`grid gap-sm rounded-lg border border-neutral-slate p-lg ${surface.className}`}
+              >
+                <h3 className="font-mono text-dashboard-meta text-text-secondary" lang="en">
+                  {surface.label}
+                </h3>
+                <div className="flex flex-wrap gap-md">
+                  <InputCell state="default">
+                    <Input
+                      data-testid={`input-${surface.id}-default`}
+                      label={copy.name}
+                      defaultValue={copy.value}
+                    />
+                  </InputCell>
+                  <InputCell state="focused (Tab here)">
+                    <Input
+                      data-testid={`input-${surface.id}-focused`}
+                      label={copy.name}
+                      defaultValue={copy.value}
+                    />
+                  </InputCell>
+                  <InputCell state="placeholder">
+                    <Input
+                      data-testid={`input-${surface.id}-placeholder`}
+                      label={copy.name}
+                      placeholder={copy.placeholder}
+                    />
+                  </InputCell>
+                  <InputCell state="error">
+                    <Input
+                      data-testid={`input-${surface.id}-error`}
+                      label={copy.name}
+                      error={copy.error}
+                    />
+                  </InputCell>
+                  <InputCell state="disabled">
+                    <Input
+                      data-testid={`input-${surface.id}-disabled`}
+                      label={copy.name}
+                      defaultValue={copy.value}
+                      disabled
+                    />
+                  </InputCell>
+                  <InputCell state='email · dir="ltr"'>
+                    <Input
+                      data-testid={`input-${surface.id}-email`}
+                      label={copy.email}
+                      type="email"
+                      dir="ltr"
+                      autoComplete="email"
+                      defaultValue={SAMPLE_EMAIL}
+                    />
+                  </InputCell>
+                </div>
+              </div>
+            </div>
+          ))}
+        </section>
+      </main>
+      {/*
+      Outside <main> on purpose: the Button and Input specs count `main button` (24 / 12 / Tab
+      order). The Dialog gallery is its own labelled region, so those integrated specs stay valid.
+    */}
+      <section
+        data-testid="gallery-dialog"
+        aria-labelledby="gallery-dialog-title"
+        className="grid gap-md p-lg pt-0"
+      >
+        <h2 id="gallery-dialog-title" className="text-dashboard-title-m" lang="en">
+          Dialog · locale={locale} · Esc, scrim click and the close button close it
+        </h2>
+        <DialogDemo locale={locale === "en" ? "en" : "ar"} />
       </section>
-    </main>
+    </>
   );
 }
