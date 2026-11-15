@@ -137,13 +137,14 @@ type WithoutEventHandlers<P> = { [K in keyof P as K extends `on${string}` ? neve
 
 /** Attributes that would make the static Card focusable, editable or re-roled (D-C4). */
 type InteractiveAttribute =
-  | "role"
-  | "tabIndex"
-  | "autoFocus"
-  | "accessKey"
-  | "contentEditable"
-  | "draggable"
-  | "dangerouslySetInnerHTML";
+  "role" | "tabIndex" | "autoFocus" | "accessKey" | "contentEditable" | "draggable";
+
+/**
+ * Content-injection safety restriction, not an interaction rule: Card content comes only from
+ * `children` (React-escaped). Raw HTML would bypass the sanitizing rule for rendered rich content
+ * (CLAUDE.md, Security).
+ */
+type UnsafeContentAttribute = "dangerouslySetInnerHTML";
 
 /** `padding` exists only on `surface`; `inset` has fixed padding. */
 type CardVariantProps =
@@ -157,25 +158,39 @@ export type CardProps<E extends CardElement = "div"> = CardVariantProps & {
   children?: ReactNode;
 } & Omit<
     WithoutEventHandlers<ComponentPropsWithRef<E>>,
-    "as" | "className" | "children" | InteractiveAttribute
+    "as" | "className" | "children" | InteractiveAttribute | UnsafeContentAttribute
   >;
 
 export function Card<E extends CardElement = "div">(props: CardProps<E>): ReactNode;
 ```
 
 - **Kept, per element:** `ComponentPropsWithRef<E>` supplies each element's own attributes and
-  ref type. `li` accepts `value` and needs an `HTMLLIElement` ref; `div` rejects `value` and needs
-  an `HTMLDivElement` ref; `section`/`article` take `HTMLElement` refs. Global attributes (`id`,
+  ref type:
+
+  | `as`      | Ref type         | Element-specific       |
+  | --------- | ---------------- | ---------------------- |
+  | `div`     | `HTMLDivElement` | rejects `value`        |
+  | `section` | `HTMLElement`    | global attributes only |
+  | `article` | `HTMLElement`    | global attributes only |
+  | `li`      | `HTMLLIElement`  | accepts `value`        |
+
+  There is **no `HTMLArticleElement`** (or `HTMLSectionElement`) in the DOM: the HTML standard and
+  both `lib.dom.d.ts` and `@types/react` type `<article>` and `<section>` as `HTMLElement`. As a
+  consequence of React's typings (not a Card choice), a ref to any `HTMLElement` subtype is
+  assignable on `section`/`article`; a non-HTML ref (for example `SVGSVGElement`) is rejected. Global attributes (`id`,
   `lang`, `dir`, `title`, `hidden`, `style`), every `aria-*` and every `data-*` stay. React 19
   passes `ref` as a prop, so no `forwardRef`.
-- **Rejected at compile time:** every `on*` event handler; `role`, `tabIndex`, `autoFocus`,
-  `accessKey`, `contentEditable`, `draggable`, `dangerouslySetInnerHTML`; any other `as`
+
+- **Rejected at compile time:** every `on*` event handler; the interactive attributes `role`,
+  `tabIndex`, `autoFocus`, `accessKey`, `contentEditable`, `draggable` (static-only, D-C4);
+  `dangerouslySetInnerHTML` (content-injection safety, separate from D-C4); any other `as`
   (`"button"`, `"a"`, …); `padding` with `variant="inset"`; unknown variants or paddings; a ref of
-  the wrong element type.
+  the wrong element type (`div`/`li`) or a non-HTML ref (`section`/`article`).
 - **Verified 2026-11-15:** this exact type was compiled with the project's `tsc` (TypeScript 6
-  strict) in a throwaway file (deleted, not committed): 7 accepted usages compiled, 12
-  `@ts-expect-error` rejections held, and a deliberately unused `@ts-expect-error` failed with
-  TS2578, proving the mechanism.
+  strict) in throwaway files (deleted, not committed): 7 accepted usages compiled (including an
+  explicit ref for each of the four elements and a callback ref), 15 `@ts-expect-error`
+  rejections held, and a deliberately unused `@ts-expect-error` failed with TS2578, proving the
+  mechanism.
 - No title, header, footer, media, `interactive` or `href` props.
 
 ## 10. Delegation and instructions for Mariam
@@ -214,14 +229,17 @@ allowed and deleted before packaging.
    (`tsc --noEmit`; `tsconfig.json` includes `**/*.tsx`), which `corepack pnpm check` and the CI
    `check` job run. Each rejection uses `// @ts-expect-error`, so a rejection that stops failing
    breaks the build (TS2578). Required cases:
-   - **Accepted:** `<Card as="li" value={2} ref={createRef<HTMLLIElement>()} />` inside a `ul`;
+   - **Accepted (one explicit ref per element):**
      `<Card ref={createRef<HTMLDivElement>()} />`;
      `<Card as="section" ref={createRef<HTMLElement>()} aria-label="…" />`;
-     `aria-*`, `data-*`, `id` on each element.
+     `<Card as="article" ref={createRef<HTMLElement>()} />` (the article ref type; there is no
+     `HTMLArticleElement`, §9); `<Card as="li" value={2} ref={createRef<HTMLLIElement>()} />`
+     inside a `ul`; a callback ref `(node: HTMLDivElement | null) => …`; `aria-*`, `data-*`, `id`.
    - **Rejected:** `onClick`, `onKeyDown`, `onPointerDown` (one each, on different elements);
-     `role="button"`; `tabIndex={0}`; `as="button"` and `as="a"`; `value` on the default `div`;
-     `variant="inset" padding="md"`; `padding="sm"`; an `HTMLLIElement` ref on a `div` and an
-     `HTMLDivElement` ref on an `li`.
+     `role="button"`; `tabIndex={0}`; `dangerouslySetInnerHTML`; `as="button"` and `as="a"`;
+     `value` on the default `div`; `variant="inset" padding="md"`; `padding="sm"`; an
+     `HTMLLIElement` ref on a `div`; an `HTMLDivElement` ref on an `li`; an `SVGSVGElement` ref on
+     `article` and on `section`.
 8. jest-axe: `surface` and `inset` × `rtl`/`ltr` = 4 cases, no violations.
 
 **Integration (Yousef, `/dev/components`):** computed fill, border, radius and padding per variant
