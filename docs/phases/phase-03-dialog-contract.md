@@ -219,6 +219,12 @@ layer. Component tests therefore stub `showModal`/`close` per file (set/remove `
 - RTL and LTR: logical properties only; icon tile at inline-start, close button at inline-end;
   numerals and Latin runs isolated by the consumer (`Ltr`).
 - Reduced motion: no scale; opacity fades only (§5.1).
+- **Keyboard scrolling (fix 2026-11-16, Sheet V1 branch):** while the body overflows it is
+  focusable (`tabIndex=0`), a `region` named by the dialog title, with an inset D-B2 focus
+  ring (`internal/useScrollableFocus`, WCAG 2.1.1, axe `scrollable-region-focusable`). A body
+  that fits adds no Tab stop. Initial focus, API, styling, motion and layout are unchanged.
+  Browser tests: overflowing body reached by Tab after the close button, scrolled with
+  PageDown, focus back on the trigger after Esc; a fitting body is not a Tab stop.
 
 ## 7. Required tests
 
