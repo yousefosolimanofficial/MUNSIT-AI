@@ -88,7 +88,7 @@ Figma may render Latin inside a Cairo text layer in Cairo; the code follows the 
 
 #### 0.4.1 Implemented as tokens — `Dashboard/*` (application default)
 
-Read 2026-11-13 on Dashboard Desktop `2211:74`, Mobile `2224:372`, Tablet drawer `2242:1272`;
+Read 2026-11-13 on Dashboard Desktop `2211:74`, Tablet `2224:372`, Tablet drawer `2242:1272`;
 identical to Design System Reference §2.1. Utility = `text-dashboard-<name>`.
 
 | Figma style           | Family     | Weight       | Size / LH (px) | Tracking | CSS token                             | Source |
@@ -115,7 +115,7 @@ Design System Reference §2.2 (FIGMA, naming card). Bound occurrences found 2026
 | Figma style     | Family | Weight      | Size | LH   | Tracking | Bound on                                            |
 | --------------- | ------ | ----------- | ---- | ---- | -------- | --------------------------------------------------- |
 | Heading / Large | Inter  | Medium 500  | 56   | 117% | 0        | Design System page `10:4`                           |
-| Heading / Small | Inter  | Medium 500  | 24   | 115% | 0        | Dashboard Desktop `2211:74`, Mobile `2224:372`      |
+| Heading / Small | Inter  | Medium 500  | 24   | 115% | 0        | Dashboard Desktop `2211:74`, Tablet `2224:372`      |
 | Body / Small    | Inter  | Regular 400 | 14   | 140% | 0        | Design System page `10:4`                           |
 | UI / Caption    | Inter  | Regular 400 | 12   | 140% | 0        | Design System page `10:4`, Landing Mobile `200:683` |
 
@@ -204,7 +204,7 @@ bound styles are verified in each module's phase before use.
 | Keyframe animations on Statistic Card set `2210:187`         | None                                                        | FIGMA |
 | Keyframe animations on Dashboard Desktop `2211:74`           | None                                                        | FIGMA |
 | Keyframe animations on Dashboard Tablet drawer `2242:1272`   | None                                                        | FIGMA |
-| Keyframe animations on Dashboard Mobile `2224:372`           | None                                                        | FIGMA |
+| Keyframe animations on Dashboard Tablet `2224:372`           | None                                                        | FIGMA |
 | Prototype transition durations / easing (Smart Animate etc.) | Not exposed by the read tools used; no durations in Figma   | FIGMA |
 | Durations and easing used in code                            | Taken from the approved motion tokens below, not from Figma | —     |
 
@@ -531,17 +531,25 @@ Surfaces measured: Void Black, the Settings card (Obsidian 90% over Void), Obsid
 Enforced by `src/design-system/contrast.test.ts` (WCAG arithmetic from token values; translucent
 borders composited on the Ink fill). Rendered values are re-checked in Chromium at integration.
 
-## 8. Card surfaces (Phase 03) — Figma values read 2026-11-15 (contract draft)
+## 8. Card surfaces (Phase 03) — final values and deviations (2026-11-15)
 
-Source frames (no Card component set exists): Recent Activity Card `2220:368`, Recent Lectures
-Card `2482:1488`, Settings Group `2463:3514`, Recent Lecture Row `2482:1484`. Full spec and open
-decisions D-C1–D-C5: [phases/phase-03-card-contract.md](phases/phase-03-card-contract.md).
+Source frames, read on Desktop / Tablet / Mobile (no Card component set exists): Recent Activity
+Card `2220:368` / `2224:563` / `2238:893`, Recent Lectures Card `2482:1488` / `2482:1526` /
+`2482:1564`, Settings Group `2463:3514` / `2463:3924` / `2463:4261`, Recent Lecture Row
+`2482:1489` / `2482:1527` / `2482:1565`. Full spec:
+[phases/phase-03-card-contract.md](phases/phase-03-card-contract.md). Figma is not modified.
 
-| Item                | Figma                                                         | Status           |
-| ------------------- | ------------------------------------------------------------- | ---------------- |
-| Content card fill   | Obsidian 88% (Dashboard); Obsidian 90% (Settings Group)       | FIGMA; D-C1 open |
-| Content card border | 1px Electric Sky 14% (Dashboard); 12% (Settings Group)        | FIGMA; D-C2 open |
-| Radius              | 20 (`--radius-xl`)                                            | FIGMA            |
-| Padding             | 20 (most cards); 16 (Recent Lectures list card)               | FIGMA; D-C3 open |
-| Inset row           | White 3% fill, 1px Sky 12% border, radius 14, padding 12 / 16 | FIGMA; D-C5 open |
-| Tablet / Mobile     | Card padding not re-read                                      | NOT VERIFIED     |
+| Item                     | Figma (identical on all three breakpoints)                                 | Implemented value                                     | Status                                              |
+| ------------------------ | -------------------------------------------------------------------------- | ----------------------------------------------------- | --------------------------------------------------- |
+| `surface` fill           | Obsidian 88% (Dashboard cards); Obsidian **90%** (Settings Group)          | `bg-surface-obsidian/88`                              | **Intentional deviation** for Settings Group (D-C1) |
+| `surface` border         | 1px Sky 14% (Dashboard cards); Sky **12%** (Settings Group)                | `border-accent-electric-sky/14`                       | **Intentional deviation** for Settings Group (D-C2) |
+| `surface` radius         | 20                                                                         | `rounded-xl` (`--radius-xl`)                          | FIGMA                                               |
+| `surface` padding        | 20 (most cards, Settings Group); 16 (Recent Lectures Card)                 | `p-lg` (default) / `p-md`                             | FIGMA (D-C3)                                        |
+| `inset` fill / border    | White 3% / 1px Sky 12%                                                     | `bg-text-primary/3` / `border-accent-electric-sky/12` | FIGMA (D-C2, D-C5); white = `text-primary`          |
+| `inset` radius / padding | 14 / 12 block, 16 inline                                                   | `rounded-[14px]` (local) / `py-sm px-md`              | FIGMA                                               |
+| Gaps inside cards        | 16 (Activity), 10 (Lectures), 14 (Settings), row 16 → 10 stacked on Mobile | Caller layout, not part of Card                       | FIGMA                                               |
+
+Deviation effect: fill `#101113` → `#0f1012`; border 1.26 → 1.31:1 on Void Black. Both are
+decorative boundaries of a static container (exempt from WCAG 1.4.11). Text contrast on the
+`surface` and `inset` fills: contract §7 (Text / Muted fails for text and is not used there).
+Open: Settings shortcut links (`2463:3046`, radius 16, interactive), contract Q-1.
