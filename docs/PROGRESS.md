@@ -12,7 +12,10 @@ Single resume point. A new session starts by reading this file, the latest phase
   contract **final** [phases/phase-03-card-contract.md](phases/phase-03-card-contract.md)
   (D-C1–D-C5 approved 2026-11-15), merged through PR #12 (`eb8185e`). Starter v4
   (`munsit-starter-eb8185e.zip`) built and verified; awaiting the user's approval before the Card
-  assignment for Mariam.
+  assignment for Mariam. StatusBadge V1 **done** (2026-11-15, Yousef, parallel to Card V1):
+  PR #14 (rebase), commits on `main` up to `caac393`, CI green; contract
+  [phases/phase-03-badge-contract.md](phases/phase-03-badge-contract.md) (D-BG1, D-BG2 approved).
+  Gallery section and browser visual QA deferred until the Card V1 integration.
 - **Latest report:** [phases/phase-02-report.md](phases/phase-02-report.md) (Phase 01: [phases/phase-01-report.md](phases/phase-01-report.md))
 - **Stack decision:** [decisions/ADR-001-frontend-stack.md](decisions/ADR-001-frontend-stack.md) (Approved by the user, 2026-11-12)
 - **Phase 01 commit:** `acf48c9` `chore: initialize project (Phase 01)` on `main`.
@@ -137,6 +140,11 @@ PR #12 (rebase, `eb8185e`, CI green on PR and `main`).
 §8): 196 tracked files byte-identical + `BASELINE_COMMIT.txt` + setup-only `START_HERE.md` (no task
 assigned); in an empty folder `pnpm install --frozen-lockfile` and `pnpm check` passed (530/530,
 build 8/8). Next: the user's approval of starter v4, then the Card V1 assignment for Mariam.
+
+**2026-11-15:** StatusBadge V1 merged (PR #14, `caac393`): four statuses (ready, processing,
+pending, failed), static, tokens only; 22 tests, `pnpm check` 552/552, CI green. Dashboard chips
+stay with the Dashboard features (D-BG2). `/dev/components` Badge section and browser QA follow the
+Card V1 integration.
 
 ## Starter package gate (Mariam)
 
