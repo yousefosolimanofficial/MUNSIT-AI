@@ -76,7 +76,7 @@ interface Measured {
   border: RGB;
   borderOnInk: RGB;
   value: RGB;
-  placeholder: RGB;
+  placeholder: RGB | null;
   label: RGB;
   message: RGB | null;
   expected: Record<string, RGB>;
@@ -141,7 +141,9 @@ async function measure(input: Locator, expected: Record<string, string>): Promis
       border: paint([...stack, s.borderTopColor]),
       borderOnInk: paint([...stack, ink, s.borderTopColor]),
       value: paint([...stack, ink, s.color]),
-      placeholder: paint([...stack, ink, getComputedStyle(el, "::placeholder").color]),
+      placeholder: el.hasAttribute("placeholder")
+        ? paint([...stack, ink, getComputedStyle(el, "::placeholder").color])
+        : null,
       label: paint([...stack, ls.color]),
       message: messageEl ? paint([...stack, getComputedStyle(messageEl).color]) : null,
       expected: Object.fromEntries(
@@ -275,11 +277,13 @@ for (const locale of LOCALES) {
           const ratios: Record<string, number> = {
             label: contrast(m.label, m.surface),
             value: contrast(m.value, m.ink),
-            placeholder: contrast(m.placeholder, m.ink),
+
             "border/surface": contrast(m.border, m.surface),
             "border/ink": contrast(m.borderOnInk, m.ink),
           };
           if (m.message) ratios.message = contrast(m.message, m.surface);
+          if (m.placeholder) ratios.placeholder = contrast(m.placeholder, m.ink);
+          expect(m.placeholder !== null, where).toBe(state === "placeholder");
           report.push(
             `${where}: ${Object.entries(ratios)
               .map(([k, v]) => `${k} ${v.toFixed(2)}`)
