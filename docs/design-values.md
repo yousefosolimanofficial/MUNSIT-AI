@@ -552,4 +552,7 @@ Card `2220:368` / `2224:563` / `2238:893`, Recent Lectures Card `2482:1488` / `2
 Deviation effect: fill `#101113` → `#0f1012`; border 1.26 → 1.31:1 on Void Black. Both are
 decorative boundaries of a static container (exempt from WCAG 1.4.11). Text contrast on the
 `surface` and `inset` fills: contract §7 (Text / Muted fails for text and is not used there).
+Recent Lecture Row (`2482:1484`, variants `Size=Wide|Compact` only): no prototype `reactions`
+on the set, its instances or descendants on any breakpoint, and no hover/pressed variant; its
+action is the inner Secondary Button "فتح". The row is a static `inset` surface (contract §4).
 Open: Settings shortcut links (`2463:3046`, radius 16, interactive), contract Q-1.

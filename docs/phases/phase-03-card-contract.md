@@ -1,8 +1,9 @@
 # Component contract — Card surfaces (Phase 03, Mariam delivery 3)
 
-- **Status:** **Final draft — awaiting the user's approval** (2026-11-15). D-C1, D-C2, D-C4
-  approved; D-C3 and D-C5 approved with conditions, now met (§12). Mariam starts only after this
-  contract is approved, merged, and she has received the new starter (§10).
+- **Status:** **Final — D-C1 to D-C5 approved by the user** (2026-11-15); API made
+  non-interactive at the type level and the Recent Lecture Row interaction verified (§4, §9, §12).
+  Pending only the documentation PR review and merge. Mariam starts only after that merge and a
+  clean starter from the latest `main` (§10).
 - **Figma:** file `Avyn9kL0drXepQyTXTLXXb`, read read-only via the Figma MCP on 2026-11-15 on
   Desktop, Tablet and Mobile. Every value labelled FIGMA was read from the node itself. Figma is
   not modified. There is **no Card component set** in Figma (a design-system search for "card"
@@ -66,6 +67,23 @@ Static only (D-C4): no hover, pressed, focus, disabled, shadow, transition or an
 clickable card (for example the Settings shortcut links, Q-1) is decided with the component that
 needs it.
 
+**Recent Lecture Row is not clickable as a whole (FIGMA evidence, read 2026-11-15 with the Plugin
+API, read-only):**
+
+- Component set `Dashboard / Recent Lecture Row` `2482:1484` has one variant property, `Size`
+  (`Wide` `2482:1464`, 640×68; `Compact` `2482:1474`, 318×106). There is no Hover, Pressed or
+  Focused variant.
+- `reactions` are empty on the component set, on the instances `2482:1489` (Desktop),
+  `2482:1527` (Tablet) and `2482:1565` (Mobile), on the three Recent Lectures Cards, and on every
+  descendant of them. No prototype interaction exists anywhere in the row.
+- The component description says: "Open action navigates to Lecture Details (cross-page, not
+  linked in Figma)". The open action is the Secondary Button "فتح" inside the row (84×40), not the
+  row.
+
+So the row is an `inset` Card with a real `<a>` (Lecture Details link styled as the Secondary
+Button) or `Button` inside it, owned by the Dashboard module. Card itself is never the
+interactive control, and it never takes a click handler (§9).
+
 ## 5. Behavior
 
 - Server Component, no `"use client"`, no state, no effects.
@@ -114,6 +132,19 @@ import type { ComponentPropsWithRef, ReactNode } from "react";
 
 type CardElement = "div" | "section" | "article" | "li";
 
+/** Removes every React event handler (`onClick`, `onKeyDown`, `onPointerDown`, …). */
+type WithoutEventHandlers<P> = { [K in keyof P as K extends `on${string}` ? never : K]: P[K] };
+
+/** Attributes that would make the static Card focusable, editable or re-roled (D-C4). */
+type InteractiveAttribute =
+  | "role"
+  | "tabIndex"
+  | "autoFocus"
+  | "accessKey"
+  | "contentEditable"
+  | "draggable"
+  | "dangerouslySetInnerHTML";
+
 /** `padding` exists only on `surface`; `inset` has fixed padding. */
 type CardVariantProps =
   { variant?: "surface"; padding?: "lg" | "md" } | { variant: "inset"; padding?: never };
@@ -124,17 +155,28 @@ export type CardProps<E extends CardElement = "div"> = CardVariantProps & {
   /** Layout only, merged last. Never color, radius, border or padding. */
   className?: string;
   children?: ReactNode;
-} & Omit<ComponentPropsWithRef<E>, "as" | "className" | "children">;
+} & Omit<
+    WithoutEventHandlers<ComponentPropsWithRef<E>>,
+    "as" | "className" | "children" | InteractiveAttribute
+  >;
 
 export function Card<E extends CardElement = "div">(props: CardProps<E>): ReactNode;
 ```
 
-- `ComponentPropsWithRef<E>` keeps each element's own attributes and ref type: `li` accepts
-  `value` and an `HTMLLIElement` ref; `div` rejects `value`; `section`/`article` accept the global
-  attributes. React 19 passes `ref` as a prop, so no `forwardRef`.
-- Rejected at compile time: any other `as` (`"button"`, `"a"`, …), `padding` with `variant="inset"`,
-  and unknown variants or paddings.
-- No title, header, footer, media, `interactive`, `href` or `onClick`-specific props.
+- **Kept, per element:** `ComponentPropsWithRef<E>` supplies each element's own attributes and
+  ref type. `li` accepts `value` and needs an `HTMLLIElement` ref; `div` rejects `value` and needs
+  an `HTMLDivElement` ref; `section`/`article` take `HTMLElement` refs. Global attributes (`id`,
+  `lang`, `dir`, `title`, `hidden`, `style`), every `aria-*` and every `data-*` stay. React 19
+  passes `ref` as a prop, so no `forwardRef`.
+- **Rejected at compile time:** every `on*` event handler; `role`, `tabIndex`, `autoFocus`,
+  `accessKey`, `contentEditable`, `draggable`, `dangerouslySetInnerHTML`; any other `as`
+  (`"button"`, `"a"`, …); `padding` with `variant="inset"`; unknown variants or paddings; a ref of
+  the wrong element type.
+- **Verified 2026-11-15:** this exact type was compiled with the project's `tsc` (TypeScript 6
+  strict) in a throwaway file (deleted, not committed): 7 accepted usages compiled, 12
+  `@ts-expect-error` rejections held, and a deliberately unused `@ts-expect-error` failed with
+  TS2578, proving the mechanism.
+- No title, header, footer, media, `interactive` or `href` props.
 
 ## 10. Delegation and instructions for Mariam
 
@@ -164,10 +206,22 @@ allowed and deleted before packaging.
 4. No hex, no left/right utilities, no `hover:`, `focus:`, `active:`, `shadow`, `transition`,
    `animate` or transform classes.
 5. Native attributes (`id`, `aria-labelledby`, `data-*`, `li` `value`) and children pass through;
-   `ref` reaches the element; no role is added.
+   `ref` reaches the element (runtime: `ref.current` is an `HTMLLIElement` for `as="li"`); no role
+   or tabindex is rendered.
 6. `className` is merged last.
-7. Type tests (checked by `pnpm typecheck`): `// @ts-expect-error` on `as="button"`, on
-   `variant="inset" padding="md"`, and on `value` with `as="div"`.
+7. **Compile-time tests**, in `Card.test.tsx` as JSX inside a never-rendered function or a
+   `const` (so they cost nothing at runtime). They run through `corepack pnpm typecheck`
+   (`tsc --noEmit`; `tsconfig.json` includes `**/*.tsx`), which `corepack pnpm check` and the CI
+   `check` job run. Each rejection uses `// @ts-expect-error`, so a rejection that stops failing
+   breaks the build (TS2578). Required cases:
+   - **Accepted:** `<Card as="li" value={2} ref={createRef<HTMLLIElement>()} />` inside a `ul`;
+     `<Card ref={createRef<HTMLDivElement>()} />`;
+     `<Card as="section" ref={createRef<HTMLElement>()} aria-label="…" />`;
+     `aria-*`, `data-*`, `id` on each element.
+   - **Rejected:** `onClick`, `onKeyDown`, `onPointerDown` (one each, on different elements);
+     `role="button"`; `tabIndex={0}`; `as="button"` and `as="a"`; `value` on the default `div`;
+     `variant="inset" padding="md"`; `padding="sm"`; an `HTMLLIElement` ref on a `div` and an
+     `HTMLDivElement` ref on an `li`.
 8. jest-axe: `surface` and `inset` × `rtl`/`ltr` = 4 cases, no violations.
 
 **Integration (Yousef, `/dev/components`):** computed fill, border, radius and padding per variant
@@ -176,13 +230,13 @@ no overflow.
 
 ## 12. Decisions
 
-| ID   | Decision (user, 2026-11-15)                                           | Condition and how it is met                                                                             |
-| ---- | --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| D-C1 | **Approved:** Obsidian 88% as the one `surface` fill                  | Settings Group 90% recorded as an intentional deviation (§2, design-values §8)                          |
-| D-C2 | **Approved:** Sky 14% for `surface`, Sky 12% for `inset`              | Settings Group 12% border also normalized to 14% on `surface` (same deviation record)                   |
-| D-C3 | **Approved with condition:** padding `lg` 20 and `md` 16              | Tablet and Mobile inspected: padding identical on all breakpoints (§1); both are existing tokens        |
-| D-C4 | **Approved:** static only                                             | No hover, motion or interactive behavior (§4, §8)                                                       |
-| D-C5 | **Approved with condition:** `inset` and a restricted, type-safe `as` | `as` limited to four elements, attributes and ref typed per element, `inset` cannot take `padding` (§9) |
+| ID   | Decision (user, 2026-11-15)                                           | Condition and how it is met                                                                                                                                                      |
+| ---- | --------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| D-C1 | **Approved:** Obsidian 88% as the one `surface` fill                  | Settings Group 90% recorded as an intentional deviation (§2, design-values §8)                                                                                                   |
+| D-C2 | **Approved:** Sky 14% for `surface`, Sky 12% for `inset`              | Settings Group 12% border also normalized to 14% on `surface` (same deviation record)                                                                                            |
+| D-C3 | **Approved with condition:** padding `lg` 20 and `md` 16              | Tablet and Mobile inspected: padding identical on all breakpoints (§1); both are existing tokens                                                                                 |
+| D-C4 | **Approved:** static only                                             | No hover or motion (§4, §8); event handlers, `role` and `tabIndex` rejected by the type (§9); Recent Lecture Row verified non-interactive, action stays in its inner Button (§4) |
+| D-C5 | **Approved with condition:** `inset` and a restricted, type-safe `as` | `as` limited to four elements, attributes and ref typed per element, `inset` cannot take `padding`; verified with `tsc` (§9)                                                     |
 
 **Open items (not blocking V1):**
 
@@ -199,7 +253,8 @@ no overflow.
 
 - [ ] `DELIVERY.md` has the full baseline hash. Only `Card.tsx` and `Card.test.tsx` changed.
 - [ ] Classes per §2 with tokens, opacity modifiers and named local constants. No hex.
-- [ ] Types per §9: restricted `as`, per-element attributes and ref, no `padding` on `inset`.
+- [ ] Types per §9: restricted `as`, per-element attributes and ref, no `padding` on `inset`, no
+      event handlers, `role` or `tabIndex`; the §11.7 compile-time tests pass in `pnpm typecheck`.
 - [ ] No hover, focus, shadow, motion, role or internal layout.
 - [ ] Logical utilities only. RTL and LTR verified.
 - [ ] No new dependencies. Real results for typecheck, lint, format:check, test and build.

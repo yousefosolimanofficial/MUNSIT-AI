@@ -9,7 +9,8 @@ Single resume point. A new session starts by reading this file, the latest phase
   Mariam delivery integrated through PR #8 (rebase), commits `a1dc0f7`..`9eebeba`, CI green on
   PR and `main`. Input V1 **done** (2026-11-15): Mariam delivery integrated through PR #11
   (rebase), commits `374b68e`..`0f77aeb`, CI green on PR and `main`. Next: Card surfaces V1 —
-  contract **draft** [phases/phase-03-card-contract.md](phases/phase-03-card-contract.md).
+  contract **final** [phases/phase-03-card-contract.md](phases/phase-03-card-contract.md)
+  (D-C1–D-C5 approved 2026-11-15), in documentation PR review.
 - **Latest report:** [phases/phase-02-report.md](phases/phase-02-report.md) (Phase 01: [phases/phase-01-report.md](phases/phase-01-report.md))
 - **Stack decision:** [decisions/ADR-001-frontend-stack.md](decisions/ADR-001-frontend-stack.md) (Approved by the user, 2026-11-12)
 - **Phase 01 commit:** `acf48c9` `chore: initialize project (Phase 01)` on `main`.
@@ -126,8 +127,9 @@ merge the contract PR, then starter v3 from the newest `main` and the Input pack
 `shared-ui-input` v1 applied verbatim (SHA-256 verified); `/dev/components` Input section and
 22 integration tests added; `pnpm check` (530 tests, build) and `pnpm test:e2e` (117) passed on
 the PR head; dev routes 404 in production; gallery screenshots approved by the user (no visual
-baselines committed). Next: Card contract review and decisions, then starter v4 and the Card
-package for Mariam.
+baselines committed). Card contract final (D-C1–D-C5 approved; responsive Figma check, type-level
+static API verified with `tsc`, Recent Lecture Row confirmed non-interactive). Next: merge the
+documentation PR, then a clean starter v4 from the latest `main` and the Card package for Mariam.
 
 ## Starter package gate (Mariam)
 
