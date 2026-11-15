@@ -572,3 +572,21 @@ Full spec (D-BG1 and D-BG2 approved 2026-11-15):
 | Geometry        | Height 30, padding 5 / 10, gap 6, radius 8, 1px border, dot 6        | `py-[5px] px-[10px] gap-[6px] rounded-sm border` | FIGMA          |
 | Label           | `Dashboard/Caption` (Cairo Regular 12/18), single line; dot at start | `text-dashboard-caption whitespace-nowrap`       | FIGMA          |
 | Dashboard chips | Standalone frames (radius 8–10, height 24–28, no border)             | Not part of Badge V1                             | D-BG2 approved |
+
+## 10. Tabs (Phase 03) — Figma values and approved deviations (2026-11-15)
+
+Source: `Lecture Tab` `2278:322` and `Lecture Tab Compact` `2293:679` (page 05), read with the
+Plugin API. Full spec and decisions D-T1 to D-T6:
+[phases/phase-03-tabs-contract.md](phases/phase-03-tabs-contract.md). Figma is not modified.
+
+| Item                                           | Figma                                                                   | Implemented value                                                                | Status                                  |
+| ---------------------------------------------- | ----------------------------------------------------------------------- | -------------------------------------------------------------------------------- | --------------------------------------- |
+| `default` size                                 | 44 high, padding-inline 16, gap 8, radius 12, Body Medium, icon 18      | `h-[44px] px-md gap-[8px] rounded-md`                                            | FIGMA                                   |
+| `default` states                               | Default none / Text Secondary; Hover White 5%; Active Sky 12% + Sky 32% | as Figma; hover only on this size                                                | FIGMA                                   |
+| `compact` size                                 | 58 high, icon over Caption, padding 8 / 6, gap 4, radius 12             | `h-[58px] flex-col py-[8px] px-[6px] gap-[4px]`                                  | FIGMA                                   |
+| `compact` states                               | Default White 3% + Sky 12%; Active Sky 12% + Sky 50%, Sky label         | as Figma                                                                         | FIGMA                                   |
+| List layout                                    | Desktop 6 equal, gap 8; Tablet compact 6 equal, gap 4; Mobile 2 × 3     | `flex-1` tabs; page passes `size` and the grid (D-T3)                            | FIGMA                                   |
+| Disabled                                       | Whole list at 50% while loading (`2584:1327`)                           | `opacity-50`, tabs `disabled`, `aria-disabled` on list                           | FIGMA                                   |
+| Focus-visible                                  | Not designed                                                            | Button D-B2 ring                                                                 | **Deviation** (D-T2)                    |
+| Selected-state cue                             | Color only                                                              | Active label `underline underline-offset-4`                                      | **Deviation** (D-T6)                    |
+| Filter row (Favorites, Folders, Question Bank) | 42 high, count pill; active count Sky on Sky 20% (4.18:1 on card)       | Not implemented: one shared list, not tabs; active count white when built (D-T5) | Deferred to the modules (contract §1.1) |
