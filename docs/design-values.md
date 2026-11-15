@@ -530,3 +530,18 @@ Source: Figma `Settings / Profile Input` `2461:591`, read 2026-11-14. Full spec:
 Surfaces measured: Void Black, the Settings card (Obsidian 90% over Void), Obsidian and Graphite.
 Enforced by `src/design-system/contrast.test.ts` (WCAG arithmetic from token values; translucent
 borders composited on the Ink fill). Rendered values are re-checked in Chromium at integration.
+
+## 8. Card surfaces (Phase 03) — Figma values read 2026-11-15 (contract draft)
+
+Source frames (no Card component set exists): Recent Activity Card `2220:368`, Recent Lectures
+Card `2482:1488`, Settings Group `2463:3514`, Recent Lecture Row `2482:1484`. Full spec and open
+decisions D-C1–D-C5: [phases/phase-03-card-contract.md](phases/phase-03-card-contract.md).
+
+| Item                | Figma                                                         | Status           |
+| ------------------- | ------------------------------------------------------------- | ---------------- |
+| Content card fill   | Obsidian 88% (Dashboard); Obsidian 90% (Settings Group)       | FIGMA; D-C1 open |
+| Content card border | 1px Electric Sky 14% (Dashboard); 12% (Settings Group)        | FIGMA; D-C2 open |
+| Radius              | 20 (`--radius-xl`)                                            | FIGMA            |
+| Padding             | 20 (most cards); 16 (Recent Lectures list card)               | FIGMA; D-C3 open |
+| Inset row           | White 3% fill, 1px Sky 12% border, radius 14, padding 12 / 16 | FIGMA; D-C5 open |
+| Tablet / Mobile     | Card padding not re-read                                      | NOT VERIFIED     |
