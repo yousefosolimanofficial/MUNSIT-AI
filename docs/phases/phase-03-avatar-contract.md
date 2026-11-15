@@ -238,6 +238,6 @@ file needs to change. The gallery section is Yousef's.
 | D-AV5 | **Approved with API refinement:** meaningful avatars require a name; decorative avatars may omit it; nameless placeholders are decorative; no duplicate announcements | §4, §6            |
 | D-AV6 | **Approved:** no motion; the interactive trigger owns motion and focus                                                                                                | §7                |
 
-**Confirmation requested:** the D-AV1 verification needed the Electric Sky stop moved to −80%
-(§2.4). This uses only existing tokens and changes the lightest corner from Electric Sky to
-`rgb(57,107,206)`. Confirm at PR review.
+**D-AV1 gradient confirmed by the user (2026-11-16):** Electric Sky −80%, Cobalt Edge 71%, 135°,
+white initials, minimum calculated contrast 5.01:1 — an intentional accessibility normalization
+from Figma (N-1). Rendered contrast is verified at integration and browser QA.
