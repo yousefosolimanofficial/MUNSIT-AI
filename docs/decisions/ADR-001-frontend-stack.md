@@ -74,6 +74,12 @@ Radix UI primitives, `class-variance-authority`, `tailwind-merge` (Phase 03); Ta
 (first form); MSW (only if mock data is authorized). Testing Library, jsdom, `jest-axe` and
 `@axe-core/playwright` were added in Phase 03 (above).
 
+**Dialog without Radix (D-DL6, approved by the user 2026-11-15).** Dialog V1 uses the native
+`<dialog>` element with `showModal()`: top layer, page inertness, Esc and focus restoration come
+from the browser, so Radix Dialog (and any focus-trap package) is not added. The other Radix
+primitives stay deferred until a component needs one, each with its own approval. Contract:
+[phase-03-dialog-contract.md](../phases/phase-03-dialog-contract.md).
+
 Deliberately excluded (Roadmap §2.2): Redux, GraphQL clients, animation libraries, CSS-in-JS
 runtimes, heavy component kits, charting libraries, rich-text engines, Storybook.
 
