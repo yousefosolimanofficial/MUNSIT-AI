@@ -25,7 +25,11 @@ Single resume point. A new session starts by reading this file, the latest phase
   contract [phases/phase-03-sheet-contract.md](phases/phase-03-sheet-contract.md) final
   (D-SH1–D-SH6, normalizations N-1–N-5). Shared modal lifecycle
   `src/shared/ui/internal/useModalDialog.ts` (Dialog adopts it, behavior unchanged) and the
-  approved Dialog keyboard-scroll fix. PR open against `main`; awaiting merge approval.
+  approved Dialog keyboard-scroll fix. Merged through PR #18 (rebase), `main` at `b2cfe15`.
+  Avatar V1 contract **approved** (2026-11-16)
+  [phases/phase-03-avatar-contract.md](phases/phase-03-avatar-contract.md) (D-AV1–D-AV6;
+  contrast-driven gradient stop, N-1). Assigned to **Mariam after her Card V1 delivery**
+  (delegated: `Avatar.tsx`, `Avatar.test.tsx`); starter built only after this contract is merged.
 - **Latest report:** [phases/phase-02-report.md](phases/phase-02-report.md) (Phase 01: [phases/phase-01-report.md](phases/phase-01-report.md))
 - **Stack decision:** [decisions/ADR-001-frontend-stack.md](decisions/ADR-001-frontend-stack.md) (Approved by the user, 2026-11-12)
 - **Phase 01 commit:** `acf48c9` `chore: initialize project (Phase 01)` on `main`.
