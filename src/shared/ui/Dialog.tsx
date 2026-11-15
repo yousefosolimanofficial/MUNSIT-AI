@@ -1,27 +1,19 @@
 "use client";
 
-import {
-  useCallback,
-  useEffect,
-  useId,
-  useRef,
-  useState,
-  type MouseEvent,
-  type PointerEvent,
-  type ReactNode,
-  type RefObject,
-  type SyntheticEvent,
-} from "react";
+import { useId, type ReactNode, type RefObject } from "react";
 
 import type { IconName } from "@/design-system/icons/manifest";
 
 import { Icon } from "./Icon";
+import { useModalDialog } from "./internal/useModalDialog";
 
 /*
  * MUNSIT AI — Dialog (Phase 03, Dialog V1). Contract: docs/phases/phase-03-dialog-contract.md.
  * Figma: no shared component; one shell shared by 20+ module dialogs (contract §1, §2).
  *
- * - Native `<dialog>` + `showModal()` (D-DL6): top layer, page inert (D-DL3), no portal.
+ * - Native `<dialog>` + `showModal()` (D-DL6): top layer, page inert (D-DL3), no portal. The
+ *   lifecycle, scroll lock and focus restoration live in `internal/useModalDialog` (shared with
+ *   Sheet, Sheet contract D-SH6).
  * - Controlled only: `open` is the single source of truth. Esc, the scrim and the close button
  *   call `onOpenChange(false)`; the prop change runs the exit, then `close()` (§5.1).
  * - `data-state` (`open` | `closing` | `closed`) is set on the element imperatively, so a React
@@ -63,55 +55,6 @@ export interface DialogProps {
   actions?: ReactNode;
   /** Optional body: module content. Scrolls when the dialog reaches the viewport height. */
   children?: ReactNode;
-}
-
-/* ------------------------------------------------------------------ scroll lock (§5) */
-
-let lockCount = 0;
-let savedHtmlStyle: { overflow: string; scrollbarGutter: string } | null = null;
-
-function lockScroll(): void {
-  lockCount += 1;
-  if (lockCount > 1) return;
-  const html = document.documentElement;
-  savedHtmlStyle = { overflow: html.style.overflow, scrollbarGutter: html.style.scrollbarGutter };
-  // Keep the scrollbar's space only if the page has one, so the layout never shifts.
-  const hasScrollbar = window.innerWidth > html.clientWidth;
-  html.style.overflow = "hidden";
-  if (hasScrollbar) html.style.scrollbarGutter = "stable";
-}
-
-function unlockScroll(): void {
-  if (lockCount === 0) return;
-  lockCount -= 1;
-  if (lockCount > 0 || !savedHtmlStyle) return;
-  const html = document.documentElement;
-  html.style.overflow = savedHtmlStyle.overflow;
-  html.style.scrollbarGutter = savedHtmlStyle.scrollbarGutter;
-  savedHtmlStyle = null;
-}
-
-/** Longest computed transition (duration + delay) in ms; 0 when there is none (e.g. jsdom). */
-function transitionTimeMs(element: Element): number {
-  const style = getComputedStyle(element);
-  const toMs = (list: string) =>
-    list.split(",").map((raw) => {
-      const value = raw.trim();
-      const n = parseFloat(value);
-      if (!Number.isFinite(n)) return 0;
-      return value.endsWith("ms") ? n : n * 1000;
-    });
-  const durations = toMs(style.transitionDuration);
-  const delays = toMs(style.transitionDelay);
-  return durations.reduce((max, d, i) => Math.max(max, d + (delays[i] ?? delays[0] ?? 0)), 0);
-}
-
-/** Safety margin after the computed exit time, in case `transitionend` never fires. */
-const EXIT_FALLBACK_MARGIN_MS = 50;
-
-function isInsideRect(element: Element, x: number, y: number): boolean {
-  const rect = element.getBoundingClientRect();
-  return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
 }
 
 /* ------------------------------------------------------------------ classes (§3, §5.1) */
@@ -173,6 +116,9 @@ const CLOSE_CLASSES = [
   FOCUS_RING,
 ].join(" ");
 
+/** The exit ends with the panel's own opacity transition (§5.1). */
+const EXIT_PROPERTIES = ["opacity"] as const;
+
 const BODY_CLASSES = "min-h-0 flex-1 overflow-y-auto overscroll-contain";
 const ACTIONS_CLASSES = "flex shrink-0 gap-[10px] *:min-w-0 *:flex-1";
 
@@ -194,135 +140,12 @@ export function Dialog({
 }: DialogProps) {
   const titleId = useId();
   const descriptionId = useId();
-  const dialogRef = useRef<HTMLDialogElement>(null);
-
-  // Children stay mounted while open and during the exit.
-  const [present, setPresent] = useState(open);
-  if (open && !present) setPresent(true);
-
-  const openRef = useRef(open);
-  const onOpenChangeRef = useRef(onOpenChange);
-  useEffect(() => {
-    openRef.current = open;
-    onOpenChangeRef.current = onOpenChange;
+  const { present, requestClose, dialogProps } = useModalDialog({
+    open,
+    onOpenChange,
+    initialFocusRef,
+    exitProperties: EXIT_PROPERTIES,
   });
-
-  const lockedRef = useRef(false);
-  const restoreFocusRef = useRef<HTMLElement | null>(null);
-  const cancelExitRef = useRef<(() => void) | null>(null);
-  const pointerDownOnScrimRef = useRef(false);
-
-  /** Scroll lock off, focus back to the trigger, children unmounted. */
-  const release = useCallback(() => {
-    cancelExitRef.current?.();
-    cancelExitRef.current = null;
-    if (lockedRef.current) {
-      unlockScroll();
-      lockedRef.current = false;
-    }
-    const target = restoreFocusRef.current;
-    restoreFocusRef.current = null;
-    const active = document.activeElement;
-    const focusLost =
-      active === null || active === document.body || dialogRef.current?.contains(active) === true;
-    if (target?.isConnected && focusLost) target.focus();
-    setPresent(false);
-  }, []);
-
-  /** End of the exit: leave the top layer, then release. */
-  const finishExit = useCallback(() => {
-    const dialog = dialogRef.current;
-    if (dialog) {
-      // Marked first: the `close` event (queued by the browser) is then known to be ours.
-      dialog.dataset.state = "closed";
-      if (dialog.open) dialog.close();
-    }
-    release();
-  }, [release]);
-
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) return;
-
-    if (open) {
-      // Rapid reopen during the exit: cancel the pending close() and transition back.
-      cancelExitRef.current?.();
-      cancelExitRef.current = null;
-      dialog.dataset.state = "open";
-      if (dialog.open) return;
-      restoreFocusRef.current =
-        document.activeElement instanceof HTMLElement ? document.activeElement : null;
-      lockScroll();
-      lockedRef.current = true;
-      dialog.showModal();
-      initialFocusRef?.current?.focus();
-      return;
-    }
-
-    if (!dialog.open || dialog.dataset.state === "closing") return;
-    dialog.dataset.state = "closing";
-    const exitMs = transitionTimeMs(dialog);
-    if (exitMs === 0) {
-      finishExit();
-      return;
-    }
-    const onEnd = (event: TransitionEvent) => {
-      // Only the panel's own opacity; transitions of children bubble here too.
-      if (event.target === dialog && event.propertyName === "opacity") finishExit();
-    };
-    dialog.addEventListener("transitionend", onEnd);
-    const timer = window.setTimeout(finishExit, exitMs + EXIT_FALLBACK_MARGIN_MS);
-    cancelExitRef.current = () => {
-      dialog.removeEventListener("transitionend", onEnd);
-      window.clearTimeout(timer);
-    };
-  }, [open, initialFocusRef, finishExit]);
-
-  // Unmount while open: leave the top layer, release the lock, restore focus.
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    return () => {
-      if (dialog) {
-        dialog.dataset.state = "closed";
-        if (dialog.open) dialog.close();
-      }
-      release();
-    };
-  }, [release]);
-
-  const requestClose = useCallback(() => {
-    if (dialogRef.current?.dataset.state === "closing") return;
-    onOpenChangeRef.current(false);
-  }, []);
-
-  const handleCancel = (event: SyntheticEvent<HTMLDialogElement>) => {
-    // Esc: never let the browser close it; the prop decides (and the exit runs).
-    event.preventDefault();
-    requestClose();
-  };
-
-  const handleClose = () => {
-    const dialog = dialogRef.current;
-    if (!dialog || dialog.dataset.state === "closed") return;
-    // Closed by the browser itself (e.g. Chromium Esc without `cancel`): no exit, clean up now.
-    dialog.dataset.state = "closed";
-    release();
-    if (openRef.current) onOpenChangeRef.current(false);
-  };
-
-  const isScrimEvent = (event: PointerEvent<HTMLDialogElement> | MouseEvent<HTMLDialogElement>) =>
-    event.target === event.currentTarget &&
-    !isInsideRect(event.currentTarget, event.clientX, event.clientY);
-
-  const handlePointerDown = (event: PointerEvent<HTMLDialogElement>) => {
-    pointerDownOnScrimRef.current = isScrimEvent(event);
-  };
-
-  const handleClick = (event: MouseEvent<HTMLDialogElement>) => {
-    const startedOnScrim = pointerDownOnScrimRef.current;
-    pointerDownOnScrimRef.current = false;
-    if (startedOnScrim && isScrimEvent(event)) requestClose();
-  };
 
   const tile = (layoutClass: string, size: number) =>
     icon ? (
@@ -345,16 +168,12 @@ export function Dialog({
 
   return (
     <dialog
-      ref={dialogRef}
+      {...dialogProps}
       role={role === "alertdialog" ? "alertdialog" : undefined}
       aria-modal="true"
       aria-labelledby={present ? titleId : undefined}
       aria-describedby={present && description !== undefined ? descriptionId : undefined}
       className={`${DIALOG_CLASSES} ${WIDTH_CLASSES[width]}`}
-      onCancel={handleCancel}
-      onClose={handleClose}
-      onPointerDown={handlePointerDown}
-      onClick={handleClick}
     >
       {present ? (
         <div className={WRAPPER_CLASSES}>
