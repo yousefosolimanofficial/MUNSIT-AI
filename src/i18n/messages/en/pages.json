@@ -1,0 +1,26 @@
+{
+  "notImplemented": "This page is not implemented yet.",
+  "titles": {
+    "auth_login": "Log in",
+    "auth_register": "Create account",
+    "auth_forgotPassword": "Forgot password",
+    "auth_resetPassword": "Reset password",
+    "lectures_detail": "Lecture details",
+    "lectures_record": "Record a new lecture",
+    "summaries_reader": "Read summary",
+    "questions_new": "Create your smart quiz",
+    "questions_quiz": "Quiz",
+    "flashcards_new": "Create flashcards",
+    "flashcards_deck": "Deck details",
+    "flashcards_study": "Study mode",
+    "notes_new": "New note",
+    "notes_editor": "Edit note",
+    "folders_detail": "Folder details",
+    "settings": "My account and settings",
+    "settings_profile": "Edit profile",
+    "settings_preferences": "Study preferences",
+    "settings_notifications": "Notifications",
+    "settings_security": "Security & privacy",
+    "settings_subscription": "My subscription"
+  }
+}

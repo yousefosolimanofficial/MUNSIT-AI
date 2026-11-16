@@ -1,0 +1,12 @@
+{
+  "notFound": {
+    "title": "Page not found",
+    "body": "The link you opened doesn't exist or has moved.",
+    "backHome": "Back to the home page"
+  },
+  "error": {
+    "title": "Something went wrong",
+    "body": "This page couldn't be displayed. Please try again.",
+    "retry": "Try again"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "destinations": {
+    "dashboard": "Dashboard",
+    "lectures": "My Lectures",
+    "summaries": "Summaries",
+    "questions": "Questions",
+    "flashcards": "Flashcards",
+    "notes": "Notes",
+    "favorites": "Favorites",
+    "folders": "Folders"
+  },
+  "more": "More",
+  "moreExtras": {
+    "accountSettings": "Account settings",
+    "upgradePlan": "Upgrade plan"
+  },
+  "settingsNav": {
+    "profile": "Profile",
+    "preferences": "Study preferences",
+    "notifications": "Notifications",
+    "security": "Security & privacy",
+    "subscription": "Subscription",
+    "account": "Account management"
+  }
+}

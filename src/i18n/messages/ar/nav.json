@@ -1,0 +1,25 @@
+{
+  "destinations": {
+    "dashboard": "الرئيسية",
+    "lectures": "محاضراتي",
+    "summaries": "الملخصات",
+    "questions": "الأسئلة",
+    "flashcards": "البطاقات التعليمية",
+    "notes": "الملاحظات",
+    "favorites": "المفضلة",
+    "folders": "المجلدات"
+  },
+  "more": "المزيد",
+  "moreExtras": {
+    "accountSettings": "إعدادات الحساب",
+    "upgradePlan": "ترقية الخطة"
+  },
+  "settingsNav": {
+    "profile": "الملف الشخصي",
+    "preferences": "تفضيلات الدراسة",
+    "notifications": "الإشعارات",
+    "security": "الأمان والخصوصية",
+    "subscription": "الاشتراك",
+    "account": "إدارة الحساب"
+  }
+}

@@ -9,14 +9,20 @@
  */
 import arCommon from "./ar/common.json";
 import arDev from "./ar/dev.json";
+import arErrors from "./ar/errors.json";
+import arNav from "./ar/nav.json";
+import arPages from "./ar/pages.json";
 import enCommon from "./en/common.json";
 import enDev from "./en/dev.json";
+import enErrors from "./en/errors.json";
+import enNav from "./en/nav.json";
+import enPages from "./en/pages.json";
 
 import type { AppLocale } from "../routing";
 
 export const MESSAGES = {
-  ar: { common: arCommon, dev: arDev },
-  en: { common: enCommon, dev: enDev },
+  ar: { common: arCommon, dev: arDev, nav: arNav, pages: arPages, errors: arErrors },
+  en: { common: enCommon, dev: enDev, nav: enNav, pages: enPages, errors: enErrors },
 } as const satisfies Record<AppLocale, Record<string, unknown>>;
 
 /** Arabic (default locale) is the source of truth for message keys and types. */
