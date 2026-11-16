@@ -52,7 +52,8 @@ export async function RoutePlaceholder({ routeKey }: { routeKey: PlaceholderRout
         </h1>
         <p className="text-dashboard-body text-text-secondary">{t("notImplemented")}</p>
       </Card>
-      <ActiveDestinationProbe />
+      {/* Test instrumentation only: never rendered in production builds (see the probe). */}
+      {process.env.NODE_ENV === "production" ? null : <ActiveDestinationProbe />}
     </main>
   );
 }

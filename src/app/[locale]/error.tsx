@@ -9,7 +9,7 @@ import { Card } from "@/shared/ui/Card";
  * Localized route-error boundary (Phase 04, plan §6). Error boundaries must be Client Components
  * (Next.js 16.4 docs). The locale layout passes the `errors` namespace to the client, so
  * `useTranslations("errors")` works here (the rest of the catalog stays on the server). Unknown
- * routes are handled separately by `not-found.tsx`. Copy: `errors.error` (PROPOSED, D-R9).
+ * routes are handled separately by `not-found.tsx`. Copy: `errors.error` (approved 2026-11-16).
  *
  * Next.js 16.2+ passes `retry` (re-fetch and re-render the segment) and `error: unknown`.
  */

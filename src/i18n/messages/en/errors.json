@@ -1,12 +1,12 @@
 {
   "notFound": {
     "title": "Page not found",
-    "body": "The link you opened doesn't exist or has moved.",
-    "backHome": "Back to the home page"
+    "body": "Sorry, we couldn't find the page you're looking for.",
+    "backHome": "Back to home"
   },
   "error": {
     "title": "Something went wrong",
-    "body": "This page couldn't be displayed. Please try again.",
+    "body": "An error occurred while loading this page. Please try again.",
     "retry": "Try again"
   }
 }

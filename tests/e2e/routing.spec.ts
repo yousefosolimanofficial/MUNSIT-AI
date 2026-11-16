@@ -130,6 +130,7 @@ for (const { locale, dir, prefix } of LOCALES) {
 
         // Client-side resolution through useActiveDestination (next-intl usePathname).
         const probe = page.getByTestId("active-destination");
+        await expect(probe).toBeHidden(); // instrumentation: not visible, not in the a11y tree
         await expect(probe).toHaveAttribute("data-route-key", key);
         await expect(probe).toHaveAttribute("data-destination", expectedDestination(key));
 
@@ -206,6 +207,12 @@ for (const { locale, dir, prefix } of LOCALES) {
         await baseTest
           .expect(page.getByRole("heading", { level: 1 }))
           .toHaveText(MESSAGES[locale].errors.notFound.title);
+        // Descriptive document title (WCAG 2.4.2), set by the page's React <title>.
+        await baseTest
+          .expect(page)
+          .toHaveTitle(
+            `${MESSAGES[locale].errors.notFound.title} · ${MESSAGES[locale].common.brand.name}`,
+          );
       });
     }
 

@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
 import { Link } from "@/i18n/navigation";
@@ -8,13 +7,12 @@ import { Card } from "@/shared/ui/Card";
 /*
  * Localized 404 (Phase 04, D-R8). Rendered inside the locale layout for every `notFound()`,
  * including unknown paths through the `[...rest]` catch-all, so `lang`/`dir` follow the URL.
- * Copy: `errors.notFound` (PROPOSED, D-R9). Server Component.
+ * Copy: `errors.notFound` (approved 2026-11-16). Server Component.
+ *
+ * Title: Next.js 16 serves `notFound()` responses through its error document and renders this
+ * page on hydration, where segment metadata is not applied (Phase 04 report §7.1). The page
+ * therefore renders React's <title> itself, which React hoists into <head>.
  */
-
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations("errors");
-  return { title: t("notFound.title") };
-}
 
 const CARD_WIDTH = "max-w-[560px]";
 
@@ -26,13 +24,14 @@ const LINK_CLASSES = [
 ].join(" ");
 
 export default async function NotFound() {
-  const t = await getTranslations("errors");
+  const [t, tCommon] = await Promise.all([getTranslations("errors"), getTranslations("common")]);
 
   return (
     <main
       data-testid="not-found"
       className="grid min-h-dvh place-items-center bg-surface-void-black p-lg"
     >
+      <title>{`${t("notFound.title")} · ${tCommon("brand.name")}`}</title>
       <Card
         as="section"
         aria-labelledby="not-found-title"
