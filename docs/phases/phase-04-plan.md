@@ -1,8 +1,10 @@
 # Phase 04 — Routing & navigation registry — Plan
 
-- **Status:** **Plan for approval. Phase 04 has not started.** Nothing in this plan is
-  implemented. Decisions approved by the user on 2026-11-16 are marked **Approved**. Items that
-  still need approval are **Proposed**. Questions the design does not answer are **Unresolved**.
+- **Status:** **Architecture approved for planning (user, 2026-11-16). Phase 04 has not
+  started.** Nothing in this plan is implemented. **Approved** means approved by the user.
+  **Deferred** and **Unresolved** items are not routed in Phase 04 (§17). The folder-route
+  interpretation (§7.3) is approved for planning. Its formal Roadmap amendment is
+  [ADR-003](../decisions/ADR-003-phase-04-folder-focus-routes.md), status **Proposed**.
 - **Baseline:** `main` at `cf96d97` (Phase 03 closed in PR #24; Tabs M-1 fix in PR #25).
 - **Branch for the implementation (after authorization):** `phase/04-routing-navigation`
 
@@ -86,7 +88,7 @@ src/app/
    │  └─ settings/layout.tsx     # reserved for the Settings secondary navigation (§8.3)
    ├─ (focus)/layout.tsx         # no global navigation
    │  └─ flashcards/[deckId]/study/
-   └─ dev/                       # unchanged; development only
+   └─ dev/                       # development only; adds the error-test route (D-R10)
 ```
 
 - **Collision prevention:**
@@ -112,6 +114,13 @@ src/app/
     strings.
   - `global-error.tsx` replaces the root layout and cannot rely on the locale, so it shows short
     static Arabic and English text.
+  - **Error-test route (D-R10, approved):**
+    - A route under `dev/` that throws, so the boundary can be tested in E2E.
+    - It uses the existing development-only guard, `process.env.NODE_ENV === "production"` →
+      `notFound()`, the same as `/dev/components` and `/dev/tokens`, so production returns 404.
+    - The production 404 is verified with `next start`.
+    - The Next 16.4 `error.md` docs confirm that `error.tsx` wraps `page.tsx` in an error
+      boundary, so an error thrown during the page render reaches `[locale]/error.tsx`.
 - **Locale handling stays in next-intl:**
   - `proxy.ts` is unchanged.
   - `routing.ts` gains only the `pathnames` declaration.
@@ -139,41 +148,72 @@ English URLs are the same paths under `/en`. Arabic URLs have no prefix, and `/a
 
 ### 7.2 URL inventory
 
-| #   | Path                                                                                                                    | Group      | Screen                                         | Route key             | Active destination | Status                                                  |
-| --- | ----------------------------------------------------------------------------------------------------------------------- | ---------- | ---------------------------------------------- | --------------------- | ------------------ | ------------------------------------------------------- |
-| 1   | `/`                                                                                                                     | `(public)` | Landing (placeholder)                          | `landing`             | —                  | **Approved**                                            |
-| 2   | `/login`                                                                                                                | `(auth)`   | Login (placeholder)                            | `auth.login`          | —                  | **Approved**                                            |
-| 3   | `/register`                                                                                                             | `(auth)`   | Register (placeholder)                         | `auth.register`       | —                  | **Approved**                                            |
-| 4   | `/forgot-password`                                                                                                      | `(auth)`   | Forgot Password (placeholder)                  | `auth.forgotPassword` | —                  | **Approved**                                            |
-| 5   | `/reset-password`                                                                                                       | `(auth)`   | Reset Password (placeholder)                   | `auth.resetPassword`  | —                  | **Approved** (link token format: D-02, Phase 08)        |
-| 6   | `/dashboard`                                                                                                            | `(app)`    | Dashboard                                      | `dashboard`           | `dashboard`        | **Approved**                                            |
-| 7   | `/lectures`                                                                                                             | `(app)`    | My Lectures                                    | `lectures`            | `lectures`         | **Approved**                                            |
-| 8   | `/lectures/[lectureId]`                                                                                                 | `(app)`    | Lecture Details                                | `lectures.detail`     | `lectures`         | Proposed — workflow verified                            |
-| 9   | `/lectures/[lectureId]/tutor`                                                                                           | `(app)`    | AI Tutor                                       | `lectures.tutor`      | `lectures`         | Proposed — Handoff breadcrumb; tutor context unresolved |
-| 10  | `/lectures/record`                                                                                                      | `(app)`    | Live Recording (new lecture)                   | `lectures.record`     | `lectures`         | Proposed — workflow verified (D-R11)                    |
-| 11  | `/summaries`                                                                                                            | `(app)`    | My Summaries                                   | `summaries`           | `summaries`        | **Approved**                                            |
-| 12  | `/summaries/[summaryId]`                                                                                                | `(app)`    | Summary Reader                                 | `summaries.reader`    | `summaries`        | Proposed — workflow verified                            |
-| 13  | `/questions`                                                                                                            | `(app)`    | Question Bank library                          | `questions`           | `questions`        | **Approved**                                            |
-| 14  | `/questions/new`                                                                                                        | `(app)`    | Generator (its mobile steps are in-page)       | `questions.new`       | `questions`        | Proposed — workflow verified                            |
-| 15  | `/questions/[setId]/quiz`                                                                                               | `(app)`    | Quiz Taking (Practice / Exam)                  | `questions.quiz`      | `questions`        | Proposed — set persists; mode in URL unresolved         |
-| 16  | Results, Answer Review                                                                                                  | `(app)`    | Quiz Results, Answer Review                    | —                     | `questions`        | **Unresolved** — not routed in Phase 04                 |
-| 17  | `/flashcards`                                                                                                           | `(app)`    | Flashcards library                             | `flashcards`          | `flashcards`       | **Approved**                                            |
-| 18  | `/flashcards/new`                                                                                                       | `(app)`    | Create deck                                    | `flashcards.new`      | `flashcards`       | Proposed — workflow verified                            |
-| 19  | `/flashcards/[deckId]`                                                                                                  | `(app)`    | Deck Details                                   | `flashcards.deck`     | `flashcards`       | Proposed — workflow verified                            |
-| 20  | `/flashcards/[deckId]/study`                                                                                            | `(focus)`  | Study Mode (+ Session Complete state)          | `flashcards.study`    | `flashcards`       | Proposed — workflow verified (no shell)                 |
-| 21  | `/notes`                                                                                                                | `(app)`    | My Notes                                       | `notes`               | `notes`            | **Approved**                                            |
-| 22  | `/notes/new`                                                                                                            | `(app)`    | New Note editor                                | `notes.new`           | `notes`            | Proposed — workflow verified                            |
-| 23  | `/notes/[noteId]`                                                                                                       | `(app)`    | Note Editor                                    | `notes.editor`        | `notes`            | Proposed — workflow verified                            |
-| 24  | `/favorites`                                                                                                            | `(app)`    | Favorites (Management, Organization in-page)   | `favorites`           | `favorites`        | **Approved**                                            |
-| 25  | `/folders`                                                                                                              | `(app)`    | My Folders (Create Folder = dialog)            | `folders`             | `folders`          | **Approved**                                            |
-| 26  | `/folders/[folderId]`                                                                                                   | `(app)`    | Folder Details (Add Content dialog, selection) | `folders.detail`      | `folders`          | Proposed — workflow verified (D-R4)                     |
-| 27  | `/settings`                                                                                                             | `(app)`    | 01 Profile Overview                            | `settings`            | **none**           | **Approved**                                            |
-| 28  | `/settings/profile`, `/settings/preferences`, `/settings/notifications`, `/settings/security`, `/settings/subscription` | `(app)`    | Settings 02–06                                 | `settings.*`          | **none**           | Proposed — screens verified (D-R3)                      |
-| 29  | `/dev/components`, `/dev/tokens`                                                                                        | `dev/`     | Development only                               | `dev.*`               | —                  | Existing, 404 in production                             |
-| 30  | any unmatched path                                                                                                      | —          | Localized 404                                  | —                     | —                  | **Approved** (D-R8)                                     |
+| #   | Path                                                                                                                    | Group      | Screen                                         | Route key             | Active destination | Status                                                                |
+| --- | ----------------------------------------------------------------------------------------------------------------------- | ---------- | ---------------------------------------------- | --------------------- | ------------------ | --------------------------------------------------------------------- |
+| 1   | `/`                                                                                                                     | `(public)` | Landing (placeholder)                          | `landing`             | —                  | **Approved**                                                          |
+| 2   | `/login`                                                                                                                | `(auth)`   | Login (placeholder)                            | `auth.login`          | —                  | **Approved**                                                          |
+| 3   | `/register`                                                                                                             | `(auth)`   | Register (placeholder)                         | `auth.register`       | —                  | **Approved**                                                          |
+| 4   | `/forgot-password`                                                                                                      | `(auth)`   | Forgot Password (placeholder)                  | `auth.forgotPassword` | —                  | **Approved**                                                          |
+| 5   | `/reset-password`                                                                                                       | `(auth)`   | Reset Password (placeholder)                   | `auth.resetPassword`  | —                  | **Approved** (link token format: D-02, Phase 08)                      |
+| 6   | `/dashboard`                                                                                                            | `(app)`    | Dashboard                                      | `dashboard`           | `dashboard`        | **Approved**                                                          |
+| 7   | `/lectures`                                                                                                             | `(app)`    | My Lectures                                    | `lectures`            | `lectures`         | **Approved**                                                          |
+| 8   | `/lectures/[lectureId]`                                                                                                 | `(app)`    | Lecture Details                                | `lectures.detail`     | `lectures`         | **Approved**                                                          |
+| 9   | `/lectures/[lectureId]/tutor`                                                                                           | `(app)`    | AI Tutor                                       | `lectures.tutor`      | `lectures`         | **Deferred** — depends on tutor lecture-context initialization (D-08) |
+| 10  | `/lectures/record`                                                                                                      | `(app)`    | Live Recording (new lecture)                   | `lectures.record`     | `lectures`         | **Approved** (D-R11)                                                  |
+| 11  | `/summaries`                                                                                                            | `(app)`    | My Summaries                                   | `summaries`           | `summaries`        | **Approved**                                                          |
+| 12  | `/summaries/[summaryId]`                                                                                                | `(app)`    | Summary Reader                                 | `summaries.reader`    | `summaries`        | **Approved**                                                          |
+| 13  | `/questions`                                                                                                            | `(app)`    | Question Bank library                          | `questions`           | `questions`        | **Approved**                                                          |
+| 14  | `/questions/new`                                                                                                        | `(app)`    | Generator (its mobile steps are in-page)       | `questions.new`       | `questions`        | **Approved**                                                          |
+| 15  | `/questions/[setId]/quiz`                                                                                               | `(app)`    | Quiz Taking (Practice / Exam)                  | `questions.quiz`      | `questions`        | **Approved** — base path; quiz mode in the URL unresolved (D-09)      |
+| 16  | Results, Answer Review                                                                                                  | `(app)`    | Quiz Results, Answer Review                    | —                     | `questions`        | **Unresolved** — not routed in Phase 04 (D-09)                        |
+| 17  | `/flashcards`                                                                                                           | `(app)`    | Flashcards library                             | `flashcards`          | `flashcards`       | **Approved**                                                          |
+| 18  | `/flashcards/new`                                                                                                       | `(app)`    | Create deck                                    | `flashcards.new`      | `flashcards`       | **Approved**                                                          |
+| 19  | `/flashcards/[deckId]`                                                                                                  | `(app)`    | Deck Details                                   | `flashcards.deck`     | `flashcards`       | **Approved**                                                          |
+| 20  | `/flashcards/[deckId]/study`                                                                                            | `(focus)`  | Study Mode (+ Session Complete state)          | `flashcards.study`    | `flashcards`       | **Approved** (no shell)                                               |
+| 21  | `/notes`                                                                                                                | `(app)`    | My Notes                                       | `notes`               | `notes`            | **Approved**                                                          |
+| 22  | `/notes/new`                                                                                                            | `(app)`    | New Note editor                                | `notes.new`           | `notes`            | **Approved**                                                          |
+| 23  | `/notes/[noteId]`                                                                                                       | `(app)`    | Note Editor                                    | `notes.editor`        | `notes`            | **Approved**                                                          |
+| 24  | `/favorites`                                                                                                            | `(app)`    | Favorites (Management, Organization in-page)   | `favorites`           | `favorites`        | **Approved**                                                          |
+| 25  | `/folders`                                                                                                              | `(app)`    | My Folders (Create Folder = dialog)            | `folders`             | `folders`          | **Approved**                                                          |
+| 26  | `/folders/[folderId]`                                                                                                   | `(app)`    | Folder Details (Add Content dialog, selection) | `folders.detail`      | `folders`          | **Approved** (D-R4, §7.3)                                             |
+| 27  | `/settings`                                                                                                             | `(app)`    | 01 Profile Overview                            | `settings`            | **none**           | **Approved**                                                          |
+| 28  | `/settings/profile`, `/settings/preferences`, `/settings/notifications`, `/settings/security`, `/settings/subscription` | `(app)`    | Settings 02–06                                 | `settings.*`          | **none**           | **Approved** (D-R3)                                                   |
+| 29  | `/dev/components`, `/dev/tokens`                                                                                        | `dev/`     | Development only                               | `dev.*`               | —                  | Existing, 404 in production                                           |
+| 30  | any unmatched path                                                                                                      | —          | Localized 404                                  | —                     | —                  | **Approved** (D-R8)                                                   |
 
-Phase 04 creates placeholders only for rows whose status is Approved, or Proposed and then
-approved. Row 16 gets no route until it is resolved.
+Phase 04 creates placeholders only for **Approved** rows. Rows 9 (Tutor) and 16 (Results, Answer
+Review) get no route until their decisions are made (§17). No other route may be added.
+
+### 7.3 Roadmap discrepancy: focused folder routes (D-R4)
+
+- **Affected Roadmap requirements** (read-only, unchanged):
+  - Phase 04 Scope: "Flashcards Study Mode / focused folder routes in `(focus)`".
+  - §3 folder layout: "`(focus)/` # study mode / focused folder workflows".
+  - The Handoff (p.8) says: "Flashcards Study Mode and focused Folder workflows may hide global
+    navigation".
+- **Verified Figma evidence** (§7.1):
+  - "Folder Management" is the Create Folder dialog.
+  - "Add Content" is a dialog inside Folder Details.
+  - "Content Organization" is Folder Details in selection mode.
+  - No folder screen without the global navigation is drawn as a page.
+- **Interpretation (approved for Phase 04 planning, 2026-11-16):**
+  - The "focused folder workflows" are these modal dialogs and the selection state. They hide
+    the navigation by being modal, not by being routes.
+  - Phase 04 creates **no** folder routes in `(focus)`.
+  - `(focus)` holds Flashcards Study Mode only.
+  - The folder dialogs and selection mode are built with the Folders module (Phase 19), using the
+    Phase 03 Dialog and Sheet.
+- **Rationale:**
+  - Routes must match screens that exist in the design (no invented routes).
+  - A modal dialog is not deep-linkable state in the design.
+  - An empty `(focus)` folder route would be unused URL surface to maintain.
+- **Traceability:**
+  - The Roadmap text stays unchanged.
+  - The formal amendment is recorded in
+    [ADR-003](../decisions/ADR-003-phase-04-folder-focus-routes.md) (status **Proposed**), following
+    the ADR-002 precedent for Roadmap scope amendments.
+  - If a later Figma version draws a full-screen folder workflow, it gets a `(focus)` route
+    through a contract and an update to this plan.
 
 ## 8. Navigation registry design
 
@@ -219,8 +259,8 @@ Labels live only in messages (`nav.<id>`); components never contain them.
     the server.
   - Matches segments against the inventory patterns; the most specific match wins; trailing
     slashes are ignored.
-  - **`routeKey` is kept for future breadcrumbs**, for example `lectures.tutor` → lectures /
-    lecture details / tutor, so no second route map is needed.
+  - **`routeKey` is kept for future breadcrumbs**, for example `lectures.detail` → lectures /
+    lecture details (and `lectures.tutor` once routed), so no second route map is needed.
 - **`useActiveDestination()`:** a thin client hook.
 - **Rules (D-R6, approved):**
   - Every `(app)` and `(focus)` route resolves to exactly **one** destination, except Settings.
@@ -290,7 +330,8 @@ Labels live only in messages (`nav.<id>`); components never contain them.
 
 ## 13. Implementation sequence (after authorization)
 
-1. **Approvals:** confirm the Proposed rows in §7.2 and D-R3/D-R9/D-R10 (§17).
+1. **Approvals:** done for planning (§17). Implementation also needs ADR-003 approved, D-R9
+   copy approved before use, and the user's authorization to start Phase 04.
 2. **`pathnames` and route constants:** in `routing.ts`, plus unit tests for `getPathname` in both
    locales and for path uniqueness.
 3. **Registry and messages:** the `nav` namespace in `ar` and `en`, with Arabic copy for the More
@@ -316,23 +357,23 @@ Labels live only in messages (`nav.<id>`); components never contain them.
 
 ## 14. Testing strategy
 
-| Area                        | Test (table-driven where possible)                                                                                                                                                                        |
-| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Registry                    | Order of the 8 ids; Arabic labels equal the approved text; English labels equal D-R7; ids unique; icons exist in `ICON_MANIFEST`; mobile bar = 3 destinations + More; More sheet = 5 + settings + upgrade |
-| Inventory                   | Every path unique; no two route groups resolve to the same URL; reserved words (`new`, `record`) never used as ids                                                                                        |
-| Destination roots           | Each of the 8 roots resolves to its destination                                                                                                                                                           |
-| Nested routes               | Lecture detail, record and tutor → `lectures`; reader → `summaries`; new and quiz → `questions`; new and deck → `flashcards`; new and editor → `notes`; folder detail → `folders`                         |
-| Focus routes                | `/flashcards/[deckId]/study` → `flashcards`                                                                                                                                                               |
-| Settings                    | `/settings` and all 5 sub-routes → `null`                                                                                                                                                                 |
-| No shell and unknown        | Landing, auth, dev, unknown → `null`; trailing slash handled                                                                                                                                              |
-| Exactly one active          | Every `(app)` and `(focus)` route except Settings → exactly one destination                                                                                                                               |
-| More separation (D-R6)      | Pure helper: `more`-placement destinations → "More contains current"; Settings → none; More never `aria-current` (asserted in the Phase 05 component tests)                                               |
-| Route keys                  | Every inventory path returns its expected `routeKey`                                                                                                                                                      |
-| Locale links                | `getPathname` for every key: `ar` unprefixed, `en` under `/en`, parameters filled; `Link` renders the locale-correct href                                                                                 |
-| Deep link and refresh (E2E) | Direct load of each placeholder in `ar` and `en`: 200, title, `lang` and `dir`; reload is identical                                                                                                       |
-| 404 (E2E)                   | Unknown paths in `ar` and `en`: HTTP 404, localized page inside the root layout, link back works                                                                                                          |
-| Error (E2E)                 | Boundary renders localized text and recovers (D-R10)                                                                                                                                                      |
-| Universal checks            | axe; 1440/768/390 plus 320 overflow; keyboard; a test that no file outside `src/shared/navigation` and messages contains a nav label or a hardcoded app path                                              |
+| Area                        | Test (table-driven where possible)                                                                                                                                                                             |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Registry                    | Order of the 8 ids; Arabic labels equal the approved text; English labels equal D-R7; ids unique; icons exist in `ICON_MANIFEST`; mobile bar = 3 destinations + More; More sheet = 5 + settings + upgrade      |
+| Inventory                   | Every path unique; no two route groups resolve to the same URL; reserved words (`new`, `record`) never used as ids                                                                                             |
+| Destination roots           | Each of the 8 roots resolves to its destination                                                                                                                                                                |
+| Nested routes               | Lecture detail and record → `lectures` (tutor added when row 9 is decided); reader → `summaries`; new and quiz → `questions`; new and deck → `flashcards`; new and editor → `notes`; folder detail → `folders` |
+| Focus routes                | `/flashcards/[deckId]/study` → `flashcards`                                                                                                                                                                    |
+| Settings                    | `/settings` and all 5 sub-routes → `null`                                                                                                                                                                      |
+| No shell and unknown        | Landing, auth, dev, unknown → `null`; trailing slash handled                                                                                                                                                   |
+| Exactly one active          | Every `(app)` and `(focus)` route except Settings → exactly one destination                                                                                                                                    |
+| More separation (D-R6)      | Pure helper: `more`-placement destinations → "More contains current"; Settings → none; More never `aria-current` (asserted in the Phase 05 component tests)                                                    |
+| Route keys                  | Every inventory path returns its expected `routeKey`                                                                                                                                                           |
+| Locale links                | `getPathname` for every key: `ar` unprefixed, `en` under `/en`, parameters filled; `Link` renders the locale-correct href                                                                                      |
+| Deep link and refresh (E2E) | Direct load of each placeholder in `ar` and `en`: 200, title, `lang` and `dir`; reload is identical                                                                                                            |
+| 404 (E2E)                   | Unknown paths in `ar` and `en`: HTTP 404, localized page inside the root layout, link back works                                                                                                               |
+| Error (E2E)                 | Boundary renders localized text and recovers (D-R10)                                                                                                                                                           |
+| Universal checks            | axe; 1440/768/390 plus 320 overflow; keyboard; a test that no file outside `src/shared/navigation` and messages contains a nav label or a hardcoded app path                                                   |
 
 ## 15. Acceptance criteria (Roadmap Phase 04, unchanged)
 
@@ -354,48 +395,50 @@ Labels live only in messages (`nav.<id>`); components never contain them.
 
 ## 17. Decisions, risks and open items
 
-| ID    | Decision                                                                                                                         | Evidence                                                                                         | Status                                                         | Remaining dependency                                                                                       |
-| ----- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | -------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| D-R1  | Short English paths: `/`, the 8 destination roots, the 4 auth paths, `/settings`; nested paths per the verified inventory (§7.2) | No source defines paths; screens verified in the Handoff and Figma (§7.1)                        | **Approved** (roots, auth, settings); nested rows **Proposed** | Approval of the Proposed rows in §7.2                                                                      |
-| D-R2  | Arabic unprefixed, English `/en`, shared segments, next-intl typed `pathnames`, no second router                                 | `routing.ts`, `navigation.ts`, `proxy.ts`                                                        | **Approved**                                                   | Dev routes declared in `pathnames` (§10)                                                                   |
-| D-R3  | Settings root = Profile Overview; 5 sub-routes; secondary nav data in the registry                                               | Figma page 14: 6 screens + "Settings Navigation"                                                 | Screens **Verified**; sub-paths **Proposed**                   | Approval of the sub-paths; Arabic nav copy read from Figma                                                 |
-| D-R4  | No folder focus routes; `/folders/[folderId]` in `(app)`; Create Folder and Add Content are dialogs; selection is local state    | Figma page 13 frames and prototype links (§7.1)                                                  | Evidence **Verified**; decision **Proposed**                   | Acknowledge that the Roadmap's "focused folder routes" are not drawn as routes; dialogs belong to Phase 19 |
-| D-R5  | Quiz, Results and Review keep the shell → `(app)`                                                                                | Figma page 09: Rail on all Tablet frames                                                         | **Verified**                                                   | —                                                                                                          |
-| D-R6  | Active destination, More open state and "More contains current" are separate; More never `aria-current`; Settings → none         | Handoff navigation rules; approved by the user                                                   | **Approved**                                                   | UI in Phase 05                                                                                             |
-| D-R7  | English labels: Dashboard, My Lectures, Summaries, Questions, Flashcards, Notes, Favorites, Folders                              | Product-owner-approved copy (Figma has no English nav copy)                                      | **Approved**                                                   | —                                                                                                          |
-| D-R8  | Localized catch-all + `[locale]/not-found.tsx`; no experimental `global-not-found`; errors separate                              | Next 16.4 docs: `notFound()` renders the nearest `not-found`; `global-not-found` is experimental | **Approved**                                                   | Error namespace passed to the client (§6)                                                                  |
-| D-R9  | Placeholder "not implemented", 404 and error copy; titles of non-nav screens from Figma frames                                   | No copy in the design                                                                            | **Proposed**                                                   | Copy approval before use                                                                                   |
-| D-R10 | Error boundary tested through a development-only route that throws (404 in production)                                           | Same pattern as `/dev/*`                                                                         | **Proposed**                                                   | Approval                                                                                                   |
-| D-R11 | Live Recording = new lecture at `/lectures/record`; no lecture id; My Lectures active                                            | Figma pages 04 and 06 (§7.1)                                                                     | Evidence **Verified**; path **Proposed**                       | Approval of the path                                                                                       |
-| D-R12 | Landing `/` in `(public)`, Dashboard `/dashboard` in `(app)`; no auth redirects or route protection in Phase 04                  | Next 16 route-group caveat; Roadmap Phase 04 has no auth requirement; gate D-02 unresolved       | **Approved**                                                   | Redirects decided with D-02 (Phase 08 / 21)                                                                |
+| ID    | Decision                                                                                                                      | Evidence                                                                                         | Status                              | Remaining dependency                                                       |
+| ----- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | ----------------------------------- | -------------------------------------------------------------------------- |
+| D-R1  | Short English paths: `/`, the 8 destination roots, the 4 auth paths, `/settings`, and the Figma-supported nested paths (§7.2) | No source defines paths; screens and workflows verified in the Handoff and Figma (§7.1)          | **Approved** (except rows 9 and 16) | —                                                                          |
+| D-R2  | Arabic unprefixed, English `/en`, shared segments, next-intl typed `pathnames`, no second router                              | `routing.ts`, `navigation.ts`, `proxy.ts`                                                        | **Approved**                        | Dev routes declared in `pathnames` (§10)                                   |
+| D-R3  | Settings = Profile Overview + 5 secondary screens; secondary-nav data in the registry                                         | Figma page 14: 6 screens + "Settings Navigation"                                                 | **Approved**                        | Arabic nav copy read from Figma at implementation                          |
+| D-R4  | No folder focus routes; `/folders/[folderId]` in `(app)`; Create Folder and Add Content are dialogs; selection is local state | Figma page 13 frames and prototype links (§7.1); Roadmap discrepancy (§7.3)                      | **Approved for Phase 04 planning**  | Formal Roadmap amendment: ADR-003 (**Proposed**) needs the user's approval |
+| D-R5  | Quiz Taking (and Results and Review, when routed) keep the shell → `(app)`                                                    | Figma page 09: Rail on all Tablet frames                                                         | **Approved**                        | —                                                                          |
+| D-R6  | Active destination, More open state and "More contains current" are separate; More never `aria-current`; Settings → none      | Handoff navigation rules; approved by the user                                                   | **Approved**                        | UI in Phase 05                                                             |
+| D-R7  | English labels: Dashboard, My Lectures, Summaries, Questions, Flashcards, Notes, Favorites, Folders                           | Product-owner-approved copy (Figma has no English nav copy)                                      | **Approved**                        | —                                                                          |
+| D-R8  | Localized catch-all + `[locale]/not-found.tsx`; no experimental `global-not-found`; errors separate                           | Next 16.4 docs: `notFound()` renders the nearest `not-found`; `global-not-found` is experimental | **Approved**                        | Error namespace passed to the client (§6)                                  |
+| D-R9  | Concise bilingual placeholder ("not implemented"), 404 and error messages; non-nav screen titles from Figma frame names       | No copy in the design                                                                            | **Approved** (approach)             | Exact strings reviewed before merge of the implementation PR               |
+| D-R10 | Development-only error-test route under `dev/`, 404 in production                                                             | Existing `/dev/*` production guard; Next 16.4 `error.md`                                         | **Approved**                        | Production 404 verified with `next start`                                  |
+| D-R11 | Live Recording starts a new lecture at `/lectures/record`; no lecture id; My Lectures active                                  | Figma pages 04 and 06 (§7.1)                                                                     | **Approved**                        | —                                                                          |
+| D-R12 | Landing `/` in `(public)`, Dashboard `/dashboard` in `(app)`; no auth redirects or route protection in Phase 04               | Next 16 route-group caveat; Roadmap Phase 04 has no auth requirement; gate D-02 unresolved       | **Approved**                        | Redirects decided with D-02 (Phase 08 / 21)                                |
 
-**Unresolved (the design does not answer; not routed in Phase 04):**
+**Unresolved (the design does not answer; not routed in Phase 04; no answer invented):**
 
-- **Quiz Results and Answer Review addressability:** no persistent result id is shown, and results
-  storage is unresolved in the Handoff. It is unknown whether refresh or direct access must work.
-  To be decided with Phase 15 and the backend.
-- **Quiz mode in the URL:** Practice or Exam is chosen in the Mode Select dialog; whether it is a
-  query parameter or in-app state is open.
-- **Tutor lecture context:** how a lecture is chosen as context is unresolved in the Handoff. The
-  nesting under `/lectures/[lectureId]` follows the breadcrumb.
-- **Reset-password link format:** token and expiry are part of gate D-02 (Phase 08).
+| Item                                                                             | Future owner (Roadmap gate)                  | Phase | Dependency                                           |
+| -------------------------------------------------------------------------------- | -------------------------------------------- | ----- | ---------------------------------------------------- |
+| Question Bank Results persistence (persistent result id, refresh, direct access) | Product + Backend (D-09 "result storage")    | 15    | Backend contract (Phase 21)                          |
+| Answer Review deep-link behaviour (needs a saved attempt?)                       | Product + Backend (D-09)                     | 15    | Results persistence                                  |
+| Quiz mode (Practice / Exam) in the URL: query parameter or in-app state          | Frontend, after D-09                         | 15    | Mode Select dialog flow; whether attempts are stored |
+| AI Tutor lecture-context initialization (and so `/lectures/[lectureId]/tutor`)   | Backend/AI (D-08 "lecture context")          | 13    | Tutor API contract (Phase 21)                        |
+| Reset-password token / link format                                               | Product + Backend (D-02 "password recovery") | 08    | Auth provider choice (Phase 21)                      |
 
 **Risks:**
 
-- **Public URLs:** approve the Proposed rows before coding.
+- **Public URLs:** only Approved rows are built. Deferred rows need a decision before routing.
 - **Next 16 build failure on duplicate group paths:** guarded by the inventory test.
 - **Client translations:** `messages={null}` means the error boundary needs its namespace passed
   explicitly.
 - **Phase 05 needs O-8 first:** schedule its Figma check before Phase 05 starts.
 - **No auth (D-02):** placeholders stay public until Phase 21.
 
-## 18. Team responsibilities (PROPOSED — not approved)
+## 18. Team responsibilities (boundaries approved for planning, 2026-11-16)
 
-Ownership rules (CLAUDE.md): `src/app`, `src/shared` and `src/i18n` are owned by Yousef. No task is
-assigned to Mariam and no starter package is created until the user approves the delegation.
+Ownership rules (CLAUDE.md): `src/app`, `src/shared` and `src/i18n` are owned by Yousef.
 
-| Role              | Responsibilities                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Yousef            | Architecture ownership; final approvals (§17); integration review; PR merges                                                                                                                                                                                                                                                                                                                                                                               |
-| Claude            | After authorization: routing implementation (groups, placeholders, layouts); navigation registry and resolver; next-intl `pathnames` and messages; 404, error and placeholder routes; unit and E2E tests; phase report                                                                                                                                                                                                                                     |
-| Mariam — PROPOSED | (1) **Route → active-destination test table**: one delegated test file, written from the approved §7.2 inventory against a provided resolver signature. Done means: every row covered and passing against the merged resolver. (2) **English navigation copy consistency review**: a written note for the labels, More extras and Settings nav. (3) **RTL/LTR manual verification**: a checklist pass in both locales at 1440/768/390/320 with screenshots |
+| Role   | Responsibilities                                                                                                                                                                                                                                                                                                                  |
+| ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Yousef | Product ownership; architecture approval; final integration and merge decisions                                                                                                                                                                                                                                                   |
+| Claude | After authorization: routing implementation; navigation registry; internationalization integration (`pathnames`, messages); error and placeholder routing; automated unit and E2E tests                                                                                                                                           |
+| Mariam | (1) Route-to-active-destination test tables (one delegated test file, written from §7.2 against a provided resolver signature; done when every Approved row is covered and passing). (2) English label consistency review (a written note). (3) Manual RTL/LTR verification (checklist pass at 1440/768/390/320 with screenshots) |
+
+**Mariam's work is not started.** Her starter package and exact handoff (files, signature,
+checklist) must be reviewed and approved by the user before any delegation, per
+`TEAM_COLLABORATION.md`.
