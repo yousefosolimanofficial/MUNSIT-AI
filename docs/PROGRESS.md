@@ -30,6 +30,11 @@ Single resume point. A new session starts by reading this file, the latest phase
   [phases/phase-03-avatar-contract.md](phases/phase-03-avatar-contract.md) (D-AV1–D-AV6;
   contrast-driven gradient stop, N-1). Assigned to **Mariam after her Card V1 delivery**
   (delegated: `Avatar.tsx`, `Avatar.test.tsx`); starter built only after this contract is merged.
+  Popover/Menu V1 **approved by the user** (2026-11-16, Yousef, branch
+  `feature/03-popover-menu-v1`): contract
+  [phases/phase-03-popover-menu-contract.md](phases/phase-03-popover-menu-contract.md) final
+  (D-PM1–D-PM9). `Popover`, `Menu` (context / account, radio items) on
+  `internal/useAnchoredOverlay.ts`; PR open against `main`; awaiting merge approval.
 - **Latest report:** [phases/phase-02-report.md](phases/phase-02-report.md) (Phase 01: [phases/phase-01-report.md](phases/phase-01-report.md))
 - **Stack decision:** [decisions/ADR-001-frontend-stack.md](decisions/ADR-001-frontend-stack.md) (Approved by the user, 2026-11-12)
 - **Phase 01 commit:** `acf48c9` `chore: initialize project (Phase 01)` on `main`.
