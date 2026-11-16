@@ -3,42 +3,33 @@
 Single resume point. A new session starts by reading this file, the latest phase report, and
 [docs/references/MUNSIT_AI_Development_Roadmap_v1.0.md](references/MUNSIT_AI_Development_Roadmap_v1.0.md).
 
-- **Current phase:** 02 — Design System implementation + motion foundation — **Done**
-  (2026-11-13), merged to `main` through PR #2 (rebase), final commit `79685af` (`79685af190bdbc6e207b1bf0682e14ddab6b2184`)
-- **Active phase:** 03 — Core UI primitives — **In progress**. Button V1 **done** (2026-11-14):
-  Mariam delivery integrated through PR #8 (rebase), commits `a1dc0f7`..`9eebeba`, CI green on
-  PR and `main`. Input V1 **done** (2026-11-15): Mariam delivery integrated through PR #11
-  (rebase), commits `374b68e`..`0f77aeb`, CI green on PR and `main`. Next: Card surfaces V1 —
-  contract **final** [phases/phase-03-card-contract.md](phases/phase-03-card-contract.md)
-  (D-C1–D-C5 approved 2026-11-15), merged through PR #12 (`eb8185e`). Starter v4
-  (`munsit-starter-eb8185e.zip`) built and verified; awaiting the user's approval before the Card
-  assignment for Mariam. StatusBadge V1 **done** (2026-11-15, Yousef, parallel to Card V1):
-  PR #14 (rebase), commits on `main` up to `caac393`, CI green; contract
-  [phases/phase-03-badge-contract.md](phases/phase-03-badge-contract.md) (D-BG1, D-BG2 approved).
-  Gallery section and browser visual QA deferred until the Card V1 integration.
-  Dialog V1 **approved by the user** (2026-11-16, Yousef, branch `feature/03-dialog-v1`):
-  contract [phases/phase-03-dialog-contract.md](phases/phase-03-dialog-contract.md) final
-  (D-DL1–D-DL6 approved; D-DL4 corrected to entrance + exit motion). Native `<dialog>`, gallery
-  section and `tests/e2e/dev-components-dialog.spec.ts`; `pnpm check` and `test:e2e` green
-  locally. Merged through PR #17 (rebase), `main` at `3f50973`.
-  Sheet V1 **approved by the user** (2026-11-16, Yousef, branch `feature/03-sheet-v1`):
-  contract [phases/phase-03-sheet-contract.md](phases/phase-03-sheet-contract.md) final
-  (D-SH1–D-SH6, normalizations N-1–N-5). Shared modal lifecycle
-  `src/shared/ui/internal/useModalDialog.ts` (Dialog adopts it, behavior unchanged) and the
-  approved Dialog keyboard-scroll fix. Merged through PR #18 (rebase), `main` at `b2cfe15`.
-  Avatar V1 contract **approved** (2026-11-16)
-  [phases/phase-03-avatar-contract.md](phases/phase-03-avatar-contract.md) (D-AV1–D-AV6;
-  contrast-driven gradient stop, N-1). Assigned to **Mariam after her Card V1 delivery**
-  (delegated: `Avatar.tsx`, `Avatar.test.tsx`); starter built only after this contract is merged.
-  Popover/Menu V1 **approved by the user** (2026-11-16, Yousef, branch
-  `feature/03-popover-menu-v1`): contract
-  [phases/phase-03-popover-menu-contract.md](phases/phase-03-popover-menu-contract.md) final
-  (D-PM1–D-PM9). `Popover`, `Menu` (context / account, radio items) on
-  `internal/useAnchoredOverlay.ts`; merged through PR #20 (rebase), `main` at `d13470c`.
-  **Ownership change (user, 2026-11-16):** Yousef and Claude finish Phase 03; Mariam joins from
-  Phase 04 (no further Phase 03 assignments or starters). Avatar V1 **implemented** by Yousef
-  on `feature/03-avatar-v1`; approved; PR open against `main`; awaiting merge approval.
-- **Latest report:** [phases/phase-02-report.md](phases/phase-02-report.md) (Phase 01: [phases/phase-01-report.md](phases/phase-01-report.md))
+- **Current phase:** 03 — Core UI primitives — **Done** (closure approved by the user on
+  2026-11-16; formally closed when the closure documentation PR is merged). Report:
+  [phases/phase-03-closure-report.md](phases/phase-03-closure-report.md): 14 PASS, 2 DEFERRED —
+  APPROVED, 0 BLOCKED. Final code commit on `main`: `fff239e`.
+- **Next phase:** 04 — Routing & navigation registry — **Not started**. Before it: the
+  project-wide Motion & Interaction Audit (scheduled by the user after Phase 03 closure).
+- **Phase 03 deliveries (all merged through PRs, rebase, CI green):**
+  - Button V1: #8 (Mariam delivery)
+  - Input V1: #11 (Mariam delivery)
+  - StatusBadge V1: #14
+  - Tabs V1: #16
+  - Dialog V1: #17
+  - Sheet V1: #18 (includes the Dialog keyboard-scroll fix)
+  - Popover/Menu V1: #20
+  - Avatar V1: #21 (`27873c6`)
+  - Card V1: #22 (`cc56b26`)
+  - Final gallery integration and browser QA, plus the approved Tabs compact responsive fix:
+    #23 (`a7adcc3`, `fff239e`)
+- **Phase 03 evidence:**
+  - `pnpm check`: pass, 697/697 unit tests.
+  - Full E2E: 241/241, before the Tabs fix.
+  - Targeted gallery spec: 36/36 after the fix, including 6 new responsive regression tests.
+  - CI `check`: green on every PR.
+  - Chromium only; cross-browser E2E is in Phase 22.
+- **Ownership change (user, 2026-11-16):** Yousef and Claude finished Phase 03. Mariam joins
+  from Phase 04.
+- **Latest report:** [phases/phase-03-closure-report.md](phases/phase-03-closure-report.md) (Phase 02: [phases/phase-02-report.md](phases/phase-02-report.md); Phase 01: [phases/phase-01-report.md](phases/phase-01-report.md))
 - **Stack decision:** [decisions/ADR-001-frontend-stack.md](decisions/ADR-001-frontend-stack.md) (Approved by the user, 2026-11-12)
 - **Phase 01 commit:** `acf48c9` `chore: initialize project (Phase 01)` on `main`.
 - **Phase 02 commit:** `79685af` `docs(phase-02): design values, progress and phase report` on
@@ -71,7 +62,7 @@ works offline and delivers packages per [TEAM_COLLABORATION.md](TEAM_COLLABORATI
 | --- | ----------------------------------- | ----------- |
 | 01  | Project initialization & tooling    | Done        |
 | 02  | Design System implementation        | Done        |
-| 03  | Core UI primitives                  | In progress |
+| 03  | Core UI primitives                  | Done        |
 | 04  | Routing & navigation registry       | Not started |
 | 05  | Shared App Shell                    | Not started |
 | 06  | Shared states & overlay/guard infra | Not started |
@@ -95,7 +86,29 @@ works offline and delivers packages per [TEAM_COLLABORATION.md](TEAM_COLLABORATI
 
 ## Open blockers
 
-None for Phase 02.
+None.
+
+## Outstanding obligations (deferred Phase 03 primitives)
+
+Approved deferral: [ADR-002](decisions/ADR-002-phase-03-scope-deferral.md),
+[phase-03-plan.md](phases/phase-03-plan.md) §2.1. These are deferred, not cancelled, and not
+implemented. Each is built from an approved contract in `src/shared/ui`, with unit,
+accessibility and browser validation, **before the first consuming feature is considered
+complete**. No local substitutes.
+
+| #   | Component              | Trigger and notes                                                                                                                  | Status      |
+| --- | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| O-1 | Textarea               | First consuming feature                                                                                                            | Outstanding |
+| O-2 | Select                 | First consuming feature; Menu does not replace it                                                                                  | Outstanding |
+| O-3 | Checkbox               | First consuming feature                                                                                                            | Outstanding |
+| O-4 | Radio                  | First consuming feature; a Tabs filter group does not replace native Radio controls                                                | Outstanding |
+| O-5 | Switch                 | First consuming feature                                                                                                            | Outstanding |
+| O-6 | Tooltip                | First consuming feature                                                                                                            | Outstanding |
+| O-7 | Generic Badge          | First consuming feature; StatusBadge does not replace it                                                                           | Outstanding |
+| O-8 | Navigation Icon Button | Figma verification and implementation before its first consuming screen (may come before Phase 05, e.g. the Landing mobile navbar) | Outstanding |
+
+Each phase checks at planning time whether its screens consume one of these, and if so adds it to
+that phase's scope.
 
 ## Risks and tracked issues
 
@@ -103,7 +116,7 @@ None for Phase 02.
 | --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | R-1 | Builds depended on Google Fonts at build time (`next/font/google`); failures observed on a slow network.                                                                              | **Resolved 2026-11-13** — fonts self-hosted with `next/font/local` (`src/design-system/fonts/`, OFL); build, dev server and E2E verified with the network blocked. |
 | I-1 | Phase 01 placeholder `/` heading uses `text-2xl font-bold`; `text-2xl` no longer exists (Tailwind scale removed in step 3), so the heading has no size. Not part of the final design. | Open — placeholder is replaced by the Landing page in Phase 07.                                                                                                    |
-| I-3 | Development-only React hydration mismatch warning during `pnpm test:e2e` on `/dev/tokens` (likely `tests/e2e/icons.spec.ts` styling cells before hydration). Tests pass.              | **Open — not resolved.** Tracked in GitHub issue #3; test-only fix planned before or early in Phase 03.                                                            |
+| I-3 | Development-only React hydration mismatch warning during `pnpm test:e2e` on `/dev/tokens` (likely `tests/e2e/icons.spec.ts` styling cells before hydration). Tests pass.              | **Resolved** — PR #5 (`4990281`); GitHub issue #3 closed. E2E now fails on browser console errors.                                                                 |
 | I-2 | `UI/Navigation` (Cairo) has style name "ExtraBold" but weight 400 in Figma.                                                                                                           | NOT VERIFIED — confirm in Figma before any use.                                                                                                                    |
 
 ## Environment notes
@@ -135,6 +148,12 @@ numerals and English runs inside Arabic text (direction isolation). See R-1, I-1
 | 7   | Final audit + phase report; G-1, G-2 implemented             | Done — approved (2026-11-13)   |
 
 ## Next action
+
+**2026-11-16:** Phase 03 closure approved by the user. Once the closure documentation PR is
+merged, the next step is the project-wide Motion & Interaction Audit, then Phase 04 (Routing &
+navigation registry), each started only on the user's instruction.
+
+### History
 
 Phase 02 is **completed** (2026-11-13): all acceptance criteria passed, the six visual baselines
 were approved by the user, PR #2 was merged into `main` (final commit `79685af`) with CI `check`

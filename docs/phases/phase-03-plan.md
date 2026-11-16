@@ -1,7 +1,11 @@
 # Phase 03 — Core UI primitives (Shared UI components) — Plan
 
-- **Status:** Plan and role split approved in principle by the user (2026-11-13). Open items:
-  P-1 (dependencies), D-B6 (contrast), P-4 (issue #3 PR). No Phase 03 component code exists.
+- **Status:** Completed — Phase 03 closed (2026-11-16); see the
+  [closure report](phase-03-closure-report.md) and
+  [ADR-002](../decisions/ADR-002-phase-03-scope-deferral.md).
+- **Original status (historical, 2026-11-13):** Plan and role split approved in principle by the
+  user. Open items: P-1 (dependencies), D-B6 (contrast), P-4 (issue #3 PR). No Phase 03 component
+  code existed then. All three items were resolved during the phase.
 - **Baseline:** `main` at `b62ab21`. Its code is identical to `79685af`, the Phase 02 merge and the
   starter v1 baseline; the newer commit changes docs only.
 - **Branch:** `phase/03-shared-ui`
@@ -45,6 +49,32 @@ Phase 03).
 **Rule from the Roadmap:** inspect Figma for every NOT VERIFIED property as each component is
 built (Navigation Icon Button, inputs, dialogs, badges, tabs). A value that Figma does not define
 is a decision for the user. It is never invented.
+
+### 2.1 Approved scope deferral (user, 2026-11-16)
+
+The scope above is unchanged. Phase 03 delivered nine components (Button, Input, Card,
+StatusBadge, Tabs, Dialog, Sheet, Popover/Menu, Avatar). The following are **deferred, not
+cancelled**, per [ADR-002](../decisions/ADR-002-phase-03-scope-deferral.md):
+
+- Textarea
+- Select
+- Checkbox
+- Radio
+- Switch
+- Tooltip
+- Generic Badge
+- Navigation Icon Button (Figma verification and implementation)
+
+- **Trigger:** each is built before the first consuming feature is considered complete. No phase
+  number is fixed until that feature is known.
+- **Navigation Icon Button:** built before its first consuming screen, which may come before Phase
+  05 (for example the Landing mobile navbar, if it uses it).
+- **Same loop as the rest of Phase 03:** approved contract first, then implementation in
+  `src/shared/ui`, existing tokens only, and unit, `jest-axe` and browser validation.
+- **No local substitutes and no assumed replacements:**
+  - StatusBadge is not the generic Badge.
+  - Menu is not Select.
+  - A Tabs filter group is not native Radio controls.
 
 ## 3. Roles and assignment for Phase 03 (agreed by the user, 2026-11-13)
 
@@ -116,13 +146,13 @@ used. `@testing-library/jest-dom` and `vitest-axe` are not added.
 
 ## 5. Component order and deliveries
 
-| Order | Component                                                                                     | Owner                 | Delivery              | Notes                                                                          |
-| ----- | --------------------------------------------------------------------------------------------- | --------------------- | --------------------- | ------------------------------------------------------------------------------ |
-| 1     | Button                                                                                        | Mariam                | `shared-ui-button` v1 | Contract: [phase-03-button-contract.md](phase-03-button-contract.md)           |
-| 2     | Input (plus label and inline error)                                                           | Mariam                | `shared-ui-input` v1  | Figma values NOT VERIFIED. Yousef reads Figma and writes the contract first    |
-| 3     | Card surfaces                                                                                 | Mariam                | `shared-ui-card` v1   | Some values verified (doc cards, Statistic Card); the rest NOT VERIFIED        |
-| 4     | Badge and Status Badge                                                                        | Mariam                | `shared-ui-badge` v1  | Labels per Handoff; style NOT VERIFIED                                         |
-| 5+    | Textarea, Select, Checkbox, Radio, Switch, Tabs, Tooltip, Avatar, Dialog, Sheet, Popover/Menu | Assigned per delivery | —                     | Dialog and Sheet focus-trap work may stay with Yousef (architecture-sensitive) |
+| Order | Component                                                                                     | Owner                 | Delivery              | Notes                                                                                                                                                 |
+| ----- | --------------------------------------------------------------------------------------------- | --------------------- | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1     | Button                                                                                        | Mariam                | `shared-ui-button` v1 | Contract: [phase-03-button-contract.md](phase-03-button-contract.md)                                                                                  |
+| 2     | Input (plus label and inline error)                                                           | Mariam                | `shared-ui-input` v1  | Figma values NOT VERIFIED. Yousef reads Figma and writes the contract first                                                                           |
+| 3     | Card surfaces                                                                                 | Mariam                | `shared-ui-card` v1   | Some values verified (doc cards, Statistic Card); the rest NOT VERIFIED                                                                               |
+| 4     | Badge and Status Badge                                                                        | Mariam                | `shared-ui-badge` v1  | Labels per Handoff; style NOT VERIFIED                                                                                                                |
+| 5+    | Textarea, Select, Checkbox, Radio, Switch, Tabs, Tooltip, Avatar, Dialog, Sheet, Popover/Menu | Assigned per delivery | —                     | Dialog and Sheet focus-trap work may stay with Yousef (architecture-sensitive). Textarea, Select, Checkbox, Radio, Switch and Tooltip deferred (§2.1) |
 
 Each component goes through the same loop:
 
@@ -164,6 +194,9 @@ Yousef reviews, integrates and merges every delivery. Mariam never pushes.
 - DoD: no visual component used by features exists outside `shared/ui`, and every variant maps to
   props.
 
+Outcome at closure: see [phase-03-closure-report.md](phase-03-closure-report.md). The scope items
+deferred in §2.1 are accepted as **DEFERRED — APPROVED** (A-14), not as delivered.
+
 ## 8. Risks
 
 | Risk                                                            | Mitigation                                                                                                                                      |
@@ -175,7 +208,17 @@ Yousef reviews, integrates and merges every delivery. Mariam never pushes.
 | Test-tooling gap (no jsdom or axe yet)                          | P-1 before coding                                                                                                                               |
 | Visual baselines are Windows/Chromium-only                      | Mariam's screenshots are review evidence; baselines are created by Yousef during integration                                                    |
 
-## 9. Next steps
+## 9. Next Steps (Historical — 2026-11-13)
+
+**Resolved through the Phase 03 closure process (2026-11-16).** The steps below are kept for
+traceability only. They are complete:
+
+- **Completed:** nine components (Button, Input, Card, StatusBadge, Tabs, Dialog, Sheet,
+  Popover/Menu, Avatar).
+- **Formally deferred:** eight components (Textarea, Select, Checkbox, Radio, Switch, Tooltip,
+  Generic Badge, Navigation Icon Button). See §2.1 and ADR-002. The deferred components are **not
+  implemented**.
+- **Final outcome:** documented in the [Phase 03 closure report](phase-03-closure-report.md).
 
 1. The user decides D-B6 and approves the P-1 dependency list (D-B1 to D-B5 decided 2026-11-13).
 2. P-1: dependency approval, then a `chore(deps)` PR.
