@@ -34,7 +34,10 @@ Single resume point. A new session starts by reading this file, the latest phase
   `feature/03-popover-menu-v1`): contract
   [phases/phase-03-popover-menu-contract.md](phases/phase-03-popover-menu-contract.md) final
   (D-PM1–D-PM9). `Popover`, `Menu` (context / account, radio items) on
-  `internal/useAnchoredOverlay.ts`; PR open against `main`; awaiting merge approval.
+  `internal/useAnchoredOverlay.ts`; merged through PR #20 (rebase), `main` at `d13470c`.
+  **Ownership change (user, 2026-11-16):** Yousef and Claude finish Phase 03; Mariam joins from
+  Phase 04 (no further Phase 03 assignments or starters). Avatar V1 **implemented** by Yousef
+  on `feature/03-avatar-v1`; approved; PR open against `main`; awaiting merge approval.
 - **Latest report:** [phases/phase-02-report.md](phases/phase-02-report.md) (Phase 01: [phases/phase-01-report.md](phases/phase-01-report.md))
 - **Stack decision:** [decisions/ADR-001-frontend-stack.md](decisions/ADR-001-frontend-stack.md) (Approved by the user, 2026-11-12)
 - **Phase 01 commit:** `acf48c9` `chore: initialize project (Phase 01)` on `main`.
