@@ -1,9 +1,13 @@
 # Phase 04 — Routing & navigation registry — Closure Report
 
-- **Status:** **DRAFT — ready for final review. Phase 04 is not closed.** All product copy is
-  approved and applied (§8; product owner, 2026-11-16). The 404 limitation is accepted as a
-  temporary development-stage risk, R-2 (§7.1), not as production behaviour. Phase 04 closes only
-  after the product owner's merge authorization and the merge of the implementation PR.
+- **Status:** **CLOSED** (2026-11-16). The product owner authorized the merge; PR #27 was
+  squash-merged into `main` as `9888e088470e7d6a0c59f3ae6df18953bc2e29f2`, and post-merge CI on
+  `main` completed successfully. All product copy is approved (§8). **Risk R-2 stays OPEN**
+  (§7.1): accepted for development only, with a mandatory gate before production launch, no
+  later than Phase 22.
+- **Merge:** PR #27 (`feat: implement Phase 04 routing and navigation registry`), squash commit
+  `9888e08` on `main` (68 files; no dependency changes; Roadmap, Phase 03 records and ADRs
+  unchanged).
 - **Branch:** `feat/phase-04-routing-navigation`, from `main` at `de697cf` (PR #26).
 - **Plan:** [phase-04-plan.md](phase-04-plan.md); decisions D-R1 to D-R12;
   [ADR-003](../decisions/ADR-003-phase-04-folder-focus-routes.md) (Approved).
@@ -351,3 +355,41 @@ Each task can be done offline from a starter package and checked independently:
    approval" (§8.2, §8.3) for tone and consistency. Output: a written note, with no code.
 3. **Manual RTL/LTR verification:** a checklist pass over all placeholder routes and the 404 in
    both locales at 1440/768/390/320, with screenshots. Output: a checklist and images.
+
+## 12. Final closure evidence (2026-11-16)
+
+Verified on the PR head `02a1057` immediately before the merge, then on `main`:
+
+| Check                                                                                  | Result                                                              |
+| -------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| `corepack pnpm check` (typecheck, ESLint, dependency-cruiser, Prettier, Vitest, build) | **Pass**; unit tests **907/907**                                    |
+| `corepack pnpm test:e2e` (full suite)                                                  | **382/382** passed                                                  |
+| Production (`next start`)                                                              | **71/71** route-status checks; test probe on **0** production pages |
+| CI `check` on the PR head `02a1057`                                                    | **Success**                                                         |
+| Merge                                                                                  | Squash, head pinned to `02a1057`; PR #27 **MERGED** as `9888e08`    |
+| Post-merge CI on `main` (`9888e08`)                                                    | **Completed: success**                                              |
+
+**Delivered and approved:**
+
+- Routing architecture: D-R1 to D-R12 and ADR-003.
+- Typed next-intl `pathnames`: Arabic unprefixed, English `/en`.
+- 30 placeholder routes in `(public)`, `(auth)`, `(app)` and `(focus)`.
+- A localized 404 (catch-all) and a localized error boundary, plus a global fallback and the
+  development-only error-test route.
+- The navigation registry: 8 destinations, mobile bar and More control, More-sheet extras,
+  Settings navigation.
+- `resolveActiveDestination`, `mobileBarIndicator` and `useActiveDestination`.
+- Every visible string verified from Figma or the Handoff, or approved by the product owner.
+
+**Carried forward (not closed by Phase 04):**
+
+- **R-2:** the blank no-JavaScript 404. OPEN, with a Phase 22 gate (§7.1).
+- **Deferred decisions:**
+  - D-08: Tutor route and lecture context.
+  - D-09: Quiz Results persistence, Answer Review deep links, quiz mode in the URL.
+  - D-02: reset-password link format.
+  - D-18: plan-upgrade behaviour.
+  - Settings "إدارة الحساب" target.
+- **O-8:** Navigation Icon Button Figma check and contract, required before Phase 05.
+- **Temporary instrumentation:** `ActiveDestinationProbe` (non-production only) is removed when
+  the Phase 05 shell consumes `useActiveDestination`.

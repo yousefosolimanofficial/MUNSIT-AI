@@ -1,8 +1,7 @@
 # Phase 04 — Routing & navigation registry — Plan
 
-- **Status:** **Architecture approved (user, 2026-11-16). Implementation in progress** on
-  `feat/phase-04-routing-navigation` (authorized 2026-11-16); evidence in the draft
-  [Phase 04 closure report](phase-04-closure-report.md). **Approved** means approved by the user.
+- **Status:** **Completed — Phase 04 CLOSED (2026-11-16).** Implemented in PR #27 (`9888e08`); see
+  the [Phase 04 closure report](phase-04-closure-report.md). **Approved** means approved by the user.
   **Deferred** and **Unresolved** items are not routed in Phase 04 (§17). The folder-route
   interpretation (§7.3) is recorded in
   [ADR-003](../decisions/ADR-003-phase-04-folder-focus-routes.md), **Approved** on 2026-11-16.
