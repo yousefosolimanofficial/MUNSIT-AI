@@ -3,8 +3,8 @@
 - **Status:** **Architecture approved for planning (user, 2026-11-16). Phase 04 has not
   started.** Nothing in this plan is implemented. **Approved** means approved by the user.
   **Deferred** and **Unresolved** items are not routed in Phase 04 (§17). The folder-route
-  interpretation (§7.3) is approved for planning. Its formal Roadmap amendment is
-  [ADR-003](../decisions/ADR-003-phase-04-folder-focus-routes.md), status **Proposed**.
+  interpretation (§7.3) is recorded in
+  [ADR-003](../decisions/ADR-003-phase-04-folder-focus-routes.md), **Approved** on 2026-11-16.
 - **Baseline:** `main` at `cf96d97` (Phase 03 closed in PR #24; Tabs M-1 fix in PR #25).
 - **Branch for the implementation (after authorization):** `phase/04-routing-navigation`
 
@@ -210,7 +210,7 @@ Review) get no route until their decisions are made (§17). No other route may b
 - **Traceability:**
   - The Roadmap text stays unchanged.
   - The formal amendment is recorded in
-    [ADR-003](../decisions/ADR-003-phase-04-folder-focus-routes.md) (status **Proposed**), following
+    [ADR-003](../decisions/ADR-003-phase-04-folder-focus-routes.md) (**Approved** 2026-11-16), following
     the ADR-002 precedent for Roadmap scope amendments.
   - If a later Figma version draws a full-screen folder workflow, it gets a `(focus)` route
     through a contract and an update to this plan.
@@ -330,8 +330,8 @@ Labels live only in messages (`nav.<id>`); components never contain them.
 
 ## 13. Implementation sequence (after authorization)
 
-1. **Approvals:** done for planning (§17). Implementation also needs ADR-003 approved, D-R9
-   copy approved before use, and the user's authorization to start Phase 04.
+1. **Approvals:** done (§17; ADR-003 approved 2026-11-16). Implementation still needs the D-R9
+   copy approved before use and the user's separate authorization to start Phase 04.
 2. **`pathnames` and route constants:** in `routing.ts`, plus unit tests for `getPathname` in both
    locales and for path uniqueness.
 3. **Registry and messages:** the `nav` namespace in `ar` and `en`, with Arabic copy for the More
@@ -395,20 +395,20 @@ Labels live only in messages (`nav.<id>`); components never contain them.
 
 ## 17. Decisions, risks and open items
 
-| ID    | Decision                                                                                                                      | Evidence                                                                                         | Status                              | Remaining dependency                                                       |
-| ----- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | ----------------------------------- | -------------------------------------------------------------------------- |
-| D-R1  | Short English paths: `/`, the 8 destination roots, the 4 auth paths, `/settings`, and the Figma-supported nested paths (§7.2) | No source defines paths; screens and workflows verified in the Handoff and Figma (§7.1)          | **Approved** (except rows 9 and 16) | —                                                                          |
-| D-R2  | Arabic unprefixed, English `/en`, shared segments, next-intl typed `pathnames`, no second router                              | `routing.ts`, `navigation.ts`, `proxy.ts`                                                        | **Approved**                        | Dev routes declared in `pathnames` (§10)                                   |
-| D-R3  | Settings = Profile Overview + 5 secondary screens; secondary-nav data in the registry                                         | Figma page 14: 6 screens + "Settings Navigation"                                                 | **Approved**                        | Arabic nav copy read from Figma at implementation                          |
-| D-R4  | No folder focus routes; `/folders/[folderId]` in `(app)`; Create Folder and Add Content are dialogs; selection is local state | Figma page 13 frames and prototype links (§7.1); Roadmap discrepancy (§7.3)                      | **Approved for Phase 04 planning**  | Formal Roadmap amendment: ADR-003 (**Proposed**) needs the user's approval |
-| D-R5  | Quiz Taking (and Results and Review, when routed) keep the shell → `(app)`                                                    | Figma page 09: Rail on all Tablet frames                                                         | **Approved**                        | —                                                                          |
-| D-R6  | Active destination, More open state and "More contains current" are separate; More never `aria-current`; Settings → none      | Handoff navigation rules; approved by the user                                                   | **Approved**                        | UI in Phase 05                                                             |
-| D-R7  | English labels: Dashboard, My Lectures, Summaries, Questions, Flashcards, Notes, Favorites, Folders                           | Product-owner-approved copy (Figma has no English nav copy)                                      | **Approved**                        | —                                                                          |
-| D-R8  | Localized catch-all + `[locale]/not-found.tsx`; no experimental `global-not-found`; errors separate                           | Next 16.4 docs: `notFound()` renders the nearest `not-found`; `global-not-found` is experimental | **Approved**                        | Error namespace passed to the client (§6)                                  |
-| D-R9  | Concise bilingual placeholder ("not implemented"), 404 and error messages; non-nav screen titles from Figma frame names       | No copy in the design                                                                            | **Approved** (approach)             | Exact strings reviewed before merge of the implementation PR               |
-| D-R10 | Development-only error-test route under `dev/`, 404 in production                                                             | Existing `/dev/*` production guard; Next 16.4 `error.md`                                         | **Approved**                        | Production 404 verified with `next start`                                  |
-| D-R11 | Live Recording starts a new lecture at `/lectures/record`; no lecture id; My Lectures active                                  | Figma pages 04 and 06 (§7.1)                                                                     | **Approved**                        | —                                                                          |
-| D-R12 | Landing `/` in `(public)`, Dashboard `/dashboard` in `(app)`; no auth redirects or route protection in Phase 04               | Next 16 route-group caveat; Roadmap Phase 04 has no auth requirement; gate D-02 unresolved       | **Approved**                        | Redirects decided with D-02 (Phase 08 / 21)                                |
+| ID    | Decision                                                                                                                      | Evidence                                                                                         | Status                              | Remaining dependency                                         |
+| ----- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | ----------------------------------- | ------------------------------------------------------------ |
+| D-R1  | Short English paths: `/`, the 8 destination roots, the 4 auth paths, `/settings`, and the Figma-supported nested paths (§7.2) | No source defines paths; screens and workflows verified in the Handoff and Figma (§7.1)          | **Approved** (except rows 9 and 16) | —                                                            |
+| D-R2  | Arabic unprefixed, English `/en`, shared segments, next-intl typed `pathnames`, no second router                              | `routing.ts`, `navigation.ts`, `proxy.ts`                                                        | **Approved**                        | Dev routes declared in `pathnames` (§10)                     |
+| D-R3  | Settings = Profile Overview + 5 secondary screens; secondary-nav data in the registry                                         | Figma page 14: 6 screens + "Settings Navigation"                                                 | **Approved**                        | Arabic nav copy read from Figma at implementation            |
+| D-R4  | No folder focus routes; `/folders/[folderId]` in `(app)`; Create Folder and Add Content are dialogs; selection is local state | Figma page 13 frames and prototype links (§7.1); Roadmap discrepancy (§7.3)                      | **Approved** (ADR-003, 2026-11-16)  | Folder dialogs and selection state built in Phase 19         |
+| D-R5  | Quiz Taking (and Results and Review, when routed) keep the shell → `(app)`                                                    | Figma page 09: Rail on all Tablet frames                                                         | **Approved**                        | —                                                            |
+| D-R6  | Active destination, More open state and "More contains current" are separate; More never `aria-current`; Settings → none      | Handoff navigation rules; approved by the user                                                   | **Approved**                        | UI in Phase 05                                               |
+| D-R7  | English labels: Dashboard, My Lectures, Summaries, Questions, Flashcards, Notes, Favorites, Folders                           | Product-owner-approved copy (Figma has no English nav copy)                                      | **Approved**                        | —                                                            |
+| D-R8  | Localized catch-all + `[locale]/not-found.tsx`; no experimental `global-not-found`; errors separate                           | Next 16.4 docs: `notFound()` renders the nearest `not-found`; `global-not-found` is experimental | **Approved**                        | Error namespace passed to the client (§6)                    |
+| D-R9  | Concise bilingual placeholder ("not implemented"), 404 and error messages; non-nav screen titles from Figma frame names       | No copy in the design                                                                            | **Approved** (approach)             | Exact strings reviewed before merge of the implementation PR |
+| D-R10 | Development-only error-test route under `dev/`, 404 in production                                                             | Existing `/dev/*` production guard; Next 16.4 `error.md`                                         | **Approved**                        | Production 404 verified with `next start`                    |
+| D-R11 | Live Recording starts a new lecture at `/lectures/record`; no lecture id; My Lectures active                                  | Figma pages 04 and 06 (§7.1)                                                                     | **Approved**                        | —                                                            |
+| D-R12 | Landing `/` in `(public)`, Dashboard `/dashboard` in `(app)`; no auth redirects or route protection in Phase 04               | Next 16 route-group caveat; Roadmap Phase 04 has no auth requirement; gate D-02 unresolved       | **Approved**                        | Redirects decided with D-02 (Phase 08 / 21)                  |
 
 **Unresolved (the design does not answer; not routed in Phase 04; no answer invented):**
 
