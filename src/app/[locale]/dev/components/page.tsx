@@ -4,9 +4,13 @@ import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 
 import { Avatar, type AvatarSize } from "@/shared/ui/Avatar";
+import { StatusBadge, type StatusBadgeStatus } from "@/shared/ui/Badge";
 import { Button } from "@/shared/ui/Button";
+import { Card } from "@/shared/ui/Card";
 import { Input } from "@/shared/ui/Input";
 import { Ltr } from "@/shared/ui/Ltr";
+import { Tab, TabList, TabPanel, Tabs, type TabsSize } from "@/shared/ui/Tabs";
+import type { IconName } from "@/design-system/icons/manifest";
 
 import { DialogDemo } from "./_components/DialogDemo";
 import { PopoverMenuDemo } from "./_components/PopoverMenuDemo";
@@ -37,6 +41,12 @@ import { SheetDemo } from "./_components/SheetDemo";
  *
  * Avatar: both sizes with initials, image, broken image (falls back to initials) and the
  * placeholder; outside <main> like the overlay sections.
+ *
+ * Card: `surface` at both paddings and `inset` rows nested in a `surface` (Recent Lectures
+ * pattern: the row's action is the inner Button, never the card). Status Badge: the four
+ * statuses on the page, on a `surface` and on an `inset`. Tabs: `default` (Desktop), `compact`
+ * in one row (Tablet) and in the 2 × 3 grid (Mobile), and the disabled list. All three sit
+ * outside <main> because they contain buttons.
  */
 
 export const metadata: Metadata = {
@@ -135,11 +145,74 @@ const AVATAR_SAMPLES: readonly {
   { id: "placeholder-96", size: 96, ar: "", en: "", decorative: true },
 ];
 
+/** Card copy: Figma Dashboard titles; the row titles are sample data. English for LTR. */
+const CARD_COPY = {
+  ar: {
+    activity: "النشاط الأخير",
+    lectures: "المحاضرات الأخيرة",
+    rows: ["مقدمة في الخوارزميات", "هياكل البيانات"],
+    open: "فتح",
+    body: "محتوى البطاقة يحدده المكان الذي تُستخدم فيه.",
+  },
+  en: {
+    activity: "Recent activity",
+    lectures: "Recent lectures",
+    rows: ["Introduction to algorithms", "Data structures"],
+    open: "Open",
+    body: "The caller decides the card's content and layout.",
+  },
+} as const;
+
+/** Status Badge labels: Figma `Status Badge` 2258:1026 (contract §1); English for LTR. */
+const BADGE_LABELS: Record<StatusBadgeStatus, { ar: string; en: string }> = {
+  ready: { ar: "جاهزة", en: "Ready" },
+  processing: { ar: "قيد المعالجة", en: "Processing" },
+  pending: { ar: "في الانتظار", en: "Pending" },
+  failed: { ar: "فشلت المعالجة", en: "Processing failed" },
+};
+const BADGE_STATUSES = ["ready", "processing", "pending", "failed"] as const;
+
+/**
+ * Lecture tool tabs: Figma `Lecture Tabs` (instance of `Lecture Tab` 2278:322), labels and icons
+ * in inline order from the start; "التفريغ النصي" is the active tab in Figma. English for LTR.
+ */
+const LECTURE_TOOLS: readonly { value: string; icon: IconName; ar: string; en: string }[] = [
+  { value: "transcript", icon: "fileText", ar: "التفريغ النصي", en: "Transcript" },
+  { value: "summary", icon: "sparkles", ar: "الملخص الذكي", en: "Smart summary" },
+  { value: "key-points", icon: "lightbulb", ar: "المعلومات المهمة", en: "Key points" },
+  { value: "questions", icon: "help", ar: "الأسئلة", en: "Questions" },
+  { value: "notes", icon: "note", ar: "الملاحظات", en: "Notes" },
+  { value: "slides", icon: "slides", ar: "شرائح المحاضرة", en: "Lecture slides" },
+];
+
+/**
+ * Tabs samples (contract §2.4, D-T3): the page picks the size and the Mobile grid, so each sample
+ * is shown only from the width it is designed for (`visibility`): `default` is the Desktop row
+ * (six tabs do not fit a phone), the compact row is the Tablet layout, the 2 × 3 grid is Mobile
+ * and fits every width. The disabled list uses the grid so it is checked at every width.
+ */
+const TABS_GRID = "grid grid-cols-3 gap-[8px]";
+const TABS_SAMPLES: readonly {
+  id: string;
+  size: TabsSize;
+  visibility: string;
+  listClassName?: string;
+  disabled?: boolean;
+}[] = [
+  { id: "default", size: "default", visibility: "hidden lg:grid" },
+  { id: "compact-row", size: "compact", visibility: "hidden md:grid" },
+  { id: "compact-grid", size: "compact", visibility: "grid", listClassName: TABS_GRID },
+  { id: "disabled", size: "compact", visibility: "grid", listClassName: TABS_GRID, disabled: true },
+];
+
 export default async function DevComponentsPage() {
   if (process.env.NODE_ENV === "production") notFound();
   const locale = await getLocale();
   const label = locale === "en" ? LABELS.en : LABELS.ar;
   const copy = locale === "en" ? INPUT_COPY.en : INPUT_COPY.ar;
+  const cardCopy = locale === "en" ? CARD_COPY.en : CARD_COPY.ar;
+  const badgeLabel = (status: StatusBadgeStatus) =>
+    BADGE_LABELS[status][locale === "en" ? "en" : "ar"];
 
   return (
     <>
@@ -310,6 +383,134 @@ export default async function DevComponentsPage() {
             </div>
           ))}
         </div>
+      </section>
+      <section
+        data-testid="gallery-card"
+        aria-labelledby="gallery-card-title"
+        className="grid gap-md p-lg pt-0"
+      >
+        <h2 id="gallery-card-title" className="text-dashboard-title-m" lang="en">
+          Card · locale={locale} · surface (padding lg / md) and inset rows inside a surface
+        </h2>
+        <div className="grid gap-md md:grid-cols-2">
+          <Card
+            as="section"
+            data-testid="card-surface-lg"
+            aria-labelledby="card-activity-title"
+            className="grid content-start gap-md"
+          >
+            <h3 id="card-activity-title" className="text-dashboard-title-m">
+              {cardCopy.activity}
+            </h3>
+            <p className="text-dashboard-body text-text-secondary">{cardCopy.body}</p>
+            <p className="text-dashboard-meta text-text-muted-readable">{cardCopy.body}</p>
+          </Card>
+          <Card
+            as="section"
+            padding="md"
+            data-testid="card-surface-md"
+            aria-labelledby="card-lectures-title"
+            className="grid content-start gap-[10px]"
+          >
+            <h3 id="card-lectures-title" className="text-dashboard-title-m">
+              {cardCopy.lectures}
+            </h3>
+            <ul className="grid gap-[10px]">
+              {cardCopy.rows.map((title, index) => (
+                <Card
+                  key={title}
+                  as="li"
+                  variant="inset"
+                  data-testid={`card-inset-${index}`}
+                  className="flex flex-wrap items-center justify-between gap-md"
+                >
+                  <span className="grid min-w-0 gap-xs">
+                    <span className="text-dashboard-body-medium">{title}</span>
+                    <StatusBadge status={index === 0 ? "ready" : "processing"} className="w-fit">
+                      {badgeLabel(index === 0 ? "ready" : "processing")}
+                    </StatusBadge>
+                  </span>
+                  <Button variant="secondary">{cardCopy.open}</Button>
+                </Card>
+              ))}
+            </ul>
+          </Card>
+        </div>
+      </section>
+      <section
+        data-testid="gallery-badge"
+        aria-labelledby="gallery-badge-title"
+        className="grid gap-md p-lg pt-0"
+      >
+        <h2 id="gallery-badge-title" className="text-dashboard-title-m" lang="en">
+          Status Badge · locale={locale} · four statuses on the page, a surface and an inset
+        </h2>
+        {(["page", "surface", "inset"] as const).map((context) => {
+          const badges = BADGE_STATUSES.map((status) => (
+            <StatusBadge key={status} status={status} data-testid={`badge-${context}-${status}`}>
+              {badgeLabel(status)}
+            </StatusBadge>
+          ));
+          const row = <div className="flex flex-wrap gap-sm">{badges}</div>;
+          return (
+            <div key={context} className="grid gap-xs">
+              <span className="font-mono text-dashboard-meta text-text-secondary" lang="en">
+                <Ltr>{context}</Ltr>
+              </span>
+              {context === "page" ? (
+                row
+              ) : context === "surface" ? (
+                <Card>{row}</Card>
+              ) : (
+                <Card>
+                  <Card variant="inset">{row}</Card>
+                </Card>
+              )}
+            </div>
+          );
+        })}
+      </section>
+      <section
+        data-testid="gallery-tabs"
+        aria-labelledby="gallery-tabs-title"
+        className="grid gap-md p-lg pt-0"
+      >
+        <h2 id="gallery-tabs-title" className="text-dashboard-title-m" lang="en">
+          Tabs · locale={locale} · default (lg+), compact row (md+), compact 2 × 3 grid, disabled
+        </h2>
+        {TABS_SAMPLES.map((sample) => (
+          <div
+            key={sample.id}
+            data-testid={`tabs-${sample.id}`}
+            className={`${sample.visibility} gap-xs`}
+          >
+            <span className="font-mono text-dashboard-meta text-text-secondary" lang="en">
+              <Ltr>{sample.id}</Ltr>
+            </span>
+            <Tabs
+              label={`${locale === "en" ? "Lecture tools" : "أدوات المحاضرة"} (${sample.id})`}
+              size={sample.size}
+              defaultValue="transcript"
+              className="grid gap-md"
+              {...(sample.disabled ? { disabled: true } : {})}
+            >
+              <TabList {...(sample.listClassName ? { className: sample.listClassName } : {})}>
+                {LECTURE_TOOLS.map((tool) => (
+                  <Tab key={tool.value} value={tool.value} icon={tool.icon}>
+                    {locale === "en" ? tool.en : tool.ar}
+                  </Tab>
+                ))}
+              </TabList>
+              {LECTURE_TOOLS.map((tool) => (
+                <TabPanel key={tool.value} value={tool.value}>
+                  <Card variant="inset" className="text-dashboard-body text-text-secondary">
+                    {locale === "en" ? tool.en : tool.ar}
+                  </Card>
+                </TabPanel>
+              ))}
+            </Tabs>
+          </div>
+        ))}
       </section>
     </>
   );
