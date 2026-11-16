@@ -627,3 +627,26 @@ read with the Plugin API. Full spec, decisions D-SH1 to D-SH6 and normalizations
 | Actions   | Row gap 12; primary fills, secondary hugs                                          | `flex gap-[12px]`; widths from the children                                 | FIGMA                         |
 | Motion    | Not designed                                                                       | Slide up 320 / down 200, scrim fade, `ease-standard`; reduced: opacity only | **Approved addition** (D-SH5) |
 | Body      | Not designed                                                                       | Focusable region while it overflows                                         | N-5 (WCAG 2.1.1)              |
+
+## 13. Popover and Menu (Phase 03) — Figma values and approved decisions (2026-11-16)
+
+Source: `Notification Dropdown` `2236:784`, `User Menu` `2236:813`, `More Options Dropdown`
+`2261:1500`, `Filter Menu` `2261:1430`, `Summary Options Menu` `2392:3979`, and their overlay
+frames, read with the Plugin API. Full spec and decisions D-PM1 to D-PM9:
+[phases/phase-03-popover-menu-contract.md](phases/phase-03-popover-menu-contract.md). Figma is
+not modified.
+
+| Item                | Figma                                                                                     | Implemented value                                                              | Status               |
+| ------------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ | -------------------- |
+| Menu `context`      | 220; Graphite 98%; Sky 18% border; radius 14; padding 6, gap 2; shadow 0/16/40 50%        | as Figma                                                                       | FIGMA                |
+| Menu `account`      | 256; Obsidian 97%; Sky 18%; radius 18; padding 8, gap 2; shadow 0/24/56 55%               | as Figma; account header is a consumer slot                                    | FIGMA                |
+| Popover             | 380 (Mobile 350); Obsidian 97%; Sky 18%; radius 20; padding 16, gap 6; shadow 0/24/56 55% | as Figma; width clamps to viewport − 40                                        | FIGMA                |
+| Items               | context 40 / Body / icon 18 Secondary; account 44 / Body Medium / icon 20 Sky; option 38  | as Figma; danger Coral Pulse                                                   | FIGMA                |
+| Selected option     | Sky 12% fill + check (vector, Sky)                                                        | `aria-checked:bg-accent-electric-sky/12` + existing `check` icon               | FIGMA (D-PM9)        |
+| Dividers            | context White 8%; account Sky 10%                                                         | as Figma                                                                       | FIGMA                |
+| Offsets             | context menus 6; User Menu 9; Notifications 16                                            | per component                                                                  | FIGMA (D-PM5)        |
+| Viewport margin     | Mobile panels inset 14–20                                                                 | menus 16; Popover 20                                                           | D-PM5                |
+| Hover / focus       | Not designed                                                                              | White 5% + D-B2 ring on keyboard focus                                         | **Addition** (D-PM4) |
+| Scrim               | Top Bar / Notes 1% (invisible); My Lectures 62%                                           | None in the primitives; My Lectures 62% is a module exception                  | D-PM8                |
+| Motion              | Not designed                                                                              | In 200: fade + scale 0.97 + 4px slide; out 120: fade + scale; reduced: opacity | **Addition** (D-PM6) |
+| Rename/delete icons | Raw vectors, not in the icon set                                                          | Rendered without icons until exported                                          | D-PM9                |
