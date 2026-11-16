@@ -3,12 +3,20 @@
 Single resume point. A new session starts by reading this file, the latest phase report, and
 [docs/references/MUNSIT_AI_Development_Roadmap_v1.0.md](references/MUNSIT_AI_Development_Roadmap_v1.0.md).
 
-- **Current phase:** 03 — Core UI primitives — **Done** (closure approved by the user on
-  2026-11-16; formally closed when the closure documentation PR is merged). Report:
+- **Current phase:** 04 — Routing & navigation registry — **In progress** (implementation
+  authorized by the user on 2026-11-16; branch `feat/phase-04-routing-navigation`). Plan:
+  [phases/phase-04-plan.md](phases/phase-04-plan.md); folder-route interpretation:
+  [decisions/ADR-003-phase-04-folder-focus-routes.md](decisions/ADR-003-phase-04-folder-focus-routes.md)
+  (Approved). Draft report: [phases/phase-04-closure-report.md](phases/phase-04-closure-report.md).
+- **Phase 03:** **CLOSED** — closure PR #24 merged (`4a2f3f4`). Report:
   [phases/phase-03-closure-report.md](phases/phase-03-closure-report.md): 14 PASS, 2 DEFERRED —
-  APPROVED, 0 BLOCKED. Final code commit on `main`: `fff239e`.
-- **Next phase:** 04 — Routing & navigation registry — **Not started**. Before it: the
-  project-wide Motion & Interaction Audit (scheduled by the user after Phase 03 closure).
+  APPROVED, 0 BLOCKED. Final Phase 03 code commit: `fff239e`.
+- **Between Phase 03 and Phase 04 (2026-11-16):**
+  - Motion & Interaction Audit of the nine Phase 03 components: **completed**. Finding M-1 (Tabs
+    hover not limited to fine pointers) fixed in PR #25 (`cf96d97`). M-2 to M-6 are design-spec
+    gaps (close-button and menu pressed states, Input hover, Button loading), not defects.
+  - Phase 04 plan approved (D-R1 to D-R12) and merged through PR #26 (`de697cf`), including
+    ADR-003.
 - **Phase 03 deliveries (all merged through PRs, rebase, CI green):**
   - Button V1: #8 (Mariam delivery)
   - Input V1: #11 (Mariam delivery)
@@ -29,7 +37,7 @@ Single resume point. A new session starts by reading this file, the latest phase
   - Chromium only; cross-browser E2E is in Phase 22.
 - **Ownership change (user, 2026-11-16):** Yousef and Claude finished Phase 03. Mariam joins
   from Phase 04.
-- **Latest report:** [phases/phase-03-closure-report.md](phases/phase-03-closure-report.md) (Phase 02: [phases/phase-02-report.md](phases/phase-02-report.md); Phase 01: [phases/phase-01-report.md](phases/phase-01-report.md))
+- **Latest report:** [phases/phase-03-closure-report.md](phases/phase-03-closure-report.md) (Phase 04 draft: [phases/phase-04-closure-report.md](phases/phase-04-closure-report.md); Phase 02: [phases/phase-02-report.md](phases/phase-02-report.md); Phase 01: [phases/phase-01-report.md](phases/phase-01-report.md))
 - **Stack decision:** [decisions/ADR-001-frontend-stack.md](decisions/ADR-001-frontend-stack.md) (Approved by the user, 2026-11-12)
 - **Phase 01 commit:** `acf48c9` `chore: initialize project (Phase 01)` on `main`.
 - **Phase 02 commit:** `79685af` `docs(phase-02): design values, progress and phase report` on
@@ -63,7 +71,7 @@ works offline and delivers packages per [TEAM_COLLABORATION.md](TEAM_COLLABORATI
 | 01  | Project initialization & tooling    | Done        |
 | 02  | Design System implementation        | Done        |
 | 03  | Core UI primitives                  | Done        |
-| 04  | Routing & navigation registry       | Not started |
+| 04  | Routing & navigation registry       | In progress |
 | 05  | Shared App Shell                    | Not started |
 | 06  | Shared states & overlay/guard infra | Not started |
 | 07  | Landing Page                        | Not started |
@@ -148,6 +156,11 @@ numerals and English runs inside Arabic text (direction isolation). See R-1, I-1
 | 7   | Final audit + phase report; G-1, G-2 implemented             | Done — approved (2026-11-13)   |
 
 ## Next action
+
+**2026-11-16:** Phase 04 implementation in progress on `feat/phase-04-routing-navigation`:
+routes, registry, active-destination resolver, placeholders, localized 404 and error handling,
+tests. The implementation PR merges only after review and the product owner's approval of the
+PROPOSED bilingual copy (D-R9). Mariam's Phase 04 tasks are not delegated yet.
 
 **2026-11-16:** Phase 03 closure approved by the user. Once the closure documentation PR is
 merged, the next step is the project-wide Motion & Interaction Audit, then Phase 04 (Routing &

@@ -1,12 +1,14 @@
 # Phase 04 — Routing & navigation registry — Plan
 
-- **Status:** **Architecture approved for planning (user, 2026-11-16). Phase 04 has not
-  started.** Nothing in this plan is implemented. **Approved** means approved by the user.
+- **Status:** **Architecture approved (user, 2026-11-16). Implementation in progress** on
+  `feat/phase-04-routing-navigation` (authorized 2026-11-16); evidence in the draft
+  [Phase 04 closure report](phase-04-closure-report.md). **Approved** means approved by the user.
   **Deferred** and **Unresolved** items are not routed in Phase 04 (§17). The folder-route
   interpretation (§7.3) is recorded in
   [ADR-003](../decisions/ADR-003-phase-04-folder-focus-routes.md), **Approved** on 2026-11-16.
 - **Baseline:** `main` at `cf96d97` (Phase 03 closed in PR #24; Tabs M-1 fix in PR #25).
-- **Branch for the implementation (after authorization):** `phase/04-routing-navigation`
+- **Implementation branch:** `feat/phase-04-routing-navigation` (name set by the user's
+  authorization, 2026-11-16)
 
 ## 1. Objective
 
@@ -442,3 +444,17 @@ Ownership rules (CLAUDE.md): `src/app`, `src/shared` and `src/i18n` are owned by
 **Mariam's work is not started.** Her starter package and exact handoff (files, signature,
 checklist) must be reviewed and approved by the user before any delegation, per
 `TEAM_COLLABORATION.md`.
+
+## 19. Implementation evidence (2026-11-16, draft)
+
+Implemented as planned. Details, test counts, the copy table and known limitations are in the draft
+[Phase 04 closure report](phase-04-closure-report.md). Deviations from the plan text:
+
+- **Route constants location:** they live in `src/i18n/routes.ts`, a leaf module, so that both
+  `src/i18n/routing.ts` (`pathnames`) and `src/shared/navigation` can import them without a cycle.
+  The registry and resolver are in `src/shared/navigation/` as planned.
+- **Error boundary prop:** Next.js 16.4 passes `retry` (not `reset`) to `error.tsx` and
+  `global-error.tsx`; the implementation follows the installed docs.
+- **Production 404 first response:** a Next.js behaviour under a top-level dynamic root layout
+  (report §7.1). The localized page renders on hydration. The experimental `global-not-found` stays
+  excluded (D-R8).
