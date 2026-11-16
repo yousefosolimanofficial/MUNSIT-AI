@@ -302,10 +302,16 @@ describe("Tabs — classes (§6.5)", () => {
       expect.arrayContaining([
         "border-transparent",
         "text-text-secondary",
-        "enabled:hover:bg-text-primary/5",
-        "enabled:hover:text-text-primary",
+        "[@media(hover:hover)_and_(pointer:fine)]:enabled:hover:bg-text-primary/5",
+        "[@media(hover:hover)_and_(pointer:fine)]:enabled:hover:text-text-primary",
       ]),
     );
+    // M-1: hover applies only to fine pointers that can hover (motion.css rule), never on touch.
+    expect(
+      classesOf(inactive).filter(
+        (c) => c.includes("hover:") && !c.startsWith("[@media(hover:hover)"),
+      ),
+    ).toEqual([]);
     expect(classesOf(active).some((c) => c.includes("hover:"))).toBe(false);
     expect(classesOf(active.querySelector("svg") as Element)).toContain("text-accent-electric-sky");
     expect(classesOf(inactive.querySelector("svg") as Element)).not.toContain(

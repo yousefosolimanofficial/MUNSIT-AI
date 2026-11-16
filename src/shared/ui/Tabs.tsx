@@ -113,7 +113,7 @@ const TAB_SIZE: Record<TabsSize, string> = {
 const TAB_STATE: Record<TabsSize, { inactive: string; active: string }> = {
   default: {
     inactive:
-      "border-transparent text-text-secondary enabled:hover:bg-text-primary/5 enabled:hover:text-text-primary",
+      "border-transparent text-text-secondary [@media(hover:hover)_and_(pointer:fine)]:enabled:hover:bg-text-primary/5 [@media(hover:hover)_and_(pointer:fine)]:enabled:hover:text-text-primary",
     active: "bg-accent-electric-sky/12 border-accent-electric-sky/32 text-text-primary",
   },
   compact: {

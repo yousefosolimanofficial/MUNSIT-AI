@@ -460,3 +460,113 @@ for (const locale of LOCALES) {
     }
   });
 }
+
+/**
+ * M-1 (Motion & Interaction Audit): the `default` tab hover applies only under
+ * `(hover: hover) and (pointer: fine)`, like Button and Menu, so touch never leaves a sticky
+ * hover fill. 1280 wide: the `default` row is shown from `lg` (gallery, D-T3).
+ */
+const tabBg = (tab: Locator) => tab.evaluate((el) => getComputedStyle(el).backgroundColor);
+const TRANSPARENT = "rgba(0, 0, 0, 0)";
+
+test.describe("Tabs hover, fine pointer (M-1)", () => {
+  test.use({ viewport: { width: 1280, height: 900 } });
+
+  test("hovering an inactive default tab shows the White 5% fill and white label", async ({
+    page,
+  }) => {
+    await load(page, "/dev/components");
+    expect(
+      await page.evaluate(() => matchMedia("(hover: hover) and (pointer: fine)").matches),
+    ).toBe(true);
+    const tab = page.getByTestId("tabs-default").getByRole("tab", { selected: false }).first();
+    expect(await tabBg(tab)).toBe(TRANSPARENT);
+    await tab.hover();
+    await expect.poll(() => tabBg(tab)).not.toBe(TRANSPARENT);
+    await expect
+      .poll(() => tab.evaluate((el) => getComputedStyle(el).color))
+      .toBe("rgb(255, 255, 255)");
+  });
+});
+
+test.describe("Tabs hover rules, coarse pointers (M-1)", () => {
+  test.use({ viewport: { width: 1280, height: 900 } });
+
+  test("every hover rule that styles an inactive default tab requires (hover: hover) and (pointer: fine)", async ({
+    page,
+  }) => {
+    // Chromium cannot emulate hover/pointer media features here, so the loaded stylesheet is
+    // checked instead. Tailwind's `hover:` alone only adds `(hover: hover)`, which still matches
+    // devices with a coarse primary pointer.
+    await load(page, "/dev/components");
+    const tab = page.getByTestId("tabs-default").getByRole("tab", { selected: false }).first();
+    const rules = await tab.evaluate((el) => {
+      // Tailwind 4 emits nested CSS: `.x:enabled:hover { @media (...) { background-color } }`, so
+      // declarations can sit in nested blocks under the hover rule; each one is collected with
+      // every media condition around it.
+      const found: { selector: string; media: string[] }[] = [];
+      const hasStyle = (rule: CSSRule) =>
+        "style" in rule &&
+        ((rule as CSSStyleRule).style.backgroundColor !== "" ||
+          (rule as CSSStyleRule).style.color !== "");
+      const children = (rule: CSSRule) =>
+        "cssRules" in rule ? Array.from((rule as CSSGroupingRule).cssRules) : [];
+      const collect = (rule: CSSRule, selector: string, media: string[]) => {
+        const next = rule instanceof CSSMediaRule ? [...media, rule.conditionText] : media;
+        if (hasStyle(rule)) found.push({ selector, media: next });
+        for (const child of children(rule)) collect(child, selector, next);
+      };
+      const walk = (list: CSSRule[], media: string[]) => {
+        for (const rule of list) {
+          const next = rule instanceof CSSMediaRule ? [...media, rule.conditionText] : media;
+          if (rule instanceof CSSStyleRule && rule.selectorText.includes(":hover")) {
+            let matches = false;
+            try {
+              // Strip only the :hover pseudo-class, not the escaped "\:hover\:" in class names.
+              matches = el.matches(rule.selectorText.replace(/(?<!\\):hover/g, ""));
+            } catch {
+              matches = false;
+            }
+            if (matches) {
+              collect(rule, rule.selectorText, media);
+              continue;
+            }
+          }
+          walk(children(rule), next);
+        }
+      };
+      for (const sheet of Array.from(document.styleSheets)) {
+        try {
+          walk(Array.from(sheet.cssRules), []);
+        } catch {
+          // cross-origin sheet: not ours
+        }
+      }
+      return found;
+    });
+    expect(rules.length).toBeGreaterThan(0); // the designed hover exists
+    for (const rule of rules) {
+      expect(
+        rule.media.some((m) => m.includes("hover: hover") && m.includes("pointer: fine")),
+        rule.selector,
+      ).toBe(true);
+    }
+  });
+});
+
+test.describe("Tabs tap (touch emulation)", () => {
+  test.use({ viewport: { width: 1280, height: 900 }, hasTouch: true, isMobile: true });
+
+  test("tapping selects a default tab and leaves the previous one without a fill", async ({
+    page,
+  }) => {
+    await load(page, "/dev/components");
+    const tabs = page.getByTestId("tabs-default").getByRole("tab");
+    await tabs.nth(1).tap();
+    await expect(tabs.nth(1)).toHaveAttribute("aria-selected", "true");
+    await tabs.nth(3).tap();
+    await expect(tabs.nth(3)).toHaveAttribute("aria-selected", "true");
+    await page.waitForTimeout(300);
+    expect(await tabBg(tabs.nth(1))).toBe(TRANSPARENT);
+  });
+});
