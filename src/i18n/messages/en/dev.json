@@ -9,5 +9,10 @@
     "fieldLabel": "Test field",
     "switchToEnglish": "English",
     "switchToArabic": "العربية"
+  },
+  "errorTest": {
+    "note": "DEV-ONLY fixture — not product copy",
+    "title": "Error boundary test",
+    "trigger": "Throw a render error"
   }
 }

@@ -1,0 +1,26 @@
+{
+  "notImplemented": "هذه الصفحة قيد التطوير.",
+  "titles": {
+    "auth_login": "تسجيل الدخول",
+    "auth_register": "إنشاء حساب",
+    "auth_forgotPassword": "نسيت كلمة المرور",
+    "auth_resetPassword": "إعادة تعيين كلمة المرور",
+    "lectures_detail": "تفاصيل المحاضرة",
+    "lectures_record": "تسجيل محاضرة جديدة",
+    "summaries_reader": "الملخص",
+    "questions_new": "أنشئ اختبارك الذكي",
+    "questions_quiz": "الاختبار",
+    "flashcards_new": "إنشاء بطاقات تعليمية",
+    "flashcards_deck": "تفاصيل البطاقات",
+    "flashcards_study": "وضع المذاكرة",
+    "notes_new": "ملاحظة جديدة",
+    "notes_editor": "تعديل الملاحظة",
+    "folders_detail": "تفاصيل المجلد",
+    "settings": "حسابي وإعداداتي",
+    "settings_profile": "تعديل الملف الشخصي",
+    "settings_preferences": "تفضيلات الدراسة",
+    "settings_notifications": "الإشعارات",
+    "settings_security": "الأمان والخصوصية",
+    "settings_subscription": "اشتراكي"
+  }
+}

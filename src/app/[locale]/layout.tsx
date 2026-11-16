@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
-import { getTranslations } from "next-intl/server";
+import { getMessages, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 
@@ -16,7 +16,9 @@ export function generateStaticParams() {
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("common");
-  return { title: t("brand.name") };
+  const brand = t("brand.name");
+  // Pages set only their screen title; the brand completes it (Phase 04 placeholders).
+  return { title: { default: brand, template: `%s · ${brand}` } };
 }
 
 /**
@@ -29,13 +31,17 @@ export default async function LocaleLayout({
 }: Readonly<{ children: ReactNode; params: Promise<{ locale: string }> }>) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
+  const messages = await getMessages();
 
   return (
     <html lang={locale} dir={directionOf(locale)} className={fontVariables}>
       <body>
-        {/* Locale only for client navigation (locale-aware Link); messages={null} sends no
-            translations to the browser — Server Components translate on the server. */}
-        <NextIntlClientProvider messages={null}>{children}</NextIntlClientProvider>
+        {/* Locale for client navigation (locale-aware Link). Only the `errors` namespace is sent
+            to the browser, for the client-side error boundary (Phase 04); everything else is
+            translated on the server. */}
+        <NextIntlClientProvider messages={{ errors: messages.errors }}>
+          {children}
+        </NextIntlClientProvider>
       </body>
     </html>
   );
