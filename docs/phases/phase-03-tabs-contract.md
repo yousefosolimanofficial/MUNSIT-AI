@@ -87,22 +87,28 @@ per-tab disabled state.
 
 ## 3. Implemented values (existing tokens only)
 
-| Part                | Classes                                                                                                                                                                                                                |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Tab, both sizes     | `rounded-md border` · focus ring D-B2 `focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-accent-electric-sky` · `transition-colors duration-base ease-standard` |
-| `default` layout    | `h-[44px] px-md gap-[8px] text-dashboard-body-medium` (row)                                                                                                                                                            |
-| `default` inactive  | `border-transparent text-text-secondary enabled:hover:bg-text-primary/5 enabled:hover:text-text-primary`                                                                                                               |
-| `default` active    | `bg-accent-electric-sky/12 border-accent-electric-sky/32 text-text-primary`, icon `text-accent-electric-sky`                                                                                                           |
-| `compact` layout    | `min-h-[58px] flex-col py-[8px] px-[6px] gap-[4px] text-dashboard-caption`                                                                                                                                             |
-| `compact` inactive  | `bg-text-primary/3 border-accent-electric-sky/12 text-text-secondary`                                                                                                                                                  |
-| `compact` active    | `bg-accent-electric-sky/12 border-accent-electric-sky/50 text-accent-electric-sky`                                                                                                                                     |
-| Active label (D-T6) | `underline underline-offset-4`                                                                                                                                                                                         |
-| TabList             | `flex` · `gap-[8px]` (`default`) / `gap-xs` (`compact`, 4) · tabs `flex-1 min-w-0`; disabled list `opacity-50`                                                                                                         |
-| Icon                | existing `Icon`, size 18, decorative                                                                                                                                                                                   |
+| Part                | Classes                                                                                                                                                                                                                                                                |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Tab, both sizes     | `rounded-md border` · focus ring D-B2 `focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-accent-electric-sky` · `transition-colors duration-base ease-standard`                                                 |
+| `default` layout    | `h-[44px] px-md gap-[8px] text-dashboard-body-medium` (row)                                                                                                                                                                                                            |
+| `default` inactive  | `border-transparent text-text-secondary [@media(hover:hover)_and_(pointer:fine)]:enabled:hover:bg-text-primary/5 [@media(hover:hover)_and_(pointer:fine)]:enabled:hover:text-text-primary` (hover only under `(hover: hover) and (pointer: fine)`, see the note below) |
+| `default` active    | `bg-accent-electric-sky/12 border-accent-electric-sky/32 text-text-primary`, icon `text-accent-electric-sky`                                                                                                                                                           |
+| `compact` layout    | `min-h-[58px] flex-col py-[8px] px-[6px] gap-[4px] text-dashboard-caption`                                                                                                                                                                                             |
+| `compact` inactive  | `bg-text-primary/3 border-accent-electric-sky/12 text-text-secondary`                                                                                                                                                                                                  |
+| `compact` active    | `bg-accent-electric-sky/12 border-accent-electric-sky/50 text-accent-electric-sky`                                                                                                                                                                                     |
+| Active label (D-T6) | `underline underline-offset-4`                                                                                                                                                                                                                                         |
+| TabList             | `flex` · `gap-[8px]` (`default`) / `gap-xs` (`compact`, 4) · tabs `flex-1 min-w-0`; disabled list `opacity-50`                                                                                                                                                         |
+| Icon                | existing `Icon`, size 18, decorative                                                                                                                                                                                                                                   |
 
 The inactive `default` tab keeps a transparent 1px border, so the active border never changes its
 size (border-box). Local constants: heights, paddings, gaps 8 and 4 (inline), opacity modifiers
 and the underline offset. **No new token.**
+
+**Hover on fine pointers only (Motion & Interaction Audit M-1, fixed 2026-11-16, PR #25):** the
+`default` hover applies only under `(hover: hover) and (pointer: fine)`, the project rule in
+`src/design-system/motion.css` and design-values §1.3, as for Button and Menu. Tailwind's plain
+`hover:` adds only `(hover: hover)`, which still matched devices with a coarse primary pointer.
+The hover values are unchanged. `compact` still has no hover (D-T2).
 
 **Approved deviations from Figma:**
 
