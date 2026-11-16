@@ -3,9 +3,10 @@
 - **Status:** **Approved — final** (2026-11-16). D-AV1 to D-AV6 approved by the user with
   refinements (§12). The D-AV1 contrast verification required a stop adjustment (§2.4, N-1);
   it uses existing tokens only.
-- **Owner:** Mariam (delegated delivery, Phase 03 plan §3), offline, **after her Card V1
-  delivery**. Delegated files: `src/shared/ui/Avatar.tsx` and `src/shared/ui/Avatar.test.tsx`
-  only. Yousef integrates (gallery section, browser checks, PR). Independent of Popover/Menu.
+- **Owner:** Yousef. **Ownership change (user, 2026-11-16):** Phase 03 is finished by Yousef
+  and Claude; Mariam joins from Phase 04. The offline Avatar assignment is not issued.
+  Implemented on `feature/03-avatar-v1`: `src/shared/ui/Avatar.tsx`, `Avatar.test.tsx`, a
+  gallery section and `tests/e2e/dev-components-avatar.spec.ts`.
 - **Baseline:** the starter is built from the `main` commit that contains this approved contract
   (not starter v4).
 - **Figma:** file `Avyn9kL0drXepQyTXTLXXb`, read-only with the Figma MCP and Plugin API on
@@ -241,3 +242,15 @@ file needs to change. The gallery section is Yousef's.
 **D-AV1 gradient confirmed by the user (2026-11-16):** Electric Sky −80%, Cobalt Edge 71%, 135°,
 white initials, minimum calculated contrast 5.01:1 — an intentional accessibility normalization
 from Figma (N-1). Rendered contrast is verified at integration and browser QA.
+
+## 13. Implementation notes (2026-11-16)
+
+- **Hydration:** a server-rendered `<img>` can fail before React attaches `onError`. On mount
+  the component checks `complete && naturalWidth === 0` and falls back to the initials (found
+  by the browser test with a broken image; unit regression test added).
+- **Rendered contrast (Chromium, real pixels):** white against every pixel of the circle
+  interior, measured from a screenshot with the initials hidden — RTL 5.85 (40) / 5.69 (96),
+  LTR 5.84 / 5.76. Above the 5.01 calculated minimum because the circle clips the gradient's
+  lightest corner.
+- **Compile-time:** a `div` ref is not rejected (TypeScript is structural and
+  `HTMLSpanElement` adds nothing to `HTMLElement`); not tested.

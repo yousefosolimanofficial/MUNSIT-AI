@@ -3,6 +3,7 @@ import { getLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 
+import { Avatar, type AvatarSize } from "@/shared/ui/Avatar";
 import { Button } from "@/shared/ui/Button";
 import { Input } from "@/shared/ui/Input";
 import { Ltr } from "@/shared/ui/Ltr";
@@ -33,6 +34,9 @@ import { SheetDemo } from "./_components/SheetDemo";
  * Popover / Menu: context menu (its Delete opens a dialog), Sort radio menu, account menu with a
  * header slot, a Notifications-style popover, and menus inside a Dialog and a Sheet. Client demo
  * in `_components/PopoverMenuDemo.tsx`; also outside <main>.
+ *
+ * Avatar: both sizes with initials, image, broken image (falls back to initials) and the
+ * placeholder; outside <main> like the overlay sections.
  */
 
 export const metadata: Metadata = {
@@ -105,6 +109,31 @@ function InputCell({ state, children }: { state: string; children: ReactNode }) 
     </div>
   );
 }
+
+/**
+ * Avatar samples (contract docs/phases/phase-03-avatar-contract.md). The image is an inline SVG
+ * (no network); the broken image is an invalid data URI that fires `error`. Names: Figma
+ * "أحمد محمود" (Top Bar / User Menu) and English counterparts.
+ */
+const AVATAR_IMAGE =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 2'%3E%3Crect width='2' height='2' fill='%2359d499'/%3E%3Crect width='1' height='1' fill='%23ff6363'/%3E%3C/svg%3E";
+const AVATAR_BROKEN = "data:image/png;base64,AAAA";
+const AVATAR_SAMPLES: readonly {
+  id: string;
+  size: AvatarSize;
+  ar: string;
+  en: string;
+  src?: string;
+  decorative?: boolean;
+}[] = [
+  { id: "initials-40", size: 40, ar: "أحمد محمود", en: "Ahmed Mahmoud" },
+  { id: "initials-96", size: 96, ar: "أحمد محمود", en: "Ahmed Mahmoud" },
+  { id: "image-40", size: 40, ar: "أحمد محمود", en: "Ahmed Mahmoud", src: AVATAR_IMAGE },
+  { id: "image-96", size: 96, ar: "أحمد محمود", en: "Ahmed Mahmoud", src: AVATAR_IMAGE },
+  { id: "broken-96", size: 96, ar: "سارة علي", en: "Sara Ali", src: AVATAR_BROKEN },
+  { id: "placeholder-40", size: 40, ar: "", en: "", decorative: true },
+  { id: "placeholder-96", size: 96, ar: "", en: "", decorative: true },
+];
 
 export default async function DevComponentsPage() {
   if (process.env.NODE_ENV === "production") notFound();
@@ -250,6 +279,37 @@ export default async function DevComponentsPage() {
           Popover / Menu · locale={locale} · Esc, outside click and Tab close them
         </h2>
         <PopoverMenuDemo locale={locale === "en" ? "en" : "ar"} />
+      </section>
+      <section
+        data-testid="gallery-avatar"
+        aria-labelledby="gallery-avatar-title"
+        className="grid gap-md p-lg pt-0"
+      >
+        <h2 id="gallery-avatar-title" className="text-dashboard-title-m" lang="en">
+          Avatar · locale={locale} · 40 and 96: initials, image, broken image, placeholder
+        </h2>
+        <div className="flex flex-wrap items-center gap-md">
+          {AVATAR_SAMPLES.map((sample) => (
+            <div
+              key={sample.id}
+              data-testid={`avatar-${sample.id}`}
+              className="grid justify-items-center gap-xs"
+            >
+              {sample.decorative ? (
+                <Avatar decorative size={sample.size} />
+              ) : (
+                <Avatar
+                  name={locale === "en" ? sample.en : sample.ar}
+                  size={sample.size}
+                  {...(sample.src === undefined ? {} : { src: sample.src })}
+                />
+              )}
+              <span className="font-mono text-dashboard-meta text-text-secondary" lang="en">
+                <Ltr>{sample.id}</Ltr>
+              </span>
+            </div>
+          ))}
+        </div>
       </section>
     </>
   );

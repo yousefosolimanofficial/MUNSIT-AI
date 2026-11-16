@@ -650,3 +650,18 @@ not modified.
 | Scrim               | Top Bar / Notes 1% (invisible); My Lectures 62%                                           | None in the primitives; My Lectures 62% is a module exception                  | D-PM8                |
 | Motion              | Not designed                                                                              | In 200: fade + scale 0.97 + 4px slide; out 120: fade + scale; reduced: opacity | **Addition** (D-PM6) |
 | Rename/delete icons | Raw vectors, not in the icon set                                                          | Rendered without icons until exported                                          | D-PM9                |
+
+## 14. Avatar (Phase 03) — approved values (2026-11-16)
+
+Source: Top Bar `2211:179`, User Menu `2236:790`, `Profile / Avatar` `2461:651`. Full spec,
+decisions D-AV1 to D-AV6 and normalizations N-1 to N-4:
+[phases/phase-03-avatar-contract.md](phases/phase-03-avatar-contract.md). Figma is not modified.
+
+| Item        | Figma                                                               | Implemented value                                         | Status           |
+| ----------- | ------------------------------------------------------------------- | --------------------------------------------------------- | ---------------- |
+| Sizes       | 40 (Top Bar, User Menu); 96 (Profile)                               | `size` 40 (default) or 96                                 | FIGMA (D-AV2)    |
+| Fill        | Three gradients (Sky → Cobalt horizontal / 135°; Cobalt → Sky 135°) | Sky −80% → Cobalt 71%, 135° at both sizes; white initials | N-1, N-2 (D-AV1) |
+| Border      | 40: 1px Sky 40% (User Menu none); 96: 2px Sky 50%                   | as Top Bar at 40; as Figma at 96                          | FIGMA + N-3      |
+| Initials    | Card Title (40, 1 letter); Title L (96, 2 letters)                  | as Figma; ZWNJ between letters                            | FIGMA (D-AV3)    |
+| Placeholder | Graphite + `user` 44 (96 only)                                      | Graphite + `user` 44 / 18                                 | FIGMA + N-4      |
+| Contrast    | Figma styles 2.14–2.60 (fail)                                       | ≥ 5.01 calculated; rendered 5.69–5.85                     | D-AV1            |
