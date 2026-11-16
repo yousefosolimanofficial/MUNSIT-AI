@@ -8,6 +8,7 @@ import { Input } from "@/shared/ui/Input";
 import { Ltr } from "@/shared/ui/Ltr";
 
 import { DialogDemo } from "./_components/DialogDemo";
+import { PopoverMenuDemo } from "./_components/PopoverMenuDemo";
 import { SheetDemo } from "./_components/SheetDemo";
 
 /*
@@ -28,6 +29,10 @@ import { SheetDemo } from "./_components/SheetDemo";
  * Sheet: title-only options sheet (its Delete row opens a dialog: Sheet → Dialog) and a sheet with
  * description, actions and a long body. Client demo in `_components/SheetDemo.tsx`. Both overlay
  * sections sit outside <main> (see below).
+ *
+ * Popover / Menu: context menu (its Delete opens a dialog), Sort radio menu, account menu with a
+ * header slot, a Notifications-style popover, and menus inside a Dialog and a Sheet. Client demo
+ * in `_components/PopoverMenuDemo.tsx`; also outside <main>.
  */
 
 export const metadata: Metadata = {
@@ -235,6 +240,16 @@ export default async function DevComponentsPage() {
           Sheet · locale={locale} · Mobile bottom sheet; the options row opens a dialog
         </h2>
         <SheetDemo locale={locale === "en" ? "en" : "ar"} />
+      </section>
+      <section
+        data-testid="gallery-popover-menu"
+        aria-labelledby="gallery-popover-menu-title"
+        className="grid gap-md p-lg pt-0"
+      >
+        <h2 id="gallery-popover-menu-title" className="text-dashboard-title-m" lang="en">
+          Popover / Menu · locale={locale} · Esc, outside click and Tab close them
+        </h2>
+        <PopoverMenuDemo locale={locale === "en" ? "en" : "ar"} />
       </section>
     </>
   );
