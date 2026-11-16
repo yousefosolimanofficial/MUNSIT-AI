@@ -3,7 +3,7 @@
 Single resume point. A new session starts by reading this file, the latest phase report, and
 [docs/references/MUNSIT_AI_Development_Roadmap_v1.0.md](references/MUNSIT_AI_Development_Roadmap_v1.0.md).
 
-- **Current phase:** 04 — Routing & navigation registry — **Done / CLOSED** (2026-11-16).
+- **Phase 04:** Routing & navigation registry — **Done / CLOSED** (2026-11-16).
   Implementation PR #27 squash-merged into `main` as `9888e08`; post-merge CI green. Report:
   [phases/phase-04-closure-report.md](phases/phase-04-closure-report.md) (CLOSED). Plan:
   [phases/phase-04-plan.md](phases/phase-04-plan.md); folder routes:
@@ -22,8 +22,15 @@ Single resume point. A new session starts by reading this file, the latest phase
     Risks.
   - **Deferred:** Tutor route (D-08); Quiz Results, Answer Review and quiz mode in the URL (D-09);
     reset-password link format (D-02); plan upgrade (D-18); Settings "إدارة الحساب" target.
-- **Next phase:** 05 — Shared App Shell — **Not started**. It needs separate authorization, and O-8
-  (Navigation Icon Button Figma check and contract) must be done first.
+- **Current phase:** 05 — Shared App Shell — **In progress** (implementation authorized by the user
+  on 2026-11-16). Plan, O-8 contract and ADR-004 approved and merged through PR #29 (`d226a84`):
+  [phases/phase-05-plan.md](phases/phase-05-plan.md),
+  [phases/phase-05-navigation-icon-button-contract.md](phases/phase-05-navigation-icon-button-contract.md),
+  [decisions/ADR-004-shell-breakpoints.md](decisions/ADR-004-shell-breakpoints.md).
+  - **First deliverable — O-8 Navigation Icon Button: implementation underway** on
+    `feat/phase-05-navigation-icon-button` (component, tests, gallery section). The rest of the
+    shell has not started.
+  - Risk **R-2** stays OPEN (Phase 22 gate).
 - **Phase 03:** **CLOSED** — closure PR #24 merged (`4a2f3f4`). Report:
   [phases/phase-03-closure-report.md](phases/phase-03-closure-report.md): 14 PASS, 2 DEFERRED —
   APPROVED, 0 BLOCKED. Final Phase 03 code commit: `fff239e`.
@@ -88,7 +95,7 @@ works offline and delivers packages per [TEAM_COLLABORATION.md](TEAM_COLLABORATI
 | 02  | Design System implementation        | Done        |
 | 03  | Core UI primitives                  | Done        |
 | 04  | Routing & navigation registry       | Done        |
-| 05  | Shared App Shell                    | Not started |
+| 05  | Shared App Shell                    | In progress |
 | 06  | Shared states & overlay/guard infra | Not started |
 | 07  | Landing Page                        | Not started |
 | 08  | Authentication UI                   | Not started |
