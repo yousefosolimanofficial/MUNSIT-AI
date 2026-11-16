@@ -1,7 +1,11 @@
 # Phase 03 — Core UI primitives (Shared UI components) — Plan
 
-- **Status:** Plan and role split approved in principle by the user (2026-11-13). Open items:
-  P-1 (dependencies), D-B6 (contrast), P-4 (issue #3 PR). No Phase 03 component code exists.
+- **Status:** Completed — Phase 03 closed (2026-11-16); see the
+  [closure report](phase-03-closure-report.md) and
+  [ADR-002](../decisions/ADR-002-phase-03-scope-deferral.md).
+- **Original status (historical, 2026-11-13):** Plan and role split approved in principle by the
+  user. Open items: P-1 (dependencies), D-B6 (contrast), P-4 (issue #3 PR). No Phase 03 component
+  code existed then. All three items were resolved during the phase.
 - **Baseline:** `main` at `b62ab21`. Its code is identical to `79685af`, the Phase 02 merge and the
   starter v1 baseline; the newer commit changes docs only.
 - **Branch:** `phase/03-shared-ui`
@@ -204,7 +208,17 @@ deferred in §2.1 are accepted as **DEFERRED — APPROVED** (A-14), not as deliv
 | Test-tooling gap (no jsdom or axe yet)                          | P-1 before coding                                                                                                                               |
 | Visual baselines are Windows/Chromium-only                      | Mariam's screenshots are review evidence; baselines are created by Yousef during integration                                                    |
 
-## 9. Next steps
+## 9. Next Steps (Historical — 2026-11-13)
+
+**Resolved through the Phase 03 closure process (2026-11-16).** The steps below are kept for
+traceability only. They are complete:
+
+- **Completed:** nine components (Button, Input, Card, StatusBadge, Tabs, Dialog, Sheet,
+  Popover/Menu, Avatar).
+- **Formally deferred:** eight components (Textarea, Select, Checkbox, Radio, Switch, Tooltip,
+  Generic Badge, Navigation Icon Button). See §2.1 and ADR-002. The deferred components are **not
+  implemented**.
+- **Final outcome:** documented in the [Phase 03 closure report](phase-03-closure-report.md).
 
 1. The user decides D-B6 and approves the P-1 dependency list (D-B1 to D-B5 decided 2026-11-13).
 2. P-1: dependency approval, then a `chore(deps)` PR.

@@ -20,6 +20,17 @@ Phase 03 delivered nine components from approved contracts: Button, Input, Card,
 Tabs, Dialog, Sheet, Popover/Menu and Avatar. The closure review found that the components below
 were neither built nor formally deferred.
 
+## Rationale
+
+1. **No current need.** No Phase 03 screen or feature requires any of the eight components.
+2. **Figma first.** Their design specifications must be verified against the actual Figma screens
+   where they are used, and values are never invented (CLAUDE.md).
+3. **No premature assumptions.** Building them now would introduce unverified assumptions about
+   their APIs, behavior and design values, which would likely need rework once a consuming screen
+   is designed in detail.
+4. **Precedent.** This follows D-T1, the previously approved decision to defer the Tabs filter rows
+   to the modules that use them.
+
 ## Decision
 
 The following primitives are **deferred, not cancelled**. Each remains a required shared UI
