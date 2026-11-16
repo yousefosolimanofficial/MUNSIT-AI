@@ -101,7 +101,7 @@ const UNKNOWN_AND_DEFERRED = [
 ];
 
 async function expectCardInside(page: Page, width: number): Promise<void> {
-  const card = await page.locator("main > section").boundingBox();
+  const card = await page.locator("main > section, [data-route-key] > section").boundingBox();
   baseTest.expect(card).not.toBeNull();
   baseTest.expect(card?.x ?? -1).toBeGreaterThanOrEqual(0);
   baseTest.expect((card?.x ?? 0) + (card?.width ?? 0)).toBeLessThanOrEqual(width);
@@ -126,7 +126,13 @@ for (const { locale, dir, prefix } of LOCALES) {
         await expect(page.getByText(MESSAGES[locale].pages.notImplemented)).toBeVisible();
         const brand = MESSAGES[locale].common.brand.name;
         await expect(page).toHaveTitle(key === "landing" ? brand : `${title} · ${brand}`);
-        await expect(page.locator("main")).toHaveAttribute("data-route-key", key);
+        // The placeholder is the page's `<main>` outside the app shell, and content inside the
+        // shell's one `<main>` on `(app)` routes (Phase 05). Either way: exactly one main.
+        await expect(page.locator("[data-route-key]:has(> section)")).toHaveAttribute(
+          "data-route-key",
+          key,
+        );
+        await expect(page.getByRole("main")).toHaveCount(1);
 
         // Client-side resolution through useActiveDestination (next-intl usePathname).
         const probe = page.getByTestId("active-destination");

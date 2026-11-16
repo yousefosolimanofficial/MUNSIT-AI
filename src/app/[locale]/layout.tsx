@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -13,6 +13,13 @@ import "../globals.css";
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
+
+/**
+ * `viewportFit: "cover"` (ADR-004, Phase 05) lets the page extend under device notches and home
+ * indicators; the mobile shell adds `env(safe-area-inset-*)` padding. Next.js keeps its default
+ * `width=device-width, initial-scale=1`.
+ */
+export const viewport: Viewport = { viewportFit: "cover" };
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("common");

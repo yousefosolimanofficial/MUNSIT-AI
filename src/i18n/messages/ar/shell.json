@@ -2,5 +2,12 @@
   "openMenu": "فتح القائمة",
   "search": "البحث",
   "notifications": "الإشعارات",
-  "appearance": "المظهر"
+  "appearance": "المظهر",
+  "mainNavigation": "التنقل الرئيسي",
+  "skipToContent": "الانتقال إلى المحتوى الرئيسي",
+  "drawerTitle": "القائمة",
+  "upgradeCard": {
+    "description": "افتح ميزات أكثر: أسئلة غير محدودة وملخصات أذكى.",
+    "action": "ترقية الآن"
+  }
 }

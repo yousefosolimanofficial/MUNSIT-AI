@@ -59,6 +59,11 @@
   --radius-lg: 16px;
   --radius-xl: 20px;
   --radius-2xl: 24px;
+
+  /* ------------------------------------------- Shell breakpoint (ADR-004, Approved; Phase 05) */
+  /* The one added breakpoint: Mobile < 45rem ≤ Rail (`rail:`) < 80rem ≤ Sidebar (default `xl:`).
+     rem-based on purpose: larger root font sizes switch to the compact shell earlier. */
+  --breakpoint-rail: 45rem;
 }
 
 /*

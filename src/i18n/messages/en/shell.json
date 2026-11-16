@@ -2,5 +2,12 @@
   "openMenu": "Open menu",
   "search": "Search",
   "notifications": "Notifications",
-  "appearance": "Appearance"
+  "appearance": "Appearance",
+  "mainNavigation": "Main navigation",
+  "skipToContent": "Skip to main content",
+  "drawerTitle": "Menu",
+  "upgradeCard": {
+    "description": "Unlock more: unlimited questions and smarter summaries.",
+    "action": "Upgrade now"
+  }
 }
