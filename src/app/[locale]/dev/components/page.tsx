@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getLocale } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 
@@ -9,10 +9,12 @@ import { Button } from "@/shared/ui/Button";
 import { Card } from "@/shared/ui/Card";
 import { Input } from "@/shared/ui/Input";
 import { Ltr } from "@/shared/ui/Ltr";
+import { NavigationIconButton } from "@/shared/ui/NavigationIconButton";
 import { Tab, TabList, TabPanel, Tabs, type TabsSize } from "@/shared/ui/Tabs";
 import type { IconName } from "@/design-system/icons/manifest";
 
 import { DialogDemo } from "./_components/DialogDemo";
+import { NavigationIconButtonDemo } from "./_components/NavigationIconButtonDemo";
 import { PopoverMenuDemo } from "./_components/PopoverMenuDemo";
 import { SheetDemo } from "./_components/SheetDemo";
 
@@ -41,6 +43,9 @@ import { SheetDemo } from "./_components/SheetDemo";
  *
  * Avatar: both sizes with initials, image, broken image (falls back to initials) and the
  * placeholder; outside <main> like the overlay sections.
+ *
+ * Navigation Icon Button (O-8, Phase 05): Rail-style links (active, default, disabled) and actions
+ * (expanded toggle, activation counter, disabled, 44 mobile size); outside <main> (it has buttons).
  *
  * Card: `surface` at both paddings and `inset` rows nested in a `surface` (Recent Lectures
  * pattern: the row's action is the inner Button, never the card). Status Badge: the four
@@ -208,6 +213,7 @@ const TABS_SAMPLES: readonly {
 export default async function DevComponentsPage() {
   if (process.env.NODE_ENV === "production") notFound();
   const locale = await getLocale();
+  const [tNav, tShell] = await Promise.all([getTranslations("nav"), getTranslations("shell")]);
   const label = locale === "en" ? LABELS.en : LABELS.ar;
   const copy = locale === "en" ? INPUT_COPY.en : INPUT_COPY.ar;
   const cardCopy = locale === "en" ? CARD_COPY.en : CARD_COPY.ar;
@@ -511,6 +517,45 @@ export default async function DevComponentsPage() {
             </Tabs>
           </div>
         ))}
+      </section>
+      <section
+        data-testid="gallery-nib"
+        aria-labelledby="gallery-nib-title"
+        className="grid gap-md p-lg pt-0"
+      >
+        <h2 id="gallery-nib-title" className="text-dashboard-title-m" lang="en">
+          Navigation Icon Button · locale={locale} · links (default, active, disabled) and actions
+          (md 40 / lg 44, expanded, disabled); hover, press and Tab for live states
+        </h2>
+        <nav aria-label="Rail link samples" className="flex flex-wrap items-center gap-[10px]">
+          <NavigationIconButton
+            data-testid="nib-link-active"
+            icon="home"
+            label={tNav("destinations.dashboard")}
+            href="/dashboard"
+            active
+          />
+          <NavigationIconButton
+            data-testid="nib-link"
+            icon="book"
+            label={tNav("destinations.lectures")}
+            href="/lectures"
+          />
+          <NavigationIconButton
+            data-testid="nib-link-disabled"
+            icon="crown"
+            label={tNav("moreExtras.upgradePlan")}
+            href="/settings/subscription"
+            disabled
+          />
+        </nav>
+        <NavigationIconButtonDemo
+          labels={{
+            openMenu: tShell("openMenu"),
+            notifications: tShell("notifications"),
+            search: tShell("search"),
+          }}
+        />
       </section>
     </>
   );
