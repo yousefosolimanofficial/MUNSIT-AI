@@ -106,7 +106,7 @@ const TAB_BASE = [
 /** Size layouts (contract §2.1, §2.2). Heights, paddings and gaps are component constants. */
 const TAB_SIZE: Record<TabsSize, string> = {
   default: "h-[44px] gap-[8px] px-md text-dashboard-body-medium",
-  compact: "h-[58px] flex-col gap-[4px] px-[6px] py-[8px] text-dashboard-caption",
+  compact: "min-h-[58px] flex-col gap-[4px] px-[6px] py-[8px] text-dashboard-caption",
 };
 
 /** States per size (contract §3). Hover only where Figma designs it (size "default"). */

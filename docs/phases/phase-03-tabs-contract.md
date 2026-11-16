@@ -93,7 +93,7 @@ per-tab disabled state.
 | `default` layout    | `h-[44px] px-md gap-[8px] text-dashboard-body-medium` (row)                                                                                                                                                            |
 | `default` inactive  | `border-transparent text-text-secondary enabled:hover:bg-text-primary/5 enabled:hover:text-text-primary`                                                                                                               |
 | `default` active    | `bg-accent-electric-sky/12 border-accent-electric-sky/32 text-text-primary`, icon `text-accent-electric-sky`                                                                                                           |
-| `compact` layout    | `h-[58px] flex-col py-[8px] px-[6px] gap-[4px] text-dashboard-caption`                                                                                                                                                 |
+| `compact` layout    | `min-h-[58px] flex-col py-[8px] px-[6px] gap-[4px] text-dashboard-caption`                                                                                                                                             |
 | `compact` inactive  | `bg-text-primary/3 border-accent-electric-sky/12 text-text-secondary`                                                                                                                                                  |
 | `compact` active    | `bg-accent-electric-sky/12 border-accent-electric-sky/50 text-accent-electric-sky`                                                                                                                                     |
 | Active label (D-T6) | `underline underline-offset-4`                                                                                                                                                                                         |
@@ -110,6 +110,12 @@ and the underline offset. **No new token.**
 - **D-T6:** an underlined label on the active tab, a non-color cue. Figma shows the selection by
   color only. Dimensions and spacing are unchanged.
 - **D-T5:** applies to the filter row when its module builds it.
+
+**Responsive fix (user, 2026-11-16, final gallery QA):** the `compact` height is a **minimum**
+of 58 (`min-h-[58px]`), not a fixed height. Where the label fits on one line (every label at the
+Figma Mobile width of 390), the tab stays 58. Below that (360, 320) a two-word label wraps and the
+tab grows, keeping the 8px block padding. Tabs in one row stretch to the same height (grid and
+flex default). No label is truncated or resized. API and interaction are unchanged.
 
 ## 4. API (implemented)
 

@@ -326,7 +326,7 @@ describe("Tabs — classes (§6.5)", () => {
     for (const tab of [active, inactive]) {
       expect(classesOf(tab)).toEqual(
         expect.arrayContaining([
-          "h-[58px]",
+          "min-h-[58px]",
           "flex-col",
           "gap-[4px]",
           "px-[6px]",
