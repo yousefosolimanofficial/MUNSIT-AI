@@ -455,6 +455,11 @@ Implemented as planned. Details, test counts, the copy table and known limitatio
   The registry and resolver are in `src/shared/navigation/` as planned.
 - **Error boundary prop:** Next.js 16.4 passes `retry` (not `reset`) to `error.tsx` and
   `global-error.tsx`; the implementation follows the installed docs.
-- **Production 404 first response:** a Next.js behaviour under a top-level dynamic root layout
-  (report §7.1). The localized page renders on hydration. The experimental `global-not-found` stays
-  excluded (D-R8).
+- **Production 404 first response:** a Next.js 16.4.6 framework behaviour for `notFound()`,
+  reproduced in a minimal standard app (report §7.1).
+  - The localized page renders on hydration, and the page sets its own document title (React
+    `<title>`).
+  - The experimental `global-not-found` stays excluded (D-R8).
+  - Options for full server-rendered 404 HTML are listed in the report and need a decision.
+- **Copy:** the common placeholder, 404 and error copy was approved on 2026-11-16 and applied. The
+  remaining screen titles and English navigation copy are listed for approval (report §8.2, §8.3).
