@@ -159,6 +159,7 @@ describe("Tailwind 4 @theme integration (real compiler, globals.css entry)", () 
       "duration-flip",
       "ease-standard",
       "transition",
+      "rail:block",
       // Must NOT generate (off-system):
       "bg-red-500",
       "text-white",
@@ -181,6 +182,11 @@ describe("Tailwind 4 @theme integration (real compiler, globals.css entry)", () 
     expect(css).toMatch(/\.rounded-md\s*\{[^}]*var\(--radius-md\)/);
     expect(css).toMatch(/\.duration-base\s*\{[^}]*var\(--transition-duration-base\)/);
     expect(css).toMatch(/\.ease-standard\s*\{[^}]*var\(--ease-standard\)/);
+  });
+
+  it("defines the ADR-004 `rail` breakpoint at 45rem (the one added shell breakpoint)", () => {
+    expect(tokensCss).toMatch(/--breakpoint-rail:\s*45rem;/);
+    expect(css).toMatch(/@media \(width >= 45rem\)\s*\{\s*\.rail\\:block/);
   });
 
   it.each([

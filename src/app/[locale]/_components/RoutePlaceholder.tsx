@@ -9,8 +9,8 @@ import { ActiveDestinationProbe } from "./ActiveDestinationProbe";
 /*
  * Phase 04 route placeholder (plan §4, D-R9). Not a product screen: it shows the screen title and
  * says the feature is not implemented. Titles come from the registry or messages (never inline),
- * and the copy is bilingual through next-intl. Layout is minimal: the app shell arrives in
- * Phase 05. Server Component.
+ * and the copy is bilingual through next-intl. Layout is minimal; on `(app)` routes it renders
+ * inside the Phase 05 app shell. Server Component.
  */
 
 async function routeTitle(routeKey: PlaceholderRouteKey): Promise<string> {
@@ -34,13 +34,28 @@ export async function placeholderMetadata(routeKey: PlaceholderRouteKey): Promis
 /** Local layout constant (not a token): readable width of the placeholder card. */
 const CARD_WIDTH = "max-w-[560px]";
 
+/**
+ * Routes outside the `(app)` group (Landing, Auth, Focus) have no app shell, so the placeholder
+ * is their `<main>`. Inside the shell, the shell owns the one `<main>` (Phase 05) and the
+ * placeholder is plain content within it.
+ */
+function isOutsideShell(routeKey: PlaceholderRouteKey): boolean {
+  return routeKey === "landing" || routeKey.startsWith("auth.") || routeKey === "flashcards.study";
+}
+
 export async function RoutePlaceholder({ routeKey }: { routeKey: PlaceholderRouteKey }) {
   const [title, t] = await Promise.all([routeTitle(routeKey), getTranslations("pages")]);
+  const outsideShell = isOutsideShell(routeKey);
+  const Root = outsideShell ? "main" : "div";
 
   return (
-    <main
+    <Root
       data-route-key={routeKey}
-      className="grid min-h-dvh place-items-center bg-surface-void-black p-lg"
+      className={
+        outsideShell
+          ? "grid min-h-dvh place-items-center bg-surface-void-black p-lg"
+          : "grid min-h-full place-items-center"
+      }
     >
       <Card
         as="section"
@@ -54,6 +69,6 @@ export async function RoutePlaceholder({ routeKey }: { routeKey: PlaceholderRout
       </Card>
       {/* Test instrumentation only: never rendered in production builds (see the probe). */}
       {process.env.NODE_ENV === "production" ? null : <ActiveDestinationProbe />}
-    </main>
+    </Root>
   );
 }
