@@ -3,13 +3,27 @@
 Single resume point. A new session starts by reading this file, the latest phase report, and
 [docs/references/MUNSIT_AI_Development_Roadmap_v1.0.md](references/MUNSIT_AI_Development_Roadmap_v1.0.md).
 
-- **Current phase:** 04 — Routing & navigation registry — **In progress** (implementation
-  authorized by the user on 2026-11-16; branch `feat/phase-04-routing-navigation`). Plan:
-  [phases/phase-04-plan.md](phases/phase-04-plan.md); folder-route interpretation:
+- **Current phase:** 04 — Routing & navigation registry — **Done / CLOSED** (2026-11-16).
+  Implementation PR #27 squash-merged into `main` as `9888e08`; post-merge CI green. Report:
+  [phases/phase-04-closure-report.md](phases/phase-04-closure-report.md) (CLOSED). Plan:
+  [phases/phase-04-plan.md](phases/phase-04-plan.md); folder routes:
   [decisions/ADR-003-phase-04-folder-focus-routes.md](decisions/ADR-003-phase-04-folder-focus-routes.md)
-  (Approved). Draft report: [phases/phase-04-closure-report.md](phases/phase-04-closure-report.md).
-  All Phase 04 product copy approved (2026-11-16). Open risk **R-2** (blank no-JavaScript 404,
-  accepted temporarily; Phase 22 gate) — see Risks.
+  (Approved).
+  - **Evidence:** `pnpm check` with 907/907 unit tests; E2E 382/382; production route checks 71/71
+    (probe absent in production); CI green on the PR head and on `main`.
+  - **Delivered:**
+    - typed next-intl `pathnames` (Arabic unprefixed, English `/en`);
+    - 30 placeholder routes in four route groups;
+    - localized 404 and error handling;
+    - the navigation registry (destinations, mobile bar and More, More-sheet extras, Settings nav);
+    - the active-destination resolver and hook;
+    - all copy approved (2026-11-16).
+  - **Open risk R-2:** the blank no-JavaScript 404. Development-only acceptance; Phase 22 gate. See
+    Risks.
+  - **Deferred:** Tutor route (D-08); Quiz Results, Answer Review and quiz mode in the URL (D-09);
+    reset-password link format (D-02); plan upgrade (D-18); Settings "إدارة الحساب" target.
+- **Next phase:** 05 — Shared App Shell — **Not started**. It needs separate authorization, and O-8
+  (Navigation Icon Button Figma check and contract) must be done first.
 - **Phase 03:** **CLOSED** — closure PR #24 merged (`4a2f3f4`). Report:
   [phases/phase-03-closure-report.md](phases/phase-03-closure-report.md): 14 PASS, 2 DEFERRED —
   APPROVED, 0 BLOCKED. Final Phase 03 code commit: `fff239e`.
@@ -73,7 +87,7 @@ works offline and delivers packages per [TEAM_COLLABORATION.md](TEAM_COLLABORATI
 | 01  | Project initialization & tooling    | Done        |
 | 02  | Design System implementation        | Done        |
 | 03  | Core UI primitives                  | Done        |
-| 04  | Routing & navigation registry       | In progress |
+| 04  | Routing & navigation registry       | Done        |
 | 05  | Shared App Shell                    | Not started |
 | 06  | Shared states & overlay/guard infra | Not started |
 | 07  | Landing Page                        | Not started |
@@ -125,7 +139,7 @@ that phase's scope.
 | ID  | Item                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | Status / action                                                                                                                                                                                                                                  |
 | --- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | R-1 | Builds depended on Google Fonts at build time (`next/font/google`); failures observed on a slow network.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | **Resolved 2026-11-13** — fonts self-hosted with `next/font/local` (`src/design-system/fonts/`, OFL); build, dev server and E2E verified with the network blocked.                                                                               |
-| I-1 | Phase 01 placeholder `/` heading uses `text-2xl font-bold`; `text-2xl` no longer exists (Tailwind scale removed in step 3), so the heading has no size. Not part of the final design.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | Open — placeholder is replaced by the Landing page in Phase 07.                                                                                                                                                                                  |
+| I-1 | Phase 01 placeholder `/` heading used `text-2xl font-bold`, a class that no longer exists.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | **Resolved** — Phase 04 replaced the Phase 01 page with the `(public)` placeholder (PR #27); the Landing page itself comes in Phase 07.                                                                                                          |
 | I-3 | Development-only React hydration mismatch warning during `pnpm test:e2e` on `/dev/tokens` (likely `tests/e2e/icons.spec.ts` styling cells before hydration). Tests pass.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | **Resolved** — PR #5 (`4990281`); GitHub issue #3 closed. E2E now fails on browser console errors.                                                                                                                                               |
 | I-2 | `UI/Navigation` (Cairo) has style name "ExtraBold" but weight 400 in Figma.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | NOT VERIFIED — confirm in Figma before any use.                                                                                                                                                                                                  |
 | R-2 | **404 rendering (Phase 04, accepted temporarily 2026-11-16):** unknown or deferred URLs return HTTP 404, but the first HTML is Next.js 16.4.6's empty error document. The localized 404 appears only after hydration, so without JavaScript (or if JS fails, or for non-JS crawlers) the page is **blank**: no message, no link back, no descriptive title. Low SEO impact (404 + `noindex`); accessibility dead end without JS. Framework behaviour for `notFound()`, reproduced in a minimal Next app; alternatives: proxy rewrite to a static 404 (amends D-R8) or experimental `global-not-found`. Details: [phases/phase-04-closure-report.md](phases/phase-04-closure-report.md) §7.1. | **Open — accepted only as a development-stage limitation, not production behaviour.** Re-test at the next Next.js upgrade. **Must be resolved or explicitly re-accepted by the product owner before production launch, no later than Phase 22.** |
@@ -159,6 +173,10 @@ numerals and English runs inside Arabic text (direction isolation). See R-1, I-1
 | 7   | Final audit + phase report; G-1, G-2 implemented             | Done — approved (2026-11-13)   |
 
 ## Next action
+
+**2026-11-16:** Phase 04 is CLOSED (PR #27, `9888e08`; closure documentation PR). Next: Phase 05
+(Shared App Shell), only on the user's authorization. O-8 (Navigation Icon Button) comes first.
+Risk R-2 stays open until its Phase 22 gate.
 
 **2026-11-16:** Phase 04 implementation in progress on `feat/phase-04-routing-navigation`:
 routes, registry, active-destination resolver, placeholders, localized 404 and error handling,
