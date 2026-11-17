@@ -14,6 +14,7 @@ export async function getShellLabels(): Promise<ShellLabels> {
   const [nav, shell] = await Promise.all([getTranslations("nav"), getTranslations("shell")]);
   return {
     mainNavigation: shell("mainNavigation"),
+    bottomNavigation: shell("bottomNavigation"),
     skipToContent: shell("skipToContent"),
     openMenu: shell("openMenu"),
     drawerTitle: shell("drawerTitle"),

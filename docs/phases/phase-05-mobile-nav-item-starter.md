@@ -1,6 +1,10 @@
 # Phase 05 — `MobileNavItem` assignment (starter package, final)
 
-**Status:** DELIVERED / AWAITING IMPLEMENTATION. Authorized by the product owner on 2026-11-17.
+**Status:** DELIVERED / UNDER INTEGRATION. Mariam's delivery
+`munsit-delivery-mobile-nav-item-20261117-v1.zip` was received on 2026-11-17. It is integrated on
+`delivery/shell-mobile-nav-item-v1`, with the delivery applied verbatim as its own commit, and it
+becomes ACCEPTED when the integration PR is merged. The assignment below was authorized by the
+product owner on 2026-11-17.
 The starter `munsit-starter-9abe1c0.zip` (baseline `9abe1c0`, SHA-256
 `205bbdc72f90b1cb0f7069530ea661e8f6c908001844ab1969c13c7a2facb634`) was sent to Mariam; delivery
 confirmed by Yousef on 2026-11-17. Not complete until her delivery is received, reviewed and its

@@ -4,8 +4,6 @@ import { getTranslations } from "next-intl/server";
 import { routeTitleSource, type PlaceholderRouteKey } from "@/shared/navigation/route-titles";
 import { Card } from "@/shared/ui/Card";
 
-import { ActiveDestinationProbe } from "./ActiveDestinationProbe";
-
 /*
  * Phase 04 route placeholder (plan §4, D-R9). Not a product screen: it shows the screen title and
  * says the feature is not implemented. Titles come from the registry or messages (never inline),
@@ -67,8 +65,6 @@ export async function RoutePlaceholder({ routeKey }: { routeKey: PlaceholderRout
         </h1>
         <p className="text-dashboard-body text-text-secondary">{t("notImplemented")}</p>
       </Card>
-      {/* Test instrumentation only: never rendered in production builds (see the probe). */}
-      {process.env.NODE_ENV === "production" ? null : <ActiveDestinationProbe />}
     </Root>
   );
 }

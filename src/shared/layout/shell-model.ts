@@ -25,6 +25,8 @@ export interface ShellDestination {
 export interface ShellLabels {
   /** `nav` landmark name for the Sidebar, Rail and drawer: "التنقل الرئيسي". */
   readonly mainNavigation: string;
+  /** `nav` landmark name for the mobile bottom navigation: "التنقل السفلي". */
+  readonly bottomNavigation: string;
   /** Skip link: "الانتقال إلى المحتوى الرئيسي". */
   readonly skipToContent: string;
   /** Rail menu button name: "فتح القائمة". */
@@ -96,3 +98,9 @@ export const MAIN_CONTENT_ID = "main-content";
  * `rail:` (45rem) up to `xl:` (80rem). Used to close the drawer when the viewport leaves it.
  */
 export const RAIL_RANGE_QUERY = "(width >= 45rem) and (width < 80rem)";
+
+/**
+ * Viewport range of the mobile shell (ADR-004: below `rail:`, 45rem). Used to close the More
+ * sheet when the viewport leaves it.
+ */
+export const MOBILE_RANGE_QUERY = "(width < 45rem)";

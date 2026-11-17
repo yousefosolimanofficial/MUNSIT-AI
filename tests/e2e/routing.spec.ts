@@ -54,6 +54,36 @@ function expectedDestination(key: string): string {
   return DESTINATIONS.includes(root) ? root : "";
 }
 
+/** Routes rendered without the app shell (Landing, Auth, Focus): no navigation at all. */
+function isOutsideShell(key: string): boolean {
+  return key === "landing" || key.startsWith("auth.") || key === "flashcards.study";
+}
+
+/**
+ * The visible navigation marks exactly the expected destination with `aria-current="page"`
+ * (its root link), and nothing on routes without a destination such as Settings (D-R6).
+ * Shell-less routes render no navigation; their resolution is covered by the unit tests of
+ * `resolveActiveDestination`.
+ */
+async function expectActiveDestination(page: Page, prefix: string, key: string): Promise<void> {
+  if (isOutsideShell(key)) {
+    await expect(page.getByRole("navigation")).toHaveCount(0);
+    return;
+  }
+  const current = page.locator("nav a[aria-current='page']:visible");
+  const destination = expectedDestination(key);
+  if (destination === "") {
+    await expect(page.locator("nav a:visible").first()).toBeVisible();
+    await expect(current).toHaveCount(0);
+    return;
+  }
+  await expect(current).toHaveCount(1);
+  await expect(current).toHaveAttribute(
+    "href",
+    `${prefix}${ROUTES[destination as keyof typeof ROUTES]}`,
+  );
+}
+
 function localized(prefix: string, url: string): string {
   return url === "/" ? prefix || "/" : `${prefix}${url}`;
 }
@@ -134,15 +164,13 @@ for (const { locale, dir, prefix } of LOCALES) {
         );
         await expect(page.getByRole("main")).toHaveCount(1);
 
-        // Client-side resolution through useActiveDestination (next-intl usePathname).
-        const probe = page.getByTestId("active-destination");
-        await expect(probe).toBeHidden(); // instrumentation: not visible, not in the a11y tree
-        await expect(probe).toHaveAttribute("data-route-key", key);
-        await expect(probe).toHaveAttribute("data-destination", expectedDestination(key));
+        // Client-side resolution through useActiveDestination (next-intl usePathname), read from
+        // the real navigation that renders it (the Sidebar at this 1280 viewport).
+        await expectActiveDestination(page, prefix, key);
 
         await page.reload();
         await expect(page.getByRole("heading", { level: 1 })).toHaveText(title);
-        await expect(probe).toHaveAttribute("data-destination", expectedDestination(key));
+        await expectActiveDestination(page, prefix, key);
       });
     }
   });

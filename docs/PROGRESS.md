@@ -38,21 +38,31 @@ Single resume point. A new session starts by reading this file, the latest phase
     controls (search, notifications, appearance, language, user menu), the Desktop/Tablet Top Bar
     and the Mobile Top Bar. Review fixes: theme-trigger arrow keys and a query-preserving
     language switch.
-  - **Mobile navigation increment: implementation underway** on `feat/phase-05-mobile-navigation`:
-    the More sheet with mobile language access (D-S10). The sheet's shell trigger arrives with
-    `BottomNav`.
+  - **Mobile More sheet with language access (D-S10): delivered.** PR #33 squash-merged as
+    `d57a809`.
+  - **Mobile navigation integration: in review** on `delivery/shell-mobile-nav-item-v1` (final
+    Phase 05 integration PR, not merged). It covers:
+    - Mariam's `MobileNavItem` delivery, applied verbatim as its own commit;
+    - `BottomNav` (mobile only, registry order, `mobileBarIndicator`, More opens the More sheet;
+      the sheet closes when the viewport leaves the mobile range);
+    - mobile content padding 108 + inset and mobile scroll padding, so the fixed bars never hide
+      focus;
+    - the 320 px fit (D-S13) and the hidden dev indicator (D-S14), both proposed in the PR;
+    - removal of the Phase 04 `ActiveDestinationProbe` (E2E now read the real `aria-current`);
+    - the full ADR-004 validation matrix (`tests/e2e/bottom-nav.spec.ts`).
+  - **Mariam `MobileNavItem`: DELIVERED / UNDER INTEGRATION.** Delivery
+    `munsit-delivery-mobile-nav-item-20261117-v1.zip` (baseline `9abe1c0`) received 2026-11-17.
+    - Source review passed: two files only, frozen API kept, no dependencies, tokens reused.
+    - Her three additions are accepted unchanged: `"aria-current"?: never`, `whitespace-nowrap`,
+      `cursor-pointer`.
+    - The integration branch passes `pnpm check` and the full E2E suite.
+    - **ACCEPTED** only when the integration PR is merged with CI green.
 
-    Still to come: `MobileNavItem` (Mariam), `BottomNav` and the More-sheet wiring, removing the
-    probe, and the full ADR-004 matrix.
-
-  - **Mariam `MobileNavItem`: DELIVERED / AWAITING IMPLEMENTATION.** Starter
-    `munsit-starter-9abe1c0.zip` (baseline `9abe1c0`, SHA-256 `205bbdc7…acb634`) was sent to
-    Mariam. Delivery confirmed by Yousef on 2026-11-17; the confirmation date is recorded, as the
-    exact send date was not given. Not complete until her delivery is received, reviewed and its
-    tests pass. Her files (`MobileNavItem.tsx`, `MobileNavItem.test.tsx`) are hers alone; no
-    replacement. Next: integrate her delivery on `delivery/shell-mobile-nav-item-v1`, then
-    `BottomNav`. Assignment:
+    Assignment:
     [phases/phase-05-mobile-nav-item-starter.md](phases/phase-05-mobile-nav-item-starter.md).
+
+  - **Before Phase 05 can close:** merge the integration PR (CI green), record the acceptance,
+    then the Phase 05 closure report.
   - Risk **R-2** stays OPEN (Phase 22 gate).
 - **Phase 03:** **CLOSED** — closure PR #24 merged (`4a2f3f4`). Report:
   [phases/phase-03-closure-report.md](phases/phase-03-closure-report.md): 14 PASS, 2 DEFERRED —
