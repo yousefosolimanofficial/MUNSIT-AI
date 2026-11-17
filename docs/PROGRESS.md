@@ -40,30 +40,25 @@ Single resume point. A new session starts by reading this file, the latest phase
     language switch.
   - **Mobile More sheet with language access (D-S10): delivered.** PR #33 squash-merged as
     `d57a809`.
-  - **Mobile navigation integration: in review** on `delivery/shell-mobile-nav-item-v1` (final
-    Phase 05 integration PR, not merged). It covers:
-    - Mariam's `MobileNavItem` delivery, applied verbatim as its own commit;
-    - `BottomNav` (mobile only, registry order, `mobileBarIndicator`, More opens the More sheet;
-      the sheet closes when the viewport leaves the mobile range);
-    - mobile content padding 108 + inset and mobile scroll padding, so the fixed bars never hide
-      focus;
-    - the 320 px fit (D-S13) and the hidden dev indicator (D-S14), both proposed in the PR;
-    - removal of the Phase 04 `ActiveDestinationProbe` (E2E now read the real `aria-current`);
-    - the full ADR-004 validation matrix (`tests/e2e/bottom-nav.spec.ts`).
-  - **Mariam `MobileNavItem`: DELIVERED / UNDER INTEGRATION.** Delivery
-    `munsit-delivery-mobile-nav-item-20261117-v1.zip` (baseline `9abe1c0`) received 2026-11-17.
-    - Source review passed: two files only, frozen API kept, no dependencies, tokens reused.
-    - Her three additions are accepted unchanged: `"aria-current"?: never`, `whitespace-nowrap`,
-      `cursor-pointer`.
-    - The integration branch passes `pnpm check` and the full E2E suite.
-    - **ACCEPTED** only when the integration PR is merged with CI green.
-
-    Assignment:
+  - **Mobile navigation integration: delivered.** PR #35 rebase-merged on 2026-11-17: Mariam's
+    delivery `d364d58`, then `BottomNav` integration `6c47e35`; CI green on the PR head and on
+    `main`. It covers:
+    - `BottomNav` wired to the More sheet;
+    - mobile bottom padding and scroll padding;
+    - D-S13 (320 px fit) and D-S14 (dev indicator), both approved 2026-11-17;
+    - removal of the Phase 04 probe;
+    - the full ADR-004 matrix.
+  - **Mariam `MobileNavItem`: ACCEPTED / INTEGRATED** (delivered and integrated 2026-11-17, PR
+    #35). Integrated without source changes: both files are byte-identical to her delivery, in
+    commit `d364d58`. Mariam wrote the code; Yousef, the integrator, is the Git author. Assignment:
     [phases/phase-05-mobile-nav-item-starter.md](phases/phase-05-mobile-nav-item-starter.md).
-
-  - **Before Phase 05 can close:** merge the integration PR (CI green), record the acceptance,
-    then the Phase 05 closure report.
-  - Risk **R-2** stays OPEN (Phase 22 gate).
+  - **Evidence on `main` `6c47e35`:** `pnpm check` with 1020/1020 unit tests; E2E 637/637,
+    including the ADR-004 matrix; post-merge CI green. Chromium only.
+  - **Closure: READY FOR CLOSURE, pending the product owner's approval** of
+    [phases/phase-05-closure-report.md](phases/phase-05-closure-report.md) (closure documentation
+    PR). Phase 05 stays In progress until that approval.
+  - Risk **R-2** stays OPEN (Phase 22 gate). Cross-browser verification is tracked separately
+    as **R-3** (pre-production QA).
 - **Phase 03:** **CLOSED** — closure PR #24 merged (`4a2f3f4`). Report:
   [phases/phase-03-closure-report.md](phases/phase-03-closure-report.md): 14 PASS, 2 DEFERRED —
   APPROVED, 0 BLOCKED. Final Phase 03 code commit: `fff239e`.
@@ -93,7 +88,7 @@ Single resume point. A new session starts by reading this file, the latest phase
   - Chromium only; cross-browser E2E is in Phase 22.
 - **Ownership change (user, 2026-11-16):** Yousef and Claude finished Phase 03. Mariam joins
   from Phase 04.
-- **Latest report:** [phases/phase-03-closure-report.md](phases/phase-03-closure-report.md) (Phase 04 draft: [phases/phase-04-closure-report.md](phases/phase-04-closure-report.md); Phase 02: [phases/phase-02-report.md](phases/phase-02-report.md); Phase 01: [phases/phase-01-report.md](phases/phase-01-report.md))
+- **Latest report:** [phases/phase-05-closure-report.md](phases/phase-05-closure-report.md) (pending approval; Phase 04: [phases/phase-04-closure-report.md](phases/phase-04-closure-report.md); Phase 03: [phases/phase-03-closure-report.md](phases/phase-03-closure-report.md); Phase 02: [phases/phase-02-report.md](phases/phase-02-report.md); Phase 01: [phases/phase-01-report.md](phases/phase-01-report.md))
 - **Stack decision:** [decisions/ADR-001-frontend-stack.md](decisions/ADR-001-frontend-stack.md) (Approved by the user, 2026-11-12)
 - **Phase 01 commit:** `acf48c9` `chore: initialize project (Phase 01)` on `main`.
 - **Phase 02 commit:** `79685af` `docs(phase-02): design values, progress and phase report` on
@@ -183,6 +178,7 @@ that phase's scope.
 | I-3 | Development-only React hydration mismatch warning during `pnpm test:e2e` on `/dev/tokens` (likely `tests/e2e/icons.spec.ts` styling cells before hydration). Tests pass.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | **Resolved** — PR #5 (`4990281`); GitHub issue #3 closed. E2E now fails on browser console errors.                                                                                                                                               |
 | I-2 | `UI/Navigation` (Cairo) has style name "ExtraBold" but weight 400 in Figma.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | NOT VERIFIED — confirm in Figma before any use.                                                                                                                                                                                                  |
 | R-2 | **404 rendering (Phase 04, accepted temporarily 2026-11-16):** unknown or deferred URLs return HTTP 404, but the first HTML is Next.js 16.4.6's empty error document. The localized 404 appears only after hydration, so without JavaScript (or if JS fails, or for non-JS crawlers) the page is **blank**: no message, no link back, no descriptive title. Low SEO impact (404 + `noindex`); accessibility dead end without JS. Framework behaviour for `notFound()`, reproduced in a minimal Next app; alternatives: proxy rewrite to a static 404 (amends D-R8) or experimental `global-not-found`. Details: [phases/phase-04-closure-report.md](phases/phase-04-closure-report.md) §7.1. | **Open — accepted only as a development-stage limitation, not production behaviour.** Re-test at the next Next.js upgrade. **Must be resolved or explicitly re-accepted by the product owner before production launch, no later than Phase 22.** |
+| R-3 | **Cross-browser coverage (Phase 05, 2026-11-17):** all automated and manual checks so far ran in Chromium only. Firefox, Safari (WebKit) and Edge are unverified, although D-12 requires the latest two majors of each. This is separate from R-2, which concerns the no-JavaScript 404 document in every browser.                                                                                                                                                                                                                                                                                                                                                                           | **Open — pre-production QA requirement.** Run the E2E suite and a manual pass in Firefox, WebKit and Edge before production launch (Phase 22 at the latest).                                                                                     |
 
 ## Environment notes
 
@@ -213,6 +209,11 @@ numerals and English runs inside Arabic text (direction isolation). See R-1, I-1
 | 7   | Final audit + phase report; G-1, G-2 implemented             | Done — approved (2026-11-13)   |
 
 ## Next action
+
+**2026-11-17:** Phase 05 implementation complete. PR #35 rebase-merged as `d364d58` (Mariam's
+`MobileNavItem`) and `6c47e35` (`BottomNav`); CI green on `main`. The closure report is in a
+documentation PR, pending the product owner's approval. Phase 05 stays In progress until then.
+Phase 06 is not started; it begins only on the user's authorization. R-2 and R-3 stay open.
 
 **2026-11-16:** Phase 04 is CLOSED (PR #27, `9888e08`; closure documentation PR). Next: Phase 05
 (Shared App Shell), only on the user's authorization. O-8 (Navigation Icon Button) comes first.
