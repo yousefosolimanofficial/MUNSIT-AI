@@ -1,35 +1,37 @@
 # Phase 05 — `MobileNavItem` assignment (starter package, final)
 
-**Status:** READY TO SEND. Waiting for separate authorization. **Nothing is assigned yet.** There
-is no starter archive, no delivery and no integration branch until Yousef authorizes sending it.
+**Status:** AUTHORIZED by the product owner (2026-11-17). Ready to send. **Not yet delivered to
+Mariam:** sending the starter is Yousef's action. The starter package is prepared locally from
+`main` `9abe1c0`; it is not committed and not sent.
 
-- **Reviewed against `main` on 2026-11-17**, after PR #31 (`330348e`):
-  - O-8 (`0404c6e`) is merged.
-  - `DestinationPath` is in `src/shared/layout/shell-model.ts`.
-  - `ICON_SIZES.mobileNav` is 22.
-  - Neither delegated file exists yet.
+- **Reviewed against `main` `9abe1c0` on 2026-11-17**, after PR #32:
+  - **API inputs:** O-8 (`0404c6e`) is merged; `DestinationPath` is in
+    `src/shared/layout/shell-model.ts`; `ICON_SIZES.mobileNav` is 22.
+  - **Registry contract:** unchanged since Phase 04. `git diff 9888e08 9abe1c0` over
+    `src/shared/navigation` and `src/i18n/routes.ts` is empty, so `DESTINATIONS`, `MORE_CONTROL`
+    and `mobileBarIndicator` are as approved.
+  - **API frozen:** §3 below, approved with this authorization.
+  - Neither delegated file exists on `main`.
 - **Sources:**
-  - Phase 05 plan §21.1 (approved in principle).
+  - Phase 05 plan §21.1.
   - Figma, re-checked read-only on 2026-11-17.
   - The procedure in [TEAM_COLLABORATION.md](../TEAM_COLLABORATION.md) and
     [FEATURE_DELIVERY_CHECKLIST.md](../FEATURE_DELIVERY_CHECKLIST.md).
-- **Ready to send:** §2 to §9 are written for Mariam and can be copied into the starter's
-  `START_HERE.md` as they are.
+- **Integration dependency:** `BottomNav` and the shell wiring of the More sheet (built in the
+  mobile navigation increment) wait for this delivery.
 
-## 1. Before sending (Yousef)
+## 1. Sending checklist (Yousef)
 
-1. Authorize the assignment. Record it in `docs/PROGRESS.md` (module assignments) and in the
-   delivery log of `TEAM_COLLABORATION.md`.
-2. Confirm that the registry contract (`DESTINATIONS`, `MORE_CONTROL`, `mobileBarIndicator`) is
-   unchanged since Phase 04, and that §3 below is frozen.
-3. Build the starter from a pushed `main` commit that passes `corepack pnpm check`
-   (`TEAM_COLLABORATION.md` §4: `git archive` + `BASELINE_COMMIT.txt`), and add this document as
-   `START_HERE.md`.
-4. Log the starter: date, short hash, module "Phase 05 MobileNavItem (delegated
-   `MobileNavItem.tsx`, `MobileNavItem.test.tsx`)".
+1. Send the prepared starter `munsit-starter-9abe1c0.zip`. It contains the tracked files at
+   `9abe1c0`, plus `BASELINE_COMMIT.txt` and this document as `START_HERE.md`. Alternatively,
+   rebuild it with `TEAM_COLLABORATION.md` §4.
+2. After sending, record:
+   - the assignment in `docs/PROGRESS.md` (module assignments);
+   - the starter in the `TEAM_COLLABORATION.md` delivery log (date, `9abe1c0`, "Phase 05
+     MobileNavItem — delegated `MobileNavItem.tsx`, `MobileNavItem.test.tsx`").
 
-Claude neither creates nor edits the two delegated files while they are delegated. `BottomNav` is
-built only after this delivery is integrated.
+Claude neither creates nor edits the two delegated files while they are delegated, and makes no
+commits on Mariam's behalf. `BottomNav` is built only after this delivery is integrated.
 
 ---
 

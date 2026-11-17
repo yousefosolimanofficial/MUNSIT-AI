@@ -34,16 +34,20 @@ Single resume point. A new session starts by reading this file, the latest phase
     - `AppShell` and `SkipLink`;
     - the Desktop Sidebar, Sidebar Item and Upgrade Card;
     - the Tablet Rail and drawer.
-  - **Shell increment 2: implementation underway** on `feat/phase-05-top-bars`. It covers the Top
-    Bar controls (search, notifications, appearance, language, user menu), the Desktop/Tablet Top
-    Bar and the Mobile Top Bar.
+  - **Shell increment 2: delivered.** PR #32 squash-merged as `9abe1c0`. It covers the Top Bar
+    controls (search, notifications, appearance, language, user menu), the Desktop/Tablet Top Bar
+    and the Mobile Top Bar. Review fixes: theme-trigger arrow keys and a query-preserving
+    language switch.
+  - **Mobile navigation increment: implementation underway** on `feat/phase-05-mobile-navigation`:
+    the More sheet with mobile language access (D-S10). The sheet's shell trigger arrives with
+    `BottomNav`.
 
-    Still to come: `MobileNavItem`, the bottom navigation, the More sheet, removing the probe, and
-    the full ADR-004 matrix.
+    Still to come: `MobileNavItem` (Mariam), `BottomNav` and the More-sheet wiring, removing the
+    probe, and the full ADR-004 matrix.
 
-  - **Mariam `MobileNavItem` assignment: READY TO SEND**, waiting for separate authorization
-    ([phases/phase-05-mobile-nav-item-starter.md](phases/phase-05-mobile-nav-item-starter.md)).
-    Nothing is assigned. `BottomNav` waits for its integration.
+  - **Mariam `MobileNavItem`: AUTHORIZED** (D-S12). The starter `munsit-starter-9abe1c0.zip` is
+    prepared and verified locally; **not yet sent** (Yousef's action). Assignment:
+    [phases/phase-05-mobile-nav-item-starter.md](phases/phase-05-mobile-nav-item-starter.md).
   - Risk **R-2** stays OPEN (Phase 22 gate).
 - **Phase 03:** **CLOSED** — closure PR #24 merged (`4a2f3f4`). Report:
   [phases/phase-03-closure-report.md](phases/phase-03-closure-report.md): 14 PASS, 2 DEFERRED —
