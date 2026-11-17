@@ -28,6 +28,11 @@ export async function getShellLabels(): Promise<ShellLabels> {
       icon: destination.icon,
       href: ROUTES[destination.routeKey],
     })),
+    more: {
+      title: nav("more"),
+      close: shell("closeMenu"),
+      accountSettings: nav("moreExtras.accountSettings"),
+    },
     topBar: {
       search: shell("search"),
       searchPlaceholder: shell("searchPlaceholder"),

@@ -42,6 +42,17 @@ export interface ShellLabels {
   readonly destinations: readonly ShellDestination[];
   /** Top Bar controls (plan §11, decisions D-S3–D-S6, D-S9). */
   readonly topBar: TopBarLabels;
+  /** Mobile More sheet (plan §10, §11.3; mobile language access approved 2026-11-17). */
+  readonly more: MoreSheetLabels;
+}
+
+export interface MoreSheetLabels {
+  /** Sheet title and accessible name: "المزيد" (`nav.more`). */
+  readonly title: string;
+  /** Close button name: "إغلاق القائمة". */
+  readonly close: string;
+  /** "إعدادات الحساب" (`nav.moreExtras.accountSettings`) → the Settings root. */
+  readonly accountSettings: string;
 }
 
 export interface TopBarLabels {

@@ -3,6 +3,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 
+import { getShellLabels } from "@/shared/layout/shell-labels";
 import { Avatar, type AvatarSize } from "@/shared/ui/Avatar";
 import { StatusBadge, type StatusBadgeStatus } from "@/shared/ui/Badge";
 import { Button } from "@/shared/ui/Button";
@@ -14,6 +15,7 @@ import { Tab, TabList, TabPanel, Tabs, type TabsSize } from "@/shared/ui/Tabs";
 import type { IconName } from "@/design-system/icons/manifest";
 
 import { DialogDemo } from "./_components/DialogDemo";
+import { MoreSheetDemo } from "./_components/MoreSheetDemo";
 import { NavigationIconButtonDemo } from "./_components/NavigationIconButtonDemo";
 import { PopoverMenuDemo } from "./_components/PopoverMenuDemo";
 import { SheetDemo } from "./_components/SheetDemo";
@@ -213,7 +215,11 @@ const TABS_SAMPLES: readonly {
 export default async function DevComponentsPage() {
   if (process.env.NODE_ENV === "production") notFound();
   const locale = await getLocale();
-  const [tNav, tShell] = await Promise.all([getTranslations("nav"), getTranslations("shell")]);
+  const [tNav, tShell, shellLabels] = await Promise.all([
+    getTranslations("nav"),
+    getTranslations("shell"),
+    getShellLabels(),
+  ]);
   const label = locale === "en" ? LABELS.en : LABELS.ar;
   const copy = locale === "en" ? INPUT_COPY.en : INPUT_COPY.ar;
   const cardCopy = locale === "en" ? CARD_COPY.en : CARD_COPY.ar;
@@ -556,6 +562,17 @@ export default async function DevComponentsPage() {
             search: tShell("search"),
           }}
         />
+      </section>
+      <section
+        data-testid="gallery-more-sheet"
+        aria-labelledby="gallery-more-sheet-title"
+        className="grid justify-items-start gap-md p-lg pt-0"
+      >
+        <h2 id="gallery-more-sheet-title" className="text-dashboard-title-m" lang="en">
+          Mobile More sheet · locale={locale} · registry rows, language row, upgrade (opened here by
+          a sample button; in the product by the bottom navigation&apos;s More control)
+        </h2>
+        <MoreSheetDemo labels={shellLabels} />
       </section>
     </>
   );

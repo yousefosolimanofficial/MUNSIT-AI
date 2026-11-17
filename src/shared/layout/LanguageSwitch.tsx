@@ -30,6 +30,8 @@ import { useSamePageHref, useSamePageHrefWithQuery, type LinkHref } from "./use-
 
 export interface LanguageSwitchProps {
   labels: { language: string; languageNames: { en: string; ar: string } };
+  /** Called when a language link is activated (the mobile More sheet closes). */
+  onNavigate?: () => void;
 }
 
 /** Focus ring, D-B2 (same as Button). */
@@ -53,7 +55,7 @@ export const LANGUAGE_SEGMENTS = [
   { locale: "ar", text: "AR" },
 ] as const satisfies readonly { locale: AppLocale; text: string }[];
 
-function LanguageGroup({ labels, href }: LanguageSwitchProps & { href: LinkHref }) {
+function LanguageGroup({ labels, href, onNavigate }: LanguageSwitchProps & { href: LinkHref }) {
   const current = useLocale();
   return (
     <div role="group" aria-label={labels.language} dir="ltr" className={GROUP}>
@@ -65,6 +67,7 @@ function LanguageGroup({ labels, href }: LanguageSwitchProps & { href: LinkHref 
             href={href}
             locale={isCurrent ? undefined : segment.locale}
             aria-current={isCurrent ? "true" : undefined}
+            onClick={onNavigate}
             className={`${SEGMENT} ${isCurrent ? SEGMENT_CURRENT : SEGMENT_OTHER}`}
           >
             {/* Name = visible code + the language named in itself (WCAG 2.5.3 Label in Name). */}
@@ -79,18 +82,18 @@ function LanguageGroup({ labels, href }: LanguageSwitchProps & { href: LinkHref 
   );
 }
 
-function LanguageGroupWithQuery({ labels }: LanguageSwitchProps) {
-  return <LanguageGroup labels={labels} href={useSamePageHrefWithQuery()} />;
+function LanguageGroupWithQuery(props: LanguageSwitchProps) {
+  return <LanguageGroup {...props} href={useSamePageHrefWithQuery()} />;
 }
 
-function LanguageGroupWithoutQuery({ labels }: LanguageSwitchProps) {
-  return <LanguageGroup labels={labels} href={useSamePageHref()} />;
+function LanguageGroupWithoutQuery(props: LanguageSwitchProps) {
+  return <LanguageGroup {...props} href={useSamePageHref()} />;
 }
 
-export function LanguageSwitch({ labels }: LanguageSwitchProps) {
+export function LanguageSwitch(props: LanguageSwitchProps) {
   return (
-    <Suspense fallback={<LanguageGroupWithoutQuery labels={labels} />}>
-      <LanguageGroupWithQuery labels={labels} />
+    <Suspense fallback={<LanguageGroupWithoutQuery {...props} />}>
+      <LanguageGroupWithQuery {...props} />
     </Suspense>
   );
 }
