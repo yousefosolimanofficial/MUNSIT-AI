@@ -6,7 +6,7 @@ Single resume point. A new session starts by reading this file, the latest phase
 - **Current phase:** 06 — Shared states & overlay/guard infrastructure — **Planning** (kickoff
   authorized by the user on 2026-11-17). The plan is in review and **implementation has not
   started**: [phases/phase-06-plan.md](phases/phase-06-plan.md), with the Figma values in
-  [design-values.md §15](design-values.md). Decisions D-U1 to D-U10 are PROPOSED. Phase 07 is NOT
+  [design-values.md §15](design-values.md). Decisions D-U1 to D-U10 have dispositions (2026-11-18); the guard is conditional on a technical proof. Phase 07 is NOT
   STARTED. R-2 and R-3 stay OPEN.
 - **Phase 04:** Routing & navigation registry — **Done / CLOSED** (2026-11-16).
   Implementation PR #27 squash-merged into `main` as `9888e08`; post-merge CI green. Report:

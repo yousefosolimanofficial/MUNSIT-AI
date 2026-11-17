@@ -1,7 +1,7 @@
 # Phase 06 — Shared states & overlay/guard infrastructure — Plan
 
-- **Status:** **PROPOSED, awaiting approval.** Implementation has not started and needs the user's
-  authorization. Decisions D-U1 to D-U10 (§6) are proposals.
+- **Status:** **APPROVED with conditions (user, 2026-11-18).** Every decision has a disposition
+  (§6). The navigation guard is conditionally approved behind a technical proof (§7.1).
 - **Baseline:** `main` at `300c828`. Phase 05 is CLOSED (2026-11-17), CI is green, and the tree is
   clean. Risks R-2 and R-3 stay OPEN.
 - **Sources:**
@@ -99,7 +99,7 @@ values are in [design-values.md §15](../design-values.md).
 src/shared/ui/Button.tsx                       + variant "danger" (D-U2), contract addendum
 src/shared/patterns/Skeleton.tsx               Skeleton block + SkeletonText helpers
 src/shared/patterns/ErrorCard.tsx              ErrorCard (layout "card" | "section")
-src/shared/patterns/EmptyState.tsx             EmptyState (D-U4)
+src/shared/patterns/EmptyState.tsx             EmptyState (D-U4; Mariam assignment)
 src/shared/patterns/SectionBoundary.tsx        status-driven boundary + render-error boundary
 src/shared/patterns/ConfirmGuardDialog.tsx     guard dialog on Dialog
 src/shared/patterns/NavigationGuardProvider.tsx interception (§7), mounted in [locale]/layout
@@ -114,20 +114,20 @@ docs/shared-patterns.md                        DoD: which component to reuse, an
 - No new dependency, no new token. Translucent tints, radii and sizes are local component
   constants (CLAUDE.md).
 
-## 6. Proposed decisions (need approval)
+## 6. Decisions (user, 2026-11-18)
 
-| ID    | Proposal                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| D-U1  | **One guard visual for every guard** (Roadmap + Handoff P2): safe action Primary with default focus; leave action Danger (D-U2); Esc and scrim = stay; `alertdialog`. The Notes guard keeps its own copy and its 440 width, and the Recording guard 420                                                                                                                                                                                                              |
-| D-U2  | **Button `danger` variant (resolves D-B5):** the Secondary fill and border with a Coral Pulse label, as drawn in the Recording guard. Hover and Pressed reuse the Secondary states. Contrast is 5.79:1 at rest and 4.66:1 when pressed (both AA). It is label-only like v1. No solid red button (the P2 inversion is not reproduced)                                                                                                                                 |
-| D-U3  | **Skeleton motion:** Figma is static. Proposed: a slow opacity pulse with the existing motion tokens (motion principle), removed under `prefers-reduced-motion`. `aria-hidden` blocks; the section exposes `aria-busy` and one localized "loading" text for screen readers. **Alternative:** static blocks exactly as Figma                                                                                                                                          |
-| D-U4  | **EmptyState sizes:** one component with `size="page"` (First-Time values) and `size="section"` (Notes values), because both are FIGMA and differ. Content comes from props: icon, title, description, up to two actions and an optional footnote. **Alternative:** normalize to one size (would change one Figma screen)                                                                                                                                            |
-| D-U5  | **ErrorCard:** `layout="card"` (full error, Primary retry) and `layout="section"` (inline row, Secondary retry), with copy from props. The retry label defaults to the approved "إعادة المحاولة" (Figma). The **Notes error dialogs** stay module `Dialog` usages                                                                                                                                                                                                    |
-| D-U6  | **Toast (timing NOT DESIGNED):** one region, centred at the bottom, at the Figma gaps (78; Mobile 118 above the bottom bar, plus the safe area). Success and Info use `role="status"` and auto-dismiss after 5 s, paused on hover or focus. Error uses `role="alert"`, does not auto-dismiss, and has a close control. One toast at a time (a new one replaces the old). Motion: fade + 8px rise, opacity only when reduced. Needs approval because nothing is drawn |
-| D-U7  | **Guard mechanism (§7):** a provider in `[locale]/layout` (it covers `(app)` and `(focus)`): capture-phase interception of same-origin link activation, `useGuardedRouter` for programmatic navigation, a history sentinel for Back/Forward, and `beforeunload` for refresh and tab close (native prompt, not styled). Next 16 offers per-link `onNavigate` but no router-level block, so a central layer is needed                                                  |
-| D-U8  | **Notifications / User Menu:** the Phase 05 shells satisfy "shells only, content static until data exists". There are no sample items (no mock data without authorization), no logout (D-02) and no account header data. Their frames are re-verified in the final increment                                                                                                                                                                                         |
-| D-U9  | **Dev-only guard harness route** inside `(app)` (for example `/dev/guard`), returning 404 in production like `/dev/error-test`, so E2E can exercise the real Sidebar, bottom bar, More sheet, language switch and user menu. It is removed before Phase 22 with the other dev routes                                                                                                                                                                                 |
-| D-U10 | **English guard copy** (§9) is proposed for approval. The Arabic copy is approved (Roadmap)                                                                                                                                                                                                                                                                                                                                                                          |
+| ID    | Decision                                                                                                                                                                                                                                                                                                                                                                                                                                          | Disposition                                                                                                                                                                                                                         |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| D-U1  | **ConfirmGuardDialog:** every guard follows the Recording guard. Stay is Primary and initially focused; Leave is the red-text secondary (D-U2); Esc and scrim keep the current page; `alertdialog` on the Phase 03 `Dialog`. The Notes guard keeps its copy and 440 width, and the Recording guard 420                                                                                                                                            | **APPROVED**                                                                                                                                                                                                                        |
+| D-U2  | **Red-text Button:** a minimal `danger` variant, the Secondary fill and border with a Coral Pulse label (Recording guard). Existing behaviour is unchanged and no other variant is added. Contrast is verified rendered at rest, hover, focus and pressed (calculated 5.79:1 and 4.66:1)                                                                                                                                                          | **APPROVED**                                                                                                                                                                                                                        |
+| D-U3  | **Skeleton:** content-shaped blocks with a subtle opacity pulse from the existing motion tokens. No pulse under `prefers-reduced-motion`. No dependency                                                                                                                                                                                                                                                                                           | **APPROVED**                                                                                                                                                                                                                        |
+| D-U4  | **EmptyState:** one shared component, `variant="default"` and `variant="compact"`. `default` = Figma `Shared / Empty State` `2389:4037` (the cross-module component used by Summaries and Notes). `compact` = Dashboard First-Time `2482:2130`, the tighter box (padding 48/32, radius 20); its icon tile is 72 against 64, as drawn. Values: design-values §15.3; assignment: [phase-06-empty-state-starter.md](phase-06-empty-state-starter.md) | **APPROVED** (variant mapping recorded here)                                                                                                                                                                                        |
+| D-U5  | **ErrorCard:** `layout="card"` (Dashboard full error `2495:2424`, Primary retry) and `layout="section"` (inline `2495:2966`, Secondary retry). Copy comes from props; the retry label defaults to "إعادة المحاولة" (Figma). Notes error dialogs stay module `Dialog` usages                                                                                                                                                                       | **NOT COVERED by the 2026-11-18 decisions.** Smallest safe resolution: both layouts are verified Figma frames with no product choice between them, so the API is confirmed in the Increment 2 PR review. Not needed for Increment 1 |
+| D-U6  | **Toast:** Success, Error and Info; bottom-centre, clear of the mobile bottom bar (Figma gap 118; 78 elsewhere, plus the safe area). Success and Info auto-dismiss after **4 s**; Error persists until dismissed. The timer pauses while the toast is hovered or focused. Announcements use `role="status"` / `role="alert"`; the toast is keyboard reachable and never covers navigation controls                                                | **APPROVED WITH IMPLEMENTATION VALIDATION** (Increment 4). Any deviation, for example a longer duration for long messages under WCAG 2.2.1, is documented in that PR                                                                |
+| D-U7  | **Navigation guard (§7):** a provider in `[locale]/layout`; capture-phase interception of same-origin link activation; `useGuardedRouter` for programmatic navigation; a history sentinel for Back/Forward; `beforeunload` (native, browser-dependent prompt)                                                                                                                                                                                     | **CONDITIONALLY APPROVED:** a narrow technical proof comes first (Increment 1, §7.1). If it cannot reliably meet the Roadmap acceptance, Increment 1 stops and reports the evidence and a safer alternative                         |
+| D-U8  | **Notifications / User Menu:** the Phase 05 shells stay as they are: no sample items, no logout (D-02), no account header data. Frames are re-verified in Increment 5                                                                                                                                                                                                                                                                             | **NOT COVERED.** Smallest safe resolution: no change. The existing behaviour stays, and CLAUDE.md already forbids mock data without authorization. Any content needs a later decision                                               |
+| D-U9  | **Dev-only guard test route** inside `(app)`: 404 in production, not linked from any navigation, no sensitive debugging information, **removed before Phase 06 closure**                                                                                                                                                                                                                                                                          | **APPROVED**                                                                                                                                                                                                                        |
+| D-U10 | **English guard copy** (§9)                                                                                                                                                                                                                                                                                                                                                                                                                       | **NOT COVERED.** Smallest safe resolution: Increment 1 uses the §9 English text marked PROPOSED, and the Increment 1 PR is not merged until the copy is approved (Phase 04/05 practice). The Arabic copy is approved (Roadmap)      |
 
 ## 7. Navigation guard design (D-U7)
 
@@ -153,6 +153,28 @@ useGuardedRouter()              // same API as next-intl useRouter; asks the act
   removes the sentinel.
 - **Dialog:** focus moves to the safe action on open and returns to the element that started the
   navigation.
+
+### 7.1 Technical proof (condition of D-U7)
+
+Increment 1 must demonstrate the following in Chromium E2E, each against the real URL and history:
+
+1. internal link interception;
+2. programmatic navigation;
+3. browser Back;
+4. Forward after a cancellation;
+5. repeated Back attempts;
+6. refresh and tab-close protection;
+7. free navigation when inactive;
+8. no stuck navigation or corrupted history;
+9. no browser listeners left after unmount;
+10. RTL/LTR and an accessible confirmation.
+
+**App-controlled vs browser-controlled navigation:**
+
+- **App-controlled** paths (links, the router, in-app history) show the custom dialog.
+- **Browser-controlled** paths (refresh, tab close, typed URL, external links) can only use the
+  native `beforeunload` prompt. That prompt cannot be styled, its look is browser-dependent, and
+  it requires prior user interaction. No protection is claimed beyond what the browser allows.
 
 ## 8. Increments and PR boundaries
 
@@ -210,15 +232,15 @@ tests, and resolves the deferred D-B5. Increment 3 can run in parallel with it i
 
 ## 10. Collaboration review (Mariam)
 
-**Candidate: `EmptyState` (increment 3).** It is **proposed, not assigned**: it needs the user's
-authorization, an approved D-U4, and a starter package.
+**`EmptyState` (increment 3): assignment authorized (user, 2026-11-18).** It is prepared: it needs the user's
+authorization (given 2026-11-18), D-U4 (approved), and a starter package (prepared, not sent until the user confirms the handoff).
 
-| Criterion        | Assessment                                                                  |
-| ---------------- | --------------------------------------------------------------------------- |
-| API frozen       | Yes, after D-U4: `{ size, icon, title, description?, actions?, footnote? }` |
-| Isolated files   | `src/shared/patterns/EmptyState.tsx` and `EmptyState.test.tsx` only         |
-| Dependencies     | Available on `main`: `Button`, `Icon`, tokens, Figma values (§15.3)         |
-| Integration risk | Low: no state, no routing, no overlay                                       |
+| Criterion        | Assessment                                                                                      |
+| ---------------- | ----------------------------------------------------------------------------------------------- |
+| API frozen       | Yes: `{ variant?, icon, title, description?, actions?, footnote?, headingLevel? }` (starter §3) |
+| Isolated files   | `src/shared/patterns/EmptyState.tsx` and `EmptyState.test.tsx` only                             |
+| Dependencies     | Available on `main`: `Button`, `Icon`, tokens, Figma values (§15.3)                             |
+| Integration risk | Low: no state, no routing, no overlay                                                           |
 
 **Not suitable for delegation:**
 
