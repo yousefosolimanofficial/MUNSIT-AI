@@ -1,7 +1,8 @@
 # Phase 05 — Shared App Shell — Plan
 
-- **Status:** **Plan with approved architecture (user, 2026-11-16). Phase 05 has not started.**
-  Implementation needs a separate authorization.
+- **Status:** **Phase 05 CLOSED (2026-11-17).** Closure report:
+  [phase-05-closure-report.md](phase-05-closure-report.md). The plan, with its architecture approved
+  by the user on 2026-11-16, is kept as the record.
   - **Approved:** ADR-004, the O-8 contract, decisions D-S1 to D-S9 (§20), and all shell copy
     (§14, product owner, 2026-11-16).
 - **Baseline:** `main` at `72c8ad9` (Phase 04 CLOSED; risk R-2 OPEN).

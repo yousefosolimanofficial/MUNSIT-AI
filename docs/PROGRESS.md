@@ -3,6 +3,8 @@
 Single resume point. A new session starts by reading this file, the latest phase report, and
 [docs/references/MUNSIT_AI_Development_Roadmap_v1.0.md](references/MUNSIT_AI_Development_Roadmap_v1.0.md).
 
+- **Current phase:** none in progress. **Phase 06 (Shared states & overlay/guard infrastructure)
+  is NOT STARTED** and begins only on the user's authorization. Phase 07 is NOT STARTED.
 - **Phase 04:** Routing & navigation registry — **Done / CLOSED** (2026-11-16).
   Implementation PR #27 squash-merged into `main` as `9888e08`; post-merge CI green. Report:
   [phases/phase-04-closure-report.md](phases/phase-04-closure-report.md) (CLOSED). Plan:
@@ -22,8 +24,8 @@ Single resume point. A new session starts by reading this file, the latest phase
     Risks.
   - **Deferred:** Tutor route (D-08); Quiz Results, Answer Review and quiz mode in the URL (D-09);
     reset-password link format (D-02); plan upgrade (D-18); Settings "إدارة الحساب" target.
-- **Current phase:** 05 — Shared App Shell — **In progress** (implementation authorized by the user
-  on 2026-11-16). Plan, O-8 contract and ADR-004 approved and merged through PR #29 (`d226a84`):
+- **Phase 05:** Shared App Shell — **Done / CLOSED** (2026-11-17; closure approved by the product
+  owner, closure PR #36). Implementation was authorized by the user on 2026-11-16. Plan, O-8 contract and ADR-004 approved and merged through PR #29 (`d226a84`):
   [phases/phase-05-plan.md](phases/phase-05-plan.md),
   [phases/phase-05-navigation-icon-button-contract.md](phases/phase-05-navigation-icon-button-contract.md),
   [decisions/ADR-004-shell-breakpoints.md](decisions/ADR-004-shell-breakpoints.md).
@@ -54,9 +56,10 @@ Single resume point. A new session starts by reading this file, the latest phase
     [phases/phase-05-mobile-nav-item-starter.md](phases/phase-05-mobile-nav-item-starter.md).
   - **Evidence on `main` `6c47e35`:** `pnpm check` with 1020/1020 unit tests; E2E 637/637,
     including the ADR-004 matrix; post-merge CI green. Chromium only.
-  - **Closure: READY FOR CLOSURE, pending the product owner's approval** of
-    [phases/phase-05-closure-report.md](phases/phase-05-closure-report.md) (closure documentation
-    PR). Phase 05 stays In progress until that approval.
+  - **Closure report:** [phases/phase-05-closure-report.md](phases/phase-05-closure-report.md)
+    (CLOSED). All eight Roadmap acceptance criteria pass.
+  - **Pre-production QA requirements (not passed, carried forward):** real-device verification,
+    screen-reader testing (VoiceOver, TalkBack, NVDA) and mobile performance of the blur 16 bars.
   - Risk **R-2** stays OPEN (Phase 22 gate). Cross-browser verification is tracked separately
     as **R-3** (pre-production QA).
 - **Phase 03:** **CLOSED** — closure PR #24 merged (`4a2f3f4`). Report:
@@ -88,7 +91,7 @@ Single resume point. A new session starts by reading this file, the latest phase
   - Chromium only; cross-browser E2E is in Phase 22.
 - **Ownership change (user, 2026-11-16):** Yousef and Claude finished Phase 03. Mariam joins
   from Phase 04.
-- **Latest report:** [phases/phase-05-closure-report.md](phases/phase-05-closure-report.md) (pending approval; Phase 04: [phases/phase-04-closure-report.md](phases/phase-04-closure-report.md); Phase 03: [phases/phase-03-closure-report.md](phases/phase-03-closure-report.md); Phase 02: [phases/phase-02-report.md](phases/phase-02-report.md); Phase 01: [phases/phase-01-report.md](phases/phase-01-report.md))
+- **Latest report:** [phases/phase-05-closure-report.md](phases/phase-05-closure-report.md) (CLOSED; Phase 04: [phases/phase-04-closure-report.md](phases/phase-04-closure-report.md); Phase 03: [phases/phase-03-closure-report.md](phases/phase-03-closure-report.md); Phase 02: [phases/phase-02-report.md](phases/phase-02-report.md); Phase 01: [phases/phase-01-report.md](phases/phase-01-report.md))
 - **Stack decision:** [decisions/ADR-001-frontend-stack.md](decisions/ADR-001-frontend-stack.md) (Approved by the user, 2026-11-12)
 - **Phase 01 commit:** `acf48c9` `chore: initialize project (Phase 01)` on `main`.
 - **Phase 02 commit:** `79685af` `docs(phase-02): design values, progress and phase report` on
@@ -123,7 +126,7 @@ works offline and delivers packages per [TEAM_COLLABORATION.md](TEAM_COLLABORATI
 | 02  | Design System implementation        | Done        |
 | 03  | Core UI primitives                  | Done        |
 | 04  | Routing & navigation registry       | Done        |
-| 05  | Shared App Shell                    | In progress |
+| 05  | Shared App Shell                    | Done        |
 | 06  | Shared states & overlay/guard infra | Not started |
 | 07  | Landing Page                        | Not started |
 | 08  | Authentication UI                   | Not started |
@@ -210,10 +213,11 @@ numerals and English runs inside Arabic text (direction isolation). See R-1, I-1
 
 ## Next action
 
-**2026-11-17:** Phase 05 implementation complete. PR #35 rebase-merged as `d364d58` (Mariam's
-`MobileNavItem`) and `6c47e35` (`BottomNav`); CI green on `main`. The closure report is in a
-documentation PR, pending the product owner's approval. Phase 05 stays In progress until then.
-Phase 06 is not started; it begins only on the user's authorization. R-2 and R-3 stay open.
+**2026-11-17:** Phase 05 is CLOSED. The product owner approved the closure; closure PR #36 was
+squash-merged. Final code: PR #35, with Mariam's `MobileNavItem` in `d364d58` and `BottomNav` in
+`6c47e35`; CI green. Next: Phase 06, only on the user's authorization. Phase 06 and 07 are not
+started. R-2 and R-3 stay open, together with the pre-production QA requirements (real devices,
+screen readers, blur performance).
 
 **2026-11-16:** Phase 04 is CLOSED (PR #27, `9888e08`; closure documentation PR). Next: Phase 05
 (Shared App Shell), only on the user's authorization. O-8 (Navigation Icon Button) comes first.

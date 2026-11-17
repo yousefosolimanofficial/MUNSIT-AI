@@ -1,8 +1,8 @@
 # Phase 05 — Shared App Shell — Closure Report
 
-- **Status:** **READY FOR CLOSURE, pending the product owner's approval of this report** (closure
-  PR, documentation only). Phase 05 becomes CLOSED only when this PR is approved. Until then,
-  `docs/PROGRESS.md` shows Phase 05 as In progress.
+- **Status:** **CLOSED** (2026-11-17). The product owner approved the closure on 2026-11-17, and
+  this report was merged through the documentation-only closure PR #36. **Risks R-2 and R-3 stay
+  OPEN** (§12).
 - **Final code on `main`:** `6c47e35` (PR #35, rebase merge); post-merge CI green.
 - **Plan:** [phase-05-plan.md](phase-05-plan.md), decisions D-S1 to D-S14 (all Approved);
   [ADR-004](../decisions/ADR-004-shell-breakpoints.md) (Approved, validated, §5);
@@ -257,8 +257,8 @@ ADR-004, O-8 (D-NIB1 to D-NIB6) and all shell copy (§14 of the plan) are approv
 | --- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | R-2 | Blank first HTML for HTTP 404 without JavaScript (Next.js 16.4.6 `notFound()` under `[locale]`)                           | **OPEN**: development-stage acceptance only; resolve or re-accept before production (Phase 22 at the latest). Unrelated to browser coverage |
 | R-3 | Cross-browser coverage: every Phase 05 check ran in **Chromium only**. Firefox, Safari (WebKit) and Edge are not verified | **OPEN**: a pre-production QA requirement (D-12: latest two majors), planned for Phase 22                                                   |
-| —   | Backdrop blur 16 performance on low-end phones (plan §19)                                                                 | Not measured; the Figma value is kept until a problem is measured                                                                           |
-| —   | No real-device or screen-reader pass (VoiceOver, TalkBack, NVDA)                                                          | Open; DOM, axe and unit checks only                                                                                                         |
+| QA  | Backdrop blur 16 performance on low-end phones (plan §19)                                                                 | Not measured; the Figma value is kept until a problem is measured                                                                           |
+| QA  | No real-device or screen-reader pass (VoiceOver, TalkBack, NVDA)                                                          | Open; DOM, axe and unit checks only                                                                                                         |
 
 ## 13. Deferred work (unchanged, nothing invented)
 
@@ -301,5 +301,5 @@ ADR-004, O-8 (D-NIB1 to D-NIB6) and all shell copy (§14 of the plan) are approv
 | DoD | Shell implemented once; modules only render content; screenshots at the three reference widths                    | **PASS**                                                                                                  |
 | —   | No shell on `(focus)`, `(auth)` and Landing; no temporary probe                                                   | **PASS**                                                                                                  |
 
-**Recommendation:** Phase 05 meets its acceptance criteria and can be formally **CLOSED** once
-this report is approved, with R-2 and R-3 carried as open pre-production risks.
+**Result:** Phase 05 met its acceptance criteria and is **CLOSED** (product owner, 2026-11-17).
+R-2, R-3 and the pre-production QA requirements in §12 are carried forward open.
