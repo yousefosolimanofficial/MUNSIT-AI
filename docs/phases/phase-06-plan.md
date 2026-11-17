@@ -176,6 +176,22 @@ Increment 1 must demonstrate the following in Chromium E2E, each against the rea
   native `beforeunload` prompt. That prompt cannot be styled, its look is browser-dependent, and
   it requires prior user interaction. No protection is claimed beyond what the browser allows.
 
+### 7.2 Proof results (Increment 1, Chromium, 2026-11-18)
+
+The proof passed: `tests/e2e/navigation-guard.spec.ts`, 32 tests in `ar` and `en`, each checking
+the real URL, history and page state.
+
+| Exit path                                                                    | Result                                                                                         |
+| ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| Sidebar, Rail, drawer, bottom bar, More sheet, in-page link, language switch | Supported: Stay keeps URL, state and focus; Leave navigates once (overlays close)              |
+| Programmatic (`useGuardedRouter`, user menu)                                 | Supported                                                                                      |
+| Browser Back, repeated Back (≥ 1 ms apart), double click                     | Supported: one dialog, no history corruption; Leave goes back                                  |
+| Refresh, tab close                                                           | Native `beforeunload` prompt only (browser UI, after user interaction); dismiss keeps the page |
+| Guard off, or toggled off                                                    | Never blocks; all three listeners removed (DevTools listener registry); Back not stuck         |
+| **Limitation:** two Back steps queued in the same task (scripted)            | The committed traversal leaves the page without the dialog. History stays consistent           |
+| **Limitation:** Forward entries while a guard is active                      | Discarded by the sentinel entry (History API semantics): Forward cannot leave, nor return      |
+| Not verified                                                                 | Firefox, Safari, Edge (R-3); typed URL and external links (native prompt only, not automated)  |
+
 ## 8. Increments and PR boundaries
 
 | #   | Increment (PR)                                                                                                                                                                                               | Files                                                                                                                         | Depends on                    | Tests                                                                                                                                                                                                                                                                                                             | Acceptance                                                                                           |

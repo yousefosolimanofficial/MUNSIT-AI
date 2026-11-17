@@ -6,8 +6,10 @@ Single resume point. A new session starts by reading this file, the latest phase
 - **Current phase:** 06 — Shared states & overlay/guard infrastructure — **Planning** (kickoff
   authorized by the user on 2026-11-17). The plan is in review and **implementation has not
   started**: [phases/phase-06-plan.md](phases/phase-06-plan.md), with the Figma values in
-  [design-values.md §15](design-values.md). Decisions D-U1 to D-U10 have dispositions (2026-11-18); the guard is conditional on a technical proof. Phase 07 is NOT
-  STARTED. R-2 and R-3 stay OPEN.
+  [design-values.md §15](design-values.md). The plan was approved and merged through PR #37 (`70c821d`). D-U1 to D-U10 have dispositions; D-U10 (English guard copy) is pending.
+  - **Increment 1 (guard slice): in review** on `feat/phase-06-navigation-guard`: danger Button, `ConfirmGuardDialog`, navigation guard (technical proof passed in Chromium), dev-only `/dev/guard` route (removed before closure).
+  - **Mariam `EmptyState`: PREPARED — NOT SENT.** Starter `munsit-starter-70c821d.zip` (SHA-256 `9aca9250…59f4ef`) was verified in an empty folder with a frozen install and `pnpm check` (1020/1020). Assignment: [phases/phase-06-empty-state-starter.md](phases/phase-06-empty-state-starter.md). Phase 07 is NOT
+    STARTED. R-2 and R-3 stay OPEN.
 - **Phase 04:** Routing & navigation registry — **Done / CLOSED** (2026-11-16).
   Implementation PR #27 squash-merged into `main` as `9888e08`; post-merge CI green. Report:
   [phases/phase-04-closure-report.md](phases/phase-04-closure-report.md) (CLOSED). Plan:

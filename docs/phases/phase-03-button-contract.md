@@ -295,3 +295,16 @@ considered and rejected.
 - [ ] Screenshots: 8 states (hover and pressed captured live) × RTL/LTR at 1440, 768 and 390, and
       no overflow at 320.
 - [ ] Known issues and NOT VERIFIED items listed. Integration instructions included.
+
+## 14. Addendum — `danger` variant (Phase 06, 2026-11-18)
+
+D-B5 is resolved by Phase 06 decision D-U2 (approved by the user on 2026-11-18). Plan:
+[phase-06-plan.md](phase-06-plan.md) §6.
+
+| Item     | Value                                                                                                                                                                  |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Figma    | Leave Recording Guard, leave action `2744:5127`: the Secondary fill and border with a Coral Pulse label                                                                |
+| API      | `variant="danger"` (`BUTTON_VARIANTS` = primary, secondary, danger). No other change; label-only like v1                                                               |
+| States   | Default, Hover, Pressed and Disabled reuse the Secondary surfaces and borders (D-B6 Pressed 20%). The label stays Coral Pulse when enabled; Disabled matches Secondary |
+| Contrast | Rendered in Chromium inside the guard dialog: rest 5.80, hover 5.04, keyboard focus 5.80, pressed 4.69 (AA ≥ 4.5). Focus ring D-B2 unchanged                           |
+| Not done | No solid red (Coral-filled) button: the Notes guard's drawn solid red leave action is the Handoff P2 inversion and is not reproduced                                   |
