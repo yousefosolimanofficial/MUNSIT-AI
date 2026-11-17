@@ -9,8 +9,10 @@ import { NavigationIconButton } from "@/shared/ui/NavigationIconButton";
  * - O-8 `NavigationIconButton` (`moon`, 40) opens a Phase 03 `Menu` with radio items.
  * - **Dark is the only theme** (Design System: dark-only): it is checked; Light and System are
  *   disabled items labelled "coming soon". Nothing switches and nothing is stored.
- * - Keyboard: Enter / Space open the menu and focus the first available item. ArrowDown-to-open
- *   on the trigger is not available: the O-8 API (approved) takes no key handler.
+ * - Keyboard (Phase 03 Menu contract §3.3): Enter, Space or ArrowDown open the menu on the first
+ *   available item; ArrowUp opens it on the last. The O-8 API takes no key handler, so the
+ *   Menu's trigger `onKeyDown` sits on a `display: contents` wrapper: key events bubble to it from
+ *   the button. The wrapper adds no box, role or tab stop (layout and semantics unchanged).
  */
 
 export interface ThemeMenuProps {
@@ -27,15 +29,17 @@ export function ThemeMenu({ labels }: ThemeMenuProps) {
     <Menu
       label={labels.appearance}
       trigger={(props) => (
-        <NavigationIconButton
-          ref={props.ref}
-          icon="moon"
-          label={labels.appearance}
-          aria-haspopup={props["aria-haspopup"]}
-          aria-expanded={props["aria-expanded"]}
-          aria-controls={props["aria-controls"]}
-          onClick={props.onClick}
-        />
+        <span className="contents" onKeyDown={props.onKeyDown}>
+          <NavigationIconButton
+            ref={props.ref}
+            icon="moon"
+            label={labels.appearance}
+            aria-haspopup={props["aria-haspopup"]}
+            aria-expanded={props["aria-expanded"]}
+            aria-controls={props["aria-controls"]}
+            onClick={props.onClick}
+          />
+        </span>
       )}
     >
       {/* Single supported value: selecting Dark only closes the menu. */}

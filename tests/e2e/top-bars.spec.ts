@@ -216,6 +216,44 @@ for (const { locale, dir, prefix, shell, nav } of LOCALES) {
       ).toEqual({ storage: 0, cookie: "", scheme: "dark" });
     });
 
+    test("appearance: ArrowDown / ArrowUp on the trigger open the menu (Menu contract §3.3)", async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      const moon = bar(page).getByRole("button", { name: shell.appearance });
+      await load(page, `${prefix}/dashboard`, moon);
+      const menu = page.getByRole("menu", { name: shell.appearance });
+      for (const key of ["ArrowDown", "ArrowUp"]) {
+        await moon.focus();
+        await page.keyboard.press(key);
+        await expect(menu).toBeVisible();
+        // Light and System are disabled: the first and the last available item is Dark.
+        await expect(menu.getByRole("menuitemradio", { name: shell.theme.dark })).toBeFocused();
+        await page.keyboard.press("Escape");
+        await expect(menu).toBeHidden();
+        await expect(moon).toBeFocused();
+      }
+    });
+
+    test("language switch keeps the query string (after hydration)", async ({ page }) => {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      const group = bar(page).getByRole("group", { name: shell.language });
+      const other = locale === "ar" ? "en" : "ar";
+      const otherLink = group.getByRole("link", { name: shell.languageNames[other] });
+      await load(page, `${prefix}/folders/f2?tab=notes&tag=a&tag=b`, otherLink);
+      const otherPrefix = other === "en" ? "/en" : "/ar";
+      await expect(otherLink).toHaveAttribute(
+        "href",
+        `${otherPrefix}/folders/f2?tab=notes&tag=a&tag=b`,
+      );
+      await otherLink.click();
+      const landed = other === "en" ? "/en" : "";
+      await expect(page).toHaveURL(
+        (url) => url.pathname === `${landed}/folders/f2` && url.search === "?tab=notes&tag=a&tag=b",
+      );
+      await expect(page.locator("html")).toHaveAttribute("lang", other);
+    });
+
     test("language switch: same page in the other language, params kept, then back", async ({
       page,
     }) => {

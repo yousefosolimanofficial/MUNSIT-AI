@@ -44,6 +44,7 @@ const routerState = vi.hoisted(() => ({
   push: (() => {}) as (href: string) => void,
   pathname: "/dashboard",
   params: { locale: "ar" } as Record<string, string>,
+  search: "",
 }));
 
 vi.mock("@/i18n/navigation", async (importOriginal) => ({
@@ -55,6 +56,7 @@ vi.mock("@/i18n/navigation", async (importOriginal) => ({
 vi.mock("next/navigation", async (importOriginal) => ({
   ...(await importOriginal<typeof import("next/navigation")>()),
   useParams: () => routerState.params,
+  useSearchParams: () => new URLSearchParams(routerState.search),
 }));
 
 /** Same mapping as `getShellLabels()`, from the real message catalogs. */
@@ -651,6 +653,7 @@ describe("Top Bar controls (Figma 2211:170, 2224:399, 2238:923)", () => {
   beforeEach(() => {
     routerState.pathname = "/dashboard";
     routerState.params = { locale: "ar" };
+    routerState.search = "";
     routerState.push = vi.fn();
   });
 
@@ -817,6 +820,43 @@ describe("Top Bar controls (Figma 2211:170, 2224:399, 2238:923)", () => {
       expect(group.getAttribute("dir")).toBe("ltr");
     },
   );
+
+  it("language switch keeps the query string (repeated keys too)", () => {
+    routerState.pathname = "/folders/[folderId]";
+    routerState.params = { locale: "ar", folderId: "f2" };
+    routerState.search = "tab=notes&tag=a&tag=b";
+    const { t } = renderBar("ar");
+    const group = screen.getByRole("group", { name: t.language });
+    const en = within(group).getByRole("link", { name: joinedName("EN", "English") });
+    const ar = within(group).getByRole("link", { name: joinedName("AR", "العربية") });
+    expect(en.getAttribute("href")).toBe("/en/folders/f2?tab=notes&tag=a&tag=b");
+    expect(ar.getAttribute("href")).toBe("/folders/f2?tab=notes&tag=a&tag=b");
+  });
+
+  it("theme trigger: ArrowDown opens on the first available item, ArrowUp on the last (Menu §3.3)", async () => {
+    const { t } = renderBar("ar");
+    const trigger = screen.getByRole("button", { name: t.appearance });
+    trigger.focus();
+    await userEvent.keyboard("{ArrowDown}");
+    const menu = screen.getByRole("menu", { name: t.appearance });
+    expect(trigger.getAttribute("aria-expanded")).toBe("true");
+    const [dark] = within(menu).getAllByRole("menuitemradio");
+    expect(document.activeElement).toBe(dark);
+    await userEvent.keyboard("{Escape}");
+    expect(trigger.getAttribute("aria-expanded")).toBe("false");
+    trigger.focus();
+    await userEvent.keyboard("{ArrowUp}");
+    // Light and System are disabled, so the last available item is Dark.
+    expect(document.activeElement).toBe(
+      within(screen.getByRole("menu", { name: t.appearance })).getAllByRole("menuitemradio")[0],
+    );
+    // The key-handler wrapper adds no box, role or tab stop.
+    const wrapper = trigger.parentElement;
+    expect(wrapper?.tagName).toBe("SPAN");
+    expect(wrapper?.className).toBe("contents");
+    expect(wrapper?.hasAttribute("role")).toBe(false);
+    expect(wrapper?.hasAttribute("tabindex")).toBe(false);
+  });
 
   it("language switch keeps dynamic route params", () => {
     routerState.pathname = "/folders/[folderId]";

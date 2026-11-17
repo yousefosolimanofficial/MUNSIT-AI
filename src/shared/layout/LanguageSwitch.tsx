@@ -1,12 +1,13 @@
 "use client";
 
-import type { ComponentProps } from "react";
+import { Suspense } from "react";
 
 import { useLocale } from "next-intl";
-import { useParams } from "next/navigation";
 
-import { Link, usePathname } from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 import type { AppLocale } from "@/i18n/routing";
+
+import { useSamePageHref, useSamePageHrefWithQuery, type LinkHref } from "./use-same-page-href";
 
 /*
  * MUNSIT AI — language switch (Phase 05). Figma: `Language Switch` `2211:182`: 86 × 38,
@@ -14,22 +15,22 @@ import type { AppLocale } from "@/i18n/routing";
  * padding 6 / 10, Inter Medium 12/16; current segment Sky 20% + white, other Text/Secondary.
  *
  * - A labelled group ("اللغة") of two locale-aware links to the **same page** in each language
- *   (typed next-intl `Link`; dynamic params kept). The other language passes `locale`, which
- *   next-intl always prefixes (`/ar/…` then redirects to the unprefixed Arabic URL); the
- *   current language links without it and has `aria-current="true"`.
+ *   (typed next-intl `Link`): the pathname, dynamic params and query string are kept. The other
+ *   language passes `locale`, which next-intl always prefixes (`/ar/…` then redirects to the
+ *   unprefixed Arabic URL); the current language links without it and has
+ *   `aria-current="true"`.
+ * - The query is read inside a `<Suspense>` boundary (`useSamePageHrefWithQuery`); its fallback
+ *   is the same group without the query, so the prerendered HTML and the layout never change.
  * - Visible text stays "EN" / "AR" (Figma). Each link is also named by its language in that
  *   language (approved copy, plan §14), in a visually hidden span with `lang`, after the visible
  *   code, so the name contains the visible label (WCAG 2.5.3): "EN English", "AR العربية".
  * - The segment order is the Figma visual order (EN, AR from left to right) in both directions:
  *   Latin labels, so the group is `dir="ltr"`.
- * - The query string is not carried over (no screen uses one yet).
  */
 
 export interface LanguageSwitchProps {
   labels: { language: string; languageNames: { en: string; ar: string } };
 }
-
-type LinkHref = ComponentProps<typeof Link>["href"];
 
 /** Focus ring, D-B2 (same as Button). */
 const FOCUS_RING =
@@ -46,25 +47,17 @@ const SEGMENT = [
 const SEGMENT_CURRENT = "bg-accent-electric-sky/20 text-text-primary";
 const SEGMENT_OTHER = "cursor-pointer text-text-secondary";
 
-const SEGMENTS = [
+/** The two languages, in the Figma visual order. Shared with the mobile More sheet. */
+export const LANGUAGE_SEGMENTS = [
   { locale: "en", text: "EN" },
   { locale: "ar", text: "AR" },
 ] as const satisfies readonly { locale: AppLocale; text: string }[];
 
-export function LanguageSwitch({ labels }: LanguageSwitchProps) {
+function LanguageGroup({ labels, href }: LanguageSwitchProps & { href: LinkHref }) {
   const current = useLocale();
-  const pathname = usePathname();
-  // Route params without the `[locale]` segment, which `locale` below replaces.
-  const params = Object.fromEntries(
-    Object.entries(useParams<Record<string, string>>()).filter(([key]) => key !== "locale"),
-  );
-  // `pathname` is the internal template of the typed `pathnames` (e.g. a `[folderId]` route);
-  // the current params fill it. next-intl cannot correlate the two types, hence the cast.
-  const href = (Object.keys(params).length > 0 ? { pathname, params } : pathname) as LinkHref;
-
   return (
     <div role="group" aria-label={labels.language} dir="ltr" className={GROUP}>
-      {SEGMENTS.map((segment) => {
+      {LANGUAGE_SEGMENTS.map((segment) => {
         const isCurrent = segment.locale === current;
         return (
           <Link
@@ -83,5 +76,21 @@ export function LanguageSwitch({ labels }: LanguageSwitchProps) {
         );
       })}
     </div>
+  );
+}
+
+function LanguageGroupWithQuery({ labels }: LanguageSwitchProps) {
+  return <LanguageGroup labels={labels} href={useSamePageHrefWithQuery()} />;
+}
+
+function LanguageGroupWithoutQuery({ labels }: LanguageSwitchProps) {
+  return <LanguageGroup labels={labels} href={useSamePageHref()} />;
+}
+
+export function LanguageSwitch({ labels }: LanguageSwitchProps) {
+  return (
+    <Suspense fallback={<LanguageGroupWithoutQuery labels={labels} />}>
+      <LanguageGroupWithQuery labels={labels} />
+    </Suspense>
   );
 }
