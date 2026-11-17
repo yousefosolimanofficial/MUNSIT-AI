@@ -14,5 +14,16 @@
     "note": "DEV-ONLY fixture — not product copy",
     "title": "Error boundary test",
     "trigger": "Throw a render error"
+  },
+  "guardTest": {
+    "note": "DEV-ONLY fixture — not product copy",
+    "title": "Navigation guard test",
+    "guardOn": "Guard on",
+    "guardOff": "Guard off",
+    "kindUnsaved": "Unsaved changes guard",
+    "kindRecording": "Recording guard",
+    "inPageLink": "In-page link to My Lectures",
+    "programmatic": "Programmatic navigation to Summaries",
+    "status": "Guard status"
   }
 }

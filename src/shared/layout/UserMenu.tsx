@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "@/i18n/navigation";
+import { useGuardedRouter } from "@/shared/hooks/useNavigationGuard";
 import { Avatar } from "@/shared/ui/Avatar";
 import { Icon } from "@/shared/ui/Icon";
 import { Menu, MenuItem } from "@/shared/ui/Menu";
@@ -35,7 +35,8 @@ const TRIGGER = [
 ].join(" ");
 
 export function UserMenu({ labels }: UserMenuProps) {
-  const router = useRouter();
+  // Guarded (Phase 06): an active navigation guard asks before leaving.
+  const router = useGuardedRouter();
   const openSettings = () => router.push(SETTINGS_HREF);
 
   return (

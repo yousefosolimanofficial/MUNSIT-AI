@@ -10,13 +10,16 @@ import type { ButtonHTMLAttributes, ReactNode, Ref } from "react";
  *   Disabled is the native `disabled` attribute. Nothing here is a prop copy of a state.
  * - Colors come only from tokens and opacity modifiers. No literal hex values.
  * - Symmetric padding, centered label, no `dir`: identical in RTL and LTR.
- * - v1 is label-only: no loading, no icons, no destructive variant (D-B3, D-B4, D-B5).
+ * - v1 is label-only: no loading, no icons (D-B3, D-B4).
+ * - `danger` (Phase 06, D-U2, resolves D-B5): the red-text leave action of the guard dialogs
+ *   (Figma Leave Recording Guard `2744:5127`). Secondary surface and border in every state, with
+ *   a Coral Pulse label. No solid red button exists.
  *
  * Tailwind reads class names from source text, so every class below is written in full
  * (never built from pieces at runtime).
  */
 
-export const BUTTON_VARIANTS = ["primary", "secondary"] as const;
+export const BUTTON_VARIANTS = ["primary", "secondary", "danger"] as const;
 export type ButtonVariant = (typeof BUTTON_VARIANTS)[number];
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -91,6 +94,16 @@ const VARIANT_CLASSES = {
     // Pressed: Sky 20% fill (approved exception D-B6; Figma 24%), Sky 55% border.
     "enabled:active:bg-accent-electric-sky/20 enabled:active:border-accent-electric-sky/55",
     // Disabled: no fill, Sky 20% border, Muted label (Figma; not Electric Sky).
+    "disabled:bg-transparent disabled:border-accent-electric-sky/20 disabled:text-text-muted",
+  ].join(" "),
+  danger: [
+    // Default: the Secondary surface and border, Coral Pulse label (Figma `2744:5127`).
+    "border bg-accent-electric-sky/8 border-accent-electric-sky/30 text-accent-coral-pulse",
+    // Hover and Pressed: the Secondary states; the label stays Coral Pulse (not designed, D-U2).
+    "[@media(hover:hover)_and_(pointer:fine)]:enabled:hover:not-active:bg-accent-electric-sky/16",
+    "[@media(hover:hover)_and_(pointer:fine)]:enabled:hover:not-active:border-accent-electric-sky/55",
+    "enabled:active:bg-accent-electric-sky/20 enabled:active:border-accent-electric-sky/55",
+    // Disabled: as Secondary.
     "disabled:bg-transparent disabled:border-accent-electric-sky/20 disabled:text-text-muted",
   ].join(" "),
 } as const satisfies Record<ButtonVariant, string>;

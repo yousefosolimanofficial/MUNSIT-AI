@@ -45,6 +45,7 @@ export const ROUTES = {
   "dev.components": "/dev/components",
   "dev.tokens": "/dev/tokens",
   "dev.errorTest": "/dev/error-test",
+  "dev.guard": "/dev/guard",
 } as const;
 
 export type RouteKey = keyof typeof ROUTES;
