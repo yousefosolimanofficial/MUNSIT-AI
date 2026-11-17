@@ -3,8 +3,11 @@
 Single resume point. A new session starts by reading this file, the latest phase report, and
 [docs/references/MUNSIT_AI_Development_Roadmap_v1.0.md](references/MUNSIT_AI_Development_Roadmap_v1.0.md).
 
-- **Current phase:** none in progress. **Phase 06 (Shared states & overlay/guard infrastructure)
-  is NOT STARTED** and begins only on the user's authorization. Phase 07 is NOT STARTED.
+- **Current phase:** 06 — Shared states & overlay/guard infrastructure — **Planning** (kickoff
+  authorized by the user on 2026-11-17). The plan is in review and **implementation has not
+  started**: [phases/phase-06-plan.md](phases/phase-06-plan.md), with the Figma values in
+  [design-values.md §15](design-values.md). Decisions D-U1 to D-U10 have dispositions (2026-11-18); the guard is conditional on a technical proof. Phase 07 is NOT
+  STARTED. R-2 and R-3 stay OPEN.
 - **Phase 04:** Routing & navigation registry — **Done / CLOSED** (2026-11-16).
   Implementation PR #27 squash-merged into `main` as `9888e08`; post-merge CI green. Report:
   [phases/phase-04-closure-report.md](phases/phase-04-closure-report.md) (CLOSED). Plan:
@@ -127,7 +130,7 @@ works offline and delivers packages per [TEAM_COLLABORATION.md](TEAM_COLLABORATI
 | 03  | Core UI primitives                  | Done        |
 | 04  | Routing & navigation registry       | Done        |
 | 05  | Shared App Shell                    | Done        |
-| 06  | Shared states & overlay/guard infra | Not started |
+| 06  | Shared states & overlay/guard infra | Planning    |
 | 07  | Landing Page                        | Not started |
 | 08  | Authentication UI                   | Not started |
 | 09  | Dashboard                           | Not started |
@@ -212,6 +215,10 @@ numerals and English runs inside Arabic text (direction isolation). See R-1, I-1
 | 7   | Final audit + phase report; G-1, G-2 implemented             | Done — approved (2026-11-13)   |
 
 ## Next action
+
+**2026-11-17:** Phase 06 kickoff. The planning PR (plan, Figma audit in design-values §15) awaits
+approval. No implementation yet. Recommended first increment: the guard slice. Mariam candidate:
+`EmptyState`, proposed only and not assigned.
 
 **2026-11-17:** Phase 05 is CLOSED. The product owner approved the closure; closure PR #36 was
 squash-merged. Final code: PR #35, with Mariam's `MobileNavItem` in `d364d58` and `BottomNav` in
