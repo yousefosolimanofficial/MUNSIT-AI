@@ -29,19 +29,21 @@ Single resume point. A new session starts by reading this file, the latest phase
   [decisions/ADR-004-shell-breakpoints.md](decisions/ADR-004-shell-breakpoints.md).
   - **O-8 Navigation Icon Button: delivered.** PR #30 squash-merged as `0404c6e`; CI green on
     the PR head and on `main`.
-  - **Shell increment 1: implementation underway** on `feat/phase-05-app-shell`. It covers:
+  - **Shell increment 1: delivered.** PR #31 squash-merged as `330348e`. It covers:
     - the `rail` breakpoint and `viewportFit`;
     - `AppShell` and `SkipLink`;
     - the Desktop Sidebar, Sidebar Item and Upgrade Card;
     - the Tablet Rail and drawer.
+  - **Shell increment 2: implementation underway** on `feat/phase-05-top-bars`. It covers the Top
+    Bar controls (search, notifications, appearance, language, user menu), the Desktop/Tablet Top
+    Bar and the Mobile Top Bar.
 
-    Still to come: the Top Bars and their controls, the user menu, the mobile Top Bar,
-    `MobileNavItem`, the bottom navigation, the More sheet, removing the probe, and the full
-    ADR-004 matrix.
+    Still to come: `MobileNavItem`, the bottom navigation, the More sheet, removing the probe, and
+    the full ADR-004 matrix.
 
-  - **Mariam `MobileNavItem` starter package: PROPOSED**, waiting for approval
+  - **Mariam `MobileNavItem` assignment: READY TO SEND**, waiting for separate authorization
     ([phases/phase-05-mobile-nav-item-starter.md](phases/phase-05-mobile-nav-item-starter.md)).
-    Nothing is assigned.
+    Nothing is assigned. `BottomNav` waits for its integration.
   - Risk **R-2** stays OPEN (Phase 22 gate).
 - **Phase 03:** **CLOSED** — closure PR #24 merged (`4a2f3f4`). Report:
   [phases/phase-03-closure-report.md](phases/phase-03-closure-report.md): 14 PASS, 2 DEFERRED —
