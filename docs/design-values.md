@@ -665,3 +665,69 @@ decisions D-AV1 to D-AV6 and normalizations N-1 to N-4:
 | Initials    | Card Title (40, 1 letter); Title L (96, 2 letters)                  | as Figma; ZWNJ between letters                            | FIGMA (D-AV3)    |
 | Placeholder | Graphite + `user` 44 (96 only)                                      | Graphite + `user` 44 / 18                                 | FIGMA + N-4      |
 | Contrast    | Figma styles 2.14–2.60 (fail)                                       | ≥ 5.01 calculated; rendered 5.69–5.85                     | D-AV1            |
+
+## 15. Phase 06 shared states and guards — Figma values (read-only, 2026-11-17)
+
+Source: file `Avyn9kL0drXepQyTXTLXXb`, read with the Plugin API (computed node values). Nothing
+here is built yet. **FIGMA** = measured; **NOT DESIGNED** = absent from Figma (needs a decision,
+never invented). Plan: [phases/phase-06-plan.md](phases/phase-06-plan.md).
+
+### 15.1 Skeleton
+
+| Item      | Figma                                                                                                                               | Status           |
+| --------- | ----------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
+| Component | `Skeleton / Block` `2495:1719`: 100 × 12, radius 8, fill White 7%                                                                   | FIGMA            |
+| Use       | Instances sized to the content they replace (e.g. 124 × 16 title, 308 × 12 line, blocks 102–220 high) inside the real section cards | FIGMA            |
+| Screens   | Dashboard Loading Desktop `2495:1720`, Tablet `2495:2978`, Mobile `2495:4188`                                                       | FIGMA            |
+| Motion    | None drawn (static blocks)                                                                                                          | **NOT DESIGNED** |
+
+### 15.2 Error card (full) and section error (inline)
+
+| Item            | Figma                                                                                                                                                                       | Status |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| Full card       | `Dashboard Error State` `2495:2424` (in `2495:2291`): 1160 wide (Mobile 350, `2495:4794`), vertical, gap 14, padding 32/24, radius 20, Obsidian 90%, 1px Coral 25%, centred | FIGMA  |
+| Full: icon tile | 56, radius 14, Coral 12% fill, Coral 30% border, `alert` 25 Coral                                                                                                           | FIGMA  |
+| Full: text      | Title Cairo Bold 20/30 Primary; body Regular 14/22 Secondary                                                                                                                | FIGMA  |
+| Full: action    | Primary Button "إعادة المحاولة" (126 × 44)                                                                                                                                  | FIGMA  |
+| Section error   | `Section Error` `2495:2966` (Partial Error `2495:2435`): horizontal, gap 14, padding 0/16, 46 high, centred                                                                 | FIGMA  |
+| Section: parts  | Icon tile 44, radius 14, Coral 12/30, `alert` 20; title Cairo SemiBold 16/24 Primary; body Regular 12/18 Secondary; Secondary Button "إعادة المحاولة" (128 × 44)            | FIGMA  |
+| Module dialogs  | Notes errors (`2433:7909`, 7 types, 440 wide) are Phase 03 `Dialog` instances, not error cards                                                                              | FIGMA  |
+
+### 15.3 Empty state
+
+| Item         | Dashboard First-Time `2482:2130` (Tablet `2482:2661`, Mobile `2482:3155`)      | Notes `NoNotes` `2433:7748` (+ NoResults, EmptyFolder, NoLinkedLecture) |
+| ------------ | ------------------------------------------------------------------------------ | ----------------------------------------------------------------------- |
+| Box          | vertical, gap 16, padding 48/32, radius 20, Obsidian 88%, 1px Sky 14%, centred | vertical, gap 16, padding 56/40, radius 24, Obsidian 88%, 1px Sky 12%   |
+| Icon tile    | 72, radius 20, Sky 12% fill, Sky 40% border, icon 32 Sky                       | 64, radius 18, Sky 12%, Sky 25%, icon 28                                |
+| Title / body | Cairo Bold 28/40 Primary; Regular 14/22 Secondary                              | same                                                                    |
+| Actions      | Primary + Secondary Buttons (gap 12); footnote Regular 12/18 Secondary         | one Primary Button                                                      |
+
+Both are FIGMA. The two boxes differ (radius, padding, tile); a single component needs a decision
+(plan D-U4).
+
+### 15.4 Guard dialogs
+
+| Item         | Leave Recording Guard `2744:5118` (Tablet `2744:5135`, Mobile `2591:3192`)                                                                                                                               | Unsaved Changes Guard `2746:14333` (Tablet `2745:14318`, Mobile `2602:7896`)    |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| Dialog       | 420 × 236 (Mobile 350); Phase 03 Dialog values (padding 24, gap 14, radius 24, Obsidian 98%, Sky 18%, shadow 0/16/40 50%)                                                                                | 440 × 236; same values                                                          |
+| Icon tile    | 48, Coral 12/30 (danger tone)                                                                                                                                                                            | same                                                                            |
+| Copy         | "هل تريد مغادرة التسجيل؟" / "قد تفقد أجزاء من التسجيل لم يتم حفظها بعد إذا غادرت الصفحة."                                                                                                                | "لديك تغييرات غير محفوظة" / "إذا غادرت الآن، قد تفقد التعديلات التي لم تحفظها." |
+| Safe action  | "البقاء في الصفحة": **Primary** (Sky fill, Void label)                                                                                                                                                   | "متابعة التعديل": Secondary (Sky 8% / Sky 30%, Sky label)                       |
+| Leave action | "مغادرة على أي حال": **Secondary fill and border with Coral Pulse label**                                                                                                                                | "مغادرة بدون حفظ": solid Coral fill, Void label (the Handoff P2 inversion)      |
+| Behaviour    | Annotation `2588:338`: `alertdialog`, focus trapped and restored; safe action default focus; Esc/scrim = stay; refresh/tab close = native `beforeunload` only; shown while recording data may be unsaved | Frontend annotation `2602:7943`                                                 |
+
+Roadmap Phase 06 and the Handoff (P2) resolve the conflict: every guard follows the Recording
+guard (safe = primary, leave = secondary with red text).
+
+**Leave action contrast (calculated):** Coral Pulse on Sky 8% over Obsidian = **5.79:1**. On the
+Secondary Pressed fill (Sky 20%, D-B6) = **4.66:1**. Both pass AA; the second has little margin.
+
+### 15.5 Toast
+
+| Item                              | Figma `Settings / Toast` `2462:1771` (Kind = Success / Error / Info)                                                            | Status           |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
+| Box                               | 420 × 52 (Mobile 350), horizontal, gap 14, padding 10/14, radius 14, Graphite 98%, shadow 0/16/40 50%                           | FIGMA            |
+| Tone                              | 1px border at 40%: Success Green / Coral Pulse / Info Blue; 22 round mark in the solid tone with `check` / `alert` / `check` 13 | FIGMA            |
+| Text                              | Cairo Regular 14/22 Primary                                                                                                     | FIGMA            |
+| Placement                         | Centred horizontally. Bottom gap 78 (Desktop `2464:3617`, Tablet `2464:3977`); Mobile `2464:4337` 118 (above the 84 bottom bar) | FIGMA            |
+| Timing, dismiss, stacking, motion | Not drawn                                                                                                                       | **NOT DESIGNED** |
