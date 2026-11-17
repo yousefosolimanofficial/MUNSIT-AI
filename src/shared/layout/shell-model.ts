@@ -40,7 +40,39 @@ export interface ShellLabels {
   };
   /** The eight destinations in registry order. */
   readonly destinations: readonly ShellDestination[];
+  /** Top Bar controls (plan §11, decisions D-S3–D-S6, D-S9). */
+  readonly topBar: TopBarLabels;
 }
+
+export interface TopBarLabels {
+  /** Search button and trigger name: "البحث". */
+  readonly search: string;
+  /** Visible text of the desktop/tablet search trigger (Figma placeholder). */
+  readonly searchPlaceholder: string;
+  /** Search availability message (D-S4). */
+  readonly searchSoon: string;
+  /** Notifications button name and popover title: "الإشعارات". */
+  readonly notifications: string;
+  /** Notifications availability message (D-S5). */
+  readonly notificationsSoon: string;
+  /** Appearance (theme) trigger name and menu name: "المظهر". */
+  readonly appearance: string;
+  /** Theme options (D-S3): Dark is the only available theme. */
+  readonly theme: { readonly dark: string; readonly light: string; readonly system: string };
+  /** User menu trigger name and menu name: "قائمة الحساب". */
+  readonly accountMenu: string;
+  /** User menu: "الملف الشخصي" (`nav.settingsNav.profile`). */
+  readonly profile: string;
+  /** User menu: "الإعدادات". */
+  readonly settings: string;
+  /** Language switch group name: "اللغة". */
+  readonly language: string;
+  /** Each language named in its own language (rendered with `lang`). */
+  readonly languageNames: { readonly en: string; readonly ar: string };
+}
+
+/** Settings root (D-S9): the user menu's Profile and Settings both open it. */
+export const SETTINGS_HREF = ROUTES.settings;
 
 /** Plan upgrade target (D-S7): the existing subscription settings route. No payment logic. */
 export const UPGRADE_HREF = ROUTES["settings.subscription"];

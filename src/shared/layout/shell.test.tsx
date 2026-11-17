@@ -12,10 +12,12 @@ import { ROUTES } from "@/i18n/routes";
 import { DESTINATIONS, type DestinationId } from "@/shared/navigation/nav-registry";
 
 import { AppShellView } from "./AppShellView";
+import { MobileTopBar } from "./MobileTopBar";
 import { MAIN_CONTENT_ID, RAIL_RANGE_QUERY, type ShellLabels } from "./shell-model";
 import { Sidebar, SidebarPanel } from "./Sidebar";
 import { SidebarItem } from "./SidebarItem";
 import { TabletRail } from "./TabletRail";
+import { TopBar } from "./TopBar";
 import { UpgradeCard } from "./UpgradeCard";
 
 /*
@@ -37,6 +39,24 @@ vi.mock("@/shared/navigation/use-active-destination", () => ({
   useActiveDestination: () => ({ routeKey: null, destination: active.destination }),
 }));
 
+/** Router, pathname and params for the Top Bar controls (no Next.js app router in jsdom). */
+const routerState = vi.hoisted(() => ({
+  push: (() => {}) as (href: string) => void,
+  pathname: "/dashboard",
+  params: { locale: "ar" } as Record<string, string>,
+}));
+
+vi.mock("@/i18n/navigation", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/i18n/navigation")>()),
+  useRouter: () => ({ push: (href: string) => routerState.push(href) }),
+  usePathname: () => routerState.pathname,
+}));
+
+vi.mock("next/navigation", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("next/navigation")>()),
+  useParams: () => routerState.params,
+}));
+
 /** Same mapping as `getShellLabels()`, from the real message catalogs. */
 function labelsFor(locale: Locale): ShellLabels {
   const { nav, shell } = MESSAGES[locale];
@@ -56,6 +76,20 @@ function labelsFor(locale: Locale): ShellLabels {
       icon: d.icon,
       href: ROUTES[d.routeKey],
     })),
+    topBar: {
+      search: shell.search,
+      searchPlaceholder: shell.searchPlaceholder,
+      searchSoon: shell.searchSoon,
+      notifications: shell.notifications,
+      notificationsSoon: shell.notificationsSoon,
+      appearance: shell.appearance,
+      theme: shell.theme,
+      accountMenu: shell.accountMenu,
+      profile: nav.settingsNav.profile,
+      settings: shell.settings,
+      language: shell.language,
+      languageNames: shell.languageNames,
+    },
   };
 }
 
@@ -75,6 +109,15 @@ function classesOf(element: Element | null): string[] {
 
 const prefixOf = (locale: Locale) => (locale === "ar" ? "" : "/en");
 
+/**
+ * Accessible name made of two spans. jsdom's name computation drops the space between them;
+ * Chromium keeps it, and the exact names are asserted there (tests/e2e/top-bars.spec.ts).
+ */
+function joinedName(first: string, second: string): RegExp {
+  const escape = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`^${escape(first)}\\s*${escape(second)}$`);
+}
+
 /* --------------------------------------------------------------- stubs: dialog, matchMedia */
 
 const showModal = vi.fn(function (this: HTMLDialogElement) {
@@ -86,6 +129,17 @@ const mediaListeners = new Set<() => void>();
 
 beforeAll(() => {
   HTMLDialogElement.prototype.showModal = showModal;
+  // jsdom has no Popover API (same stub as the Phase 03 Popover and Menu tests).
+  if (!("showPopover" in HTMLElement.prototype)) {
+    Object.assign(HTMLElement.prototype, {
+      showPopover(this: HTMLElement) {
+        this.style.display = "flex";
+      },
+      hidePopover(this: HTMLElement) {
+        this.style.display = "";
+      },
+    });
+  }
   HTMLDialogElement.prototype.close = function (this: HTMLDialogElement) {
     if (!this.hasAttribute("open")) return;
     this.removeAttribute("open");
@@ -483,9 +537,19 @@ describe("TabletRail and TabletDrawer (Figma 2224:379, 2242:1272)", () => {
 
 /* ----------------------------------------------------------------------- Shell layout */
 
+/** Emulates one breakpoint in jsdom (no Tailwind CSS): hide the shell parts it does not show. */
+function showOnly(container: HTMLElement, visible: "desktop" | "mobile") {
+  const hidden =
+    visible === "desktop" ? ["rail", "mobile-top-bar"] : ["sidebar", "rail", "top-bar"];
+  for (const part of hidden) {
+    const element = container.querySelector<HTMLElement>(`[data-shell="${part}"]`);
+    if (element) element.style.display = "none";
+  }
+}
+
 describe("AppShellView", () => {
   it.each<Locale>(["ar", "en"])(
-    "skip link first, then the navigation, then the one main (%s)",
+    "skip link first, then the navigation, the Top Bars, then the one main (%s)",
     (locale) => {
       const labels = labelsFor(locale);
       inLocale(
@@ -503,12 +567,15 @@ describe("AppShellView", () => {
       expect(main.getAttribute("tabindex")).toBe("-1");
       expect(within(main).getByRole("heading", { level: 1 })).toBeTruthy();
       expect(within(main).queryByRole("navigation")).toBeNull();
+      expect(main.querySelector("header")).toBeNull(); // the Top Bars sit outside main
 
-      // Document order: skip link → Sidebar → Rail → main (inline start comes first).
+      // Document order: skip link → Sidebar → Rail → Mobile Top Bar → Top Bar → main.
       const order = [
         skip,
         document.querySelector('[data-shell="sidebar"]'),
         document.querySelector('[data-shell="rail"]'),
+        document.querySelector('[data-shell="mobile-top-bar"]'),
+        document.querySelector('[data-shell="top-bar"]'),
         main,
       ];
       for (let i = 1; i < order.length; i += 1) {
@@ -519,34 +586,276 @@ describe("AppShellView", () => {
         );
       }
       expect(classesOf(skip)).toContain("not-focus:sr-only");
+      for (const part of ["top-bar", "mobile-top-bar"]) {
+        expect(document.querySelector(`[data-shell="${part}"]`)?.tagName).toBe("HEADER");
+      }
     },
   );
 
-  it("main padding follows the page-padding variables per breakpoint", () => {
-    inLocale("ar", <AppShellView labels={labelsFor("ar")}>x</AppShellView>);
-    expect(classesOf(screen.getByRole("main"))).toEqual(
+  it("content padding follows the page-padding variables; mobile starts 88 + the top inset", () => {
+    const { container } = inLocale("ar", <AppShellView labels={labelsFor("ar")}>x</AppShellView>);
+    expect(classesOf(container.querySelector('[data-shell="content"]'))).toEqual(
       expect.arrayContaining([
-        "p-[var(--page-padding-mobile)]",
+        "px-[var(--page-padding-mobile)]",
+        "pb-[var(--page-padding-mobile)]",
+        "pt-[calc(88px_+_env(safe-area-inset-top))]",
         "rail:p-[var(--page-padding-tablet)]",
         "xl:p-[var(--page-padding-desktop)]",
+        "rail:gap-[24px]",
         "min-w-0",
         "flex-1",
       ]),
     );
+    expect(classesOf(screen.getByRole("main"))).toEqual(
+      expect.arrayContaining(["min-w-0", "flex-1"]),
+    );
   });
 
-  it.each<Locale>(["ar", "en"])("has no axe violations (%s)", async (locale) => {
-    const { container } = inLocale(
+  it.each<Locale>(["ar", "en"])(
+    "has no axe violations, desktop and mobile (%s)",
+    async (locale) => {
+      // jsdom applies no Tailwind CSS, so every shell part would be exposed at once. A real browser
+      // shows one navigation and one Top Bar per breakpoint; emulate them. Each width is checked
+      // with axe in Chromium (tests/e2e/shell.spec.ts, tests/e2e/top-bars.spec.ts).
+      for (const visible of ["desktop", "mobile"] as const) {
+        const { container } = inLocale(
+          locale,
+          <AppShellView labels={labelsFor(locale)}>
+            <h1>Content</h1>
+          </AppShellView>,
+        );
+        showOnly(container, visible);
+        expect((await axe(container, AXE_OPTIONS)).violations, visible).toEqual([]);
+        cleanup();
+      }
+    },
+  );
+});
+
+/* ------------------------------------------------------------------------- Top Bars */
+
+describe("Top Bar controls (Figma 2211:170, 2224:399, 2238:923)", () => {
+  function renderBar(locale: Locale, bar: "desktop" | "mobile" = "desktop") {
+    const labels = labelsFor(locale);
+    const view = inLocale(
       locale,
-      <AppShellView labels={labelsFor(locale)}>
-        <h1>Content</h1>
-      </AppShellView>,
+      bar === "desktop" ? (
+        <TopBar labels={labels.topBar} />
+      ) : (
+        <MobileTopBar labels={labels.topBar} />
+      ),
     );
-    // jsdom applies no Tailwind CSS, so the Sidebar and the Rail would both be exposed. A real
-    // browser shows one of them per breakpoint; emulate `xl:` (Rail `display: none`). Each width
-    // is checked with axe in Chromium (tests/e2e/shell.spec.ts).
-    const rail = container.querySelector<HTMLElement>('[data-shell="rail"]');
-    if (rail) rail.style.display = "none";
-    expect((await axe(container, AXE_OPTIONS)).violations).toEqual([]);
+    return { ...view, labels, t: labels.topBar };
+  }
+
+  beforeEach(() => {
+    routerState.pathname = "/dashboard";
+    routerState.params = { locale: "ar" };
+    routerState.push = vi.fn();
   });
+
+  it.each<Locale>(["ar", "en"])(
+    "Desktop/Tablet bar: one header, Figma order, every control named (%s)",
+    (locale) => {
+      const { t, container } = renderBar(locale);
+      const header = screen.getByRole("banner");
+      expect(header.getAttribute("data-shell")).toBe("top-bar");
+      expect(classesOf(header)).toEqual(
+        expect.arrayContaining(["hidden", "rail:flex", "h-[56px]", "justify-between"]),
+      );
+      // Exact accessible names, in document order. The search field's name is the approved label
+      // followed by its visible text (WCAG 2.5.3 Label in Name).
+      const searchName = joinedName(`${t.search}:`, t.searchPlaceholder);
+      expect(within(header).getAllByRole("button")).toEqual(
+        [searchName, t.notifications, t.appearance, t.accountMenu].map((name) =>
+          within(header).getByRole("button", { name }),
+        ),
+      );
+      const languages = within(header).getByRole("group", { name: t.language });
+      expect(
+        within(languages)
+          .getAllByRole("link")
+          .map((l) => l.firstElementChild?.textContent),
+      ).toEqual(["EN", "AR"]);
+      // The search wrapper grows up to the Figma 440 and may shrink (Tablet 353 at 768).
+      expect(classesOf(screen.getByRole("button", { name: searchName }).parentElement)).toEqual(
+        expect.arrayContaining(["flex-1", "min-w-0", "max-w-[440px]"]),
+      );
+      // No nested interactive elements anywhere in the bar.
+      for (const control of container.querySelectorAll("a, button")) {
+        expect(control.querySelector("a, button")).toBeNull();
+      }
+    },
+  );
+
+  it.each<Locale>(["ar", "en"])(
+    "Mobile bar: fixed, 72 + inset, logo then search, notifications (O-8 lg) and the user menu (%s)",
+    (locale) => {
+      const { t } = renderBar(locale, "mobile");
+      const header = screen.getByRole("banner");
+      expect(classesOf(header)).toEqual(
+        expect.arrayContaining([
+          "fixed",
+          "top-0",
+          "rail:hidden",
+          "h-[calc(72px_+_env(safe-area-inset-top))]",
+          "pt-[env(safe-area-inset-top)]",
+          "bg-surface-void-black/88",
+          "backdrop-blur-[16px]",
+          "border-b",
+          "ps-lg",
+          "pe-[14px]",
+        ]),
+      );
+      expect(within(header).getByRole("img", { name: "MUNSIT AI" }).getAttribute("data-logo")).toBe(
+        "horizontal",
+      );
+      const buttons = within(header).getAllByRole("button");
+      expect(buttons.map((b) => b.getAttribute("aria-label"))).toEqual([
+        t.search,
+        t.notifications,
+        t.accountMenu,
+      ]);
+      for (const button of buttons.slice(0, 2)) {
+        expect(classesOf(button)).toContain("size-[44px]");
+        expect(button.querySelector("svg")?.getAttribute("width")).toBe("18");
+      }
+      // Figma: no language switch and no theme control on the mobile bar.
+      expect(within(header).queryByRole("group", { name: t.language })).toBeNull();
+      expect(within(header).queryByRole("button", { name: t.appearance })).toBeNull();
+    },
+  );
+
+  it("search: a button styled as the Figma field (no text input) opening «coming soon»", async () => {
+    const { t, container } = renderBar("ar");
+    expect(container.querySelector("input, textarea, [role=searchbox]")).toBeNull();
+    // Name = approved label + the visible text (WCAG 2.5.3); the visible text is the placeholder.
+    const search = screen.getByRole("button", {
+      name: joinedName(`${t.search}:`, t.searchPlaceholder),
+    });
+    expect(search.querySelector(".sr-only")?.textContent).toBe(`${t.search}: `);
+    expect(search.querySelector(".truncate")?.textContent).toBe(t.searchPlaceholder);
+    expect(search.getAttribute("aria-haspopup")).toBe("dialog");
+    expect(search.querySelector("svg")?.getAttribute("width")).toBe("18");
+    expect(classesOf(search)).toEqual(
+      expect.arrayContaining([
+        "h-[44px]",
+        "rounded-md",
+        "px-md",
+        "gap-sm",
+        "border-accent-electric-sky/12",
+        "bg-text-primary/4",
+      ]),
+    );
+    await userEvent.click(search);
+    expect(search.getAttribute("aria-expanded")).toBe("true");
+    const panel = screen.getByRole("dialog", { name: t.search });
+    expect(panel.textContent).toBe(t.searchSoon);
+  });
+
+  it("notifications: O-8 bell, no unread dot or count, «coming soon» popover titled «الإشعارات»", async () => {
+    const { t, container } = renderBar("ar");
+    const bell = screen.getByRole("button", { name: t.notifications });
+    expect(bell.querySelector("svg")?.getAttribute("data-icon")).toBe("bell");
+    expect(classesOf(bell)).toContain("size-[40px]");
+    expect(container.querySelector(".bg-accent-coral-pulse")).toBeNull(); // no unread dot
+    await userEvent.click(bell);
+    const panel = screen.getByRole("dialog", { name: t.notifications });
+    expect(within(panel).getByText(t.notifications)).toBeTruthy();
+    expect(within(panel).getByText(t.notificationsSoon)).toBeTruthy();
+    expect(within(panel).queryAllByRole("listitem")).toHaveLength(0); // no fabricated items
+  });
+
+  it("theme: Dark checked; Light and System disabled; selecting stores nothing", async () => {
+    const { t } = renderBar("ar");
+    const setItem = vi.spyOn(Storage.prototype, "setItem");
+    const trigger = screen.getByRole("button", { name: t.appearance });
+    expect(trigger.getAttribute("aria-haspopup")).toBe("menu");
+    expect(trigger.querySelector("svg")?.getAttribute("data-icon")).toBe("moon");
+    await userEvent.click(trigger);
+    const menu = screen.getByRole("menu", { name: t.appearance });
+    const options = within(menu).getAllByRole("menuitemradio");
+    expect(options.map((o) => o.textContent)).toEqual([
+      t.theme.dark,
+      t.theme.light,
+      t.theme.system,
+    ]);
+    expect(options.map((o) => o.getAttribute("aria-checked"))).toEqual(["true", "false", "false"]);
+    expect(options.map((o) => (o as HTMLButtonElement).disabled)).toEqual([false, true, true]);
+    await userEvent.click(options[0] as HTMLElement);
+    expect(trigger.getAttribute("aria-expanded")).toBe("false");
+    expect(setItem).not.toHaveBeenCalled();
+    expect(document.cookie).toBe("");
+    setItem.mockRestore();
+  });
+
+  it.each<Locale>(["ar", "en"])(
+    "language switch: links to the same page in each language, current marked (%s)",
+    (locale) => {
+      routerState.params = { locale };
+      const { t } = renderBar(locale);
+      const group = screen.getByRole("group", { name: t.language });
+      // Exact names: the visible code, then the language named in itself (WCAG 2.5.3).
+      const en = within(group).getByRole("link", { name: joinedName("EN", "English") });
+      const ar = within(group).getByRole("link", { name: joinedName("AR", "العربية") });
+      // The current language links without `locale` (clean URL). The other language passes
+      // `locale`, which next-intl always prefixes; `/ar/...` then redirects to the unprefixed
+      // Arabic URL (as-needed prefix, checked in Chromium).
+      expect(en.getAttribute("href")).toBe("/en/dashboard");
+      expect(ar.getAttribute("href")).toBe(locale === "ar" ? "/dashboard" : "/ar/dashboard");
+      expect(en.querySelector(".sr-only")?.getAttribute("lang")).toBe("en");
+      expect(ar.querySelector(".sr-only")?.getAttribute("lang")).toBe("ar");
+      expect([en.firstElementChild?.textContent, ar.firstElementChild?.textContent]).toEqual([
+        "EN",
+        "AR",
+      ]);
+      const current = locale === "en" ? en : ar;
+      const other = locale === "en" ? ar : en;
+      expect(current?.getAttribute("aria-current")).toBe("true");
+      expect(other?.hasAttribute("aria-current")).toBe(false);
+      expect(classesOf(current ?? null)).toContain("bg-accent-electric-sky/20");
+      expect(group.getAttribute("dir")).toBe("ltr");
+    },
+  );
+
+  it("language switch keeps dynamic route params", () => {
+    routerState.pathname = "/folders/[folderId]";
+    routerState.params = { locale: "ar", folderId: "f2" };
+    const { t } = renderBar("ar");
+    const [en, ar] = within(screen.getByRole("group", { name: t.language })).getAllByRole("link");
+    expect(en?.getAttribute("href")).toBe("/en/folders/f2");
+    expect(ar?.getAttribute("href")).toBe("/folders/f2");
+  });
+
+  it("user menu: decorative avatar trigger; Profile and Settings open /settings; no logout", async () => {
+    const { t } = renderBar("ar");
+    const trigger = screen.getByRole("button", { name: t.accountMenu });
+    expect(trigger.getAttribute("aria-haspopup")).toBe("menu");
+    expect(trigger.textContent).toBe(""); // no name or role (no user data)
+    expect(trigger.querySelector('[aria-hidden="true"]')).not.toBeNull(); // decorative avatar
+    expect(classesOf(trigger)).toEqual(
+      expect.arrayContaining(["h-[54px]", "rounded-[14px]", "px-[10px]", "gap-[10px]"]),
+    );
+    await userEvent.click(trigger);
+    const menu = screen.getByRole("menu", { name: t.accountMenu });
+    const items = within(menu).getAllByRole("menuitem");
+    expect(items.map((i) => i.textContent)).toEqual([t.profile, t.settings]);
+    expect(menu.textContent).not.toContain("تسجيل الخروج");
+    await userEvent.click(items[0] as HTMLElement);
+    expect(routerState.push).toHaveBeenLastCalledWith("/settings");
+    await userEvent.click(trigger);
+    const again = within(screen.getByRole("menu", { name: t.accountMenu }));
+    await userEvent.click(again.getAllByRole("menuitem")[1] as HTMLElement);
+    expect(routerState.push).toHaveBeenLastCalledWith("/settings");
+  });
+
+  it.each<Locale>(["ar", "en"])(
+    "has no axe violations, menus closed and open (%s)",
+    async (locale) => {
+      const { container, t } = renderBar(locale);
+      expect((await axe(container, AXE_OPTIONS)).violations).toEqual([]);
+      await userEvent.click(screen.getByRole("button", { name: t.accountMenu }));
+      expect((await axe(container, AXE_OPTIONS)).violations).toEqual([]);
+    },
+  );
 });

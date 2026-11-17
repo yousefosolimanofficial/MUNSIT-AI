@@ -9,5 +9,20 @@
   "upgradeCard": {
     "description": "Unlock more: unlimited questions and smarter summaries.",
     "action": "Upgrade now"
+  },
+  "searchPlaceholder": "Search your lectures, summaries or questions...",
+  "searchSoon": "Search coming soon",
+  "notificationsSoon": "Notifications coming soon",
+  "theme": {
+    "dark": "Dark",
+    "light": "Light — Coming soon",
+    "system": "System — Coming soon"
+  },
+  "accountMenu": "Account menu",
+  "settings": "Settings",
+  "language": "Language",
+  "languageNames": {
+    "en": "English",
+    "ar": "العربية"
   }
 }
