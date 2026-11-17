@@ -12,9 +12,15 @@ import { ROUTES } from "@/i18n/routes";
 import { DESTINATIONS, type DestinationId } from "@/shared/navigation/nav-registry";
 
 import { AppShellView } from "./AppShellView";
+import { BottomNav } from "./BottomNav";
 import { MobileTopBar } from "./MobileTopBar";
 import { MoreSheet } from "./MoreSheet";
-import { MAIN_CONTENT_ID, RAIL_RANGE_QUERY, type ShellLabels } from "./shell-model";
+import {
+  MAIN_CONTENT_ID,
+  MOBILE_RANGE_QUERY,
+  RAIL_RANGE_QUERY,
+  type ShellLabels,
+} from "./shell-model";
 import { Sidebar, SidebarPanel } from "./Sidebar";
 import { SidebarItem } from "./SidebarItem";
 import { TabletRail } from "./TabletRail";
@@ -65,6 +71,7 @@ function labelsFor(locale: Locale): ShellLabels {
   const { nav, shell } = MESSAGES[locale];
   return {
     mainNavigation: shell.mainNavigation,
+    bottomNavigation: shell.bottomNavigation,
     skipToContent: shell.skipToContent,
     openMenu: shell.openMenu,
     drawerTitle: shell.drawerTitle,
@@ -155,7 +162,7 @@ beforeAll(() => {
   };
   window.matchMedia = vi.fn((query: string) => ({
     get matches() {
-      return query === RAIL_RANGE_QUERY ? mediaMatches : false;
+      return query === RAIL_RANGE_QUERY || query === MOBILE_RANGE_QUERY ? mediaMatches : false;
     },
     media: query,
     onchange: null,
@@ -548,7 +555,9 @@ describe("TabletRail and TabletDrawer (Figma 2224:379, 2242:1272)", () => {
 /** Emulates one breakpoint in jsdom (no Tailwind CSS): hide the shell parts it does not show. */
 function showOnly(container: HTMLElement, visible: "desktop" | "mobile") {
   const hidden =
-    visible === "desktop" ? ["rail", "mobile-top-bar"] : ["sidebar", "rail", "top-bar"];
+    visible === "desktop"
+      ? ["rail", "mobile-top-bar", "bottom-nav"]
+      : ["sidebar", "rail", "top-bar"];
   for (const part of hidden) {
     const element = container.querySelector<HTMLElement>(`[data-shell="${part}"]`);
     if (element) element.style.display = "none";
@@ -600,13 +609,13 @@ describe("AppShellView", () => {
     },
   );
 
-  it("content padding follows the page-padding variables; mobile starts 88 + the top inset", () => {
+  it("content padding follows the page-padding variables; mobile 88 + top inset, 108 + bottom inset", () => {
     const { container } = inLocale("ar", <AppShellView labels={labelsFor("ar")}>x</AppShellView>);
     expect(classesOf(container.querySelector('[data-shell="content"]'))).toEqual(
       expect.arrayContaining([
         "px-[var(--page-padding-mobile)]",
-        "pb-[var(--page-padding-mobile)]",
         "pt-[calc(88px_+_env(safe-area-inset-top))]",
+        "pb-[calc(108px_+_env(safe-area-inset-bottom))]",
         "rail:p-[var(--page-padding-tablet)]",
         "xl:p-[var(--page-padding-desktop)]",
         "rail:gap-[24px]",
@@ -1028,6 +1037,133 @@ describe("MoreSheet (Figma 2236:972)", () => {
   it.each<Locale>(["ar", "en"])("has no axe violations (%s)", async (locale) => {
     routerState.params = { locale };
     const { container } = renderSheet(locale);
+    expect((await axe(container, AXE_OPTIONS)).violations).toEqual([]);
+  });
+});
+
+/* ------------------------------------------------------------------------- Bottom navigation */
+
+describe("BottomNav (Figma 2238:1187)", () => {
+  function renderNav(locale: Locale = "ar") {
+    const labels = labelsFor(locale);
+    const view = inLocale(locale, <BottomNav labels={labels} />);
+    const nav = screen.getByRole("navigation", { name: labels.bottomNavigation });
+    const more = within(nav).getByRole("button", { name: labels.more.title });
+    return { ...view, labels, nav, more };
+  }
+
+  const ACTIVE = "bg-accent-electric-sky/12";
+
+  beforeEach(() => {
+    routerState.pathname = "/dashboard";
+    routerState.params = { locale: "ar" };
+    routerState.search = "";
+  });
+
+  it.each<Locale>(["ar", "en"])(
+    "named landmark; the three bar destinations in registry order, then More (%s)",
+    (locale) => {
+      routerState.params = { locale };
+      const { nav, labels } = renderNav(locale);
+      const items = within(nav).getAllByRole("listitem");
+      expect(items).toHaveLength(4);
+      const bar = DESTINATIONS.filter((d) => d.mobile === "bar");
+      const links = within(nav).getAllByRole("link");
+      expect(links.map((l) => l.textContent)).toEqual(
+        bar.map((d) => MESSAGES[locale].nav.destinations[d.id]),
+      );
+      expect(links.map((l) => l.getAttribute("href"))).toEqual(
+        bar.map((d) => `${prefixOf(locale)}${ROUTES[d.routeKey]}`),
+      );
+      expect(items[3]?.textContent).toBe(labels.more.title);
+      expect(within(items[3] as HTMLElement).getByRole("button")).toBeTruthy();
+    },
+  );
+
+  it.each<[DestinationId | null, string | null, boolean]>([
+    ["dashboard", "/dashboard", false],
+    ["summaries", "/summaries", false],
+    ["questions", null, true], // a More-sheet destination: More looks Active, no aria-current
+    ["folders", null, true],
+    [null, null, false], // Settings and other routes without a destination: nothing (D-R6)
+  ])("indicator for %s (mobileBarIndicator)", (destination, currentHref, moreActive) => {
+    active.destination = destination;
+    const { nav, more } = renderNav();
+    const current = nav.querySelectorAll("[aria-current]");
+    expect([...current].map((el) => el.getAttribute("href"))).toEqual(
+      currentHref ? [currentHref] : [],
+    );
+    expect(current[0]?.getAttribute("aria-current") ?? "page").toBe("page");
+    expect(more.hasAttribute("aria-current")).toBe(false);
+    expect(classesOf(more).includes(ACTIVE)).toBe(moreActive);
+  });
+
+  it("More opens the More sheet; Esc closes it and aria-expanded follows", async () => {
+    const { more, labels } = renderNav();
+    expect(more.getAttribute("aria-haspopup")).toBe("dialog");
+    expect(more.getAttribute("aria-expanded")).toBe("false");
+    await userEvent.click(more);
+    expect(showModal).toHaveBeenCalledTimes(1);
+    expect(more.getAttribute("aria-expanded")).toBe("true");
+    const dialog = screen.getByRole("dialog", { name: labels.more.title });
+    fireEvent(dialog, new Event("cancel", { cancelable: true }));
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 400));
+    });
+    expect(more.getAttribute("aria-expanded")).toBe("false");
+  });
+
+  it("an open sheet does not change the indicator; selecting a destination closes it", async () => {
+    active.destination = "dashboard";
+    const { more, labels } = renderNav();
+    await userEvent.click(more);
+    expect(classesOf(more)).not.toContain(ACTIVE); // open/closed is separate UI state (D-R6)
+    const dialog = screen.getByRole("dialog", { name: labels.more.title });
+    fireEvent.click(within(dialog).getByRole("link", { name: MESSAGES.ar.nav.destinations.notes }));
+    expect(more.getAttribute("aria-expanded")).toBe("false");
+  });
+
+  it("closes the sheet when the viewport leaves the mobile range", async () => {
+    const { more } = renderNav();
+    await userEvent.click(more);
+    expect(more.getAttribute("aria-expanded")).toBe("true");
+    mediaMatches = false;
+    act(() => {
+      for (const listener of mediaListeners) listener();
+    });
+    expect(more.getAttribute("aria-expanded")).toBe("false");
+  });
+
+  it("Figma bar: fixed, mobile only, Ink 94%, Sky 12% top border, blur 16, safe-area, 320 fit", () => {
+    const { nav } = renderNav();
+    expect(classesOf(nav)).toEqual(
+      expect.arrayContaining([
+        "fixed",
+        "inset-x-0",
+        "bottom-0",
+        "rail:hidden",
+        "h-[calc(84px_+_env(safe-area-inset-bottom))]",
+        "border-t",
+        "border-accent-electric-sky/12",
+        "bg-surface-ink/94",
+        "backdrop-blur-[16px]",
+        "pt-[8px]",
+        "pb-[calc(16px_+_env(safe-area-inset-bottom))]",
+        "px-[max(0px,min(16px,calc((100%_-_304px)/2)))]",
+      ]),
+    );
+    expect(classesOf(nav.querySelector("ul"))).toEqual(
+      expect.arrayContaining(["flex", "justify-between", "items-start"]),
+    );
+    for (const item of within(nav).getAllByRole("listitem")) {
+      expect(classesOf(item)).toContain("shrink-0");
+    }
+  });
+
+  it.each<Locale>(["ar", "en"])("has no axe violations (%s)", async (locale) => {
+    routerState.params = { locale };
+    active.destination = "questions";
+    const { container } = renderNav(locale);
     expect((await axe(container, AXE_OPTIONS)).violations).toEqual([]);
   });
 });

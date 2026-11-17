@@ -13,9 +13,10 @@ import enShell from "../../src/i18n/messages/en/shell.json" with { type: "json" 
  * `2211:81`, Sidebar Item `2210:118`, Upgrade Plan Card `2211:158`, Rail `2224:379`,
  * drawer `2242:1272`.
  *
- * Not yet covered (the rest of the shell does not exist yet): the mobile Top Bar and bottom
- * navigation, the Top Bars, and the full ADR-004 validation matrix (zoom, larger root fonts,
- * safe areas). Mobile widths here only prove that no navigation leaks below 45rem.
+ * The mobile bottom navigation and the full ADR-004 validation matrix (zoom, larger root fonts,
+ * short heights, safe areas) are in tests/e2e/bottom-nav.spec.ts; the Top Bars in
+ * tests/e2e/top-bars.spec.ts. Mobile widths here prove that the main navigation never leaks
+ * below 45rem, where the bottom navigation takes over.
  */
 
 const LOCALES = [
@@ -545,11 +546,11 @@ for (const { locale, dir, prefix, nav, shell } of LOCALES) {
     });
   });
 
-  test.describe(`ADR-004 thresholds, first increment (${locale})`, () => {
+  test.describe(`ADR-004 thresholds (${locale})`, () => {
     const CASES = [
-      { width: 320, shell: "none" },
-      { width: 390, shell: "none" },
-      { width: 719, shell: "none" },
+      { width: 320, shell: "mobile" },
+      { width: 390, shell: "mobile" },
+      { width: 719, shell: "mobile" },
       { width: 720, shell: "rail" },
       { width: 768, shell: "rail" },
       { width: 1024, shell: "rail" },
@@ -558,16 +559,17 @@ for (const { locale, dir, prefix, nav, shell } of LOCALES) {
       { width: 1440, shell: "sidebar" },
     ] as const;
     for (const { width, shell: expected } of CASES) {
-      test(`${width}px: ${expected === "none" ? "no navigation yet (mobile shell follows)" : expected}, no horizontal overflow`, async ({
-        page,
-      }) => {
+      test(`${width}px: ${expected}, no horizontal overflow`, async ({ page }) => {
         await page.setViewportSize({ width, height: 800 });
         await page.goto(`${prefix}/dashboard`);
         await page.evaluate(() => document.fonts.ready);
         await expect(sidebar(page)).toBeVisible({ visible: expected === "sidebar" });
         await expect(rail(page)).toBeVisible({ visible: expected === "rail" });
         await expect(page.getByRole("navigation", mainNav)).toHaveCount(
-          expected === "none" ? 0 : 1,
+          expected === "mobile" ? 0 : 1,
+        );
+        await expect(page.getByRole("navigation", { name: shell.bottomNavigation })).toHaveCount(
+          expected === "mobile" ? 1 : 0,
         );
         expect(await noHorizontalOverflow(page)).toBe(true);
         // The placeholder content stays inside the main column.
