@@ -9,5 +9,20 @@
   "upgradeCard": {
     "description": "افتح ميزات أكثر: أسئلة غير محدودة وملخصات أذكى.",
     "action": "ترقية الآن"
+  },
+  "searchPlaceholder": "ابحث في محاضراتك، الملخصات أو الأسئلة...",
+  "searchSoon": "البحث متاح قريبًا",
+  "notificationsSoon": "الإشعارات متاحة قريبًا",
+  "theme": {
+    "dark": "داكن",
+    "light": "فاتح — قريبًا",
+    "system": "حسب النظام — قريبًا"
+  },
+  "accountMenu": "قائمة الحساب",
+  "settings": "الإعدادات",
+  "language": "اللغة",
+  "languageNames": {
+    "en": "English",
+    "ar": "العربية"
   }
 }

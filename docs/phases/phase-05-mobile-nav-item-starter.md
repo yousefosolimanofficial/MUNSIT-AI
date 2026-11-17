@@ -1,40 +1,60 @@
-# Phase 05 — `MobileNavItem` starter package (proposal)
+# Phase 05 — `MobileNavItem` assignment (starter package, final)
 
-**Status:** PROPOSED. Waiting for product-owner approval. **Nothing is assigned yet.** There is no
-branch, no starter archive and no delivery for Mariam until Yousef approves this document.
+**Status:** READY TO SEND. Waiting for separate authorization. **Nothing is assigned yet.** There
+is no starter archive, no delivery and no integration branch until Yousef authorizes sending it.
 
-- **Source:** Phase 05 plan §21.1 (approved in principle) and Figma, re-checked read-only on 2026-11-17.
-- **Procedure:** [TEAM_COLLABORATION.md](../TEAM_COLLABORATION.md) and
-  [FEATURE_DELIVERY_CHECKLIST.md](../FEATURE_DELIVERY_CHECKLIST.md).
+- **Reviewed against `main` on 2026-11-17**, after PR #31 (`330348e`):
+  - O-8 (`0404c6e`) is merged.
+  - `DestinationPath` is in `src/shared/layout/shell-model.ts`.
+  - `ICON_SIZES.mobileNav` is 22.
+  - Neither delegated file exists yet.
+- **Sources:**
+  - Phase 05 plan §21.1 (approved in principle).
+  - Figma, re-checked read-only on 2026-11-17.
+  - The procedure in [TEAM_COLLABORATION.md](../TEAM_COLLABORATION.md) and
+    [FEATURE_DELIVERY_CHECKLIST.md](../FEATURE_DELIVERY_CHECKLIST.md).
+- **Ready to send:** §2 to §9 are written for Mariam and can be copied into the starter's
+  `START_HERE.md` as they are.
 
-## 1. Scope
+## 1. Before sending (Yousef)
 
-| Item                 | Value                                                                                                                                   |
-| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| Component            | `MobileNavItem`: one item of the mobile bottom navigation                                                                               |
-| Delegated files      | **Only** `src/shared/layout/MobileNavItem.tsx` and `src/shared/layout/MobileNavItem.test.tsx`                                           |
-| Not delegated        | `BottomNav`, the More sheet, the registry, messages, routes, tokens, any other file. Write any other need as a request in `DELIVERY.md` |
-| Claude               | Does not create or edit the two delegated files while they are delegated. Builds `BottomNav` **after** the delivery is integrated       |
-| Dependencies         | None new. Never install packages                                                                                                        |
-| Baseline (to record) | The `main` commit the starter is built from, once this proposal is approved. It goes in `DELIVERY.md`                                   |
+1. Authorize the assignment. Record it in `docs/PROGRESS.md` (module assignments) and in the
+   delivery log of `TEAM_COLLABORATION.md`.
+2. Confirm that the registry contract (`DESTINATIONS`, `MORE_CONTROL`, `mobileBarIndicator`) is
+   unchanged since Phase 04, and that §3 below is frozen.
+3. Build the starter from a pushed `main` commit that passes `corepack pnpm check`
+   (`TEAM_COLLABORATION.md` §4: `git archive` + `BASELINE_COMMIT.txt`), and add this document as
+   `START_HERE.md`.
+4. Log the starter: date, short hash, module "Phase 05 MobileNavItem (delegated
+   `MobileNavItem.tsx`, `MobileNavItem.test.tsx`)".
 
-**Start conditions (all must hold when the starter is built):**
+Claude neither creates nor edits the two delegated files while they are delegated. `BottomNav` is
+built only after this delivery is integrated.
 
-- O-8 is merged. Done: PR #30, `0404c6e`.
-- The Phase 04 registry contract (`DESTINATIONS`, `MORE_CONTROL`, `mobileBarIndicator`) is
-  unchanged.
-- This API is frozen by the approval.
-- The starter is built with `git archive` from a pushed, verified `main` commit and logged in
-  `TEAM_COLLABORATION.md`.
+---
 
-## 2. Approved API (frozen on approval)
+## 2. Your task, Mariam
+
+Build **one** shared component: `MobileNavItem`, one item of the mobile bottom navigation, with its
+unit tests.
+
+| You may change **only**                    | Everything else                                                                                                          |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| `src/shared/layout/MobileNavItem.tsx`      | Do not edit. If you need a change elsewhere (messages, registry, tokens, config), write it as a request in `DELIVERY.md` |
+| `src/shared/layout/MobileNavItem.test.tsx` | Never install or upgrade packages                                                                                        |
+
+`BottomNav` (the bar that lays out four items) is **not** part of your task. Yousef's integration
+builds it on top of your component.
+
+## 3. Exact API (frozen)
 
 ```tsx
 import type { IconName } from "@/design-system/icons/manifest";
-import type { RoutePath } from "@/i18n/routes";
+
+import type { DestinationPath } from "./shell-model";
 
 export type MobileNavItemProps =
-  | { kind: "destination"; icon: IconName; label: string; href: RoutePath; active: boolean }
+  | { kind: "destination"; icon: IconName; label: string; href: DestinationPath; active: boolean }
   | {
       kind: "more";
       icon: "more";
@@ -44,110 +64,140 @@ export type MobileNavItemProps =
       containsActive: boolean;
     };
 
-export function MobileNavItem(props: MobileNavItemProps): JSX.Element;
+export function MobileNavItem(props: MobileNavItemProps): React.JSX.Element;
 ```
 
-- **`destination`** renders the locale-aware next-intl `Link` (`@/i18n/navigation`), with
-  `aria-current="page"` only when `active`.
-- **`more`** renders a `<button type="button">` with `aria-haspopup="dialog"` and
-  `aria-expanded={expanded}`. It **never** has `aria-current`, because More is not a destination
-  (D-R6). `containsActive` only switches the Active **visual**. `BottomNav` sets it from
-  `mobileBarIndicator()`, so it is lit only for the five More-sheet destinations and not for
-  Settings (D-S1).
-- **Practical href type:** bottom-bar destinations are static roots, so `href` takes the same
-  `DestinationPath` the Sidebar uses (`src/shared/layout/shell-model.ts`), not dynamic templates.
-  This is a type-level narrowing of `RoutePath`; it is recorded here so the API is unambiguous.
-- No `children`, `className`, `role`, `tabIndex`, `variant` or `size` props. Mixing the two kinds
-  is a type error.
+- **`kind: "destination"`** renders the locale-aware `Link` from `@/i18n/navigation`, never
+  `next/link`. Set `aria-current="page"` only when `active` is true.
+- **`kind: "more"`** renders `<button type="button">` with `aria-haspopup="dialog"` and
+  `aria-expanded={expanded}`, and calls `onOpen` on activation. It **never** has `aria-current`,
+  because More is not a destination (decision D-R6). `containsActive` only switches it to the
+  Active **look**; `BottomNav` sets it from `mobileBarIndicator()`.
+- **No other props:** no `children`, `className`, `role`, `tabIndex`, `variant` or `size`. Mixing
+  the two kinds must be a type error.
+- **Rendering:**
+  - The component must work as a Client Component child (`BottomNav` is client-side), and needs
+    no state of its own.
+  - Follow the pattern of `src/shared/ui/NavigationIconButton.tsx`: a discriminated union, and
+    `ref` destructured in the signature if you add one. No `ref` prop is required.
 
-## 3. Figma references (read-only)
+## 4. Figma (read-only; never edit Figma)
 
-| Node                                | Use                                                                  |
-| ----------------------------------- | -------------------------------------------------------------------- |
-| `Mobile Navigation Item` `2210:302` | Component set: `State=Default` `2210:290`, `State=Active` `2210:296` |
-| Dashboard Mobile `2238:741`         | `Bottom Navigation` `2238:1187`: four items, Active = الرئيسية       |
-| More Menu Sheet `2236:972`          | Context only: what More opens. Not part of this task                 |
+File key: `Avyn9kL0drXepQyTXTLXXb`.
 
-## 4. Exact states (FIGMA, verified 2026-11-17)
+| Node                                | What it is                                                               |
+| ----------------------------------- | ------------------------------------------------------------------------ |
+| `Mobile Navigation Item` `2210:302` | The component set: `State=Default` `2210:290`, `State=Active` `2210:296` |
+| `Bottom Navigation` `2238:1187`     | In Dashboard Mobile `2238:741`: four items, Active = الرئيسية            |
 
-| Property | Default (`2210:290`)                                    | Active (`2210:296`)                 |
-| -------- | ------------------------------------------------------- | ----------------------------------- |
-| Box      | 76 × 60, radius 14, padding 8, vertical, gap 4, centred | same                                |
-| Fill     | none                                                    | Electric Sky 12%                    |
-| Border   | none                                                    | none                                |
-| Icon     | 22, Text/Secondary `#9c9c9d`                            | 22, Electric Sky `#63a1ff`          |
-| Label    | Cairo Regular 12 / 18, Text/Secondary                   | Cairo Regular 12 / 18, Electric Sky |
+## 5. Visual states (FIGMA, verified 2026-11-17)
 
-- **Hover and pressed:** not designed. Add none. No hover means no fine-pointer hover rule is
-  needed.
-- **Focus:** the D-B2 ring (2px solid Electric Sky, offset 2), keyboard only (`focus-visible`).
-- **Motion:** colour transitions only, `duration-base ease-standard`. No transform.
+| Property | Default (`2210:290`)                                          | Active (`2210:296`)                 |
+| -------- | ------------------------------------------------------------- | ----------------------------------- |
+| Box      | 76 × 60, radius 14, padding 8, vertical stack, gap 4, centred | same                                |
+| Fill     | none                                                          | Electric Sky 12%                    |
+| Border   | none                                                          | none                                |
+| Icon     | 22, Text/Secondary `#9c9c9d`                                  | 22, Electric Sky `#63a1ff`          |
+| Label    | Cairo Regular 12 / 18, Text/Secondary                         | Cairo Regular 12 / 18, Electric Sky |
 
-## 5. Design tokens and local constants
+"Active" means an active destination, or More with `containsActive`.
 
-| Need            | Use                                                                                              |
-| --------------- | ------------------------------------------------------------------------------------------------ |
-| Colours         | `text-text-secondary`, `text-accent-electric-sky`, `bg-accent-electric-sky/12`                   |
-| Gap 4           | `gap-xs` (token)                                                                                 |
-| Label type      | `text-dashboard-caption` (12/18/400)                                                             |
-| Icon            | `<Icon name={icon} size={22} />` (`ICON_SIZES.mobileNav`)                                        |
-| Local constants | `w-[76px] h-[60px] rounded-[14px] p-[8px]`: component sizes, not tokens (CLAUDE.md design rules) |
-| Focus ring      | The D-B2 classes, copied from `Button.tsx`                                                       |
+**Hover and pressed:** neither is designed, so add neither.
 
-No new tokens and no literal hex values.
+**Focus:** the D-B2 ring, copied from `Button.tsx`:
+`focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid
+focus-visible:outline-accent-electric-sky`.
 
-## 6. Accessibility
+**Motion:** colour transitions only (`transition-colors duration-base ease-standard`). No
+transform.
 
-- The visible label is the accessible name; the icon is `aria-hidden`.
-- **Target:** 76 × 60 (above 24 × 24; WCAG 2.5.8).
-- **Destination:** `aria-current="page"` only when active; never on More.
+**Classes** (tokens; the sizes are local constants, not tokens):
+
+| Need           | Class                                                                                       |
+| -------------- | ------------------------------------------------------------------------------------------- |
+| Box            | `w-[76px] h-[60px] rounded-[14px] p-[8px] flex flex-col items-center justify-center gap-xs` |
+| Default colour | `text-text-secondary`                                                                       |
+| Active         | `bg-accent-electric-sky/12 text-accent-electric-sky`                                        |
+| Label          | `text-dashboard-caption`                                                                    |
+| Icon           | `<Icon name={icon} size={22} />` (`ICON_SIZES.mobileNav`), coloured by `currentColor`       |
+
+No literal hex values and no new tokens. Do not use physical `left`/`right` classes.
+
+## 6. Accessibility requirements
+
+- The visible label is the accessible name; the icon is `aria-hidden`, which `Icon` does by
+  default.
+- The target is 76 × 60 (WCAG 2.5.8).
+- **Destination:** `aria-current="page"` only when active.
 - **More:** a real `<button>` with `aria-haspopup="dialog"` and `aria-expanded`. Enter and Space
-  activate it.
-- **Colour is never the only signal:** Active pairs with `aria-current` (destination). More's lit
-  state is visual only, by decision D-S1/D-R6, and the sheet's own `aria-current` row carries the
-  semantics.
-- **RTL and LTR:** identical layout (vertical stack), no physical `left`/`right`, the icon is not
-  mirrored.
-- Rendered contrast is measured at integration (Chromium).
+  activate it, and it never has `aria-current`.
+- **No nested interactive elements.**
+- **RTL and LTR:** identical vertical layout, and the icon is never mirrored.
 
-## 7. Test requirements (`MobileNavItem.test.tsx`)
+## 7. Unit-test acceptance criteria (`MobileNavItem.test.tsx`)
 
-- **Setup:** jsdom, Testing Library, `NextIntlClientProvider` in `ar` and `en`, the same as
-  `src/shared/ui/NavigationIconButton.test.tsx`.
-- **Link vs button:** a destination renders `<a>` with the locale href (`/dashboard`,
-  `/en/dashboard`); More renders `<button type="button">`.
-- **`aria-current`:** present only on an active destination; never on More, even when
-  `containsActive` is true.
-- **More:** `aria-haspopup="dialog"`, `aria-expanded` passes through, and `onOpen` is called on
-  click, Enter and Space.
-- **Classes per state:**
-  - Default: `text-text-secondary`, no fill.
-  - Active destination, or More with `containsActive`: `bg-accent-electric-sky/12
-text-accent-electric-sky`.
-  - Box: `w-[76px] h-[60px] rounded-[14px] p-[8px] gap-xs`.
-- **Icon:** 22, `aria-hidden`; label text rendered.
-- **Compile-time API:** `@ts-expect-error` for mixing kinds, `aria-current` on More, a missing
-  `label`, `children`, and an unknown icon.
-- **jest-axe:** no violations in RTL and LTR (`color-contrast` off in jsdom), asserted as
-  `expect((await axe(container, AXE_OPTIONS)).violations).toEqual([])`.
-- **Gate:** `corepack pnpm check` passes on the starter.
+**Setup:** jsdom, Testing Library, and a `NextIntlClientProvider` wrapper in `ar` and `en`. Copy
+the setup from `src/shared/ui/NavigationIconButton.test.tsx`.
 
-## 8. Integration steps (Yousef, per TEAM_COLLABORATION.md)
+All of the following must pass:
+
+1. A destination renders `<a>` with the locale href (`/dashboard` in `ar`, `/en/dashboard` in
+   `en`); More renders `<button type="button">`.
+2. `aria-current="page"` appears only on an active destination. It never appears on More, even
+   with `containsActive`.
+3. **More:** `aria-haspopup="dialog"`, and `aria-expanded` follows `expanded`. `onOpen` is called
+   on click, on Enter and on Space.
+4. **Classes:**
+   - Default: `text-text-secondary`, no fill.
+   - Active destination, or More with `containsActive`: `bg-accent-electric-sky/12` and
+     `text-accent-electric-sky`.
+   - Box classes as in §5.
+5. The icon is 22 (`width="22"`) and `aria-hidden="true"`, and the label text renders.
+6. **Compile-time API:** `// @ts-expect-error` for:
+   - mixing the kinds;
+   - `aria-current` on More;
+   - a missing `label`;
+   - `children`;
+   - an unknown icon.
+7. jest-axe in RTL and LTR, asserted as
+   `expect((await axe(container, { rules: { "color-contrast": { enabled: false } } })).violations).toEqual([])`.
+8. `corepack pnpm check` passes on your copy.
+
+## 8. Branch and delivery workflow (offline; `TEAM_COLLABORATION.md` §4–§5)
+
+1. Unzip the starter into an empty folder, then:
+
+   ```bash
+   corepack pnpm install
+   git init -b baseline && git add -A && git commit -m "baseline <short hash>"
+   git switch -c work
+   ```
+
+   These branches are local only; nothing is pushed.
+
+2. Implement the two files on `work`. Run `corepack pnpm check`.
+3. Deliver `munsit-delivery-mobile-nav-item-<YYYYMMDD>-v1.zip`, containing:
+   - `DELIVERY.md`: the template in §5.2, with the full baseline hash from
+     `BASELINE_COMMIT.txt`;
+   - `files/` with exactly the two files;
+   - `delivery.patch` (`git diff baseline..work`);
+   - `pnpm check` output;
+   - screenshots if you used a scratch page. Do not commit the scratch page.
+4. **Never include:** `node_modules/`, `.next/`, `.env*`, caches or credentials.
+
+## 9. Integration requirements (Yousef)
 
 1. Create `delivery/shell-mobile-nav-item-v1` from the recorded baseline commit.
-2. Apply only the two files, from the patch or the manifest. Never unzip over the project root.
+2. Apply the patch or the two manifest files only; never unzip over the project.
 3. Check that `git status` lists exactly the two files.
 4. Commit the delivery on its own; integration fixes go in separate commits.
-5. Rebase onto `main`, then run `typecheck`, `lint`, `format:check`, `test` and `build`.
+5. Rebase onto `main`, then run typecheck, lint, format, unit tests, build and E2E.
 6. Open a PR, wait for CI to be green, and merge.
-7. Claude then builds `BottomNav`, which consumes `MobileNavItem` without changing it, plus the
-   E2E checks (390 and 320 in RTL and LTR, computed Figma values, contrast).
+7. Claude then builds `BottomNav` with the component **unchanged**, plus the E2E checks (390 and
+   320, RTL and LTR, computed Figma values, rendered contrast).
 
-## 9. Definition of Done
+**Definition of Done:**
 
-- The two files are merged through a PR, with CI green.
-- `pnpm check` passes.
-- Every test in §7 is present and passing.
+- The two files are merged, with every §7 criterion passing.
 - `BottomNav` consumes the component unchanged.
-- Screenshots at 390 and 320 in RTL and LTR are captured at integration.
 - No other file was changed by the delivery.

@@ -28,5 +28,23 @@ export async function getShellLabels(): Promise<ShellLabels> {
       icon: destination.icon,
       href: ROUTES[destination.routeKey],
     })),
+    topBar: {
+      search: shell("search"),
+      searchPlaceholder: shell("searchPlaceholder"),
+      searchSoon: shell("searchSoon"),
+      notifications: shell("notifications"),
+      notificationsSoon: shell("notificationsSoon"),
+      appearance: shell("appearance"),
+      theme: {
+        dark: shell("theme.dark"),
+        light: shell("theme.light"),
+        system: shell("theme.system"),
+      },
+      accountMenu: shell("accountMenu"),
+      profile: nav("settingsNav.profile"),
+      settings: shell("settings"),
+      language: shell("language"),
+      languageNames: { en: shell("languageNames.en"), ar: shell("languageNames.ar") },
+    },
   };
 }
