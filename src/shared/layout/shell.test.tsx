@@ -13,6 +13,7 @@ import { DESTINATIONS, type DestinationId } from "@/shared/navigation/nav-regist
 
 import { AppShellView } from "./AppShellView";
 import { MobileTopBar } from "./MobileTopBar";
+import { MoreSheet } from "./MoreSheet";
 import { MAIN_CONTENT_ID, RAIL_RANGE_QUERY, type ShellLabels } from "./shell-model";
 import { Sidebar, SidebarPanel } from "./Sidebar";
 import { SidebarItem } from "./SidebarItem";
@@ -78,6 +79,11 @@ function labelsFor(locale: Locale): ShellLabels {
       icon: d.icon,
       href: ROUTES[d.routeKey],
     })),
+    more: {
+      title: nav.more,
+      close: shell.closeMenu,
+      accountSettings: nav.moreExtras.accountSettings,
+    },
     topBar: {
       search: shell.search,
       searchPlaceholder: shell.searchPlaceholder,
@@ -898,4 +904,130 @@ describe("Top Bar controls (Figma 2211:170, 2224:399, 2238:923)", () => {
       expect((await axe(container, AXE_OPTIONS)).violations).toEqual([]);
     },
   );
+});
+
+/* ------------------------------------------------------------------------- More sheet */
+
+describe("MoreSheet (Figma 2236:972)", () => {
+  function renderSheet(locale: Locale, onOpenChange = vi.fn()) {
+    const labels = labelsFor(locale);
+    const view = inLocale(locale, <MoreSheet open onOpenChange={onOpenChange} labels={labels} />);
+    const dialog = screen.getByRole("dialog", { name: labels.more.title });
+    return { ...view, labels, dialog, onOpenChange };
+  }
+
+  beforeEach(() => {
+    routerState.pathname = "/dashboard";
+    routerState.params = { locale: "ar" };
+    routerState.search = "";
+  });
+
+  it.each<Locale>(["ar", "en"])(
+    "Phase 03 Sheet titled «المزيد» with «إغلاق القائمة»; registry rows in Figma order (%s)",
+    (locale) => {
+      routerState.params = { locale };
+      const { labels, dialog } = renderSheet(locale);
+      expect(showModal).toHaveBeenCalled();
+      expect(within(dialog).getByRole("button", { name: labels.more.close })).toBeTruthy();
+      const rows = within(screen.getByTestId("more-sheet-rows")).getAllByRole("link");
+      const prefix = prefixOf(locale);
+      const more = DESTINATIONS.filter((d) => d.mobile === "more");
+      // 5 destinations, account settings, the two language links, upgrade.
+      expect(rows.map((r) => r.getAttribute("href"))).toEqual([
+        ...more.map((d) => `${prefix}${ROUTES[d.routeKey]}`),
+        `${prefix}/settings`,
+        "/en/dashboard",
+        locale === "ar" ? "/dashboard" : "/ar/dashboard",
+        `${prefix}/settings/subscription`,
+      ]);
+      expect(rows.slice(0, 5).map((r) => r.textContent)).toEqual(
+        more.map((d) => MESSAGES[locale].nav.destinations[d.id]),
+      );
+      expect(rows[5]?.textContent).toBe(labels.more.accountSettings);
+      expect(rows.at(-1)?.textContent).toBe(labels.upgrade.title);
+      expect(within(dialog).getByRole("group", { name: labels.topBar.language })).toBeTruthy();
+      // The bar destinations are not in the sheet.
+      for (const bar of DESTINATIONS.filter((d) => d.mobile === "bar")) {
+        expect(within(dialog).queryByText(MESSAGES[locale].nav.destinations[bar.id])).toBeNull();
+      }
+    },
+  );
+
+  it.each<[string | null, string | null]>([
+    ["questions", MESSAGES.ar.nav.destinations.questions],
+    ["folders", MESSAGES.ar.nav.destinations.folders],
+    ["dashboard", null], // a bar destination: nothing in the sheet is current
+    [null, null], // Settings (D-R6): no current row, not even account settings
+  ])("current row for destination %s", (id, expected) => {
+    active.destination = id;
+    renderSheet("ar");
+    const current = within(screen.getByTestId("more-sheet-rows")).queryAllByRole("link", {
+      current: "page",
+    });
+    expect(current.map((c) => c.textContent)).toEqual(expected === null ? [] : [expected]);
+  });
+
+  it("Figma row values; upgrade row Sky 12% / 30% with a Sky label", () => {
+    renderSheet("ar");
+    const rows = within(screen.getByTestId("more-sheet-rows")).getAllByRole("link");
+    const first = rows[0] ?? null;
+    expect(classesOf(first)).toEqual(
+      expect.arrayContaining([
+        "min-h-[56px]",
+        "rounded-[14px]",
+        "px-sm",
+        "gap-[14px]",
+        "bg-accent-electric-sky/5",
+        "border-accent-electric-sky/10",
+        "text-dashboard-body-medium",
+      ]),
+    );
+    const tile = first?.querySelector("span");
+    expect(classesOf(tile ?? null)).toEqual(
+      expect.arrayContaining([
+        "size-[36px]",
+        "bg-accent-electric-sky/14",
+        "text-accent-electric-sky",
+      ]),
+    );
+    expect(tile?.querySelector("svg")?.getAttribute("width")).toBe("18");
+    const upgrade = rows.at(-1) ?? null;
+    expect(classesOf(upgrade)).toEqual(
+      expect.arrayContaining([
+        "bg-accent-electric-sky/12",
+        "border-accent-electric-sky/30",
+        "text-accent-electric-sky",
+        "px-[14px]",
+      ]),
+    );
+    expect(upgrade?.querySelector("svg")?.getAttribute("data-icon")).toBe("crown");
+  });
+
+  it("a destination, the upgrade row or a language link closes the sheet", async () => {
+    const { onOpenChange, labels, dialog } = renderSheet("ar");
+    const block = (event: MouseEvent) => event.preventDefault();
+    document.addEventListener("click", block);
+    try {
+      await userEvent.click(within(dialog).getByRole("link", { name: "الملاحظات" }));
+      await userEvent.click(within(dialog).getByRole("link", { name: labels.upgrade.title }));
+      await userEvent.click(
+        within(dialog).getByRole("link", { name: joinedName("EN", "English") }),
+      );
+    } finally {
+      document.removeEventListener("click", block);
+    }
+    expect(onOpenChange.mock.calls).toEqual([[false], [false], [false]]);
+  });
+
+  it("the close button requests closing (Esc and scrim: Chromium)", async () => {
+    const { onOpenChange, labels, dialog } = renderSheet("ar");
+    await userEvent.click(within(dialog).getByRole("button", { name: labels.more.close }));
+    expect(onOpenChange).toHaveBeenLastCalledWith(false);
+  });
+
+  it.each<Locale>(["ar", "en"])("has no axe violations (%s)", async (locale) => {
+    routerState.params = { locale };
+    const { container } = renderSheet(locale);
+    expect((await axe(container, AXE_OPTIONS)).violations).toEqual([]);
+  });
 });
