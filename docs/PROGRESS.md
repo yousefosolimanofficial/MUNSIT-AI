@@ -45,8 +45,13 @@ Single resume point. A new session starts by reading this file, the latest phase
     Still to come: `MobileNavItem` (Mariam), `BottomNav` and the More-sheet wiring, removing the
     probe, and the full ADR-004 matrix.
 
-  - **Mariam `MobileNavItem`: AUTHORIZED** (D-S12). The starter `munsit-starter-9abe1c0.zip` is
-    prepared and verified locally; **not yet sent** (Yousef's action). Assignment:
+  - **Mariam `MobileNavItem`: DELIVERED / AWAITING IMPLEMENTATION.** Starter
+    `munsit-starter-9abe1c0.zip` (baseline `9abe1c0`, SHA-256 `205bbdc7…acb634`) was sent to
+    Mariam. Delivery confirmed by Yousef on 2026-11-17; the confirmation date is recorded, as the
+    exact send date was not given. Not complete until her delivery is received, reviewed and its
+    tests pass. Her files (`MobileNavItem.tsx`, `MobileNavItem.test.tsx`) are hers alone; no
+    replacement. Next: integrate her delivery on `delivery/shell-mobile-nav-item-v1`, then
+    `BottomNav`. Assignment:
     [phases/phase-05-mobile-nav-item-starter.md](phases/phase-05-mobile-nav-item-starter.md).
   - Risk **R-2** stays OPEN (Phase 22 gate).
 - **Phase 03:** **CLOSED** — closure PR #24 merged (`4a2f3f4`). Report:
@@ -89,10 +94,10 @@ Single resume point. A new session starts by reading this file, the latest phase
 
 ## Team and module assignments
 
-| Developer | Role                                                         | Assigned modules                                      |
-| --------- | ------------------------------------------------------------ | ----------------------------------------------------- |
-| Yousef    | Frontend Lead — architecture, shared foundation, integration | Shared foundation (by role); modules not assigned yet |
-| Mariam    | Frontend Developer — assigned feature modules                | Not assigned yet                                      |
+| Developer | Role                                                         | Assigned modules                                                                                                                                 |
+| --------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Yousef    | Frontend Lead — architecture, shared foundation, integration | Shared foundation (by role); modules not assigned yet                                                                                            |
+| Mariam    | Frontend Developer — assigned feature modules                | Feature modules: not assigned yet. Delegated shared component: Phase 05 `MobileNavItem` (2 files): delivered 2026-11-17, awaiting implementation |
 
 **Phase 03 assignment (agreed by the user, 2026-11-13).** Yousef: component requirements and
 architecture review, contracts, integration, quality assurance, GitHub management. Mariam:

@@ -1,8 +1,10 @@
 # Phase 05 — `MobileNavItem` assignment (starter package, final)
 
-**Status:** AUTHORIZED by the product owner (2026-11-17). Ready to send. **Not yet delivered to
-Mariam:** sending the starter is Yousef's action. The starter package is prepared locally from
-`main` `9abe1c0`; it is not committed and not sent.
+**Status:** DELIVERED / AWAITING IMPLEMENTATION. Authorized by the product owner on 2026-11-17.
+The starter `munsit-starter-9abe1c0.zip` (baseline `9abe1c0`, SHA-256
+`205bbdc72f90b1cb0f7069530ea661e8f6c908001844ab1969c13c7a2facb634`) was sent to Mariam; delivery
+confirmed by Yousef on 2026-11-17. Not complete until her delivery is received, reviewed and its
+tests pass. (The starter's `START_HERE.md` is this document as sent, before this status line.)
 
 - **Reviewed against `main` `9abe1c0` on 2026-11-17**, after PR #32:
   - **API inputs:** O-8 (`0404c6e`) is merged; `DestinationPath` is in
