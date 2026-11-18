@@ -62,6 +62,22 @@ const test = baseTest.extend<{ guard: string[] }>({
 });
 const { expect } = baseTest;
 
+/**
+ * `retry()` (catchError) re-renders the section only after a router refresh: a server round trip
+ * whose dev-server latency under parallel load ranges from ~2 s to over 10 s. Tests wait for that
+ * refresh response (the real synchronisation point) instead of a fixed sleep or a short timeout.
+ * Start it before the retry is activated; await it before checking the outcome.
+ */
+function waitForRefresh(page: Page) {
+  return page.waitForResponse(
+    (response) => {
+      const headers = response.request().headers();
+      return headers.rsc === "1" && !("next-router-prefetch" in headers);
+    },
+    { timeout: 60_000 },
+  );
+}
+
 async function openGallery(page: Page, prefix: string) {
   await page.goto(`${prefix}/dev/components`);
   await page.evaluate(() => document.fonts.ready);
@@ -274,11 +290,13 @@ for (const { locale, dir, prefix, title, retry } of LOCALES) {
       await page.getByTestId("break-section-b").click();
       const button = page.getByTestId("section-b").getByRole("button", { name: retry });
       await button.focus();
+      const refreshed = waitForRefresh(page);
       await page.keyboard.press("Enter");
       await expect(button).toHaveAttribute("aria-disabled", "true");
       await page.keyboard.press("Enter");
       await page.keyboard.press(" ");
       await expect(button).toBeFocused();
+      await refreshed;
       await expect(page.getByTestId("section-b-content")).toBeVisible();
       await expect(page.getByTestId("retry-count")).toHaveText("Retries: 1");
       await expect(page.getByTestId("section-a-counter")).toContainText("1"); // not remounted
@@ -292,12 +310,16 @@ for (const { locale, dir, prefix, title, retry } of LOCALES) {
       await page.getByTestId("retry-mode").click(); // keeps failing
       await page.getByTestId("break-section-b").click();
       const b = page.getByTestId("section-b");
+      let refreshed = waitForRefresh(page);
       await b.getByRole("button", { name: retry }).click();
       await expect(page.getByTestId("retry-count")).toHaveText("Retries: 1");
+      await refreshed;
       await expect(b.getByRole("heading", { name: title })).toBeVisible();
       await expect(page.getByTestId("section-b-content")).toHaveCount(0);
       await page.getByTestId("retry-mode").click(); // fixes the cause
+      refreshed = waitForRefresh(page);
       await b.getByRole("button", { name: retry }).click();
+      await refreshed;
       await expect(page.getByTestId("section-b-content")).toBeVisible();
       await expect(page.getByTestId("retry-count")).toHaveText("Retries: 2");
     });
@@ -325,20 +347,22 @@ for (const { locale, dir, prefix, title, retry } of LOCALES) {
       await page.getByTestId("break-section-b").click();
       const b = page.getByTestId("section-b");
       for (let attempt = 1; attempt <= 2; attempt += 1) {
+        const current = await b.getByRole("button", { name: retry }).elementHandle();
         await b.getByRole("button", { name: retry }).focus();
+        const refreshed = waitForRefresh(page);
         await page.keyboard.press("Enter");
         await expect(page.getByTestId("retry-count")).toHaveText(`Retries: ${attempt}`);
-        const next = b.getByRole("button", { name: retry });
-        await expect(next).not.toHaveAttribute("aria-disabled", "true"); // retry settled
-        // The boundary re-renders in a Transition after the retry settles; let it commit (the
-        // persisting failure mounts a new fallback) before checking focus and acting again.
-        await page.waitForTimeout(1200);
-        await expect(next).toBeFocused(); // focus is on the (new) retry button
+        // The persisting failure mounts a new fallback once the retry's refresh commits.
+        await refreshed;
+        await expect.poll(() => current?.evaluate((node) => node.isConnected)).toBe(false);
+        await expect(b.getByRole("button", { name: retry })).toBeFocused(); // the new button
       }
       await page.getByTestId("retry-mode").click(); // now fixes the cause
       await b.getByRole("button", { name: retry }).focus();
       const scrollBefore = await page.evaluate(() => window.scrollY);
+      const refreshed = waitForRefresh(page);
       await page.keyboard.press("Enter");
+      await refreshed;
       const heading = page.getByTestId("section-b-content");
       await expect(heading).toBeFocused();
       await expect(heading).toHaveAttribute("tabindex", "-1");
@@ -355,8 +379,10 @@ for (const { locale, dir, prefix, title, retry } of LOCALES) {
       await openGallery(page, prefix);
       await page.getByTestId("break-section-b").click();
       await page.getByTestId("section-b").getByRole("button", { name: retry }).focus();
+      const refreshed = waitForRefresh(page);
       await page.keyboard.press("Enter");
       await page.getByTestId("section-a-counter").focus(); // the user moves on while pending
+      await refreshed;
       await expect(page.getByTestId("section-b-content")).toBeVisible();
       await expect(page.getByTestId("section-a-counter")).toBeFocused();
 

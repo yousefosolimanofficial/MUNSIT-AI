@@ -471,6 +471,62 @@ describe("SectionBoundary — focus after retry", () => {
     }
   });
 
+  it("slow recovery (over 10 s, a slow refresh): focus still lands on the heading, not the document", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    let release: () => void = () => {};
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    function SlowPage() {
+      const [broken, setBroken] = useState(true);
+      return (
+        <SectionBoundary
+          copy={COPY}
+          onRetry={async () => {
+            await gate;
+            setBroken(false);
+          }}
+        >
+          {broken ? <Fragile broken /> : <h3 data-testid="slow-heading">recovered</h3>}
+        </SectionBoundary>
+      );
+    }
+    vi.useFakeTimers();
+    try {
+      render(<SlowPage />);
+      const button = screen.getByRole("button", { name: COPY.retryLabel });
+      button.focus();
+      fireEvent.click(button);
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(15_000); // longer than any fixed watch limit
+      });
+      expect(document.activeElement).toBe(button); // still pending, focus kept
+      await act(async () => {
+        release();
+        await vi.advanceTimersByTimeAsync(50);
+      });
+      expect(document.activeElement).toBe(screen.getByTestId("slow-heading"));
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("stops watching once the user moves focus out, even if the section recovers later", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    render(<FocusPage slow />);
+    const button = screen.getByRole("button", { name: COPY.retryLabel });
+    button.focus();
+    fireEvent.click(button);
+    screen.getByTestId("elsewhere").focus(); // focusout with an outside relatedTarget
+    await settle();
+    screen.getByTestId("recovered-heading");
+    expect(document.activeElement).toBe(screen.getByTestId("elsewhere"));
+    // Coming back later and blurring to the document does not re-arm anything.
+    (document.activeElement as HTMLElement).blur();
+    await settle();
+    expect(document.activeElement).toBe(document.body);
+  });
+
   it("never steals focus: if the user moved elsewhere during the retry, focus stays there", async () => {
     vi.spyOn(console, "error").mockImplementation(() => {});
     render(<FocusPage slow />);
