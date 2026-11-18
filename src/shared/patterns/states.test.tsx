@@ -389,3 +389,132 @@ describe("SectionBoundary", () => {
     expect(screen.getByRole("button", { name: "click" })).toBeTruthy();
   });
 });
+
+/* ------------------------------------------------------------------ retry focus */
+
+function FocusPage({
+  persistent = false,
+  heading = true,
+  slow = false,
+}: {
+  persistent?: boolean;
+  heading?: boolean;
+  slow?: boolean;
+}) {
+  const [broken, setBroken] = useState(true);
+  return (
+    <>
+      <button type="button" data-testid="elsewhere">
+        elsewhere
+      </button>
+      <section data-testid="focus-section">
+        <SectionBoundary
+          copy={COPY}
+          onRetry={async () => {
+            if (slow) await new Promise((resolve) => setTimeout(resolve, 20));
+            if (!persistent) setBroken(false);
+          }}
+        >
+          {broken ? (
+            <Fragile broken />
+          ) : heading ? (
+            <h3 data-testid="recovered-heading">recovered</h3>
+          ) : (
+            <p data-testid="recovered-text">recovered</p>
+          )}
+        </SectionBoundary>
+      </section>
+    </>
+  );
+}
+
+async function settle() {
+  await act(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 40));
+  });
+}
+
+describe("SectionBoundary — focus after retry", () => {
+  it("recovery: focus moves to the recovered heading (made focusable), not to the document", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    render(<FocusPage />);
+    const button = screen.getByRole("button", { name: COPY.retryLabel });
+    button.focus();
+    fireEvent.click(button);
+    await settle();
+    const heading = screen.getByTestId("recovered-heading");
+    expect(document.activeElement).toBe(heading);
+    expect(heading.getAttribute("tabindex")).toBe("-1"); // not in the Tab order
+  });
+
+  it("recovery without a heading: focus moves to the section wrapper", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    render(<FocusPage heading={false} />);
+    const button = screen.getByRole("button", { name: COPY.retryLabel });
+    button.focus();
+    fireEvent.click(button);
+    await settle();
+    const wrapper = screen.getByTestId("recovered-text").closest("[data-section-boundary]");
+    expect(document.activeElement).toBe(wrapper);
+  });
+
+  it("persistent failure: focus moves to the new retry button, repeatedly", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    render(<FocusPage persistent />);
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      const button = screen.getByRole("button", { name: COPY.retryLabel });
+      button.focus();
+      fireEvent.click(button);
+      await settle();
+      const next = screen.getByRole("button", { name: COPY.retryLabel });
+      expect(document.activeElement).toBe(next);
+    }
+  });
+
+  it("never steals focus: if the user moved elsewhere during the retry, focus stays there", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    render(<FocusPage slow />);
+    const button = screen.getByRole("button", { name: COPY.retryLabel });
+    button.focus();
+    fireEvent.click(button);
+    screen.getByTestId("elsewhere").focus();
+    await settle();
+    expect(screen.getByTestId("recovered-heading")).toBeTruthy();
+    expect(document.activeElement).toBe(screen.getByTestId("elsewhere"));
+  });
+
+  it("no focus management when retry was not activated from the section (focus elsewhere)", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    render(<FocusPage />);
+    screen.getByTestId("elsewhere").focus();
+    fireEvent.click(screen.getByRole("button", { name: COPY.retryLabel }));
+    await settle();
+    expect(document.activeElement).toBe(screen.getByTestId("elsewhere"));
+  });
+
+  it("status path: retry → loading (waits) → ready: focus lands on the content heading", async () => {
+    function StatusPage() {
+      const [status, setStatus] = useState<"error" | "loading" | "ready">("error");
+      return (
+        <SectionBoundary
+          copy={COPY}
+          status={status}
+          loading={<div aria-busy="true">loading</div>}
+          onRetry={async () => {
+            setStatus("loading");
+            await new Promise((resolve) => setTimeout(resolve, 20));
+            setStatus("ready");
+          }}
+        >
+          <h3 data-testid="status-heading">ready</h3>
+        </SectionBoundary>
+      );
+    }
+    render(<StatusPage />);
+    const button = screen.getByRole("button", { name: COPY.retryLabel });
+    button.focus();
+    fireEvent.click(button);
+    await settle();
+    expect(document.activeElement).toBe(screen.getByTestId("status-heading"));
+  });
+});

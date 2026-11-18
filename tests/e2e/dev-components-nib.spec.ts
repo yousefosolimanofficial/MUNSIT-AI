@@ -135,9 +135,14 @@ for (const { path, dir, prefix } of LOCALES) {
       await load(page, path);
       const button = page.getByTestId("nib-count");
       await button.hover();
-      await expect
-        .poll(async () => (await onBlack(button, "backgroundColor"))[2])
-        .toBeGreaterThan(20);
+      // Wait for the 200ms colour transition to settle (same tolerance as expectTint), so the
+      // fill and border are never sampled mid-transition.
+      const deviation = async (property: "backgroundColor" | "borderTopColor", alpha: number) => {
+        const actual = await onBlack(button, property);
+        return Math.max(...SKY.map((channel, i) => Math.abs((actual[i] ?? -99) - channel * alpha)));
+      };
+      await expect.poll(() => deviation("backgroundColor", 0.1)).toBeLessThanOrEqual(1.5);
+      await expect.poll(() => deviation("borderTopColor", 0.3)).toBeLessThanOrEqual(1.5);
       expectTint(await onBlack(button, "backgroundColor"), SKY, 0.1, "hover fill");
       expectTint(await onBlack(button, "borderTopColor"), SKY, 0.3, "hover border");
       await expect

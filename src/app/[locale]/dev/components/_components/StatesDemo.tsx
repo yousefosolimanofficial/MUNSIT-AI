@@ -30,9 +30,9 @@ const HOST =
 function Fragile({ broken }: { broken: boolean }) {
   if (broken) throw new Error("MUNSIT dev states-demo: intentional section render error");
   return (
-    <p data-testid="section-b-content" className="text-dashboard-body">
+    <h3 data-testid="section-b-content" className="text-dashboard-card-title">
       B · OK
-    </p>
+    </h3>
   );
 }
 
@@ -123,9 +123,9 @@ export function StatesDemo({ copy }: { copy: StatesDemoCopy }) {
             </SkeletonRegion>
           }
         >
-          <p data-testid="section-d-content" className="text-dashboard-body">
+          <h3 data-testid="section-d-content" className="text-dashboard-card-title">
             D · OK
-          </p>
+          </h3>
         </SectionBoundary>
       </section>
     </div>

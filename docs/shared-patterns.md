@@ -91,9 +91,19 @@ sections keep rendering and stay interactive.
   root's `onCaughtError` in production), and `onError` gives the module the error once.
 
 **Retry:** `onRetry` runs first (re-fetch, or fix the state), then the boundary re-renders its
-children (`retry()`). If they throw again, the ErrorCard comes back. Focus stays on the retry
-button while it is pending. After a successful recovery the button is gone, so focus returns to
-the document.
+children (`retry()`). If they throw again, the ErrorCard comes back.
+
+**Focus after a retry started from inside the section:**
+
+- **While pending:** focus stays on the retry button.
+- **Recovered:** focus moves, without scrolling, to the section's first heading (made focusable
+  with `tabindex="-1"`, not in the Tab order), or to the section wrapper when there is no heading.
+- **Still failing:** focus moves to the new retry button.
+- **User moved elsewhere:** nothing is moved.
+
+The watcher is scoped to the section and stops once it has decided. Edge case: retrying again
+within about a second of a previous failure (while that re-render is still committing) can leave
+focus on the new retry button rather than the heading. Nothing is lost.
 
 ## Navigation guard: `useNavigationGuard`, `useGuardedRouter`
 

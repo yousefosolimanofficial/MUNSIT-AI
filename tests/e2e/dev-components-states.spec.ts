@@ -316,6 +316,58 @@ for (const { locale, dir, prefix, title, retry } of LOCALES) {
       await expect(d.locator('[aria-busy="true"]')).toHaveCount(0);
     });
 
+    test("retry focus: recovery focuses the section heading without scrolling; a persistent failure focuses the new retry button", async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      await openGallery(page, prefix);
+      await page.getByTestId("retry-mode").click(); // keeps failing first
+      await page.getByTestId("break-section-b").click();
+      const b = page.getByTestId("section-b");
+      for (let attempt = 1; attempt <= 2; attempt += 1) {
+        await b.getByRole("button", { name: retry }).focus();
+        await page.keyboard.press("Enter");
+        await expect(page.getByTestId("retry-count")).toHaveText(`Retries: ${attempt}`);
+        const next = b.getByRole("button", { name: retry });
+        await expect(next).not.toHaveAttribute("aria-disabled", "true"); // retry settled
+        // The boundary re-renders in a Transition after the retry settles; let it commit (the
+        // persisting failure mounts a new fallback) before checking focus and acting again.
+        await page.waitForTimeout(1200);
+        await expect(next).toBeFocused(); // focus is on the (new) retry button
+      }
+      await page.getByTestId("retry-mode").click(); // now fixes the cause
+      await b.getByRole("button", { name: retry }).focus();
+      const scrollBefore = await page.evaluate(() => window.scrollY);
+      await page.keyboard.press("Enter");
+      const heading = page.getByTestId("section-b-content");
+      await expect(heading).toBeFocused();
+      await expect(heading).toHaveAttribute("tabindex", "-1");
+      expect(await page.evaluate(() => window.scrollY)).toBe(scrollBefore);
+      // Keyboard navigation continues normally from the recovered section.
+      await page.keyboard.press("Tab");
+      await expect(page.getByTestId("section-c-counter")).toBeFocused();
+    });
+
+    test("retry focus: never stolen when the user moves on; data path focuses the heading after loading", async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      await openGallery(page, prefix);
+      await page.getByTestId("break-section-b").click();
+      await page.getByTestId("section-b").getByRole("button", { name: retry }).focus();
+      await page.keyboard.press("Enter");
+      await page.getByTestId("section-a-counter").focus(); // the user moves on while pending
+      await expect(page.getByTestId("section-b-content")).toBeVisible();
+      await expect(page.getByTestId("section-a-counter")).toBeFocused();
+
+      await page.getByTestId("section-d-fail").click();
+      const d = page.getByTestId("section-d");
+      await d.getByRole("button", { name: retry }).focus();
+      await page.keyboard.press("Enter");
+      await expect(d.locator('[aria-busy="true"]')).toBeVisible();
+      await expect(page.getByTestId("section-d-content")).toBeFocused();
+    });
+
     for (const width of WIDTHS) {
       test(`${width}px: no overflow; error cards and skeletons stay inside their hosts`, async ({
         page,
