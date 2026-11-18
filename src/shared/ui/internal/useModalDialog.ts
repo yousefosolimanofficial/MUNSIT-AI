@@ -256,7 +256,10 @@ export function useModalDialog({
 
   const onClose = () => {
     const dialog = dialogRef.current;
-    if (!dialog || dialog.dataset.state === "closed") return;
+    // `close` is dispatched in a later task. If the dialog was reopened (`showModal()`) before
+    // the event of our own earlier `close()` arrived, the event is stale: the dialog is open
+    // again, so it must not be treated as a browser close.
+    if (!dialog || dialog.dataset.state === "closed" || dialog.open) return;
     // Closed by the browser itself (e.g. Chromium Esc without `cancel`): no exit, clean up now.
     dialog.dataset.state = "closed";
     release();
