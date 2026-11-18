@@ -33,8 +33,8 @@ import { ConfirmGuardDialog, type GuardCopy, type GuardKind } from "./ConfirmGua
  *      Back leaves the sentinel, so it is restored and the dialog asks. Limitations (documented):
  *      Forward entries are discarded while active, and a multi-entry jump cannot be stopped.
  * 3. `beforeunload`: refresh, tab close, typed URLs and external links get the browser's native,
- *    unstyled prompt, only after user interaction (browser rule). No custom UI is possible. It is
- *    skipped during an approved Leave, so the user is not asked twice.
+ *    unstyled prompt, only after user interaction (browser rule). No custom UI is possible. An approved
+ *    Leave authorizes at most one prompt, and only for a traversal that leaves the document.
  *
  * Programmatic navigation goes through `useGuardedRouter` → `requestNavigation`; ESLint forbids a
  * raw `useRouter` elsewhere (eslint.config.mjs).
@@ -43,12 +43,12 @@ import { ConfirmGuardDialog, type GuardCopy, type GuardKind } from "./ConfirmGua
 const SENTINEL_KEY = "__munsitGuardSentinel";
 
 /**
- * After an approved Leave the guard stands down for this long: no interception and no
- * `beforeunload`, so the approved navigation and any immediate follow-up (for example Back right
- * after arriving) are never swallowed while the guarded page is still unmounting. If the page is
- * somehow still there afterwards, protection resumes.
+ * Fallback only (no Navigation API): how long an approved `history.go(-2)` may authorize one
+ * `beforeunload`, in case that traversal leaves the document. The fallback cannot observe a
+ * traversal that silently does nothing, so this bounds the authorization. App-controlled paths are
+ * never affected by it.
  */
-const LEAVE_WINDOW_MS = 2000;
+const FALLBACK_UNLOAD_AUTH_MS = 1500;
 
 type Pending =
   | { type: "link"; anchor: HTMLAnchorElement; href: string }
@@ -59,6 +59,12 @@ type Pending =
 export interface NavigationGuardProviderProps {
   copy: Record<GuardKind, GuardCopy>;
   children: ReactNode;
+}
+
+/** The page identity the guard protects: path and query (a hash change stays on the page). */
+function pageOf(href: string): string {
+  const url = new URL(href);
+  return `${url.pathname}${url.search}`;
 }
 
 function historyState(): Record<string, unknown> {
@@ -104,8 +110,19 @@ export function NavigationGuardProvider({ copy, children }: NavigationGuardProvi
   const ownPops = useRef(0);
   /** True while the provider replays an approved link click. */
   const replaying = useRef(false);
-  /** Until when the guard stands down (an approved Leave is in progress). */
-  const leavingUntil = useRef(0);
+  /*
+   * Navigation-specific authorization after an approved Leave (no time window):
+   * - `authorizedKey`: the one history entry the user approved; it passes once.
+   * - `authorizedUnload`: one `beforeunload` may pass, only while the approved traversal can
+   *   still unload the document (cross-document). Cleared when the traversal turns out to be
+   *   same-document, settles, fails, or the activation ends.
+   * Link and router Leaves need neither: the approved click is replayed synchronously
+   * (`replaying`), and `navigate()` runs directly without passing the guard.
+   */
+  const authorizedKey = useRef<string | null>(null);
+  const authorizedUnload = useRef(false);
+  /** URL of the guarded page for the current activation. */
+  const guardedHref = useRef("");
 
   const sync = useCallback(() => {
     const top = stack.current.at(-1);
@@ -143,10 +160,17 @@ export function NavigationGuardProvider({ copy, children }: NavigationGuardProvi
 
   useEffect(() => {
     if (!active) return;
-    const leaving = () => Date.now() < leavingUntil.current;
+    guardedHref.current = pageOf(window.location.href);
+    authorizedKey.current = null;
+    authorizedUnload.current = false;
+    /**
+     * The approved navigation has committed (the URL is no longer the guarded page's), and this
+     * page is only waiting to unmount: it must not swallow anything the user does next.
+     */
+    const departed = () => pageOf(window.location.href) !== guardedHref.current;
 
     const onClick = (event: MouseEvent) => {
-      if (replaying.current || leaving()) return;
+      if (replaying.current || departed()) return;
       const anchor = guardedAnchor(event);
       if (anchor === null) return;
       event.preventDefault();
@@ -154,7 +178,11 @@ export function NavigationGuardProvider({ copy, children }: NavigationGuardProvi
       ask({ type: "link", anchor, href: anchor.href });
     };
     const onBeforeUnload = (event: BeforeUnloadEvent) => {
-      if (leaving()) return;
+      if (authorizedUnload.current) {
+        authorizedUnload.current = false; // exactly one
+        return;
+      }
+      if (departed()) return;
       event.preventDefault();
       // Legacy browsers need a returnValue to show the prompt.
       event.returnValue = "";
@@ -164,12 +192,23 @@ export function NavigationGuardProvider({ copy, children }: NavigationGuardProvi
     const removeCommon = () => {
       window.removeEventListener("click", onClick, true);
       window.removeEventListener("beforeunload", onBeforeUnload);
+      authorizedKey.current = null;
+      authorizedUnload.current = false;
     };
 
     const navigation = navigationApi();
     if (navigation !== null) {
       const onNavigate = (event: NavigateEvent) => {
-        if (event.navigationType !== "traverse" || leaving()) return;
+        if (event.navigationType !== "traverse") return;
+        if (authorizedKey.current !== null && event.destination.key === authorizedKey.current) {
+          authorizedKey.current = null; // exactly once
+          // Same-document: no unload follows, so no prompt is authorized any more.
+          if (event.cancelable) authorizedUnload.current = false;
+          return;
+        }
+        if (departed()) return;
+        // A traversal that only changes the hash stays on the guarded page: nothing to ask.
+        if (pageOf(event.destination.url) === guardedHref.current) return;
         if (!event.cancelable) return; // cross-document: beforeunload's job
         event.preventDefault();
         ask({ type: "traverse", key: event.destination.key });
@@ -184,10 +223,8 @@ export function NavigationGuardProvider({ copy, children }: NavigationGuardProvi
     // Fallback: sentinel history entry.
     const token = `${Date.now()}-${Math.random()}`;
     const onSentinel = () => historyState()[SENTINEL_KEY] === token;
-    /** URL of the guarded page (where the sentinel lives). */
-    let guardedHref = window.location.href;
     const pushSentinel = () => {
-      guardedHref = window.location.href;
+      guardedHref.current = pageOf(window.location.href);
       window.history.pushState(
         { ...historyState(), [SENTINEL_KEY]: token },
         "",
@@ -198,12 +235,13 @@ export function NavigationGuardProvider({ copy, children }: NavigationGuardProvi
     const onPopState = () => {
       if (ownPops.current > 0) {
         ownPops.current -= 1;
+        authorizedUnload.current = false; // the approved traversal stayed in this document
         return;
       }
-      if (onSentinel() || leaving()) return;
+      if (onSentinel()) return;
       // The traversal already left the guarded page (a multi-entry jump). A committed traversal
       // cannot be cancelled, so history is left untouched and the page leaves (limitation).
-      if (window.location.href !== guardedHref) return;
+      if (departed()) return;
       // Back left the sentinel for the guarded entry (same URL): restore it and ask.
       pushSentinel();
       ask({ type: "history" });
@@ -260,15 +298,26 @@ export function NavigationGuardProvider({ copy, children }: NavigationGuardProvi
     setPending(null);
     if (next === null) return;
     stack.current.at(-1)?.registration.onLeave?.();
-    leavingUntil.current = Date.now() + LEAVE_WINDOW_MS;
 
     if (next.type === "traverse") {
       const navigation = navigationApi();
-      if (navigation !== null) navigation.traverseTo(next.key);
+      if (navigation === null) return;
+      authorizedKey.current = next.key;
+      authorizedUnload.current = true;
+      const clear = () => {
+        authorizedKey.current = null;
+        authorizedUnload.current = false;
+      };
+      // A failed or completed traversal ends the authorization; the guard stays on.
+      void navigation.traverseTo(next.key).finished?.then(clear, clear);
       return;
     }
     if (next.type === "history") {
       // Fallback, at the restored sentinel: go back past it and the guarded entry.
+      authorizedUnload.current = true;
+      window.setTimeout(() => {
+        authorizedUnload.current = false;
+      }, FALLBACK_UNLOAD_AUTH_MS);
       ownPops.current += 1;
       window.history.go(-2);
       return;

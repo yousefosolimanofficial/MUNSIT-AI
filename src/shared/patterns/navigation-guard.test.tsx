@@ -361,15 +361,26 @@ describe("NavigationGuardProvider — guard ON", () => {
 
 /** Minimal Navigation API stand-in: an EventTarget with `traverseTo` (Chromium has the real one). */
 class FakeNavigation extends EventTarget {
-  traverseTo = vi.fn();
+  /** Settles the latest `traverseTo` result (as the browser would after the traversal). */
+  settle: { resolve: () => void; reject: (reason: unknown) => void } | null = null;
+  traverseTo = vi.fn(() => {
+    let resolve = () => {};
+    let reject: (reason: unknown) => void = () => {};
+    const finished = new Promise<void>((res, rej) => {
+      resolve = res;
+      reject = rej;
+    });
+    this.settle = { resolve, reject };
+    return { committed: finished, finished };
+  });
 }
 
-function traverseEvent(key: string, cancelable = true) {
+function traverseEvent(key: string, cancelable = true, url = "http://localhost:3000/dashboard") {
   const event = new Event("navigate", { cancelable }) as Event & {
     navigationType: string;
-    destination: { key: string };
+    destination: { key: string; url: string };
   };
-  Object.assign(event, { navigationType: "traverse", destination: { key } });
+  Object.assign(event, { navigationType: "traverse", destination: { key, url } });
   return event;
 }
 
@@ -412,31 +423,107 @@ describe("NavigationGuardProvider — Navigation API path", () => {
     expect(document.querySelector("dialog[open]")).toBeNull();
   });
 
-  it("after an approved Leave the guard stands down at once (no swallowed follow-up, no prompt)", async () => {
-    renderGuard(<Harness initial />);
-    await flush();
+  /** Approves Leave for a traversal to `key` (the browser has not run it yet). */
+  async function approveTraverse(key: string) {
     act(() => {
-      fake.dispatchEvent(traverseEvent("a"));
+      fake.dispatchEvent(traverseEvent(key));
     });
     fireEvent.click(screen.getByRole("button", { name: copyFor("ar").unsaved.leave }));
     await flush();
-    const followUp = traverseEvent("b");
+    expect(fake.traverseTo).toHaveBeenLastCalledWith(key);
+  }
+
+  function prevented(event: Event, target: EventTarget = fake) {
     act(() => {
-      fake.dispatchEvent(followUp);
+      target.dispatchEvent(event);
     });
-    expect(followUp.defaultPrevented).toBe(false);
+    return event.defaultPrevented;
+  }
+
+  it("authorization is specific to the approved traversal: while it is pending, every other path stays guarded", async () => {
+    renderGuard(<Harness initial />);
+    await flush();
+    await approveTraverse("a");
+    // The approved traversal has not happened (delayed or failed): nothing else may pass.
+    expect(prevented(traverseEvent("b"))).toBe(true);
+    fireEvent.click(screen.getByRole("button", { name: copyFor("ar").unsaved.stay }));
+    await flush();
+    const click = new MouseEvent("click", { bubbles: true, cancelable: true, button: 0 });
+    expect(prevented(click, screen.getByTestId("link"))).toBe(true);
+    expect(screen.getByRole("alertdialog")).toBeTruthy();
+  });
+
+  it("the approved traversal passes exactly once; a same-document one also ends unload authorization", async () => {
+    renderGuard(<Harness initial />);
+    await flush();
+    await approveTraverse("a");
+    expect(prevented(traverseEvent("a"))).toBe(false); // the approved one
     const unload = new Event("beforeunload", { cancelable: true });
-    window.dispatchEvent(unload);
-    expect(unload.defaultPrevented).toBe(false);
-    // Protection resumes if the page is still there after the stand-down window.
+    expect(prevented(unload, window)).toBe(true); // same-document: no unload is authorized
+    expect(prevented(traverseEvent("a"))).toBe(true); // not twice
+  });
+
+  it("a cross-document approved traversal authorizes exactly one beforeunload", async () => {
+    renderGuard(<Harness initial />);
+    await flush();
+    await approveTraverse("other-doc");
+    expect(prevented(traverseEvent("other-doc", false))).toBe(false);
+    expect(prevented(new Event("beforeunload", { cancelable: true }), window)).toBe(false);
+    expect(prevented(new Event("beforeunload", { cancelable: true }), window)).toBe(true);
+  });
+
+  it("a failed approved traversal clears all authorization; the guard stays on", async () => {
+    renderGuard(<Harness initial />);
+    await flush();
+    await approveTraverse("a");
     await act(async () => {
-      await vi.advanceTimersByTimeAsync(2100);
+      fake.settle?.reject(new Error("traversal failed"));
+      await Promise.resolve();
     });
-    const later = traverseEvent("c");
+    await flush();
+    expect(prevented(traverseEvent("a"))).toBe(true);
+    expect(prevented(new Event("beforeunload", { cancelable: true }), window)).toBe(true);
+  });
+
+  it("once the approved navigation has committed (URL changed), the departing page swallows nothing", async () => {
+    renderGuard(<Harness initial />);
+    await flush();
+    window.history.replaceState(null, "", "/lectures"); // the approved navigation committed
+    expect(prevented(traverseEvent("z"))).toBe(false);
+    const click = new MouseEvent("click", { bubbles: true, cancelable: true, button: 0 });
+    const anchor = screen.getByTestId("hash"); // any link
+    anchor.removeAttribute("href");
+    anchor.setAttribute("href", "/summaries");
+    // The page's own handler prevents default in the fixture; the guard must not open a dialog.
     act(() => {
-      fake.dispatchEvent(later);
+      anchor.dispatchEvent(click);
     });
-    expect(later.defaultPrevented).toBe(true);
+    expect(document.querySelector("dialog[open]")).toBeNull();
+    expect(prevented(new Event("beforeunload", { cancelable: true }), window)).toBe(false);
+  });
+
+  it("a hash change on the guarded page keeps the guard on; a hash-only traversal is not asked", async () => {
+    renderGuard(<Harness initial />);
+    await flush();
+    window.history.replaceState(null, "", `${window.location.pathname}#section`);
+    const sameUrl = new URL(window.location.href);
+    sameUrl.hash = "";
+    expect(prevented(traverseEvent("same-page", true, sameUrl.href))).toBe(false);
+    expect(document.querySelector("dialog[open]")).toBeNull();
+    expect(prevented(traverseEvent("elsewhere"))).toBe(true); // other pages are still guarded
+    expect(prevented(new Event("beforeunload", { cancelable: true }), window)).toBe(true);
+  });
+
+  it("authorization never leaks into a new activation", async () => {
+    renderGuard(<Harness initial />);
+    await flush();
+    await approveTraverse("a");
+    fireEvent.click(screen.getByTestId("toggle")); // off
+    await flush();
+    fireEvent.click(screen.getByTestId("toggle")); // on again
+    await flush();
+    expect(prevented(traverseEvent("a"))).toBe(true);
+    expect(prevented(new Event("beforeunload", { cancelable: true }), window)).toBe(true);
   });
 
   it("the navigate listener is removed when the guard turns off", async () => {

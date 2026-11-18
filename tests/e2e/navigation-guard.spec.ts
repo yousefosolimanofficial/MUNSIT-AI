@@ -437,6 +437,31 @@ for (const { locale, dir, prefix, nav, shell, guard } of LOCALES) {
       await expect(page).toHaveURL((url) => url.pathname === `${prefix}/lectures`);
     });
 
+    test("hash change on the guarded page: the guard stays on; a hash-only Back is not asked", async ({
+      page,
+    }) => {
+      await harnessAfterDashboard(page, prefix);
+      await guardOn(page);
+      await page.evaluate(() => {
+        location.hash = "section";
+      });
+      await expect(page).toHaveURL((url) => url.hash === "#section");
+      // Links are still guarded after the hash change.
+      await page.getByTestId("guard-in-page-link").click();
+      await expect(guardDialog(page)).toBeVisible();
+      await stay(page).click();
+      // Back to the same page without the hash: stays on the page, no dialog.
+      await page.evaluate(() => history.back());
+      await expect(page).toHaveURL((url) => url.pathname === harness && url.hash === "");
+      await page.waitForTimeout(300);
+      await expect(guardDialog(page)).toHaveCount(0);
+      // Back to another page: asked.
+      await page.evaluate(() => history.back());
+      await expect(guardDialog(page)).toBeVisible();
+      expect(path(page)).toBe(harness);
+      await expect(status(page)).toHaveAttribute("data-guard", "on");
+    });
+
     test("refresh: native beforeunload prompt; dismiss keeps the page, accept reloads", async ({
       page,
     }) => {

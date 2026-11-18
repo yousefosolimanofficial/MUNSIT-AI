@@ -8,9 +8,15 @@ Single resume point. A new session starts by reading this file, the latest phase
   started**: [phases/phase-06-plan.md](phases/phase-06-plan.md), with the Figma values in
   [design-values.md §15](design-values.md). The plan was approved and merged through PR #37
   (`70c821d`); D-U1 to D-U10 have dispositions. Phase 07 is NOT STARTED. R-2 and R-3 stay OPEN.
-  - **Increment 1 (guard slice): in review** on `feat/phase-06-navigation-guard` (PR #38): danger
-    Button, `ConfirmGuardDialog`, navigation guard (technical proof passed in Chromium), dev-only
-    `/dev/guard` route (removed before closure).
+  - **Increment 1 (guard slice): COMPLETE** (PR #38, 2026-11-18). It contains:
+    - the danger Button (D-U2) and `ConfirmGuardDialog` (D-U1);
+    - the navigation guard (D-U7): Navigation API in Chromium, sentinel fallback elsewhere,
+      navigation-specific authorization after Leave, and a lint-enforced guarded router;
+    - guard copy in Arabic (Figma) and English (D-U10, approved 2026-11-18).
+
+    The dev-only `/dev/guard` route is removed before the Phase 06 closure. Browser limitations
+    (R-3) and the fallback limitations are recorded in the plan §7.2.
+
   - **Mariam `EmptyState`: ACCEPTED / INTEGRATED.** Delivered on 2026-11-18 and integrated on
     2026-11-18 through PR #39 (rebase merge): her delivery commit `b7cf1d9` (two files, verbatim,
     no source changes), then the gallery, E2E and records in `abe2952`. `pnpm check` 1049/1049;
