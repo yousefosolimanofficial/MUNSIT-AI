@@ -766,3 +766,86 @@ approved curve; none under reduced motion. Defined once in `src/design-system/mo
 
 - **Box:** `min-h-[52px]` (the 36 action makes the Error toast 56), width `min(420, viewport − 40)`.
 - **Close:** a 32 close button, the Dialog close-button look; not designed (plan §6, D-U6 notes).
+
+## 16. Landing (Phase 07) — Figma audit (read-only, 2026-11-19)
+
+Frames: Desktop `5:3` (1440 × 7669), Tablet `200:527` (768 × 9332), Mobile `200:683`
+(390 × 10992). All three use page fill Void Black `#040506`. Figma is not modified. The plan is
+[phases/phase-07-plan.md](phases/phase-07-plan.md); the copy is
+[phases/phase-07-landing-copy.md](phases/phase-07-landing-copy.md); the Hero video brief is
+[phases/phase-07-hero-video-brief.md](phases/phase-07-hero-video-brief.md).
+
+### 16.1 Hero
+
+| Item            | Desktop `28:3`                                                                                                                                       | Tablet `200:559`                                       | Mobile `200:713`                                        |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------- |
+| Frame           | 1440 × 900 at y 0, under the floating navigation                                                                                                     | 768 × 640 at y 110 (nav 78, gap 32)                    | 390 × 538 at y 94 (nav 70, gap 24)                      |
+| Video container | Full bleed (stretch), radius 0, clips                                                                                                                | As Desktop                                             | As Desktop, over a Void Black base fill                 |
+| Placeholder     | 666 × 412 still, `FIT`                                                                                                                               | Same still, `FILL`                                     | Same still, `FILL`                                      |
+| Treatment       | Image filters: exposure −0.27, saturation 0.79, highlights −1.0, shadows −0.12. No overlay layer                                                     | Same                                                   | Same                                                    |
+| Layout          | Vertical; padding 344 / 340 / 126 / 340; gap 132; centred                                                                                            | Padding 200 / 32 / 100 / 32; gap 56                    | Padding 150 / 20 / 64 / 20; gap 40                      |
+| Heading block   | 760 wide; gap 36                                                                                                                                     | 704 wide; gap 36                                       | 350 wide; gap 36                                        |
+| Heading         | `Heading/Display`: Cairo SemiBold 56 / 120%, white, centred (text box 651)                                                                           | Cairo SemiBold 44 / 120% (**no text style**)           | `Landing/Heading/Section Tablet`: 32 / 120%             |
+| Description     | `Heading/Medium`: SemiBold 24 / 140%, white, opacity 0.9                                                                                             | `Landing/Label/Title`: SemiBold 20 / 140%, opacity 0.9 | `Landing/Label/Strong`: SemiBold 16 / 140%, opacity 0.9 |
+| Actions         | Row, gap 37 (padding 0 / 48), centred; 450 wide                                                                                                      | As Desktop                                             | Column, gap 12, full width 350; **primary first**       |
+| Primary button  | "ابدأ مجانًا": 131 × 46; Mist `#e6e6e6` fill; Iron `#454647` 1px border; radius 16; padding 9 / 21; `UI/Button` Medium 20 / 140%; Ink `#07080a` label | As Desktop                                             | 350 × 46                                                |
+| Outline button  | "اكتشف كيف يعمل": 186 × 48; no fill; Mist 1px border; radius 16; padding 9 / 13; white `UI/Button` label                                             | As Desktop                                             | 350 × 48                                                |
+| Order (RTL)     | Primary at the inline start (right), outline at the end                                                                                              | As Desktop                                             | Primary above outline                                   |
+
+### 16.2 Navigation
+
+| Item    | Desktop `27:2` (component)                                                                                                                                                                            | Tablet `200:543` / Mobile `200:697`                                                                                                                               |
+| ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Box     | 1361 × 67 at x 39, y 18, **floating over the Hero**. Radius 16; fill Ink 20%; background blur 48 plus a Figma "glass" effect; 1px border `#363739` (**not a token**)                                  | 768 × 78 / 390 × 70 at y 0; no fill or effects                                                                                                                    |
+| Content | Logo (188 × 49); links "الرئيسية", "المميزات", "كيف يعمل ؟", "الأسئلة الشائعة" (`UI/Navigation`, Cairo "ExtraBold" 20 / 140%: weight **NOT VERIFIED**, §0.4.3); "EN" and "تسجيل الدخول" (`UI/Button`) | Logo 150 × 39; menu button 46 × 42 (three 20 × 2 bars); "EN" 38 × 45; login 145 × 46. The four links are in the frame, but the menu's open state is **not drawn** |
+
+### 16.3 Section geometry (top-level, in page order)
+
+| Section          | Desktop (x, y, w × h)                                                                          | Tablet (y, h) | Mobile (y, h) |
+| ---------------- | ---------------------------------------------------------------------------------------------- | ------------- | ------------- |
+| Product Showcase | `36:169` 54, 935, 1331 × 942                                                                   | 782, 786      | 656, 673      |
+| Features         | `114:6` 120, 1967, 1200 × 1000                                                                 | 1600, 1172    | 1353, 2067    |
+| How It Works     | `121:40` 120, 2967, 1200 × 820                                                                 | 2804, 892     | 3444, 1488    |
+| Use Cases        | `123:64` 120, 3787, 1200 × 1410                                                                | 3728, 1859    | 4956, 1771    |
+| FAQ              | `124:94` 124, 5215, 1200 × 989                                                                 | 5619, 870     | 6751, 1080    |
+| Pricing          | `131:177`: the component set placed at 120, 6246, 1200 × 602 (**no section intro on Desktop**) | 6521, 1985    | 7855, 2019    |
+| Final CTA        | Panel `126:104` 1200 × 366 (inside "Background Effects")                                       | 8538, 398     | 9898, 433     |
+| Footer           | `129:103` 120, 7297, 1200 × 372                                                                | 8968, 364     | 10355, 637    |
+
+**Content width:** 1200 on Desktop (the Showcase app window is 1171).
+
+**Repeated cards:**
+
+| Card                 | Desktop                                                        | Tablet (visual width) | Mobile (visual width) |
+| -------------------- | -------------------------------------------------------------- | --------------------- | --------------------- |
+| Feature Card `114:2` | 384 × 300, grid 3 × 2, gap 24; visual 336 × 144                | 294                   | 302                   |
+| Step Card `121:32`   | 282 × 440, 4 in a row, gap 24; visual 240 × 136                | 300                   | 308                   |
+| Use Case rows        | 1200 × 340; image 500 × 276 alternating with content 594 × 155 | Image 654 × 280       | Image 316 × 200       |
+
+Tablet and Mobile column counts are read from the frames at implementation.
+
+**FAQ item:**
+
+- Collapsed and Hover are 900 × 72, radius 12. Collapsed: Ink fill, Slate `#2f3031` border. Hover:
+  Obsidian fill, Iron border.
+- **Expanded** is a separate component outside the set (FAQ 01, 900 × 152).
+
+**Final CTA buttons:** radius **8** (the Hero buttons use 16).
+
+- "اكتشف المميزات": 170 × 48, Slate border.
+- "ابدأ مجانًا": 116 × 48, Mist fill.
+
+### 16.4 Images (embedded in Figma; exported at implementation)
+
+| Asset                                  | Source size | Used at (Desktop / Tablet / Mobile)      | Scale      |
+| -------------------------------------- | ----------- | ---------------------------------------- | ---------- |
+| Brand logo (`Munsit_Logo_Horizontal`)  | 908 × 236   | Nav 188 × 49 / 150 × 39; footer 170 × 56 | FIT        |
+| Hero video placeholder                 | 666 × 412   | Full Hero                                | FIT / FILL |
+| `App / Main Content` (Showcase screen) | 1376 × 768  | 918 × 470 (crop) / 702 × 360 / 348 × 250 | FILL       |
+| Feature visuals × 6                    | 1376 × 768  | 336 × 144 / 294 × 144 / 302 × 144        | FILL       |
+| `HOW_IT_WORKS_01…04`                   | 1376 × 768  | 240 × 136 / 300 × 136 / 308 × 136        | FILL       |
+| `USE_CASE_01…03`                       | 1376 × 768  | 500 × 276 / 654 × 280 / 316 × 200        | FILL       |
+
+**Colours outside the 19 tokens:** the navigation border `#363739`, and the Cyan `#06B6D4` named
+in the Hero video direction. All other colours read map to tokens: Void Black, Ink, Obsidian,
+Slate, Iron, Mist, Electric Sky, Cobalt Edge.
