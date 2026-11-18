@@ -26,7 +26,7 @@ Single resume point. A new session starts by reading this file, the latest phase
     Module guide: [shared-patterns.md](shared-patterns.md).
 
   - **Increment 4 (toast): in review** on `feat/phase-06-toast-system`: `ToastProvider` and
-    `useToast` (D-U6). The close-button copy is PROPOSED, pending approval.
+    `useToast` (D-U6). The close-button copy is approved (2026-11-18).
   - **Mariam `EmptyState`: ACCEPTED / INTEGRATED.** Delivered on 2026-11-18 and integrated on
     2026-11-18 through PR #39 (rebase merge): her delivery commit `b7cf1d9` (two files, verbatim,
     no source changes), then the gallery, E2E and records in `abe2952`. `pnpm check` 1049/1049;
