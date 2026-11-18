@@ -1,7 +1,11 @@
 # Phase 06 — Shared states & overlay/guard infrastructure — Plan
 
-- **Status:** **APPROVED with conditions (user, 2026-11-18).** Every decision has a disposition
-  (§6). The navigation guard is conditionally approved behind a technical proof (§7.1).
+- **Phase status:** **CLOSED — Development Complete, Production QA Outstanding** (closure
+  approved by the product owner on 2026-11-19; final code `main` `6cda86c`, PR #47). Not
+  production-ready. Report: [phase-06-closure-report.md](phase-06-closure-report.md).
+- **Plan status:** **APPROVED with conditions (user, 2026-11-18).** Every decision has a
+  disposition (§6). The navigation guard is conditionally approved behind a technical proof
+  (§7.1).
 - **Baseline:** `main` at `300c828`. Phase 05 is CLOSED (2026-11-17), CI is green, and the tree is
   clean. Risks R-2 and R-3 stay OPEN.
 - **Sources:**
