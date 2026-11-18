@@ -1,10 +1,11 @@
 # Phase 06 — `EmptyState` assignment (starter package)
 
-**Status:** DELIVERED / UNDER REVIEW. The starter `munsit-starter-70c821d.zip` reached Mariam (no
-separate send date was recorded), and her delivery `munsit-delivery-empty-state-20261118-v1.zip`
-was received on 2026-11-18. It is integrated for review on `delivery/phase-06-empty-state-v1`, and
-becomes ACCEPTED / INTEGRATED once that PR is merged with CI green. The assignment was authorized
-by the product owner on 2026-11-18 (Phase 06 plan D-U4, §10).
+**Status:** ACCEPTED / INTEGRATED (2026-11-18). Mariam's delivery
+`munsit-delivery-empty-state-20261118-v1.zip` (delivered 2026-11-18) was approved by the product
+owner and integrated without source changes through PR #39 (rebase merge). Her delivery commit is
+`b7cf1d9`, and the gallery, E2E and records are in `abe2952`; CI is green on `main`. The starter's
+send date was not recorded separately; her delivery against baseline `70c821d` evidences the handoff.
+The assignment was authorized by the product owner on 2026-11-18 (Phase 06 plan D-U4, §10).
 
 ---
 
