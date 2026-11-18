@@ -8,6 +8,12 @@ Single resume point. A new session starts by reading this file, the latest phase
   started**: [phases/phase-06-plan.md](phases/phase-06-plan.md), with the Figma values in
   [design-values.md §15](design-values.md). Decisions D-U1 to D-U10 have dispositions (2026-11-18); the guard is conditional on a technical proof. Phase 07 is NOT
   STARTED. R-2 and R-3 stay OPEN.
+  - **Mariam `EmptyState`: DELIVERED / UNDER REVIEW.** Delivered on 2026-11-18
+    (`munsit-delivery-empty-state-20261118-v1.zip`, baseline `70c821d`). It is integrated for
+    review on `delivery/phase-06-empty-state-v1`: her two files verbatim in their own commit,
+    then the gallery and E2E in a separate commit. `pnpm check` 1049/1049; gallery E2E 16/16.
+    **ACCEPTED** only after the integration PR is merged with CI green. Assignment:
+    [phases/phase-06-empty-state-starter.md](phases/phase-06-empty-state-starter.md).
 - **Phase 04:** Routing & navigation registry — **Done / CLOSED** (2026-11-16).
   Implementation PR #27 squash-merged into `main` as `9888e08`; post-merge CI green. Report:
   [phases/phase-04-closure-report.md](phases/phase-04-closure-report.md) (CLOSED). Plan:
