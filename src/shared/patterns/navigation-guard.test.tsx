@@ -326,10 +326,11 @@ describe("NavigationGuardProvider — guard ON", () => {
     const added = add.mock.calls.filter(([t]) =>
       ["click", "popstate", "beforeunload"].includes(t as string),
     );
-    expect(added.map(([t, , o]) => [t, o === true])).toEqual([
-      ["click", true],
-      ["popstate", false],
-      ["beforeunload", false],
+    // jsdom has no Navigation API, so this is the fallback path (popstate + sentinel).
+    expect(added.map(([t, , o]) => `${String(t)}:${o === true}`).sort()).toEqual([
+      "beforeunload:false",
+      "click:true",
+      "popstate:false",
     ]);
     fireEvent.click(screen.getByTestId("toggle"));
     await flush();
@@ -353,6 +354,101 @@ describe("NavigationGuardProvider — guard ON", () => {
     await flush();
     click(screen.getByTestId("link"));
     expect(screen.getByRole("alertdialog", { name: copyFor("en").recording.title })).toBeTruthy();
+  });
+});
+
+/* ------------------------------------------------------------- Navigation API path */
+
+/** Minimal Navigation API stand-in: an EventTarget with `traverseTo` (Chromium has the real one). */
+class FakeNavigation extends EventTarget {
+  traverseTo = vi.fn();
+}
+
+function traverseEvent(key: string, cancelable = true) {
+  const event = new Event("navigate", { cancelable }) as Event & {
+    navigationType: string;
+    destination: { key: string };
+  };
+  Object.assign(event, { navigationType: "traverse", destination: { key } });
+  return event;
+}
+
+describe("NavigationGuardProvider — Navigation API path", () => {
+  let fake: FakeNavigation;
+  beforeEach(() => {
+    fake = new FakeNavigation();
+    Object.defineProperty(window, "navigation", { value: fake, configurable: true });
+  });
+  afterEach(() => {
+    Reflect.deleteProperty(window, "navigation");
+  });
+
+  it("history is never modified; a cancelable traversal is cancelled and asked; Leave goes to the chosen entry", async () => {
+    const pushState = vi.spyOn(window.history, "pushState");
+    renderGuard(<Harness initial />);
+    await flush();
+    expect(pushState).not.toHaveBeenCalled();
+    const event = traverseEvent("entry-2");
+    act(() => {
+      fake.dispatchEvent(event);
+    });
+    expect(event.defaultPrevented).toBe(true);
+    const copy = copyFor("ar").unsaved;
+    expect(screen.getByRole("alertdialog", { name: copy.title })).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: copy.leave }));
+    await flush();
+    expect(fake.traverseTo).toHaveBeenCalledWith("entry-2");
+    expect(pushState).not.toHaveBeenCalled();
+  });
+
+  it("a non-cancelable (cross-document) traversal is left to beforeunload", async () => {
+    renderGuard(<Harness initial />);
+    await flush();
+    const event = traverseEvent("other-document", false);
+    act(() => {
+      fake.dispatchEvent(event);
+    });
+    expect(event.defaultPrevented).toBe(false);
+    expect(document.querySelector("dialog[open]")).toBeNull();
+  });
+
+  it("after an approved Leave the guard stands down at once (no swallowed follow-up, no prompt)", async () => {
+    renderGuard(<Harness initial />);
+    await flush();
+    act(() => {
+      fake.dispatchEvent(traverseEvent("a"));
+    });
+    fireEvent.click(screen.getByRole("button", { name: copyFor("ar").unsaved.leave }));
+    await flush();
+    const followUp = traverseEvent("b");
+    act(() => {
+      fake.dispatchEvent(followUp);
+    });
+    expect(followUp.defaultPrevented).toBe(false);
+    const unload = new Event("beforeunload", { cancelable: true });
+    window.dispatchEvent(unload);
+    expect(unload.defaultPrevented).toBe(false);
+    // Protection resumes if the page is still there after the stand-down window.
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(2100);
+    });
+    const later = traverseEvent("c");
+    act(() => {
+      fake.dispatchEvent(later);
+    });
+    expect(later.defaultPrevented).toBe(true);
+  });
+
+  it("the navigate listener is removed when the guard turns off", async () => {
+    const remove = vi.spyOn(fake, "removeEventListener");
+    renderGuard(<Harness initial />);
+    await flush();
+    fireEvent.click(screen.getByTestId("toggle"));
+    await flush();
+    expect(remove).toHaveBeenCalledWith("navigate", expect.any(Function));
+    const event = traverseEvent("x");
+    fake.dispatchEvent(event);
+    expect(event.defaultPrevented).toBe(false);
   });
 });
 

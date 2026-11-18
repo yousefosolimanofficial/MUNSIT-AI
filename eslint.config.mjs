@@ -7,6 +7,39 @@ import nextTs from "eslint-config-next/typescript";
 export default defineConfig([
   ...nextVitals,
   ...nextTs,
+  // Phase 06 navigation guard (D-U7): code-driven navigation must go through
+  // useGuardedRouter, so an active guard can ask first. Only the guard itself may use the raw
+  // routers. Tests mock the modules instead of importing them.
+  {
+    files: ["src/**/*.{ts,tsx}"],
+    ignores: [
+      "src/shared/hooks/useNavigationGuard.ts",
+      "src/shared/patterns/NavigationGuardProvider.tsx",
+      "src/**/*.test.{ts,tsx}",
+    ],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            {
+              name: "@/i18n/navigation",
+              importNames: ["useRouter"],
+              message:
+                "Use useGuardedRouter from @/shared/hooks/useNavigationGuard (Phase 06 navigation guard).",
+            },
+            {
+              name: "next/navigation",
+              importNames: ["useRouter"],
+              message:
+                "Use useGuardedRouter from @/shared/hooks/useNavigationGuard (Phase 06 navigation guard).",
+            },
+            { name: "next/router", message: "The Pages Router is not used (App Router only)." },
+          ],
+        },
+      ],
+    },
+  },
   globalIgnores([
     ".next/**",
     "out/**",
