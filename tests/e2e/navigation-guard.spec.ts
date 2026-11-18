@@ -308,36 +308,117 @@ for (const { locale, dir, prefix, nav, shell, guard } of LOCALES) {
       expect(await page.evaluate(() => document.documentElement.style.overflow)).toBe("");
     });
 
-    test("browser Back (user-initiated): Stay keeps page, state and history; repeated Back asks again; Leave goes back", async ({
+    /*
+     * Browser Back contract (G-1, RISK ACCEPTED — BROWSER LIMITATION, 2026-11-18; see
+     * docs/phases/phase-06-g1-findings.md). The HTML Standard lets a page cancel a Back started
+     * from the browser UI only while it holds history-action user activation, and each
+     * cancellation consumes it; Esc never grants it. So:
+     * - guaranteed: a browser Back after a user interaction is asked; Stay (click or Enter) or
+     *   any key other than Esc, or a click, makes the next Back asked again;
+     * - browser-controlled: a second Back with no interaction in between (Esc, then Back; or
+     *   Back twice) is not cancelable and leaves. The last test reproduces it on purpose.
+     * Test contract change: the former test expected repeated Backs dismissed with Esc to be
+     * asked every time, and passed only when Playwright page calls (which run with a user
+     * gesture) happened to grant activation. Its script-driven `history.back()` loop is not a
+     * user path (app code navigates through useGuardedRouter) and is covered by the rapid-Back
+     * tests below.
+     */
+    test("browser Back (user-initiated): Stay keeps page, state and history; after Stay the next Back is asked again; Leave goes back", async ({
       page,
     }) => {
       await harnessAfterDashboard(page, prefix);
-      await guardOn(page);
+      await guardOn(page); // a click: user activation
       const length = await page.evaluate(() => history.length);
 
       // User-initiated Back (as the browser button): cancelled, so it never completes.
       await page.goBack({ timeout: 1500 }).catch(() => {});
       await expect(guardDialog(page)).toBeVisible();
       expect(path(page)).toBe(harness);
-      await stay(page).click();
+      await stay(page).click(); // a click: new user activation
       await expect(guardDialog(page)).toHaveCount(0);
       expect(path(page)).toBe(harness);
       await expect(status(page)).toHaveAttribute("data-guard", "on"); // not remounted
       expect(await page.evaluate(() => history.length)).toBe(length);
 
-      for (let i = 0; i < 3; i += 1) {
-        await page.evaluate(() => history.back());
-        await expect(guardDialog(page)).toBeVisible();
-        expect(path(page)).toBe(harness);
-        await page.keyboard.press("Escape");
-        await expect(guardDialog(page)).toHaveCount(0);
-      }
+      // Enter on Stay is a keyboard activation too: the next Back is asked again.
+      await page.goBack({ timeout: 1500 }).catch(() => {});
+      await expect(guardDialog(page)).toBeVisible();
+      await expect(stay(page)).toBeFocused();
+      await page.keyboard.press("Enter");
+      await expect(guardDialog(page)).toHaveCount(0);
+      expect(path(page)).toBe(harness);
 
-      await page.evaluate(() => history.back());
+      await page.goBack({ timeout: 1500 }).catch(() => {});
+      await expect(guardDialog(page)).toBeVisible();
       await leave(page).click();
       await expect(page).toHaveURL((url) => url.pathname === `${prefix}/dashboard`);
       await expect(guardDialog(page)).toHaveCount(0);
     });
+
+    test("browser Back, then Esc: Esc is Stay (focus restored); after a later key press Back is asked again", async ({
+      page,
+    }) => {
+      await harnessAfterDashboard(page, prefix);
+      await guardOn(page);
+      await page.getByTestId("guard-programmatic").focus();
+
+      await page.goBack({ timeout: 1500 }).catch(() => {});
+      await expect(guardDialog(page)).toBeVisible();
+      await page.keyboard.press("Escape");
+      await expect(guardDialog(page)).toHaveCount(0);
+      expect(path(page)).toBe(harness);
+      await expect(status(page)).toHaveAttribute("data-guard", "on");
+      await expect(page.getByTestId("guard-programmatic")).toBeFocused();
+
+      // Tab is an activation-triggering key (Esc is not): the next Back is cancelable again.
+      await page.keyboard.press("Tab");
+      await page.goBack({ timeout: 1500 }).catch(() => {});
+      await expect(guardDialog(page)).toBeVisible();
+      expect(path(page)).toBe(harness);
+      await page.keyboard.press("Escape");
+      await expect(guardDialog(page)).toHaveCount(0);
+      expect(path(page)).toBe(harness);
+    });
+
+    for (const [name, between] of [
+      ["Esc, then Back", "escape"],
+      ["Back twice, no interaction", "none"],
+    ] as const) {
+      test(`G-1 reproduction (RISK ACCEPTED — browser limitation): ${name} leaves; the browser marks it non-cancelable`, async ({
+        page,
+      }) => {
+        await harnessAfterDashboard(page, prefix);
+        await guardOn(page);
+        await page.evaluate(() => {
+          const log: string[] = [];
+          (window as unknown as { g1Log: string[] }).g1Log = log;
+          window.navigation?.addEventListener(
+            "navigate",
+            (event) => log.push(`${event.navigationType}:${event.cancelable}`),
+            { capture: true },
+          );
+        });
+
+        // From here until the assertions, nothing may touch the page: Playwright page calls and
+        // locator polling run with a user gesture and would grant the activation G-1 lacks.
+        await page.goBack({ timeout: 1500 }).catch(() => {}); // cancelled; activation consumed
+        await page.waitForTimeout(500); // dialog open; no page call (see above)
+        if (between === "escape") {
+          await page.keyboard.press("Escape"); // closes the dialog; grants no activation
+          await page.waitForTimeout(500);
+        }
+        await page.goBack({ timeout: 1500 }).catch(() => {});
+
+        await expect(page).toHaveURL((url) => url.pathname === `${prefix}/dashboard`);
+        const log = await page.evaluate(() => (window as unknown as { g1Log?: string[] }).g1Log);
+        // Same-document traversal: the log survives (the router's own follow-up `replace` is not
+        // a traversal). First Back cancelable, second not.
+        expect(log?.filter((entry) => entry.startsWith("traverse:"))).toEqual([
+          "traverse:true",
+          "traverse:false",
+        ]);
+      });
+    }
 
     test("rapid Back: two steps in the same task, and 120 ms apart, never leave or stack dialogs", async ({
       page,
