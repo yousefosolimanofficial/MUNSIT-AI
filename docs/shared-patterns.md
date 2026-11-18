@@ -121,3 +121,40 @@ const router = useGuardedRouter(); // the only router modules may use (ESLint en
 `variant="default"` (the cross-module empty state) or `"compact"` (the Dashboard first-time
 card). Pass the icon, title, description, up to two actions and an optional footnote. Contract:
 [phases/phase-06-empty-state-starter.md](phases/phase-06-empty-state-starter.md).
+
+## Toasts: `useToast`
+
+```tsx
+"use client";
+import { useToast } from "@/shared/patterns/Toast";
+
+const toast = useToast(); // ToastProvider is mounted once in [locale]/layout
+toast.show({ kind: "success", message: t("saved") });
+toast.show({
+  kind: "error",
+  message: t("saveFailed"),
+  action: { label: t("retry"), onAction: save },
+});
+```
+
+| Kind              | Behaviour (D-U6)                                          | Announced as        |
+| ----------------- | --------------------------------------------------------- | ------------------- |
+| `success`, `info` | Leave after 4 s                                           | polite (`status`)   |
+| `error`           | Stays until dismissed; may carry one action (Figma retry) | assertive (`alert`) |
+
+**Timing and stacking:**
+
+- The timer pauses while a toast is hovered or focused, or the tab is hidden, and resumes with
+  the time left.
+- Up to 3 are shown at once; a 4th removes the oldest success or info first.
+
+**Focus and placement:**
+
+- Focus never moves to a toast. Each toast has a close button, and when a focused toast closes,
+  focus returns to where it was.
+- The stack sits bottom-centre, 118 above the bottom on mobile (clear of the bottom bar) and 78
+  elsewhere, plus the safe area. It never blocks controls beside it.
+
+**Not for:** form validation (use the field error), page or section failures (use `ErrorCard` /
+`SectionBoundary`), or anything the user must decide (use `Dialog`). There is no backend
+connection: modules call it after their own action succeeds or fails.

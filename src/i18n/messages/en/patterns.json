@@ -12,5 +12,8 @@
       "stay": "Stay on page",
       "leave": "Leave anyway"
     }
+  },
+  "toast": {
+    "close": "Close"
   }
 }
