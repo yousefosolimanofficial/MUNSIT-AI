@@ -3,8 +3,26 @@
 Single resume point. A new session starts by reading this file, the latest phase report, and
 [docs/references/MUNSIT_AI_Development_Roadmap_v1.0.md](references/MUNSIT_AI_Development_Roadmap_v1.0.md).
 
-- **Next phase:** 07 — Landing Page — **NOT STARTED.** The execution brief awaits the owner's
-  review. No Phase 07 code is written until it is reviewed and the phase is authorized.
+- **Current phase:** 07 — Landing Page — **IN PROGRESS.**
+  - **Increment 0 (planning): COMPLETE** (PR #49). Owner decisions P07-D1 to P07-D13 are
+    recorded (2026-11-19).
+    - Plan: [phases/phase-07-plan.md](phases/phase-07-plan.md).
+    - Figma audit: [design-values.md §16](design-values.md).
+    - Copy approval package: [phases/phase-07-landing-copy.md](phases/phase-07-landing-copy.md).
+    - Hero video brief: [phases/phase-07-hero-video-brief.md](phases/phase-07-hero-video-brief.md).
+  - **Approved:** D-P07-HERO-01, a product-focused Hero video.
+  - **Pending:**
+    - English copy (P07-D1, PENDING FINAL APPROVAL);
+    - the Hero video asset;
+    - approved commercial pricing content (P07-D4: placeholder pricing is development only and
+      never shown to real visitors);
+    - real legal pages (P07-D2).
+
+    These are all public-launch blockers.
+
+  - **Increment 1 (Landing foundation): NOT STARTED.** It begins only on the owner's
+    authorization. The Mariam assignment (Features and How It Works) is approved, but the starter
+    is not sent until the Increment 1 baseline and the component contracts are final.
 - **Phase 06:** Shared states & overlay/guard infrastructure — **CLOSED — Development Complete,
   Production QA Outstanding.**
   - **Closure:** approved by the product owner on 2026-11-19; final code `main` `6cda86c` (PR #47);
@@ -181,7 +199,7 @@ works offline and delivers packages per [TEAM_COLLABORATION.md](TEAM_COLLABORATI
 | 04  | Routing & navigation registry       | Done                                                |
 | 05  | Shared App Shell                    | Done                                                |
 | 06  | Shared states & overlay/guard infra | Done (CLOSED 2026-11-19; production QA outstanding) |
-| 07  | Landing Page                        | Not started (next; brief in review)                 |
+| 07  | Landing Page                        | In progress (Increment 0 complete)                  |
 | 08  | Authentication UI                   | Not started                                         |
 | 09  | Dashboard                           | Not started                                         |
 | 10  | Lecture Management                  | Not started                                         |
@@ -211,16 +229,16 @@ implemented. Each is built from an approved contract in `src/shared/ui`, with un
 accessibility and browser validation, **before the first consuming feature is considered
 complete**. No local substitutes.
 
-| #   | Component              | Trigger and notes                                                                                                                  | Status      |
-| --- | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| O-1 | Textarea               | First consuming feature                                                                                                            | Outstanding |
-| O-2 | Select                 | First consuming feature; Menu does not replace it                                                                                  | Outstanding |
-| O-3 | Checkbox               | First consuming feature                                                                                                            | Outstanding |
-| O-4 | Radio                  | First consuming feature; a Tabs filter group does not replace native Radio controls                                                | Outstanding |
-| O-5 | Switch                 | First consuming feature                                                                                                            | Outstanding |
-| O-6 | Tooltip                | First consuming feature                                                                                                            | Outstanding |
-| O-7 | Generic Badge          | First consuming feature; StatusBadge does not replace it                                                                           | Outstanding |
-| O-8 | Navigation Icon Button | Figma verification and implementation before its first consuming screen (may come before Phase 05, e.g. the Landing mobile navbar) | Outstanding |
+| #   | Component              | Trigger and notes                                                                     | Status      |
+| --- | ---------------------- | ------------------------------------------------------------------------------------- | ----------- |
+| O-1 | Textarea               | First consuming feature                                                               | Outstanding |
+| O-2 | Select                 | First consuming feature; Menu does not replace it                                     | Outstanding |
+| O-3 | Checkbox               | First consuming feature                                                               | Outstanding |
+| O-4 | Radio                  | First consuming feature; a Tabs filter group does not replace native Radio controls   | Outstanding |
+| O-5 | Switch                 | First consuming feature                                                               | Outstanding |
+| O-6 | Tooltip                | First consuming feature                                                               | Outstanding |
+| O-7 | Generic Badge          | First consuming feature; StatusBadge does not replace it                              | Outstanding |
+| O-8 | Navigation Icon Button | Delivered in Phase 05 (PR #30, `0404c6e`); this row was stale until Phase 07 planning | Delivered   |
 
 Each phase checks at planning time whether its screens consume one of these, and if so adds it to
 that phase's scope.
@@ -267,6 +285,13 @@ numerals and English runs inside Arabic text (direction isolation). See R-1, I-1
 | 7   | Final audit + phase report; G-1, G-2 implemented             | Done — approved (2026-11-13)   |
 
 ## Next action
+
+**2026-11-19:** Phase 07 Increment 0 (planning) is COMPLETE through PR #49.
+
+- **Recorded:** owner decisions P07-D1 to P07-D13; the final section order (FAQ before Pricing).
+- **Pending:** English copy, the Hero video, pricing content and legal pages.
+- **Next:** Increment 1 (Landing foundation), only on the owner's authorization. Production QA
+  obligations (R-2, R-3, G-1 and W-1 conditions) are unchanged.
 
 **2026-11-19:** Phase 06 is CLOSED (Development Complete — Production QA Outstanding). The product
 owner approved the closure; the closure records went through a documentation-only PR. Final code:
