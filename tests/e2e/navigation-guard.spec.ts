@@ -33,7 +33,7 @@ const guardDialog = (page: Page) => page.getByRole("alertdialog");
 const path = (page: Page) => new URL(page.url()).pathname;
 
 async function openHarness(page: Page, prefix: string) {
-  await page.goto(`${prefix}/dev/guard`);
+  await page.goto(`${prefix}/dev/fixtures/navigation-guard`);
   await page.evaluate(() => document.fonts.ready);
   await waitForHydration(page, page.getByTestId("guard-toggle"));
 }
@@ -78,7 +78,7 @@ async function harnessAfterDashboard(page: Page, prefix: string) {
   await page.evaluate(() => document.fonts.ready);
   // The router must be initialized (hydrated) before a client navigation.
   await waitForHydration(page, page.locator('[data-shell="sidebar"] a').first());
-  await clientNavigate(page, `${prefix}/dev/guard`);
+  await clientNavigate(page, `${prefix}/dev/fixtures/navigation-guard`);
 }
 
 async function clientNavigate(page: Page, href: string) {
@@ -104,7 +104,7 @@ const NO_NAVIGATION_API = () => {
 };
 
 for (const { locale, dir, prefix, nav, shell, guard } of LOCALES) {
-  const harness = `${prefix}/dev/guard`;
+  const harness = `${prefix}/dev/fixtures/navigation-guard`;
   const stay = (page: Page) => guardDialog(page).getByRole("button", { name: guard.unsaved.stay });
   const leave = (page: Page) =>
     guardDialog(page).getByRole("button", { name: guard.unsaved.leave });
@@ -248,7 +248,7 @@ for (const { locale, dir, prefix, nav, shell, guard } of LOCALES) {
       await leave(page).click();
       await expect(page.locator("html")).toHaveAttribute("lang", other);
       await expect(page).toHaveURL(
-        (url) => url.pathname === `${other === "en" ? "/en" : ""}/dev/guard`,
+        (url) => url.pathname === `${other === "en" ? "/en" : ""}/dev/fixtures/navigation-guard`,
       );
     });
 
@@ -482,7 +482,7 @@ for (const { locale, dir, prefix, nav, shell, guard } of LOCALES) {
         .click();
       await expect(page).toHaveURL((url) => url.pathname === `${prefix}/lectures`);
       await waitForHydration(page, page.locator('[data-shell="sidebar"] a').first());
-      await clientNavigate(page, `${prefix}/dev/guard`);
+      await clientNavigate(page, `${prefix}/dev/fixtures/navigation-guard`);
       await guardOn(page);
       await page.evaluate(() => history.go(-2));
       await expect(guardDialog(page)).toBeVisible();

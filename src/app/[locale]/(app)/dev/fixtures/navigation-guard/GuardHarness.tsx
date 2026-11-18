@@ -8,7 +8,7 @@ import { useGuardedRouter, useNavigationGuard } from "@/shared/hooks/useNavigati
 import type { GuardKind } from "@/shared/patterns/ConfirmGuardDialog";
 import { Button } from "@/shared/ui/Button";
 
-/** Dev-only harness for the navigation guard (D-U9). No product copy, no debugging data. */
+/** Dev-only test fixture for the navigation guard. No product copy, no debugging data. */
 export interface GuardHarnessProps {
   labels: {
     guardOn: string;

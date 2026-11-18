@@ -49,7 +49,7 @@ const TABLE: readonly [path: string, routeKey: RouteKey, destination: Destinatio
   ["/dev/components", "dev.components", null],
   ["/dev/tokens", "dev.tokens", null],
   ["/dev/error-test", "dev.errorTest", null],
-  ["/dev/guard", "dev.guard", null],
+  ["/dev/fixtures/navigation-guard", "dev.navigationGuardFixture", null],
 ];
 
 describe("route table", () => {

@@ -20,7 +20,22 @@ export default defineConfig({
     baseURL,
     trace: "on-first-retry",
   },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  projects: [
+    { name: "chromium", use: { ...devices["Desktop Chrome"] } },
+    // R-3 (Phase 06 Increment 5): focused cross-browser coverage of the navigation guard. Only
+    // the `*.cross-browser.spec.ts` files run in these engines; the full suite stays Chromium.
+    // Playwright WebKit is not Safari on a real device (see the Phase 06 closure report).
+    {
+      name: "firefox",
+      use: { ...devices["Desktop Firefox"] },
+      testMatch: /\.cross-browser\.spec\.ts$/,
+    },
+    {
+      name: "webkit",
+      use: { ...devices["Desktop Safari"] },
+      testMatch: /\.cross-browser\.spec\.ts$/,
+    },
+  ],
   webServer: {
     command: `next dev --port ${PORT}`,
     url: baseURL,

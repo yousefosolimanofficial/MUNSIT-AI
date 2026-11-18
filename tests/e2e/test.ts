@@ -16,6 +16,11 @@ export const test = base.extend<{ consoleGuard: void }>({
       const hydration: string[] = [];
       const errors: string[] = [];
       page.on("console", (message) => {
+        // `console.timeStamp()` markers are performance-track labels, not messages: React DOM's
+        // development build emits `timeStamp("Hydrated")`, which Firefox reports (Chromium does
+        // not). Real hydration warnings arrive as `console.error` and are still caught.
+        // (Not in Playwright's type union, but returned at runtime.)
+        if ((message.type() as string) === "timeStamp") return;
         const text = message.text().slice(0, 300);
         if (/hydrat/i.test(text)) hydration.push(text);
         else if (message.type() === "error") errors.push(text);
