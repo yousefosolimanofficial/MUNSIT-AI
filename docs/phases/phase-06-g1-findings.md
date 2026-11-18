@@ -1,7 +1,9 @@
 # Phase 06 — G-1: navigation guard and browser Back (findings, 2026-11-18)
 
-**Status: OPEN. Waiting for a product-owner risk decision.** Nothing in the guard code or its
-tests is changed by this document.
+**Status: RISK ACCEPTED — BROWSER LIMITATION** (product owner, 2026-11-18, option A in §7).
+This is a **conditional** risk acceptance, **not** approval of unrecoverable user-data loss in
+production. The browser limitation is **not fixed**: §2–§5 stay as the record of what was found.
+The acceptance holds only together with the binding data-protection criteria in §6.
 
 ## 1. Symptom
 
@@ -51,9 +53,24 @@ and focus returns to the element that had it.
 
 **Test artefact:** Playwright `page.evaluate` and locator polling run with a user gesture, so
 they grant activation. A test that polls the page between the two Backs passes, and one that
-doesn't fails. This explains the intermittent result of the guard E2E "browser Back
-(user-initiated) … repeated Back asks again". **That test is left unchanged:** it detects real
-behaviour.
+doesn't fails. This explains the intermittent result of the former guard E2E "browser Back
+(user-initiated) … repeated Back asks again".
+
+**Test contract after the decision** (PR #45, `tests/e2e/navigation-guard.spec.ts`):
+
+- **Guaranteed behaviour:** Back is asked; Stay (click or Enter) keeps the page, and the next Back
+  is asked again; Esc is Stay with focus restored; after a later key press, Back is asked again.
+- **Browser-controlled (G-1), kept as an explicit reproduction:** "Esc, then Back" and "Back
+  twice" leave, and the second traversal is logged as non-cancelable. There are no page calls
+  between the Backs, so no artificial activation. If the browser behaviour changes, these tests
+  fail and G-1 is reviewed again.
+- **Dropped:** the script `history.back()` loop dismissed with Esc. It is not a user path; the
+  rapid-Back tests cover script traversals.
+
+**Separate defect found while correcting the tests (fixed in PR #45):** a Back right after Stay
+was sometimes cancelled **with no dialog**. A stale `close` event from the dialog's previous
+`close()` arrived after `showModal()` and closed the reopened dialog (`useModalDialog`). This was
+not G-1: it was an application bug, now fixed and unit-tested.
 
 ## 4. Mitigation options
 
@@ -78,26 +95,58 @@ Phase 06 therefore implements no fix.
 It is **not** guaranteed that unsaved data survives a second browser Back unless the user
 interacted with the page in between.
 
-## 6. Requirements for future modules (Recording, Notes)
+## 6. Binding data-protection acceptance criteria (Recording, Notes)
 
-1. **Do not rely on the navigation guard alone to protect data.** It is a courtesy prompt, not
-   storage.
-2. **Persist drafts continuously:**
-   - Notes: debounced autosave of the draft.
-   - Recording: chunked capture, so a stopped or interrupted session can be recovered.
-3. **Offer recovery on return:** when the module opens, show "restore draft" or "recover
-   recording", and let the user discard it explicitly.
-4. **Decide storage per module,** with the backend team: local (IndexedDB) or server. Include
-   retention and privacy rules, and never write tokens or PII to logs.
-5. **Keep the guard on while unsaved:** it still catches the common cases (§5).
+These are **acceptance criteria** for the Notes and Recording implementation phases, carried
+forward from this decision. They are not implemented in Phase 06, and no backend behaviour is
+assumed here: storage choices are made in those phases, with the backend team.
 
-## 7. Decision needed (product owner)
+**General (both modules):**
 
-Choose one:
+- G1. The navigation guard is a courtesy prompt, not storage. Data protection must not depend on
+  it.
+- G2. The guard stays on while there is unsaved or unpersisted work.
+- G3. Storage, retention and privacy rules are decided per module; tokens and PII are never
+  written to logs.
 
-- **A.** Accept G-1 as a documented browser limitation for Phase 06. The persistence
-  requirements in §6 become acceptance criteria for the Recording and Notes phases. The guard
-  E2E would then be corrected to assert the documented behaviour, as a separate, reviewed change.
-- **B.** Keep G-1 open and block the Phase 06 closure until another approach is approved.
+**Notes:**
 
-Until then, the guard E2E stays as it is and may fail intermittently.
+- N1. **Automatic draft persistence** while editing (no explicit save needed to keep a draft).
+- N2. **Recovery after accidental navigation:** returning to the note offers the persisted draft.
+- N3. **Recovery after a refresh.**
+- N4. **Recovery after a browser restart,** where the chosen storage strategy supports it; the
+  limits of the chosen storage are documented.
+- N5. **Visible save status** (for example saving, saved, not saved).
+- N6. **Failed saves are handled:** the failure is shown, the draft is kept, and the user can try
+  again.
+- N7. **No accidental overwrite of a newer draft:** a stale copy (another tab, or an older
+  recovery) never silently replaces newer content.
+
+**Recording:**
+
+- R1. **Incremental persistence:** audio is persisted in segments while recording, not only at
+  the end.
+- R2. **Recovery of persisted segments** after navigation or interruption.
+- R3. **Clear recording and save status.**
+- R4. **Explicit handling of storage and upload failures:** shown to the user, never silent.
+- R5. **A recovery workflow for interrupted recordings:** resume, keep or discard.
+- R6. **The real recovery guarantees are validated by tests** (navigation, refresh, interruption).
+- R7. **No promise beyond what was persisted:** audio that was never successfully persisted is
+  not claimed to be recoverable, and the copy says so.
+
+**Release gate:** Notes and Recording are **not production-ready** until their criteria above are
+implemented and tested. Each implementation phase plan must list them in its acceptance
+criteria.
+
+## 7. Decision (product owner, 2026-11-18)
+
+Options presented:
+
+- **A.** Accept G-1 as a documented browser limitation.
+- **B.** Keep G-1 open and block the Phase 06 closure.
+
+**Selected: A — RISK ACCEPTED — BROWSER LIMITATION.** The acceptance is conditional:
+
+- it does **not** approve unrecoverable user-data loss in production;
+- the §6 criteria are binding for Notes and Recording, and their release gate applies;
+- the guard E2E asserts the documented behaviour and keeps the G-1 reproduction (PR #45).
