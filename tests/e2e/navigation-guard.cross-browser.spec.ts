@@ -123,9 +123,15 @@ test.describe("navigation guard · cross-browser contract", () => {
      * W-1 (Phase 06 closure report, R-3): in Playwright's WebKit build, Leave after a cancelled
      * Back (`navigation.traverseTo`) triggers a native beforeunload prompt; accepting it reloads
      * the guarded page instead of going back, dismissing it aborts the traversal. Not encoded as
-     * expected behaviour: kept as a visible fixme until verified on real Safari.
+     * expected behaviour: kept as a visible fixme until verified on real Safari. Owner decision
+     * (2026-11-18): accepted as a development-stage limitation under R-3, NOT production Safari
+     * approval; never delete or silently skip this test, and fix W-1 before claiming Safari
+     * support if real Safari reproduces it.
      */
-    test.fixme(browserName === "webkit", "W-1: WebKit Leave after a cancelled Back (R-3)");
+    test.fixme(
+      browserName === "webkit",
+      "W-1 (accepted dev-stage limitation, R-3): WebKit Leave after a cancelled Back",
+    );
     await openFixture(page);
     await guardOn(page);
     await userBack(page);

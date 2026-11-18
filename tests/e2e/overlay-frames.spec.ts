@@ -18,7 +18,7 @@ import enShell from "../../src/i18n/messages/en/shell.json" with { type: "json" 
  *   20 px viewport margin (Phase 03 D-PM5).
  * - Mobile tops (Figma 80 for both panels, 8 below the 72 bar): the app keeps the D-PM5
  *   per-component offsets below the trigger — Notifications 16 below the 44 bell (74), User Menu
- *   9 below the 54 trigger (72). Reported in the Phase 06 closure report (O-1), not changed.
+ *   9 below the 54 trigger (72). OV-1: APPROVED as implemented (owner, 2026-11-18).
  * - User Menu Mobile edge 16 (Figma 14): D-PM5 menu viewport margin 16.
  * Content is out of scope: the frames show sample notifications, an account header and Logout,
  * which D-U8 / D-S5 / D-S6 exclude until real data exists, so heights are not compared.

@@ -149,22 +149,23 @@ The baseline before Increment 5 was `main` `9b5f082`: 1133 unit and 763 E2E test
 | Notifications Desktop edge | 70                     | 20            | Approved: no name/role (D-02), so the trigger is compact; inline-start aligned, 20 margin (D-PM5) |
 | Notifications Tablet edge  | 24                     | 20            | Approved: same clamp (D-PM5)                                                                      |
 | User Menu Mobile edge      | 14                     | 16            | Approved: menu viewport margin 16 (D-PM5)                                                         |
-| Mobile tops                | 80 (both panels)       | 74 / 72       | **O-1, reported:** D-PM5 offsets (16 / 9) below the trigger; Figma draws both 8 below the bar     |
+| Mobile tops                | 80 (both panels)       | 74 / 72       | **OV-1, APPROVED (owner, 2026-11-18):** keep the D-PM5 offsets (16 / 9) below the trigger         |
 
-**O-1** is a small, open discrepancy. It is **not changed**, because D-PM5 is an approved
-interaction. The owner can keep the D-PM5 offsets, or ask for a mobile-specific top of 80. Heights
-are not compared: the frames show content that D-U8 excludes.
+**OV-1** (labelled O-1 in the PR #47 review; renamed because O-1 already names an open decision
+in design-values) is **resolved**. The owner approved the existing mobile positions on 2026-11-18:
+Notifications top 74 and User Menu top 72, following D-PM5. They are not changed to Figma's 80.
+Heights are not compared: the frames show content that D-U8 excludes.
 
 ## 8. Known limitations (accepted or documented)
 
-| ID      | Limitation                                                                                                                                 | Status                                       |
-| ------- | ------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------- |
-| **G-1** | Chromium: a second browser Back with no user interaction in between leaves without confirmation (browser rule)                             | **RISK ACCEPTED — BROWSER LIMITATION** (§11) |
-| **W-1** | WebKit (Playwright build): Leave after a cancelled Back triggers a native prompt; accepting reloads the guarded page instead of going back | **OPEN, R-3**: verify on real Safari (§10)   |
-| U-R2    | `beforeunload`: unstyled native prompt, shown only after user interaction                                                                  | Documented (browser behaviour)               |
-| —       | Fallback without the Navigation API: Forward entries are discarded; multi-step jumps are not stopped                                       | Documented (plan §7.2)                       |
-| —       | Toasts render behind an open modal (`z-50`, not the top layer); no exit animation                                                          | Documented (D-U6 notes)                      |
-| O-1     | Mobile panel tops 74 / 72 vs Figma 80                                                                                                      | Reported, owner decision                     |
+| ID      | Limitation                                                                                                                                 | Status                                                                                                                 |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- |
+| **G-1** | Chromium: a second browser Back with no user interaction in between leaves without confirmation (browser rule)                             | **RISK ACCEPTED — BROWSER LIMITATION** (§11)                                                                           |
+| **W-1** | WebKit (Playwright build): Leave after a cancelled Back triggers a native prompt; accepting reloads the guarded page instead of going back | **ACCEPTED AS A DEVELOPMENT-STAGE LIMITATION under R-3** (owner, 2026-11-18); not approval for production Safari (§10) |
+| U-R2    | `beforeunload`: unstyled native prompt, shown only after user interaction                                                                  | Documented (browser behaviour)                                                                                         |
+| —       | Fallback without the Navigation API: Forward entries are discarded; multi-step jumps are not stopped                                       | Documented (plan §7.2)                                                                                                 |
+| —       | Toasts render behind an open modal (`z-50`, not the top layer); no exit animation                                                          | Documented (D-U6 notes)                                                                                                |
+| OV-1    | Mobile panel tops 74 / 72 vs Figma 80                                                                                                      | **RESOLVED**: approved as implemented (D-PM5)                                                                          |
 
 ## 9. R-2: blank no-JavaScript 404
 
@@ -195,8 +196,20 @@ real devices.
   prompt instead (4/4 probes).
 - **W-1:** Leave via `navigation.traverseTo` fires `beforeunload` in WebKit. Accepting the prompt
   reloads the guarded page; dismissing it aborts, with an unhandled `AbortError` from the
-  `committed` promise. Not fixed here: the evidence is from the Windows WebKit port, and a guard
-  change needs confirmation on real Safari first.
+  `committed` promise. The evidence is from the Windows WebKit port.
+
+**W-1 decision (owner, 2026-11-18): ACCEPTED AS A DEVELOPMENT-STAGE LIMITATION under R-3.** This
+is **not** approval of broken Safari navigation in production. Conditions:
+
+1. **Preserve the reproduction:** the cross-browser test "browser Back: Leave goes back once"
+   stays in the spec unchanged.
+2. **Keep it visible:** it is reported on every run as an explicit `fixme` skip with the W-1
+   reason. It is never deleted or silently skipped.
+3. **Document it:** findings §3a and this report.
+4. **Test on real Safari:** macOS and iOS devices are required (R-3).
+5. **Fix before support:** if real Safari reproduces it, the guard is fixed before any claim of
+   Safari production support.
+6. **No compatibility claim:** complete cross-browser compatibility is not claimed.
 
 **Still required for R-3:**
 
@@ -263,6 +276,9 @@ Dashboard first-time card.
 
 ## 15. Recommendation
 
+**PHASE 06 — DEVELOPMENT COMPLETE / READY FOR OWNER CLOSURE.** The phase is **not** marked
+CLOSED until the owner approves.
+
 **Development scope: complete.** Every Roadmap Phase 06 deliverable is built, merged and tested.
 The guard per exit path, safe-action focus and error isolation are covered. The module guide is
 complete.
@@ -271,15 +287,14 @@ complete.
 
 - **Approve closure** of Phase 06 **as development-complete with accepted limitations**, after
   this PR is merged with CI green.
-- **Record for the owner:** G-1 (accepted) and W-1 (open under R-3).
-- **Owner decisions:** O-1, and making `e2e` a required check.
+- **Recorded owner decisions:** G-1 risk accepted; W-1 accepted as a development-stage
+  limitation under R-3; OV-1 approved as implemented.
+- **Owner action still open:** make `e2e` a required check.
 
 **Not production-ready:** R-2 and R-3 stay open, real-device and screen-reader QA remain, and
 the Notes and Recording data-protection gate applies.
 
-**Remaining blockers to closure:**
+**Remaining steps to closure:**
 
 1. Merge this PR with CI green.
-2. The owner's closure approval.
-3. The owner's position on W-1: accept it under R-3 for now, or require a fix before Safari
-   support.
+2. The owner's official closure approval.

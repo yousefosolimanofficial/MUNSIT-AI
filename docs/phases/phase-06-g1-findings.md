@@ -84,7 +84,9 @@ devices (R-3).
 
 - **G-1 is engine-specific** in automation. The acceptance (§7) and the data-protection criteria
   (§6) still apply to every browser: no engine's behaviour is a guarantee.
-- **W-1 (WebKit, separate from G-1, OPEN under R-3):**
+- **W-1 (WebKit, separate from G-1): ACCEPTED AS A DEVELOPMENT-STAGE LIMITATION under R-3**
+  (owner, 2026-11-18). This is not approval for production Safari; real Safari and iOS testing is
+  required, and a fix is required before claiming Safari support if it reproduces there:
   - Leave after a cancelled Back (`navigation.traverseTo`) fires `beforeunload`.
   - Accepting the native prompt reloads the guarded page instead of going back.
   - Dismissing it aborts the traversal, with an unhandled `AbortError` from `committed`.
