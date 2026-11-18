@@ -46,9 +46,24 @@ async function openFixture(page: Page) {
   await waitForHydration(page, page.getByTestId("guard-toggle"));
 }
 
+/**
+ * Whether the provider's listeners are attached: a synthetic, cancelable `beforeunload` is
+ * prevented only by the guard's handler (which is added in the same effect as its `navigate` and
+ * click listeners). It triggers no navigation. Works in every engine (the Chromium-only suite
+ * uses DevTools listener counts instead).
+ */
+const guardListening = (page: Page) =>
+  page.evaluate(() => {
+    const probe = new Event("beforeunload", { cancelable: true });
+    window.dispatchEvent(probe);
+    return probe.defaultPrevented;
+  });
+
+/** Turns the guard on and waits until its listeners are attached (the status renders earlier). */
 async function guardOn(page: Page) {
   await page.getByTestId("guard-toggle").click();
   await expect(status(page)).toHaveAttribute("data-guard", "on");
+  await expect.poll(() => guardListening(page)).toBe(true);
 }
 
 /** A user-initiated Back that the guard may cancel (the promise then never resolves). */
@@ -163,6 +178,7 @@ test.describe("navigation guard · cross-browser contract", () => {
     await guardOn(page);
     await page.getByTestId("guard-toggle").click();
     await expect(status(page)).toHaveAttribute("data-guard", "off");
+    await expect.poll(() => guardListening(page)).toBe(false); // listeners removed
     expect(await page.evaluate(() => history.length)).toBe(length);
     const native: string[] = [];
     page.on("dialog", (prompt) => {
