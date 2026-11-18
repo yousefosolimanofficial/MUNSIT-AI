@@ -19,6 +19,7 @@ import type { IconName } from "@/design-system/icons/manifest";
 import { DialogDemo } from "./_components/DialogDemo";
 import { ErrorCardSamples } from "./_components/ErrorCardSamples";
 import { StatesDemo } from "./_components/StatesDemo";
+import { ToastDemo } from "./_components/ToastDemo";
 import { GuardDialogDemo } from "./_components/GuardDialogDemo";
 import { MoreSheetDemo } from "./_components/MoreSheetDemo";
 import { NavigationIconButtonDemo } from "./_components/NavigationIconButtonDemo";
@@ -214,6 +215,25 @@ const STATES_COPY = {
   },
 } as const;
 
+/**
+ * Toast gallery samples (Phase 06 Increment 4). Arabic is Figma copy (`Settings / Toast`
+ * `2462:1771`); English is a dev-only gallery sample, not product copy.
+ */
+const TOAST_COPY = {
+  ar: {
+    success: "تم تحديث بياناتك بنجاح",
+    error: "حصلت مشكلة أثناء حفظ التغييرات",
+    info: "تم حفظ التفضيلات",
+    retry: "إعادة المحاولة",
+  },
+  en: {
+    success: "Your details were updated",
+    error: "Something went wrong while saving your changes",
+    info: "Preferences saved",
+    retry: "Try again",
+  },
+} as const;
+
 /** Gallery host card for samples that live inside a module card (dev only). */
 const STATE_HOST = "rounded-xl border border-accent-electric-sky/14 bg-surface-obsidian/88 p-md";
 
@@ -290,6 +310,7 @@ export default async function DevComponentsPage() {
   const cardCopy = locale === "en" ? CARD_COPY.en : CARD_COPY.ar;
   const emptyCopy = locale === "en" ? EMPTY_COPY.en : EMPTY_COPY.ar;
   const statesCopy = locale === "en" ? STATES_COPY.en : STATES_COPY.ar;
+  const toastCopy = locale === "en" ? TOAST_COPY.en : TOAST_COPY.ar;
   const badgeLabel = (status: StatusBadgeStatus) =>
     BADGE_LABELS[status][locale === "en" ? "en" : "ar"];
 
@@ -513,6 +534,16 @@ export default async function DevComponentsPage() {
             healthy: statesCopy.healthy,
           }}
         />
+      </section>
+      <section
+        data-testid="gallery-toast"
+        aria-labelledby="gallery-toast-title"
+        className="grid gap-md p-lg pt-0"
+      >
+        <h2 id="gallery-toast-title" className="text-dashboard-title-m" lang="en">
+          Toast (Phase 06) · success / info 4 s · error persistent · pause on hover or focus
+        </h2>
+        <ToastDemo copy={toastCopy} />
       </section>
       <section
         data-testid="gallery-guard"

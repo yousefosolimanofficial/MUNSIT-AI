@@ -751,3 +751,18 @@ not the viewport.
 
 **Skeleton pulse (D-U3):** opacity 1 → 0.55 → 1 over four `flip` durations (1.6s), with the
 approved curve; none under reduced motion. Defined once in `src/design-system/motion.css`.
+
+### 15.8 Toast — details and a correction (read-only, 2026-11-18)
+
+- **Correction to §15.5:** in `Kind=Error`, "إعادة المحاولة" is the label of an **inline action
+  button**, not the message. The Error message drawn is "حصلت مشكلة أثناء حفظ التغييرات".
+- **Error action** (`Retry Button`): 36 high, padding 6/12, radius 10, Coral 14% fill, 1px Coral
+  40% border, label Cairo Medium 14/22 Coral.
+- **Mark icon:** stroke Void Black, 1.75 (on the solid tone mark).
+- **Order** (RTL): mark at the inline start, then the text, then the action at the inline end.
+- **Figma frames:** each placement frame shows one toast; no stacking or close control is drawn.
+
+**Implementation (Increment 4):**
+
+- **Box:** `min-h-[52px]` (the 36 action makes the Error toast 56), width `min(420, viewport − 40)`.
+- **Close:** a 32 close button, the Dialog close-button look; not designed (plan §6, D-U6 notes).

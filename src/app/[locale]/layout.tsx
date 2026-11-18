@@ -9,6 +9,7 @@ import { directionOf } from "@/i18n/direction";
 import { routing } from "@/i18n/routing";
 import type { GuardCopy, GuardKind } from "@/shared/patterns/ConfirmGuardDialog";
 import { NavigationGuardProvider } from "@/shared/patterns/NavigationGuardProvider";
+import { ToastProvider } from "@/shared/patterns/Toast";
 
 import "../globals.css";
 
@@ -63,7 +64,10 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={{ errors: messages.errors }}>
           {/* Phase 06: one navigation guard for every route (D-U7). Inactive until a page
               registers a guard with useNavigationGuard. */}
-          <NavigationGuardProvider copy={guardCopy}>{children}</NavigationGuardProvider>
+          <NavigationGuardProvider copy={guardCopy}>
+            {/* Phase 06: one toast stack for every route (D-U6). */}
+            <ToastProvider labels={{ close: t("toast.close") }}>{children}</ToastProvider>
+          </NavigationGuardProvider>
         </NextIntlClientProvider>
       </body>
     </html>
