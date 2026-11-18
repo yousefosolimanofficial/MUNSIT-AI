@@ -32,7 +32,7 @@ This is the anti back-trapping protection: a page can stop **one** browser Back 
 user interaction. Chromium implements it. When the second Back arrives, `navigate` fires with
 `cancelable = false`, and `NavigationGuardProvider` cannot stop it. The navigation then commits.
 
-## 3. Evidence (Chromium, Playwright, `/dev/guard`)
+## 3. Evidence (Chromium, Playwright, `/dev/guard`, now `/dev/fixtures/navigation-guard`)
 
 Every row ran 4 to 8 times with the same result.
 
@@ -71,6 +71,26 @@ doesn't fails. This explains the intermittent result of the former guard E2E "br
 was sometimes cancelled **with no dialog**. A stale `close` event from the dialog's previous
 `close()` arrived after `showModal()` and closed the reopened dialog (`useModalDialog`). This was
 not G-1: it was an application bug, now fixed and unit-tested.
+
+## 3a. Other engines (Increment 5, 2026-11-18)
+
+Playwright's engine builds (Firefox 159, WebKit 27.2 for Windows) in the focused spec
+`tests/e2e/navigation-guard.cross-browser.spec.ts`. This is automation, not real Safari or real
+devices (R-3).
+
+| Second browser Back, no interaction in between | Chromium                         | Firefox                  | WebKit                                                                                                                |
+| ---------------------------------------------- | -------------------------------- | ------------------------ | --------------------------------------------------------------------------------------------------------------------- |
+| Esc then Back, or Back twice                   | **Leaves** (non-cancelable): G-1 | Asked again (cancelable) | Asked again; native `beforeunload` prompt instead when the previous entry is the document's initial load (4/4 probes) |
+
+- **G-1 is engine-specific** in automation. The acceptance (§7) and the data-protection criteria
+  (§6) still apply to every browser: no engine's behaviour is a guarantee.
+- **W-1 (WebKit, separate from G-1): ACCEPTED AS A DEVELOPMENT-STAGE LIMITATION under R-3**
+  (owner, 2026-11-18). This is not approval for production Safari; real Safari and iOS testing is
+  required, and a fix is required before claiming Safari support if it reproduces there:
+  - Leave after a cancelled Back (`navigation.traverseTo`) fires `beforeunload`.
+  - Accepting the native prompt reloads the guarded page instead of going back.
+  - Dismissing it aborts the traversal, with an unhandled `AbortError` from `committed`.
+  - Kept as a visible `fixme` test. Real Safari must confirm it before any guard change.
 
 ## 4. Mitigation options
 

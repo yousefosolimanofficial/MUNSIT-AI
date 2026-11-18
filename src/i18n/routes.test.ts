@@ -44,7 +44,7 @@ const APPROVED_INVENTORY = {
   "dev.components": "/dev/components",
   "dev.tokens": "/dev/tokens",
   "dev.errorTest": "/dev/error-test",
-  "dev.guard": "/dev/guard",
+  "dev.navigationGuardFixture": "/dev/fixtures/navigation-guard",
 };
 
 describe("route constants (approved inventory)", () => {

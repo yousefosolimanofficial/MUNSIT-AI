@@ -57,7 +57,7 @@ afterEach(() => {
   vi.restoreAllMocks();
   pushNext.mockReset();
   pushIntl.mockReset();
-  window.history.replaceState(null, "", "/dev/guard");
+  window.history.replaceState(null, "", "/dev/fixtures/navigation-guard");
 });
 
 /* ------------------------------------------------------------------ ConfirmGuardDialog */
@@ -158,7 +158,11 @@ function Harness({ initial = false, kind = "unsaved" as GuardKind }) {
       </a>
       {/* Fixture: a raw same-origin <a>, which the guard must catch like any link (next/link needs the app router, absent in jsdom). */}
       {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-      <a href="/dev/guard#part" data-testid="hash" onClick={(e) => e.preventDefault()}>
+      <a
+        href="/dev/fixtures/navigation-guard#part"
+        data-testid="hash"
+        onClick={(e) => e.preventDefault()}
+      >
         hash
       </a>
       <a href="/notes" target="_blank" data-testid="blank" onClick={(e) => e.preventDefault()}>

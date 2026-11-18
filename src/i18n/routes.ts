@@ -45,7 +45,8 @@ export const ROUTES = {
   "dev.components": "/dev/components",
   "dev.tokens": "/dev/tokens",
   "dev.errorTest": "/dev/error-test",
-  "dev.guard": "/dev/guard",
+  /** Development-only E2E fixture (`page.fixture.tsx`): not a route in production builds. */
+  "dev.navigationGuardFixture": "/dev/fixtures/navigation-guard",
 } as const;
 
 export type RouteKey = keyof typeof ROUTES;

@@ -1,7 +1,8 @@
 # Continuous integration for MUNSIT AI.
 # - check: the repository's CI-equivalent script (`pnpm check`): typecheck, ESLint,
 #   dependency-cruiser boundaries, Prettier, unit tests and the production build.
-# - e2e: the full Playwright suite (Chromium, R-3). A flaky test (passes only on a
+# - e2e: the full Playwright suite in Chromium, plus the cross-browser guard spec in Firefox
+#   and WebKit (R-3). A flaky test (passes only on a
 #   retry) fails the job (`failOnFlakyTests` in playwright.config.ts); the report
 #   and traces are uploaded when the job fails.
 # No secrets are used and nothing is deployed.
@@ -102,8 +103,9 @@ jobs:
       - name: Install dependencies (frozen lockfile)
         run: pnpm install --frozen-lockfile
 
-      - name: Install Chromium and its system dependencies
-        run: pnpm exec playwright install --with-deps chromium
+      - name: Install the browser engines and their system dependencies
+        # Chromium runs the full suite; Firefox and WebKit run the cross-browser guard spec (R-3).
+        run: pnpm exec playwright install --with-deps chromium firefox webkit
 
       - name: Run the E2E suite
         run: pnpm test:e2e

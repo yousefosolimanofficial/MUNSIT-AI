@@ -12,7 +12,7 @@ import { Button } from "@/shared/ui/Button";
 /*
  * TEMPORARY gallery demo for the Phase 06 guard dialog (D-U1) and the danger Button (D-U2).
  * Dev-only; part of /dev/components. Opening a dialog here never navigates: the real interception
- * is exercised on the dev-only /dev/guard route inside the app shell.
+ * is exercised by the dev-only fixture /dev/fixtures/navigation-guard inside the app shell.
  */
 
 export function GuardDialogDemo({ copy }: { copy: Record<GuardKind, GuardCopy> }) {

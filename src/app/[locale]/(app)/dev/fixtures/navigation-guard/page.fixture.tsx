@@ -5,18 +5,20 @@ import { notFound } from "next/navigation";
 import { GuardHarness } from "./GuardHarness";
 
 /*
- * TEMPORARY development-only route (Phase 06, D-U9): exercises the navigation guard inside the
- * real app shell (Sidebar, Rail, drawer, bottom bar, More sheet, user menu). Returns 404 in
- * production builds, is linked from nowhere, shows no debugging data, and is removed before the
- * Phase 06 closure.
+ * Development-only TEST FIXTURE (Phase 06 Increment 5; replaces the temporary `/dev/guard` route
+ * of D-U9). It exercises the navigation guard inside the real app shell (Sidebar, Rail, drawer,
+ * bottom bar, More sheet, user menu) for `tests/e2e/navigation-guard.spec.ts`.
+ * - Not a route in production: `.fixture.tsx` is a page extension only outside production
+ *   (next.config.ts), so `next build` never compiles it. The `notFound()` below is a second guard.
+ * - Linked from nowhere; no product copy and no debugging data.
  */
 
 export const metadata: Metadata = {
-  title: "Dev · Navigation guard",
+  title: "Fixture · Navigation guard",
   robots: { index: false, follow: false },
 };
 
-export default async function DevGuardPage() {
+export default async function NavigationGuardFixturePage() {
   if (process.env.NODE_ENV === "production") notFound();
   const t = await getTranslations("dev");
 
