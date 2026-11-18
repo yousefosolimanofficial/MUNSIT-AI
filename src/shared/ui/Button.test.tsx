@@ -144,6 +144,30 @@ describe("Button — variants (§11.2, §4)", () => {
     expect(classes.some((c) => c.includes("shadow-"))).toBe(false);
   });
 
+  it("danger (Phase 06, D-U2): Secondary surface and states with a Coral Pulse label; never solid red", () => {
+    render(<Button variant="danger">مغادرة على أي حال</Button>);
+    const classes = classesOf(screen.getByRole("button"));
+    expect(classes).toEqual(
+      expect.arrayContaining([
+        "border",
+        "bg-accent-electric-sky/8",
+        "border-accent-electric-sky/30",
+        "text-accent-coral-pulse",
+        `${HOVER}bg-accent-electric-sky/16`,
+        `${HOVER}border-accent-electric-sky/55`,
+        "enabled:active:bg-accent-electric-sky/20",
+        "enabled:active:border-accent-electric-sky/55",
+        "disabled:bg-transparent",
+        "disabled:border-accent-electric-sky/20",
+        "disabled:text-text-muted",
+      ]),
+    );
+    // The label stays Coral Pulse in every enabled state; no Coral fill or border, no shadow.
+    expect(classes).not.toContain("text-accent-electric-sky");
+    expect(classes.filter((c) => /bg-accent-coral|border-accent-coral/.test(c))).toEqual([]);
+    expect(classes.some((c) => c.includes("shadow-"))).toBe(false);
+  });
+
   it.each(BUTTON_VARIANTS)(
     "%s: hover only under (hover: hover) and (pointer: fine); hover and pressed only when enabled",
     (variant) => {

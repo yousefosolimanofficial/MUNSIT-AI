@@ -16,6 +16,7 @@ import { Tab, TabList, TabPanel, Tabs, type TabsSize } from "@/shared/ui/Tabs";
 import type { IconName } from "@/design-system/icons/manifest";
 
 import { DialogDemo } from "./_components/DialogDemo";
+import { GuardDialogDemo } from "./_components/GuardDialogDemo";
 import { MoreSheetDemo } from "./_components/MoreSheetDemo";
 import { NavigationIconButtonDemo } from "./_components/NavigationIconButtonDemo";
 import { PopoverMenuDemo } from "./_components/PopoverMenuDemo";
@@ -246,9 +247,10 @@ const TABS_SAMPLES: readonly {
 export default async function DevComponentsPage() {
   if (process.env.NODE_ENV === "production") notFound();
   const locale = await getLocale();
-  const [tNav, tShell, shellLabels] = await Promise.all([
+  const [tNav, tShell, tPatterns, shellLabels] = await Promise.all([
     getTranslations("nav"),
     getTranslations("shell"),
+    getTranslations("patterns"),
     getShellLabels(),
   ]);
   const label = locale === "en" ? LABELS.en : LABELS.ar;
@@ -414,6 +416,31 @@ export default async function DevComponentsPage() {
         <div data-testid="empty-minimal">
           <EmptyState icon="search" title={emptyCopy.minimalTitle} headingLevel={3} />
         </div>
+      </section>
+      <section
+        data-testid="gallery-guard"
+        aria-labelledby="gallery-guard-title"
+        className="grid gap-md p-lg pt-0"
+      >
+        <h2 id="gallery-guard-title" className="text-dashboard-title-m" lang="en">
+          Guard dialog (Phase 06) · Stay is focused · Esc and scrim = stay · danger Button
+        </h2>
+        <GuardDialogDemo
+          copy={{
+            unsaved: {
+              title: tPatterns("guard.unsaved.title"),
+              description: tPatterns("guard.unsaved.description"),
+              stay: tPatterns("guard.unsaved.stay"),
+              leave: tPatterns("guard.unsaved.leave"),
+            },
+            recording: {
+              title: tPatterns("guard.recording.title"),
+              description: tPatterns("guard.recording.description"),
+              stay: tPatterns("guard.recording.stay"),
+              leave: tPatterns("guard.recording.leave"),
+            },
+          }}
+        />
       </section>
       <section
         data-testid="gallery-sheet"

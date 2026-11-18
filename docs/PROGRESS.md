@@ -6,15 +6,22 @@ Single resume point. A new session starts by reading this file, the latest phase
 - **Current phase:** 06 — Shared states & overlay/guard infrastructure — **Planning** (kickoff
   authorized by the user on 2026-11-17). The plan is in review and **implementation has not
   started**: [phases/phase-06-plan.md](phases/phase-06-plan.md), with the Figma values in
-  [design-values.md §15](design-values.md). Decisions D-U1 to D-U10 have dispositions (2026-11-18); the guard is conditional on a technical proof. Phase 07 is NOT
-  STARTED. R-2 and R-3 stay OPEN.
+  [design-values.md §15](design-values.md). The plan was approved and merged through PR #37
+  (`70c821d`); D-U1 to D-U10 have dispositions. Phase 07 is NOT STARTED. R-2 and R-3 stay OPEN.
+  - **Increment 1 (guard slice): COMPLETE** (PR #38, 2026-11-18). It contains:
+    - the danger Button (D-U2) and `ConfirmGuardDialog` (D-U1);
+    - the navigation guard (D-U7): Navigation API in Chromium, sentinel fallback elsewhere,
+      navigation-specific authorization after Leave, and a lint-enforced guarded router;
+    - guard copy in Arabic (Figma) and English (D-U10, approved 2026-11-18).
+
+    The dev-only `/dev/guard` route is removed before the Phase 06 closure. Browser limitations
+    (R-3) and the fallback limitations are recorded in the plan §7.2.
+
   - **Mariam `EmptyState`: ACCEPTED / INTEGRATED.** Delivered on 2026-11-18 and integrated on
     2026-11-18 through PR #39 (rebase merge): her delivery commit `b7cf1d9` (two files, verbatim,
     no source changes), then the gallery, E2E and records in `abe2952`. `pnpm check` 1049/1049;
     E2E 653/653; CI green on `main`. The starter's send date was not recorded separately.
     Assignment: [phases/phase-06-empty-state-starter.md](phases/phase-06-empty-state-starter.md).
-  - **Merge note for PR #38 (guard):** it conflicts with `main` in `docs/PROGRESS.md` only (both
-    add Phase 06 bullets here). Resolve by keeping both entries; no code conflict.
 - **Phase 04:** Routing & navigation registry — **Done / CLOSED** (2026-11-16).
   Implementation PR #27 squash-merged into `main` as `9888e08`; post-merge CI green. Report:
   [phases/phase-04-closure-report.md](phases/phase-04-closure-report.md) (CLOSED). Plan:

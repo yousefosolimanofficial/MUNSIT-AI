@@ -731,3 +731,9 @@ Secondary Pressed fill (Sky 20%, D-B6) = **4.66:1**. Both pass AA; the second ha
 | Text                              | Cairo Regular 14/22 Primary                                                                                                     | FIGMA            |
 | Placement                         | Centred horizontally. Bottom gap 78 (Desktop `2464:3617`, Tablet `2464:3977`); Mobile `2464:4337` 118 (above the 84 bottom bar) | FIGMA            |
 | Timing, dismiss, stacking, motion | Not drawn                                                                                                                       | **NOT DESIGNED** |
+
+### 15.6 Danger Button — rendered contrast (Phase 06 Increment 1, 2026-11-18)
+
+Measured in Chromium on the guard dialog (label over fill, dialog surface, scrim and page):
+**rest 5.80, hover 5.04, keyboard focus 5.80, pressed 4.69**, matching the §15.4 calculation.
+Contract addendum: [phases/phase-03-button-contract.md](phases/phase-03-button-contract.md) §14.

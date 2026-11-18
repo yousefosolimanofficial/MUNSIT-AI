@@ -7,6 +7,8 @@ import type { ReactNode } from "react";
 import { fontVariables } from "@/design-system/fonts";
 import { directionOf } from "@/i18n/direction";
 import { routing } from "@/i18n/routing";
+import type { GuardCopy, GuardKind } from "@/shared/patterns/ConfirmGuardDialog";
+import { NavigationGuardProvider } from "@/shared/patterns/NavigationGuardProvider";
 
 import "../globals.css";
 
@@ -38,7 +40,19 @@ export default async function LocaleLayout({
 }: Readonly<{ children: ReactNode; params: Promise<{ locale: string }> }>) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
-  const messages = await getMessages();
+  const [messages, t] = await Promise.all([getMessages(), getTranslations("patterns")]);
+  // Guard dialog copy (approved, Phase 06 plan §9), resolved on the server for the provider.
+  const guardCopy = Object.fromEntries(
+    (["unsaved", "recording"] as const).map((kind) => [
+      kind,
+      {
+        title: t(`guard.${kind}.title`),
+        description: t(`guard.${kind}.description`),
+        stay: t(`guard.${kind}.stay`),
+        leave: t(`guard.${kind}.leave`),
+      },
+    ]),
+  ) as Record<GuardKind, GuardCopy>;
 
   return (
     <html lang={locale} dir={directionOf(locale)} className={fontVariables}>
@@ -47,7 +61,9 @@ export default async function LocaleLayout({
             to the browser, for the client-side error boundary (Phase 04); everything else is
             translated on the server. */}
         <NextIntlClientProvider messages={{ errors: messages.errors }}>
-          {children}
+          {/* Phase 06: one navigation guard for every route (D-U7). Inactive until a page
+              registers a guard with useNavigationGuard. */}
+          <NavigationGuardProvider copy={guardCopy}>{children}</NavigationGuardProvider>
         </NextIntlClientProvider>
       </body>
     </html>

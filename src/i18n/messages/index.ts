@@ -12,12 +12,14 @@ import arDev from "./ar/dev.json";
 import arErrors from "./ar/errors.json";
 import arNav from "./ar/nav.json";
 import arPages from "./ar/pages.json";
+import arPatterns from "./ar/patterns.json";
 import arShell from "./ar/shell.json";
 import enCommon from "./en/common.json";
 import enDev from "./en/dev.json";
 import enErrors from "./en/errors.json";
 import enNav from "./en/nav.json";
 import enPages from "./en/pages.json";
+import enPatterns from "./en/patterns.json";
 import enShell from "./en/shell.json";
 
 import type { AppLocale } from "../routing";
@@ -28,6 +30,7 @@ export const MESSAGES = {
     dev: arDev,
     nav: arNav,
     pages: arPages,
+    patterns: arPatterns,
     errors: arErrors,
     shell: arShell,
   },
@@ -36,6 +39,7 @@ export const MESSAGES = {
     dev: enDev,
     nav: enNav,
     pages: enPages,
+    patterns: enPatterns,
     errors: enErrors,
     shell: enShell,
   },

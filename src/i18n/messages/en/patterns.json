@@ -1,0 +1,16 @@
+{
+  "guard": {
+    "unsaved": {
+      "title": "You have unsaved changes",
+      "description": "If you leave now, you may lose the edits you haven't saved.",
+      "stay": "Keep editing",
+      "leave": "Leave without saving"
+    },
+    "recording": {
+      "title": "Leave the recording?",
+      "description": "Parts of the recording that haven't been saved yet may be lost if you leave the page.",
+      "stay": "Stay on page",
+      "leave": "Leave anyway"
+    }
+  }
+}
