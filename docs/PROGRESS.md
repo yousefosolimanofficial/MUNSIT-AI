@@ -3,14 +3,26 @@
 Single resume point. A new session starts by reading this file, the latest phase report, and
 [docs/references/MUNSIT_AI_Development_Roadmap_v1.0.md](references/MUNSIT_AI_Development_Roadmap_v1.0.md).
 
-- **Current phase:** 07 — Landing Page — **Increment 0 (planning) in review.** No implementation
-  has started.
-  - **Plan:** [phases/phase-07-plan.md](phases/phase-07-plan.md); Figma audit in
-    [design-values.md §16](design-values.md); copy (Arabic verbatim, English PROPOSED) in
-    [phases/phase-07-landing-copy.md](phases/phase-07-landing-copy.md); Hero video brief in
-    [phases/phase-07-hero-video-brief.md](phases/phase-07-hero-video-brief.md).
-  - **Approved:** D-P07-HERO-01, a product-focused Hero video (owner, 2026-11-19).
-  - **Open:** owner decisions P07-D1 to P07-D13 (plan §6).
+- **Current phase:** 07 — Landing Page — **IN PROGRESS.**
+  - **Increment 0 (planning): COMPLETE** (PR #49). Owner decisions P07-D1 to P07-D13 are
+    recorded (2026-11-19).
+    - Plan: [phases/phase-07-plan.md](phases/phase-07-plan.md).
+    - Figma audit: [design-values.md §16](design-values.md).
+    - Copy approval package: [phases/phase-07-landing-copy.md](phases/phase-07-landing-copy.md).
+    - Hero video brief: [phases/phase-07-hero-video-brief.md](phases/phase-07-hero-video-brief.md).
+  - **Approved:** D-P07-HERO-01, a product-focused Hero video.
+  - **Pending:**
+    - English copy (P07-D1, PENDING FINAL APPROVAL);
+    - the Hero video asset;
+    - approved commercial pricing content (P07-D4: placeholder pricing is development only and
+      never shown to real visitors);
+    - real legal pages (P07-D2).
+
+    These are all public-launch blockers.
+
+  - **Increment 1 (Landing foundation): NOT STARTED.** It begins only on the owner's
+    authorization. The Mariam assignment (Features and How It Works) is approved, but the starter
+    is not sent until the Increment 1 baseline and the component contracts are final.
 - **Phase 06:** Shared states & overlay/guard infrastructure — **CLOSED — Development Complete,
   Production QA Outstanding.**
   - **Closure:** approved by the product owner on 2026-11-19; final code `main` `6cda86c` (PR #47);
@@ -187,7 +199,7 @@ works offline and delivers packages per [TEAM_COLLABORATION.md](TEAM_COLLABORATI
 | 04  | Routing & navigation registry       | Done                                                |
 | 05  | Shared App Shell                    | Done                                                |
 | 06  | Shared states & overlay/guard infra | Done (CLOSED 2026-11-19; production QA outstanding) |
-| 07  | Landing Page                        | In progress (Increment 0: plan in review)           |
+| 07  | Landing Page                        | In progress (Increment 0 complete)                  |
 | 08  | Authentication UI                   | Not started                                         |
 | 09  | Dashboard                           | Not started                                         |
 | 10  | Lecture Management                  | Not started                                         |
@@ -273,6 +285,13 @@ numerals and English runs inside Arabic text (direction isolation). See R-1, I-1
 | 7   | Final audit + phase report; G-1, G-2 implemented             | Done — approved (2026-11-13)   |
 
 ## Next action
+
+**2026-11-19:** Phase 07 Increment 0 (planning) is COMPLETE through PR #49.
+
+- **Recorded:** owner decisions P07-D1 to P07-D13; the final section order (FAQ before Pricing).
+- **Pending:** English copy, the Hero video, pricing content and legal pages.
+- **Next:** Increment 1 (Landing foundation), only on the owner's authorization. Production QA
+  obligations (R-2, R-3, G-1 and W-1 conditions) are unchanged.
 
 **2026-11-19:** Phase 06 is CLOSED (Development Complete — Production QA Outstanding). The product
 owner approved the closure; the closure records went through a documentation-only PR. Final code:

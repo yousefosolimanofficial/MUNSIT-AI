@@ -1,6 +1,7 @@
 # Phase 07 — Hero video: production brief (Google Flow)
 
-- **Status:** **DRAFT for owner review** (Phase 07 Increment 0, 2026-11-19).
+- **Status:** **FINAL for owner review** (Phase 07 Increment 0, 2026-11-19). It includes owner
+  decisions P07-D7 to P07-D10. **The asset is not generated yet.**
 - **Decision:** D-P07-HERO-01, a product-focused Hero video (owner, approved). The asset is
   **not produced yet.**
 - **Rules:**
@@ -37,20 +38,38 @@ No invented features, numbers or results.
 | 3   | AI summary: highlighted lines collapse into a summary card  | Feature 03 "ملخصات ذكية ومنظمة"; Step 03     | 6–9 s           |
 | 4   | Final composition: calm, premium product interface at rest  | Showcase app window (`38:6`)                 | 9–12 s → loop   |
 
+## 2a. Interface references (real MUNSIT AI design, not invented)
+
+The motion must be based on the approved product design. Use these Figma sources (read-only) as
+references, or as composited layers:
+
+| Beat                 | Reference                                                                                                           |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| 1 Live transcription | Landing Showcase Mobile live transcript card (`200:722`); the app's Live Recording module frames (Roadmap Phase 12) |
+| 2 Smart Highlights   | Feature 02 visual (`114:16`); the Lecture Details highlights in the app design                                      |
+| 3 Summary            | Feature 03 visual (`114:20`); the My Summaries reader frames                                                        |
+| 4 Final composition  | Landing Showcase app window (`38:6`) and its screen image (`App / Main Content`, 1376 × 768)                        |
+
+**Rules for using them:**
+
+- **Abstraction:** generated footage may stylize these interfaces, but must not add controls,
+  data or features that the references do not show.
+- **Readable text:** it comes only from composited real screens, never from generation (§8).
+
 ## 3. Technical requirements
 
-| Item              | Requirement                                                                                                                                                                                                                              |
-| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Duration          | **10–12 s** seamless loop (PROPOSED). Long enough for 4 beats without fast cuts, short enough for a small file                                                                                                                           |
-| Masters           | **A. Landscape 16:10**, 2560 × 1600 (minimum 1920 × 1200), for Desktop and Tablet (Tablet crops to 6:5). **B. Portrait ≈ 0.725**, 1080 × 1490, for Mobile, composed separately: a centre crop of A would keep only ~45% of its width     |
-| Frame rate        | 24 or 30 fps, constant                                                                                                                                                                                                                   |
-| Audio             | **None** (no audio track; it plays muted)                                                                                                                                                                                                |
-| Loop              | **First frame = last frame** (same composition, camera at rest), so the loop point is invisible                                                                                                                                          |
-| Camera            | Slow, continuous movement only: gentle push-in or parallax drift, no cuts, whip pans, shakes or fast zooms. It returns to the start position for the loop                                                                                |
-| Motion style      | Premium cinematic UI motion: soft depth of field, eased transitions, light bloom on accents. **No random decorative effects** (particles, lens flares, glitch)                                                                           |
-| Colour            | Base Near Black `#040506` (= Void Black token); Deep Blue `#143CA3` (= Cobalt Edge token); Electric Blue `#63A1FF` (= Electric Sky token); Cyan `#06B6D4` (**not one of the 19 design tokens**: owner decision P07-D9)                   |
-| Text in the video | **No readable text.** Represent text as abstract lines and blocks (as the Skeleton pattern does), a waveform, and highlight bars. Real readable UI text, if wanted, must be **composited** from real screens in an editor, not generated |
-| Delivery files    | MP4 (H.264, `faststart`) and WebM (VP9 or AV1) per master; **budget PROPOSED:** ≤ 3 MB landscape, ≤ 1.5 MB portrait (measured, not a D-12 target)                                                                                        |
+| Item              | Requirement                                                                                                                                                                                                                                  |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Duration          | **10–12 s** seamless loop (PROPOSED). Long enough for 4 beats without fast cuts, short enough for a small file                                                                                                                               |
+| Masters           | **A. Landscape 16:10**, 2560 × 1600 (minimum 1920 × 1200), for Desktop and Tablet (Tablet crops to 6:5). **B. Portrait ≈ 0.725**, 1080 × 1490, for Mobile, composed separately: a centre crop of A would keep only ~45% of its width         |
+| Frame rate        | 24 or 30 fps, constant                                                                                                                                                                                                                       |
+| Audio             | **None** (no audio track; it plays muted)                                                                                                                                                                                                    |
+| Loop              | **First frame = last frame** (same composition, camera at rest), so the loop point is invisible                                                                                                                                              |
+| Camera            | Slow, continuous movement only: gentle push-in or parallax drift, no cuts, whip pans, shakes or fast zooms. It returns to the start position for the loop                                                                                    |
+| Motion style      | Premium cinematic UI motion: soft depth of field, eased transitions, light bloom on accents. **No random decorative effects** (particles, lens flares, glitch)                                                                               |
+| Colour            | Base Near Black `#040506` (= Void Black token); Deep Blue `#143CA3` (= Cobalt Edge token); Electric Blue `#63A1FF` (= Electric Sky token); Cyan `#06B6D4`, **allowed inside the video only** (P07-D9); it is not an application design token |
+| Text in the video | **No readable text.** Represent text as abstract lines and blocks (as the Skeleton pattern does), a waveform, and highlight bars. Real readable UI text, if wanted, must be **composited** from real screens in an editor, not generated     |
+| Delivery files    | MP4 (H.264, `faststart`) and WebM (VP9 or AV1) per master; **budget PROPOSED:** ≤ 3 MB landscape, ≤ 1.5 MB portrait (measured, not a D-12 target)                                                                                            |
 
 ## 4. Safe areas (keep calm and dark: real HTML sits here)
 
@@ -86,7 +105,12 @@ key motion inside it.
   merge, at each breakpoint:
   - heading 56 / 44 / 32 and description 24 / 20 / 16 (SemiBold): ≥ 3:1, large text;
   - the outline button label (Medium 20, not large text): **≥ 4.5:1** behind the button.
-- **If a frame fails:** fix the grade first. An overlay would need an owner decision (P07-D8).
+- **If a frame fails (P07-D8, approved conditionally):**
+  - fix the grade first;
+  - only if contrast still fails, add a **minimal** overlay;
+  - document the adjustment (value, breakpoint, measured contrast before and after).
+
+  **No overlay by default.**
 
 ## 7. Playback and accessibility (implementation requirements)
 
@@ -94,15 +118,23 @@ key motion inside it.
   design. Decorative: `aria-hidden="true"`, no captions needed (no speech, no information).
 - **Reduced motion:** with `prefers-reduced-motion: reduce`, the video does **not** play, and the
   poster is shown.
-- **WCAG 2.2.2 (Pause, Stop, Hide):** moving content that plays for more than 5 s beside other
-  content needs a way to pause it. **Figma draws no pause control.** Owner decision P07-D7:
-  - add a small, accessible pause/play button (not designed, needs approval); or
-  - limit playback so it stops within 5 s and rests on the last frame.
+- **Pause/Play control (P07-D7, approved; WCAG 2.2.2):**
+  - **Element:** a small, accessible `<button>` with an `aria-label` that names the action
+    ("Pause background video" / "Play background video", localized) and `aria-pressed` or a label
+    swap. It keeps a visible focus ring, has a target of at least 24 × 24 (WCAG 2.5.8), and works
+    by keyboard.
+  - **Placement:** inside the Hero, at a bottom inline-end corner, **outside** the text and CTA
+    safe areas (§4). It never overlaps the heading, the description or the buttons, at any
+    breakpoint.
+  - **Behaviour:** pausing stops the video on the current frame. The choice is remembered for the
+    session. Under reduced motion the control is not needed, because the video does not play.
 - **Mobile:** serve the portrait master through `<source media>`. Cover cropping follows Figma
   (`FILL`).
-- **Desktop fit:** Figma's desktop placeholder uses `FIT`. With a 16:10 master, `cover` and
-  `contain` give the same result at 1440 × 900. At other desktop aspect ratios, `cover` is
-  recommended (P07-D10).
+- **Fit (P07-D10, approved):**
+  - fill-and-crop (`object-fit: cover`) at every breakpoint, with responsive `object-position`
+    that keeps the composition's focal area in view;
+  - separate landscape (16:10) and portrait (Mobile) masters;
+  - at 1440 × 900 the landscape master matches Figma exactly.
 
 ## 8. Honest limits of Google Flow
 

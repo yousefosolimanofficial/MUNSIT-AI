@@ -1,9 +1,11 @@
-# Phase 07 — Landing copy (Arabic from Figma; English PROPOSED)
+# Phase 07 — Landing copy approval package (Arabic from Figma; English PROPOSED)
 
-- **Status:** **DRAFT for owner review** (Phase 07 Increment 0, 2026-11-19).
+- **Status:** English is **PENDING FINAL APPROVAL** (P07-D1, owner, 2026-11-19). The Arabic is
+  final: it is Figma verbatim (P07-D11).
 - **Arabic:** extracted **verbatim** from the Figma Landing frames (read-only, including
   component-instance overrides). It is not rewritten.
-- **English: every string is PROPOSED.** Figma has no LTR frames, so the source of English copy is
+- **English: every string is PROPOSED, not approved.** It preserves meaning and adds no product
+  claims. Ambiguous choices are flagged in §12. Figma has no LTR frames, so the source of English copy is
   the open decision O-1 ([design-values](../design-values.md)). Nothing in English ships until the
   owner approves it (P07-D1).
 - **Placement:** in implementation, all copy lives in `src/i18n/messages/{ar,en}/landing.json`
@@ -14,14 +16,14 @@ note otherwise.
 
 ## 1. Navigation
 
-| Key            | Arabic (Figma)  | English (PROPOSED) | Note                                                                                       |
-| -------------- | --------------- | ------------------ | ------------------------------------------------------------------------------------------ |
-| nav.home       | الرئيسية        | Home               |                                                                                            |
-| nav.features   | المميزات        | Features           |                                                                                            |
-| nav.howItWorks | كيف يعمل ؟      | How it works       | Figma has a space before "؟" and a trailing space. The footer writes "كيف يعمل؟" (P07-D11) |
-| nav.faq        | الأسئلة الشائعة | FAQ                |                                                                                            |
-| nav.language   | EN              | AR (in English)    | Existing language switch                                                                   |
-| nav.login      | تسجيل الدخول    | Log in             |                                                                                            |
+| Key            | Arabic (Figma)  | English (PROPOSED) | Note                                                                                                   |
+| -------------- | --------------- | ------------------ | ------------------------------------------------------------------------------------------------------ |
+| nav.home       | الرئيسية        | Home               |                                                                                                        |
+| nav.features   | المميزات        | Features           |                                                                                                        |
+| nav.howItWorks | كيف يعمل ؟      | How it works       | Kept **exactly**: the space before "؟" and the trailing space (P07-D11). The footer writes "كيف يعمل؟" |
+| nav.faq        | الأسئلة الشائعة | FAQ                |                                                                                                        |
+| nav.language   | EN              | AR (in English)    | Existing language switch                                                                               |
+| nav.login      | تسجيل الدخول    | Log in             |                                                                                                        |
 
 ## 2. Hero
 
@@ -41,29 +43,31 @@ note otherwise.
 
 **App window mock (Desktop and Tablet):** these strings are part of a product illustration.
 
-| Key                    | Arabic (Figma)            | English (PROPOSED)      |
-| ---------------------- | ------------------------- | ----------------------- |
-| showcase.recording     | جاري التسجيل              | Recording               |
-| showcase.timer         | 00:12:34                  | 00:12:34 (LTR numerals) |
-| showcase.lectureTitle  | مقدمة في الذكاء الاصطناعي | Introduction to AI      |
-| showcase.lectureType   | محاضرة مباشرة             | Live lecture            |
-| showcase.sidebarTitle  | القائمة الرئيسية          | Main menu               |
-| showcase.nav.dashboard | لوحة التحكم               | Dashboard               |
-| showcase.nav.lectures  | المحاضرات                 | Lectures                |
-| showcase.nav.live      | التسجيل المباشر           | Live recording          |
-| showcase.nav.summaries | الملخصات الذكية           | Smart summaries         |
-| showcase.nav.questions | بنك الاسئلة               | Question bank           |
-| showcase.nav.history   | سجل المحادثات             | Chat history            |
+| Key                    | Arabic (Figma)            | English (PROPOSED)                      |
+| ---------------------- | ------------------------- | --------------------------------------- |
+| showcase.recording     | جاري التسجيل              | Recording                               |
+| showcase.timer         | 00:12:34                  | 00:12:34 (LTR numerals)                 |
+| showcase.lectureTitle  | مقدمة في الذكاء الاصطناعي | Introduction to Artificial Intelligence |
+| showcase.lectureType   | محاضرة مباشرة             | Live lecture                            |
+| showcase.sidebarTitle  | القائمة الرئيسية          | Main menu                               |
+| showcase.nav.dashboard | لوحة التحكم               | Dashboard                               |
+| showcase.nav.lectures  | المحاضرات                 | Lectures                                |
+| showcase.nav.live      | التسجيل المباشر           | Live recording                          |
+| showcase.nav.summaries | الملخصات الذكية           | Smart summaries                         |
+| showcase.nav.questions | بنك الاسئلة               | Question bank                           |
+| showcase.nav.history   | سجل المحادثات             | Chat history                            |
 
 **Mobile only** (`200:722`, a live transcript card):
 
-| Key                | Arabic (Figma)                                                                | English (PROPOSED)                                                                              |
-| ------------------ | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| showcase.m.live    | مباشر                                                                         | Live                                                                                            |
-| showcase.m.heading | التفريغ الحي للمحاضرة                                                         | Live lecture transcript                                                                         |
-| showcase.m.t1      | 01:12 — أهلاً بكم في محاضرة اليوم حول الذكاء الاصطناعي وتطبيقاته.              | 01:12 — Welcome to today's lecture on artificial intelligence and its applications.             |
-| showcase.m.t2      | 02:05 — من المهم جداً فهم كيفية تدريب هذه النماذج على كميات هائلة من البيانات. | 02:05 — It's very important to understand how these models are trained on huge amounts of data. |
-| showcase.m.pause   | إيقاف مؤقت                                                                    | Pause                                                                                           |
+| Key                | Arabic (Figma)                                                        | English (PROPOSED)                                                                      |
+| ------------------ | --------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| showcase.m.live    | مباشر                                                                 | Live                                                                                    |
+| showcase.m.heading | التفريغ الحي للمحاضرة                                                 | Live lecture transcript                                                                 |
+| showcase.m.time1   | 01:12                                                                 | 01:12 (LTR numerals)                                                                    |
+| showcase.m.line1   | أهلاً بكم في محاضرة اليوم حول الذكاء الاصطناعي وتطبيقاته.              | Welcome to today's lecture on artificial intelligence and its applications.             |
+| showcase.m.time2   | 02:05                                                                 | 02:05 (LTR numerals)                                                                    |
+| showcase.m.line2   | من المهم جداً فهم كيفية تدريب هذه النماذج على كميات هائلة من البيانات. | It's very important to understand how these models are trained on huge amounts of data. |
+| showcase.m.pause   | إيقاف مؤقت                                                            | Pause                                                                                   |
 
 ## 4. Features
 
@@ -193,10 +197,31 @@ copy** in Figma (P07-D4).
 
 **Footer title sizes:** "المنصة" is 24 and "حسابك" is 20 in Figma (P07-D11).
 
-## 11. Copy observations (verbatim kept; owner to confirm)
+## 11. Copy observations (Arabic kept verbatim, P07-D11)
 
-- **"كيف يعمل ؟ "** (navigation) has a space before "؟" and a trailing space; the footer writes
-  "كيف يعمل؟". The trailing space is trimmed; whether to keep the space before "؟" is P07-D11.
-- **"بنك الاسئلة"** (Showcase mock) has no hamza; Feature 04 writes "بنك أسئلة". It is kept
-  verbatim.
+- **Navigation and footer:** "كيف يعمل ؟ " (navigation, with a space before "؟" and a trailing
+  space) and "كيف يعمل؟" (footer) are both kept **exactly as in Figma**. No normalization.
+- **Two text nodes:** the Showcase lecture title is one Figma text node with a line break:
+  "مقدمة في الذكاء الاصطناعي" ⏎ "محاضرة مباشرة". It is shown as two lines.
+- **Hamza:** "بنك الاسئلة" (Showcase mock) has no hamza, while Feature 04 writes "بنك أسئلة". Both
+  are kept verbatim.
 - **Placeholder pricing:** "تُحدد لاحقًا" (to be determined later) appears on all three plans.
+  It is development only and never shown to real visitors (P07-D4).
+
+## 12. Translation flags (owner review)
+
+| #    | Arabic                                | Proposed English                                         | Why it is flagged                                                                                         | Alternative                                       |
+| ---- | ------------------------------------- | -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| F-1  | منصت                                  | Munsit                                                   | Brand name: confirm the Latin spelling (the logo and copyright use "Munsit AI")                           | "Munsit AI" in headings                           |
+| F-2  | ابدأ مجانًا                            | Get started free                                         | **"Free" is a commercial statement.** It is in the Arabic Figma copy, but no pricing is approved (P07-D4) | "Get started" (drops "free")                      |
+| F-3  | كل كلمة ليها قيمة ومنصت مش بيفوّت كلمة | Every word matters, and Munsit doesn't miss a single one | Egyptian colloquial idiom with wordplay on "كلمة"; English loses the repetition                           | "Every word counts, and Munsit catches every one" |
+| F-4  | الدكتور                               | the lecturer                                             | In Egyptian usage "الدكتور" means the university lecturer, not a medical doctor                           | "your professor"                                  |
+| F-5  | خطط الاشتراك                          | Plans                                                    | Literal: "Subscription plans". "Subscription" can imply a paid offer, which is not approved               | "Subscription plans"                              |
+| F-6  | البداية / Starter                     | Starter / Starter                                        | The Arabic name and the Latin label become the same word in English                                       | Show the label only                               |
+| F-7  | تُحدد لاحقًا                            | to be announced                                          | Literal: "to be determined later". Development-only text                                                  | "to be determined"                                |
+| F-8  | EN (language switch)                  | AR or "العربية"                                          | The English page needs the switch label for Arabic                                                        | "عربي"                                            |
+| F-9  | تمييز المعلومات الذكي                 | Smart highlights                                         | Literal: "Smart information highlighting". The shorter form is a marketing paraphrase                     | "Smart information highlighting"                  |
+| F-10 | سجل المحادثات                         | Chat history                                             | A mock sidebar label naming a feature that is not in the Features list. Kept as an illustration           | "Conversation history"                            |
+| F-11 | الأسئلة الشائعة                       | FAQ                                                      | The abbreviation is shorter than the Arabic; the full form fits the footer                                | "Frequently asked questions"                      |
+
+**Not flagged:** numbers, timestamps and step numbers stay as written, as LTR runs.
