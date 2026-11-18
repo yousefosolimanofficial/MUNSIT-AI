@@ -3,11 +3,20 @@
 Single resume point. A new session starts by reading this file, the latest phase report, and
 [docs/references/MUNSIT_AI_Development_Roadmap_v1.0.md](references/MUNSIT_AI_Development_Roadmap_v1.0.md).
 
-- **Current phase:** 06 — Shared states & overlay/guard infrastructure — **In progress** (kickoff
-  authorized by the user on 2026-11-17). Plan: [phases/phase-06-plan.md](phases/phase-06-plan.md),
-  approved and merged through PR #37 (`70c821d`); Figma values in
-  [design-values.md §15](design-values.md); D-U1 to D-U10 approved. Phase 07 is NOT STARTED. R-2
-  and R-3 stay OPEN.
+- **Next phase:** 07 — Landing Page — **NOT STARTED.** The execution brief awaits the owner's
+  review. No Phase 07 code is written until it is reviewed and the phase is authorized.
+- **Phase 06:** Shared states & overlay/guard infrastructure — **CLOSED — Development Complete,
+  Production QA Outstanding.**
+  - **Closure:** approved by the product owner on 2026-11-19; final code `main` `6cda86c` (PR #47);
+    post-merge CI green. Report:
+    [phases/phase-06-closure-report.md](phases/phase-06-closure-report.md).
+  - **Not production-ready:**
+    - R-2 and R-3 stay OPEN; G-1 stays RISK ACCEPTED (conditional); W-1 is accepted under R-3;
+      OV-1 is RESOLVED;
+    - the production release gates are listed in the closure report §16.
+  - **Plan:** [phases/phase-06-plan.md](phases/phase-06-plan.md), approved and merged through
+    PR #37 (`70c821d`); Figma values in [design-values.md §15](design-values.md); D-U1 to D-U10
+    approved.
   - **Increment 1 (guard slice): COMPLETE** (PR #38, 2026-11-18). **G-1** is RISK ACCEPTED —
     BROWSER LIMITATION (see Risks). It contains:
     - the danger Button (D-U2) and `ConfirmGuardDialog` (D-U1);
@@ -34,8 +43,7 @@ Single resume point. A new session starts by reading this file, the latest phase
       the explicit G-1 reproduction;
     - PR #46: a CI `e2e` job (full suite; flaky tests fail) and Linux visual baselines. It is not
       yet a **required** check: that is a ruleset setting.
-  - **Increment 5 (final integration and closure readiness): in review** on
-    `feat/phase-06-final-integration`:
+  - **Increment 5 (final integration and closure readiness): COMPLETE** (PR #47, `6cda86c`):
     - Notifications / User Menu frame check (D-U8): User Menu desktop and tablet match; the other
       differences follow D-02 and D-PM5; OV-1 (mobile tops 74 / 72) is APPROVED as implemented;
     - `/dev/guard` removed (the guard E2E now runs on a dev-only fixture that is not built in
@@ -43,8 +51,8 @@ Single resume point. A new session starts by reading this file, the latest phase
     - cross-browser guard spec (Chromium, Firefox, WebKit): W-1 found in WebKit, ACCEPTED AS A
       DEVELOPMENT-STAGE LIMITATION under R-3 (not production Safari approval);
     - `shared-patterns.md` completed;
-    - [phases/phase-06-closure-report.md](phases/phase-06-closure-report.md) (closure readiness;
-      the phase stays In progress until the owner approves).
+    - [phases/phase-06-closure-report.md](phases/phase-06-closure-report.md) (CLOSED,
+      2026-11-19).
   - **Mariam `EmptyState`: ACCEPTED / INTEGRATED.** Delivered on 2026-11-18 and integrated on
     2026-11-18 through PR #39 (rebase merge): her delivery commit `b7cf1d9` (two files, verbatim,
     no source changes), then the gallery, E2E and records in `abe2952`. `pnpm check` 1049/1049;
@@ -147,10 +155,10 @@ Single resume point. A new session starts by reading this file, the latest phase
 
 ## Team and module assignments
 
-| Developer | Role                                                         | Assigned modules                                                                                                                                 |
-| --------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Yousef    | Frontend Lead — architecture, shared foundation, integration | Shared foundation (by role); modules not assigned yet                                                                                            |
-| Mariam    | Frontend Developer — assigned feature modules                | Feature modules: not assigned yet. Delegated shared component: Phase 05 `MobileNavItem` (2 files): delivered 2026-11-17, awaiting implementation |
+| Developer | Role                                                         | Assigned modules                                                                                                                                      |
+| --------- | ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Yousef    | Frontend Lead — architecture, shared foundation, integration | Shared foundation (by role); modules not assigned yet                                                                                                 |
+| Mariam    | Frontend Developer — assigned feature modules                | Feature modules: not assigned yet. Delegated shared components, both integrated: Phase 05 `MobileNavItem` (PR #35) and Phase 06 `EmptyState` (PR #39) |
 
 **Phase 03 assignment (agreed by the user, 2026-11-13).** Yousef: component requirements and
 architecture review, contracts, integration, quality assurance, GitHub management. Mariam:
@@ -165,31 +173,31 @@ works offline and delivers packages per [TEAM_COLLABORATION.md](TEAM_COLLABORATI
 
 ## Phase status
 
-| #   | Phase                               | Status      |
-| --- | ----------------------------------- | ----------- |
-| 01  | Project initialization & tooling    | Done        |
-| 02  | Design System implementation        | Done        |
-| 03  | Core UI primitives                  | Done        |
-| 04  | Routing & navigation registry       | Done        |
-| 05  | Shared App Shell                    | Done        |
-| 06  | Shared states & overlay/guard infra | In progress |
-| 07  | Landing Page                        | Not started |
-| 08  | Authentication UI                   | Not started |
-| 09  | Dashboard                           | Not started |
-| 10  | Lecture Management                  | Not started |
-| 11  | Lecture Details                     | Not started |
-| 12  | Live Recording                      | Not started |
-| 13  | AI Virtual Tutor                    | Not started |
-| 14  | My Summaries                        | Not started |
-| 15  | AI Question Bank                    | Not started |
-| 16  | My Notes                            | Not started |
-| 17  | AI Flashcards                       | Not started |
-| 18  | Favorites                           | Not started |
-| 19  | My Folders                          | Not started |
-| 20  | Profile & Settings                  | Not started |
-| 21  | API integration                     | Not started |
-| 22  | Testing & hardening                 | Not started |
-| 23  | Deployment preparation              | Not started |
+| #   | Phase                               | Status                                              |
+| --- | ----------------------------------- | --------------------------------------------------- |
+| 01  | Project initialization & tooling    | Done                                                |
+| 02  | Design System implementation        | Done                                                |
+| 03  | Core UI primitives                  | Done                                                |
+| 04  | Routing & navigation registry       | Done                                                |
+| 05  | Shared App Shell                    | Done                                                |
+| 06  | Shared states & overlay/guard infra | Done (CLOSED 2026-11-19; production QA outstanding) |
+| 07  | Landing Page                        | Not started (next; brief in review)                 |
+| 08  | Authentication UI                   | Not started                                         |
+| 09  | Dashboard                           | Not started                                         |
+| 10  | Lecture Management                  | Not started                                         |
+| 11  | Lecture Details                     | Not started                                         |
+| 12  | Live Recording                      | Not started                                         |
+| 13  | AI Virtual Tutor                    | Not started                                         |
+| 14  | My Summaries                        | Not started                                         |
+| 15  | AI Question Bank                    | Not started                                         |
+| 16  | My Notes                            | Not started                                         |
+| 17  | AI Flashcards                       | Not started                                         |
+| 18  | Favorites                           | Not started                                         |
+| 19  | My Folders                          | Not started                                         |
+| 20  | Profile & Settings                  | Not started                                         |
+| 21  | API integration                     | Not started                                         |
+| 22  | Testing & hardening                 | Not started                                         |
+| 23  | Deployment preparation              | Not started                                         |
 
 ## Open blockers
 
@@ -228,6 +236,7 @@ that phase's scope.
 | R-2 | **404 rendering (Phase 04, accepted temporarily 2026-11-16):** unknown or deferred URLs return HTTP 404, but the first HTML is Next.js 16.4.6's empty error document. The localized 404 appears only after hydration, so without JavaScript (or if JS fails, or for non-JS crawlers) the page is **blank**: no message, no link back, no descriptive title. Low SEO impact (404 + `noindex`); accessibility dead end without JS. Framework behaviour for `notFound()`, reproduced in a minimal Next app; alternatives: proxy rewrite to a static 404 (amends D-R8) or experimental `global-not-found`. Details: [phases/phase-04-closure-report.md](phases/phase-04-closure-report.md) §7.1. | **Open — accepted only as a development-stage limitation, not production behaviour.** Re-test at the next Next.js upgrade. **Must be resolved or explicitly re-accepted by the product owner before production launch, no later than Phase 22.**                                                       |
 | R-3 | **Cross-browser coverage (Phase 05, 2026-11-17):** the full suite runs in Chromium only. Since Phase 06 Increment 5, a focused guard spec also runs in Playwright Firefox and WebKit: W-1 was found in WebKit, and the engine differences are in the closure report §10. This is automation, not real devices. Real Firefox, Safari (macOS and iOS) and Edge are unverified, although D-12 requires the latest two majors of each. This is separate from R-2, which concerns the no-JavaScript 404 document in every browser.                                                                                                                                                                | **Open — pre-production QA requirement.** Run the E2E suite and a manual pass in Firefox, WebKit and Edge before production launch (Phase 22 at the latest).                                                                                                                                           |
 | G-1 | **Navigation guard, browser Back (found 2026-11-18):** a second browser Back with no user interaction in between (for example Esc, then Back, or Back twice) leaves a guarded page without confirmation. This is the HTML Standard's anti back-trapping rule (history-action activation; Esc is not activation), not an application bug. Findings, evidence and the binding Notes/Recording data-protection criteria: [phases/phase-06-g1-findings.md](phases/phase-06-g1-findings.md).                                                                                                                                                                                                      | **RISK ACCEPTED — BROWSER LIMITATION** (product owner, 2026-11-18, option A). Conditional: not approval of unrecoverable data loss; the limitation is not fixed. Notes and Recording are not production-ready until findings §6 is implemented and tested. The G-1 reproduction stays in E2E (PR #45). |
+| W-1 | **Navigation guard, WebKit (Playwright build, found 2026-11-19 in Phase 06 Increment 5):** Leave after a cancelled browser Back (`navigation.traverseTo`) fires a native `beforeunload` prompt; accepting it reloads the guarded page instead of going back. Reproduced as a visible `fixme` in `navigation-guard.cross-browser.spec.ts`.                                                                                                                                                                                                                                                                                                                                                    | **Accepted as a development-stage limitation under R-3** (product owner). Safari production support is unapproved until real Safari and iOS verification and any required fix.                                                                                                                         |
 
 ## Environment notes
 
@@ -258,6 +267,16 @@ numerals and English runs inside Arabic text (direction isolation). See R-1, I-1
 | 7   | Final audit + phase report; G-1, G-2 implemented             | Done — approved (2026-11-13)   |
 
 ## Next action
+
+**2026-11-19:** Phase 06 is CLOSED (Development Complete — Production QA Outstanding). The product
+owner approved the closure; the closure records went through a documentation-only PR. Final code:
+`main` `6cda86c` (PR #47); CI green (798 passed, 1 skipped, the visible W-1 `fixme`).
+
+- **Next:** Phase 07 (Landing Page). It is not started; its execution brief goes to the owner for
+  review first.
+- **Open:** R-2 and R-3 OPEN; G-1 RISK ACCEPTED; W-1 accepted under R-3; OV-1 RESOLVED.
+- **Owner action:** make `e2e` a required check in the `main-protection` ruleset (it requires
+  `check` only).
 
 **2026-11-17:** Phase 06 kickoff. The planning PR (plan, Figma audit in design-values §15) awaits
 approval. No implementation yet. Recommended first increment: the guard slice. Mariam candidate:

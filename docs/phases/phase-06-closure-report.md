@@ -1,10 +1,19 @@
-# Phase 06 — Closure-readiness report
+# Phase 06 — Closure report
 
 **Phase:** 06 — Shared states & overlay/guard infrastructure.
-**Status:** **IN PROGRESS — closure readiness, awaiting the owner's review.** This report does not
-close the phase. Phase 07 has not started.
-**Date:** 2026-11-18. **Baseline:** `main` `9b5f082`; Increment 5 on
-`feat/phase-06-final-integration`.
+
+- **Status:** **CLOSED** (2026-11-19).
+- **Classification:** **Development Complete — Production QA Outstanding.** This is **not**
+  production readiness.
+- **Owner approval:** the product owner formally approved the closure on 2026-11-19 and accepted
+  every Phase 06 implementation increment. It was recorded through a documentation-only closure
+  PR.
+- **Final code:** `main` `6cda86c` (PR #47, squash). Post-merge CI: `check` and `e2e` green, with
+  798 passed and 1 skipped (the visible W-1 `fixme`).
+- **Risks:** R-2 and R-3 stay OPEN; G-1 stays RISK ACCEPTED; W-1 is accepted under R-3; OV-1 is
+  RESOLVED (§16).
+- **Next phase:** Phase 07 (Landing Page) is NOT STARTED. Its execution brief awaits the owner's
+  review.
 
 This report separates four things:
 
@@ -276,8 +285,9 @@ Dashboard first-time card.
 
 ## 15. Recommendation
 
-**PHASE 06 — DEVELOPMENT COMPLETE / READY FOR OWNER CLOSURE.** The phase is **not** marked
-CLOSED until the owner approves.
+**Recommended (2026-11-18):** PHASE 06 — DEVELOPMENT COMPLETE / READY FOR OWNER CLOSURE.
+**Outcome (2026-11-19):** the owner approved the closure: **PHASE 06 — CLOSED / DEVELOPMENT
+COMPLETE** (Development Complete — Production QA Outstanding).
 
 **Development scope: complete.** Every Roadmap Phase 06 deliverable is built, merged and tested.
 The guard per exit path, safe-action focus and error isolation are covered. The module guide is
@@ -294,7 +304,34 @@ complete.
 **Not production-ready:** R-2 and R-3 stay open, real-device and screen-reader QA remain, and
 the Notes and Recording data-protection gate applies.
 
-**Remaining steps to closure:**
+## 16. Official closure record (2026-11-19)
 
-1. Merge this PR with CI green.
-2. The owner's official closure approval.
+**Decision:** the product owner approved the closure of Phase 06: **CLOSED / DEVELOPMENT
+COMPLETE**. All implementation increments (1–5) are accepted. Completed implementation decisions
+are not reopened. This approval does **not** mean production readiness.
+
+**Risk decisions preserved:**
+
+| ID   | Status                                                                                                                                                          |
+| ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| R-2  | **OPEN**, scheduled for Phase 22                                                                                                                                |
+| R-3  | **OPEN**: real browser, device, accessibility and performance validation required                                                                               |
+| G-1  | **RISK ACCEPTED — BROWSER LIMITATION**. It stays conditional on the Notes and Recording modules implementing reliable data persistence and recovery (§12)       |
+| W-1  | **Accepted as a development-stage limitation under R-3.** Safari production support stays unapproved until real-device verification and any required correction |
+| OV-1 | **RESOLVED**: the current mobile panel positions are approved                                                                                                   |
+
+**Production release gates.** These are production-readiness requirements, not reasons to reopen
+Phase 06:
+
+1. Real Safari and iOS testing.
+2. Firefox and Edge validation.
+3. Real Back-button and history-menu testing.
+4. Screen-reader and assistive-technology validation.
+5. Low-end device blur-performance testing.
+6. R-2 remediation.
+7. Notes draft persistence and recovery.
+8. Recording segment persistence and recovery.
+
+**Repository quality gate:** the intended required checks are `check` and `e2e`. The
+`main-protection` ruleset requires **`check` only** (verified through the API on 2026-11-19). Adding
+`e2e` as a required check is an **outstanding owner action**.
