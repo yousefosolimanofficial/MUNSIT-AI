@@ -1,8 +1,10 @@
 # Phase 06 — `EmptyState` assignment (starter package)
 
-**Status:** PREPARED — NOT SENT. The assignment was authorized by the product owner on 2026-11-18
-(Phase 06 plan D-U4, §10). The starter package is built from the `main` commit recorded in its
-`BASELINE_COMMIT.txt`. It is recorded as delivered only after Yousef confirms the handoff.
+**Status:** DELIVERED / UNDER REVIEW. The starter `munsit-starter-70c821d.zip` reached Mariam (no
+separate send date was recorded), and her delivery `munsit-delivery-empty-state-20261118-v1.zip`
+was received on 2026-11-18. It is integrated for review on `delivery/phase-06-empty-state-v1`, and
+becomes ACCEPTED / INTEGRATED once that PR is merged with CI green. The assignment was authorized
+by the product owner on 2026-11-18 (Phase 06 plan D-U4, §10).
 
 ---
 
