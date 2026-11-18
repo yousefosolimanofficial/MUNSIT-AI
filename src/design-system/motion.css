@@ -5,7 +5,9 @@
  * keyframe motion; durations and easing come only from here.
  *
  * Rules: CSS-first; animate `transform` and `opacity` only; hover effects only under
- * `(hover: hover) and (pointer: fine)`; no continuous decorative animation.
+ * `(hover: hover) and (pointer: fine)`; no continuous decorative animation. One approved
+ * exception: the loading-skeleton pulse (Phase 06, D-U3), opacity only and off under reduced
+ * motion.
  *
  * Utilities: `duration-fast|base|slow|flip`, `ease-standard`. A bare `transition` uses
  * base + standard.
@@ -24,6 +26,17 @@
   /* Tailwind's default keyframe animations (spin, ping, pulse, bounce) are infinite and
      off-system; they are removed. State animations are defined by their components. */
   --animate-*: initial;
+
+  /* Phase 06 (D-U3, approved): loading-skeleton pulse. Opacity only, the approved curve, a period of
+     four `flip` durations (1.6s). Components also set `motion-reduce:animate-none`. */
+  --animate-skeleton-pulse: skeleton-pulse calc(var(--transition-duration-flip) * 4)
+    var(--ease-standard) infinite;
+
+  @keyframes skeleton-pulse {
+    50% {
+      opacity: 0.55;
+    }
+  }
 
   --default-transition-duration: var(--transition-duration-base);
   --default-transition-timing-function: var(--ease-standard);

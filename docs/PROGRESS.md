@@ -3,11 +3,11 @@
 Single resume point. A new session starts by reading this file, the latest phase report, and
 [docs/references/MUNSIT_AI_Development_Roadmap_v1.0.md](references/MUNSIT_AI_Development_Roadmap_v1.0.md).
 
-- **Current phase:** 06 — Shared states & overlay/guard infrastructure — **Planning** (kickoff
-  authorized by the user on 2026-11-17). The plan is in review and **implementation has not
-  started**: [phases/phase-06-plan.md](phases/phase-06-plan.md), with the Figma values in
-  [design-values.md §15](design-values.md). The plan was approved and merged through PR #37
-  (`70c821d`); D-U1 to D-U10 have dispositions. Phase 07 is NOT STARTED. R-2 and R-3 stay OPEN.
+- **Current phase:** 06 — Shared states & overlay/guard infrastructure — **In progress** (kickoff
+  authorized by the user on 2026-11-17). Plan: [phases/phase-06-plan.md](phases/phase-06-plan.md),
+  approved and merged through PR #37 (`70c821d`); Figma values in
+  [design-values.md §15](design-values.md); D-U1 to D-U10 approved. Phase 07 is NOT STARTED. R-2
+  and R-3 stay OPEN.
   - **Increment 1 (guard slice): COMPLETE** (PR #38, 2026-11-18). It contains:
     - the danger Button (D-U2) and `ConfirmGuardDialog` (D-U1);
     - the navigation guard (D-U7): Navigation API in Chromium, sentinel fallback elsewhere,
@@ -16,6 +16,14 @@ Single resume point. A new session starts by reading this file, the latest phase
 
     The dev-only `/dev/guard` route is removed before the Phase 06 closure. Browser limitations
     (R-3) and the fallback limitations are recorded in the plan §7.2.
+
+  - **Increment 2 (loading and error states): in review** on
+    `feat/phase-06-shared-loading-error-states`:
+    - `Skeleton`, `SkeletonText` and `SkeletonRegion` (D-U3 pulse, reduced motion);
+    - `ErrorCard`, with `card` and `section` layouts (D-U5);
+    - `SectionBoundary` (Next.js `catchError`, plus `status` for data failures).
+
+    Module guide: [shared-patterns.md](shared-patterns.md).
 
   - **Mariam `EmptyState`: ACCEPTED / INTEGRATED.** Delivered on 2026-11-18 and integrated on
     2026-11-18 through PR #39 (rebase merge): her delivery commit `b7cf1d9` (two files, verbatim,
@@ -144,7 +152,7 @@ works offline and delivers packages per [TEAM_COLLABORATION.md](TEAM_COLLABORATI
 | 03  | Core UI primitives                  | Done        |
 | 04  | Routing & navigation registry       | Done        |
 | 05  | Shared App Shell                    | Done        |
-| 06  | Shared states & overlay/guard infra | Planning    |
+| 06  | Shared states & overlay/guard infra | In progress |
 | 07  | Landing Page                        | Not started |
 | 08  | Authentication UI                   | Not started |
 | 09  | Dashboard                           | Not started |

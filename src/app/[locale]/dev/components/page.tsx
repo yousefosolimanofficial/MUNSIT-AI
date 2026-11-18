@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 
 import { getShellLabels } from "@/shared/layout/shell-labels";
 import { EmptyState } from "@/shared/patterns/EmptyState";
+import { Skeleton, SkeletonRegion, SkeletonText } from "@/shared/patterns/Skeleton";
 import { Avatar, type AvatarSize } from "@/shared/ui/Avatar";
 import { StatusBadge, type StatusBadgeStatus } from "@/shared/ui/Badge";
 import { Button } from "@/shared/ui/Button";
@@ -16,6 +17,8 @@ import { Tab, TabList, TabPanel, Tabs, type TabsSize } from "@/shared/ui/Tabs";
 import type { IconName } from "@/design-system/icons/manifest";
 
 import { DialogDemo } from "./_components/DialogDemo";
+import { ErrorCardSamples } from "./_components/ErrorCardSamples";
+import { StatesDemo } from "./_components/StatesDemo";
 import { GuardDialogDemo } from "./_components/GuardDialogDemo";
 import { MoreSheetDemo } from "./_components/MoreSheetDemo";
 import { NavigationIconButtonDemo } from "./_components/NavigationIconButtonDemo";
@@ -185,6 +188,35 @@ const EMPTY_COPY = {
   },
 } as const;
 
+/**
+ * Loading and error gallery samples (Phase 06 Increment 2). Arabic is Figma copy: full error
+ * `2495:2424`, section error `2495:2966` (Dashboard). The loading label and all English text are
+ * dev-only gallery samples, not product copy.
+ */
+const STATES_COPY = {
+  ar: {
+    fullTitle: "تعذّر تحميل بيانات لوحة التحكم",
+    fullText: "حصلت مشكلة أثناء تحميل بياناتك. جرّب مرة تانية.",
+    sectionTitle: "تعذّر تحميل آخر المحاضرات",
+    sectionText: "باقي أقسام لوحة التحكم شغالة. جرّب تحميل القسم ده تاني.",
+    retry: "إعادة المحاولة",
+    loading: "جارٍ تحميل آخر المحاضرات",
+    healthy: "قسم سليم",
+  },
+  en: {
+    fullTitle: "Couldn't load the dashboard",
+    fullText: "Something went wrong while loading your data. Try again.",
+    sectionTitle: "Couldn't load the latest lectures",
+    sectionText: "The rest of the dashboard still works. Try loading this section again.",
+    retry: "Try again",
+    loading: "Loading the latest lectures",
+    healthy: "Healthy section",
+  },
+} as const;
+
+/** Gallery host card for samples that live inside a module card (dev only). */
+const STATE_HOST = "rounded-xl border border-accent-electric-sky/14 bg-surface-obsidian/88 p-md";
+
 const CARD_COPY = {
   ar: {
     activity: "النشاط الأخير",
@@ -257,6 +289,7 @@ export default async function DevComponentsPage() {
   const copy = locale === "en" ? INPUT_COPY.en : INPUT_COPY.ar;
   const cardCopy = locale === "en" ? CARD_COPY.en : CARD_COPY.ar;
   const emptyCopy = locale === "en" ? EMPTY_COPY.en : EMPTY_COPY.ar;
+  const statesCopy = locale === "en" ? STATES_COPY.en : STATES_COPY.ar;
   const badgeLabel = (status: StatusBadgeStatus) =>
     BADGE_LABELS[status][locale === "en" ? "en" : "ar"];
 
@@ -416,6 +449,70 @@ export default async function DevComponentsPage() {
         <div data-testid="empty-minimal">
           <EmptyState icon="search" title={emptyCopy.minimalTitle} headingLevel={3} />
         </div>
+      </section>
+      <section
+        data-testid="gallery-skeleton"
+        aria-labelledby="gallery-skeleton-title"
+        className="grid gap-md p-lg pt-0"
+      >
+        <h2 id="gallery-skeleton-title" className="text-dashboard-title-m" lang="en">
+          Skeleton (Phase 06) · content-shaped · pulse, none under reduced motion
+        </h2>
+        <div data-testid="skeleton-card" className={STATE_HOST}>
+          <SkeletonRegion label={statesCopy.loading}>
+            <Skeleton width="40%" height={16} />
+            <SkeletonText lines={2} />
+            <Skeleton height={96} />
+          </SkeletonRegion>
+        </div>
+        <div data-testid="skeleton-row" className="grid gap-md md:grid-cols-3">
+          {["a", "b", "c"].map((id) => (
+            <div key={id} className={STATE_HOST}>
+              <SkeletonRegion label={statesCopy.loading}>
+                <Skeleton width={124} height={16} />
+                <SkeletonText lines={3} lastLineWidth="55%" />
+              </SkeletonRegion>
+            </div>
+          ))}
+        </div>
+      </section>
+      <section
+        data-testid="gallery-error-card"
+        aria-labelledby="gallery-error-card-title"
+        className="grid gap-md p-lg pt-0"
+      >
+        <h2 id="gallery-error-card-title" className="text-dashboard-title-m" lang="en">
+          ErrorCard (Phase 06) · card · section (inside a card) · without retry
+        </h2>
+        <ErrorCardSamples
+          copy={{
+            fullTitle: statesCopy.fullTitle,
+            fullText: statesCopy.fullText,
+            sectionTitle: statesCopy.sectionTitle,
+            sectionText: statesCopy.sectionText,
+            retry: statesCopy.retry,
+          }}
+        />
+      </section>
+      <section
+        data-testid="gallery-states"
+        aria-labelledby="gallery-states-title"
+        className="grid gap-md p-lg pt-0"
+      >
+        <h2 id="gallery-states-title" className="text-dashboard-title-m" lang="en">
+          SectionBoundary (Phase 06) · one failed section beside healthy ones · retry
+        </h2>
+        <StatesDemo
+          copy={{
+            section: {
+              title: statesCopy.sectionTitle,
+              description: statesCopy.sectionText,
+              retryLabel: statesCopy.retry,
+            },
+            loading: statesCopy.loading,
+            healthy: statesCopy.healthy,
+          }}
+        />
       </section>
       <section
         data-testid="gallery-guard"

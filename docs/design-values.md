@@ -737,3 +737,17 @@ Secondary Pressed fill (Sky 20%, D-B6) = **4.66:1**. Both pass AA; the second ha
 Measured in Chromium on the guard dialog (label over fill, dialog surface, scrim and page):
 **rest 5.80, hover 5.04, keyboard focus 5.80, pressed 4.69**, matching the §15.4 calculation.
 Contract addendum: [phases/phase-03-button-contract.md](phases/phase-03-button-contract.md) §14.
+
+### 15.7 Section error at Tablet and Mobile (read-only, 2026-11-18)
+
+- **Tablet `2495:3661`:** the same row as Desktop: tile, text, Secondary retry; 614 wide.
+- **Mobile `2495:4805`:** the row becomes a vertical, centred stack, in this order: tile 44,
+  text (centred, 284 wide), then retry 128 × 44. Gap 14, padding-inline 16.
+- **Host card** (Recent Lectures): radius 20, padding 16, Obsidian 88%, Sky 14%.
+
+**Implementation (Increment 2):** a container query on the section error. It is a row from 28rem
+of card width, stacked below, so it follows the card (316 inner width on Mobile, 614 on Tablet),
+not the viewport.
+
+**Skeleton pulse (D-U3):** opacity 1 → 0.55 → 1 over four `flip` durations (1.6s), with the
+approved curve; none under reduced motion. Defined once in `src/design-system/motion.css`.
