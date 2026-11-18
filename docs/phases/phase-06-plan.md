@@ -186,7 +186,7 @@ and page state. The fallback suites remove `window.navigation` before any script
 | --------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
 | Links in the shell and the page, language switch                                  | Supported: Stay keeps URL, state and focus; Leave navigates once                                                                                                                                                                                                                                                       | Supported                                                          |
 | Programmatic (`useGuardedRouter`, user menu); raw routers are forbidden by ESLint | Supported                                                                                                                                                                                                                                                                                                              | Supported                                                          |
-| Back and Forward, user-initiated, repeated, after Stay                            | Supported; history unchanged; **Forward entries kept**                                                                                                                                                                                                                                                                 | Back supported; **Forward entries discarded** (limitation)         |
+| Back and Forward, user-initiated, repeated, after Stay                            | Supported; history unchanged; **Forward entries kept**. **Exception (G-1, OPEN):** a second browser Back with no user interaction in between (for example Esc, then Back) is non-cancelable by browser rule and leaves; see [phase-06-g1-findings.md](phase-06-g1-findings.md)                                         | Back supported; **Forward entries discarded** (limitation)         |
 | Several Back steps in one task, and a history-menu jump (`go(-2)`)                | Supported: every same-document step is cancelled; Leave lands on the chosen entry                                                                                                                                                                                                                                      | **Not stopped** (limitation); history stays consistent             |
 | A step out of the app document (cross-document)                                   | Native `beforeunload` prompt only                                                                                                                                                                                                                                                                                      | Native `beforeunload` prompt only                                  |
 | Refresh, tab close                                                                | Native `beforeunload` prompt only (after user interaction); dismiss keeps the page                                                                                                                                                                                                                                     | Same                                                               |
@@ -197,7 +197,14 @@ and page state. The fallback suites remove `window.navigation` before any script
 
 **Chromium detail:** a script-initiated repeat traversal right after a cancellation can be ignored
 by the browser (no navigation and no event). User-initiated traversals (Playwright `goBack` and
-`goForward`, as from the toolbar) are always asked. Nothing leaves without confirmation.
+`goForward`, as from the toolbar) are asked once per user interaction.
+
+**Correction (2026-11-18, G-1):** the earlier sentence "always asked; nothing leaves without
+confirmation" was wrong. The HTML Standard lets a page cancel a browser-UI traversal only with
+history-action activation, and each cancellation consumes it. Esc does not grant it. A second Back
+with no interaction in between therefore leaves. The test passed because Playwright's page calls
+grant activation. Findings and the decision needed:
+[phase-06-g1-findings.md](phase-06-g1-findings.md).
 
 ## 8. Increments and PR boundaries
 
