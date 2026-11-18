@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 
 import { getShellLabels } from "@/shared/layout/shell-labels";
+import { EmptyState } from "@/shared/patterns/EmptyState";
 import { Avatar, type AvatarSize } from "@/shared/ui/Avatar";
 import { StatusBadge, type StatusBadgeStatus } from "@/shared/ui/Badge";
 import { Button } from "@/shared/ui/Button";
@@ -154,6 +155,36 @@ const AVATAR_SAMPLES: readonly {
 ];
 
 /** Card copy: Figma Dashboard titles; the row titles are sample data. English for LTR. */
+/**
+ * EmptyState gallery samples (Phase 06, Mariam delivery v1). Arabic is Figma copy: `default` =
+ * Notes `NoNotes` (`2433:7748`, instance of `Shared / Empty State` `2389:4037`), `compact` =
+ * Dashboard First-Time (`2482:2130`). English is a dev-only gallery sample, not product copy.
+ */
+const EMPTY_COPY = {
+  ar: {
+    defaultTitle: "لسه مفيش ملاحظات هنا!",
+    defaultText: "ابدأ اكتب أول ملاحظة، وخلي كل أفكارك المهمة في مكان واحد.",
+    defaultAction: "إنشاء ملاحظة",
+    compactTitle: "لسه رحلتك مع مُنصت بتبدأ!",
+    compactText: "ارفع أول محاضرة وابدأ حوّل مذاكرتك لتجربة أذكى وأسهل.",
+    compactPrimary: "إضافة أول محاضرة",
+    compactSecondary: "تسجيل محاضرة مباشرة",
+    compactNote: "تقدر ترفع تسجيل صوتي أو ملف PDF",
+    minimalTitle: "مفيش نتائج",
+  },
+  en: {
+    defaultTitle: "No notes here yet!",
+    defaultText: "Write your first note and keep all your important ideas in one place.",
+    defaultAction: "Create note",
+    compactTitle: "Your journey with Munsit is just starting!",
+    compactText: "Upload your first lecture and make studying smarter and easier.",
+    compactPrimary: "Add first lecture",
+    compactSecondary: "Record a live lecture",
+    compactNote: "You can upload an audio recording or a PDF file",
+    minimalTitle: "No results",
+  },
+} as const;
+
 const CARD_COPY = {
   ar: {
     activity: "النشاط الأخير",
@@ -225,6 +256,7 @@ export default async function DevComponentsPage() {
   const label = locale === "en" ? LABELS.en : LABELS.ar;
   const copy = locale === "en" ? INPUT_COPY.en : INPUT_COPY.ar;
   const cardCopy = locale === "en" ? CARD_COPY.en : CARD_COPY.ar;
+  const emptyCopy = locale === "en" ? EMPTY_COPY.en : EMPTY_COPY.ar;
   const badgeLabel = (status: StatusBadgeStatus) =>
     BADGE_LABELS[status][locale === "en" ? "en" : "ar"];
 
@@ -346,6 +378,44 @@ export default async function DevComponentsPage() {
           Dialog · locale={locale} · Esc, scrim click and the close button close it
         </h2>
         <DialogDemo locale={locale === "en" ? "en" : "ar"} />
+      </section>
+      {/* Outside <main> as well: its actions are Buttons (see the comment above). */}
+      <section
+        data-testid="gallery-empty-state"
+        aria-labelledby="gallery-empty-state-title"
+        className="grid gap-md p-lg pt-0"
+      >
+        <h2 id="gallery-empty-state-title" className="text-dashboard-title-m" lang="en">
+          EmptyState (Phase 06, Mariam delivery v1) · default · compact · minimal
+        </h2>
+        <div data-testid="empty-default">
+          <EmptyState
+            icon="note"
+            title={emptyCopy.defaultTitle}
+            description={emptyCopy.defaultText}
+            actions={<Button>{emptyCopy.defaultAction}</Button>}
+            headingLevel={3}
+          />
+        </div>
+        <div data-testid="empty-compact">
+          <EmptyState
+            variant="compact"
+            icon="upload"
+            title={emptyCopy.compactTitle}
+            description={emptyCopy.compactText}
+            actions={
+              <>
+                <Button>{emptyCopy.compactPrimary}</Button>
+                <Button variant="secondary">{emptyCopy.compactSecondary}</Button>
+              </>
+            }
+            footnote={emptyCopy.compactNote}
+            headingLevel={3}
+          />
+        </div>
+        <div data-testid="empty-minimal">
+          <EmptyState icon="search" title={emptyCopy.minimalTitle} headingLevel={3} />
+        </div>
       </section>
       <section
         data-testid="gallery-guard"
