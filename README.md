@@ -283,6 +283,10 @@ Full procedure: [docs/TEAM_COLLABORATION.md](docs/TEAM_COLLABORATION.md) · Chec
 - Pull Requests use the [template](.github/PULL_REQUEST_TEMPLATE.md) and are reviewed by Yousef.
 - `corepack pnpm check` must pass before a PR is merged; GitHub Actions
   ([ci.yml](.github/workflows/ci.yml)) runs it on every PR and the result is a required check.
+- The same workflow runs the full Playwright suite in an `e2e` job (Chromium). A test that passes
+  only on a retry fails the job. Whether `e2e` is a **required** check is a repository ruleset
+  setting (`main-protection`), not code: until it is added there, confirm `e2e` is green before
+  merging.
 - Nobody overwrites another developer's assigned module or shared files without coordination.
 
 ## 16. Future Development

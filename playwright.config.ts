@@ -11,8 +11,11 @@ export default defineConfig({
   globalSetup: "./tests/e2e/global-setup.ts",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
+  // CI retries only to capture a trace (`on-first-retry`); a test that passes only on a retry
+  // is reported as flaky and fails the run, so retries never hide instability.
   retries: process.env.CI ? 2 : 0,
-  reporter: process.env.CI ? "github" : "list",
+  failOnFlakyTests: !!process.env.CI,
+  reporter: process.env.CI ? [["list"], ["github"], ["html", { open: "never" }]] : "list",
   use: {
     baseURL,
     trace: "on-first-retry",
