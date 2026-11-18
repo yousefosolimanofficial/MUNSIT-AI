@@ -35,7 +35,10 @@ import { ErrorCard, type ErrorCardLayout } from "./ErrorCard";
  *   the section wrapper when it has no heading;
  * - the new retry button when the failure persists;
  * and waits while the section is loading. If the user has already moved focus elsewhere, nothing
- * is moved. The watcher stops once it has decided, or after 10 s.
+ * is moved. The watcher stops once it has decided, when focus moves to another element outside
+ * the section, or when the section unmounts. It has no time limit: `retry()` waits for a router
+ * refresh (a server round trip), and a slow network must not drop focus to the document when the
+ * retry button finally unmounts.
  */
 
 export interface SectionErrorCopy {
@@ -106,9 +109,6 @@ function CaughtError({
 
 const CatchSection = catchError(SectionFallback);
 
-/** Upper bound for waiting on a retry outcome (a recovery normally takes one render). */
-const FOCUS_WATCH_MS = 10_000;
-
 /**
  * Restores a logical focus position after a retry started from inside `root` (see the header).
  * Returns `arm`, called when retry is activated; observes `root` only until the outcome is known.
@@ -149,10 +149,18 @@ function useRetryFocus() {
     };
 
     const observer = new MutationObserver(settle);
-    const timer = window.setTimeout(() => finish(), FOCUS_WATCH_MS);
+    // The user moved focus to another element outside the section: stop watching at once. A
+    // null `relatedTarget` (the focused button unmounting, or the window losing focus) is not a
+    // user move; the observer decides those.
+    const onFocusOut = (event: FocusEvent) => {
+      const next = event.relatedTarget;
+      if (next instanceof Node && !container.contains(next)) finish();
+    };
+    const scope: HTMLElement = container; // narrowed above; `finish` is hoisted
+    scope.addEventListener("focusout", onFocusOut);
     function finish() {
       observer.disconnect();
-      window.clearTimeout(timer);
+      scope.removeEventListener("focusout", onFocusOut);
       stop.current = null;
     }
     observer.observe(container, {
