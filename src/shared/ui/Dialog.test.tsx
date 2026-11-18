@@ -437,6 +437,36 @@ describe("Dialog — motion lifecycle (§5.1, §7.11)", () => {
     expect(document.documentElement.style.overflow).toBe("hidden");
   });
 
+  it("a stale close event after a fast reopen does not close the reopened dialog", () => {
+    // The browser dispatches `close` in a later task. Reproduce: close() with the event held
+    // back, reopen, then deliver the late event.
+    const held: Event[] = [];
+    const realClose = HTMLDialogElement.prototype.close;
+    HTMLDialogElement.prototype.close = function (this: HTMLDialogElement) {
+      if (!this.hasAttribute("open")) return;
+      this.removeAttribute("open");
+      held.push(new Event("close"));
+    };
+    try {
+      const onOpenChange = vi.fn();
+      const view = render(<Dialog open onOpenChange={onOpenChange} title={COPY.ar.title} />);
+      view.rerender(<Dialog open={false} onOpenChange={onOpenChange} title={COPY.ar.title} />);
+      expect(dialogEl().hasAttribute("open")).toBe(false); // no transition in jsdom: closed
+      view.rerender(<Dialog open onOpenChange={onOpenChange} title={COPY.ar.title} />);
+      expect(dialogEl().hasAttribute("open")).toBe(true);
+      expect(held).toHaveLength(1);
+      act(() => {
+        for (const event of held) dialogEl().dispatchEvent(event);
+      });
+      expect(onOpenChange).not.toHaveBeenCalled();
+      expect(dialogEl().hasAttribute("open")).toBe(true);
+      expect(dialogEl().dataset.state).toBe("open");
+      expect(screen.getByRole("heading", { name: COPY.ar.title })).toBeTruthy();
+    } finally {
+      HTMLDialogElement.prototype.close = realClose;
+    }
+  });
+
   it("ignores Esc and scrim clicks during the exit", () => {
     withTransition();
     const onOpenChange = vi.fn();
