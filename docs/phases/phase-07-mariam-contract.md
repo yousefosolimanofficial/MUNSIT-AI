@@ -1,9 +1,9 @@
 # Phase 07 — Mariam assignment contract: Features and How It Works (DRAFT)
 
-- **Status:** **DRAFT. Not sent.** The assignment is approved (P07-D13). The starter package is
-  created and sent only when both conditions hold:
-  1. Increment 1 (Landing foundation) is merged on `main` and becomes the baseline commit;
-  2. the owner approves the Feature Card and Step Card specifications below.
+- **Status:** **APPROVED** (owner, 2026-11-19). The Feature Card and Step Card specifications in
+  §4 are approved, and the assignment scope is unchanged (P07-D13). The starter package is
+  prepared from the verified `main` after this record merges. It is **not sent** by Claude: Yousef
+  sends it.
 - **Ownership:**
   - **Mariam writes:** the files in §2.
   - **Yousef provides:** the route, the copy wiring, the images, the tokens and all integration.
@@ -87,46 +87,58 @@ export interface HowItWorksSectionProps {
 - the sections render **inside** the existing `<section id>` boundaries (`LandingPage`), so they
   do not set `id`s themselves.
 
-## 4. Figma specification (to be approved before the starter is sent)
+## 4. Figma specification (APPROVED, 2026-11-19)
 
-### 4.1 Feature Card `114:2`
+Read-only from the component masters and their Tablet and Mobile instances (2026-11-19). All
+typography utilities exist (`typography-landing.css`, Increment 1). The colours are tokens, plus
+the Landing-local `#363739` (approved).
 
-| Part        | Value                                                                                                                                                           |
-| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Box         | Ink `#07080a` fill, 1px `#363739` border (Landing-local, as the nav), radius 16, padding 24, vertical gap 12                                                    |
-| Visual      | Full width × 144, radius 12, Obsidian `#111214` behind the image (Desktop 336 × 144)                                                                            |
-| Title       | `Landing/Card/Title`: SemiBold 20 / 130%, white, aligned to the inline start                                                                                    |
-| Description | `Landing/Body/Feature Desktop`: 18 / 145%, Text/Secondary `#9c9c9d`, inline start; Tablet and Mobile sizes to verify (`Feature Tablet` 16, `Feature Mobile` 15) |
-| Size        | Desktop 384 × 300; Tablet 342 × 288; Mobile 350 × 286                                                                                                           |
+### 4.1 Feature Card (master `114:2`)
 
-### 4.2 Step Card `121:32`
+| Part        | Desktop                                                                                                 | Tablet                                         | Mobile                                         |
+| ----------- | ------------------------------------------------------------------------------------------------------- | ---------------------------------------------- | ---------------------------------------------- |
+| Card size   | **384 × 300**                                                                                           | **342 × 288**                                  | **350 × 286**                                  |
+| Box         | Ink `#07080a` fill; 1px `#363739` border; radius 16; padding 24; vertical gap 12                        | Same                                           | Same                                           |
+| Visual      | 336 × 144, radius 12, Obsidian `#111214` behind the image                                               | 294 × 144                                      | 302 × 144                                      |
+| Title       | `text-landing-card-title` (20 / 1.3, 600), white, inline start                                          | Same                                           | Same                                           |
+| Description | `text-landing-body-feature-desktop` (18 / 1.45, 400), Text/Secondary `#9c9c9d`, `white-space: pre-line` | `text-landing-body-feature-tablet` (16 / 1.45) | `text-landing-body-feature-mobile` (15 / 1.45) |
 
-| Part       | Value                                                                                                                                                                                                                                   |
-| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Box        | Ink fill, 1px Slate `#2f3031` border, radius 16, padding 20, vertical gap 12                                                                                                                                                            |
-| Number row | Horizontal, gap 8, aligned to the inline start: number `Landing/Mono/Step` (Geist Mono 14, Electric Sky `#63a1ff`); connector line 1px Info Blue `#56c2ff` (fills the row) ending in a 6 × 6 Info Blue dot (shown when `showConnector`) |
-| Visual     | Full width × 136, radius 12, Obsidian behind the image (Desktop 240 × 136)                                                                                                                                                              |
-| Title      | `Landing/Card/Title`: SemiBold 20 / 130%, white                                                                                                                                                                                         |
-| Text       | `Landing/Body/Large`: 18 / 150%, Text/Secondary                                                                                                                                                                                         |
-| Size       | Desktop 282 × 440; Tablet 342 × 302; Mobile 350 × 300                                                                                                                                                                                   |
+Order inside the card: visual, title, description. The visual fills the width, and the height
+follows the content (Figma heights come from the text).
 
-### 4.3 Sections
+### 4.2 Step Card (master `121:32`, properties Number, Title, Description, Show Connector)
 
-| Breakpoint    | Features                                                                                                                                                     | How It Works                                    |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------- |
-| Desktop (xl+) | Width 1200, padding block 64, gap 40; intro 900 wide (heading `Section Desktop` 40, description `Body/Intro` 24, white, centred, gap 16); grid 3 × 2, gap 24 | As Features, gap 48; 4 cards in one row, gap 24 |
-| Tablet (rail) | Padding 64 / 32, gap 32; intro 704 (heading `Section Tablet` 32, description `Body/Large` 18); 2 per row, 3 rows, gap 20                                     | As Features; 2 × 2, gap 20                      |
-| Mobile        | Padding 48 / 20, gap 28; intro 350 (heading `Section Mobile` 26, description `Body/Base Mobile` 15); 1 column, gap 16                                        | As Features; 1 column, gap 16                   |
+| Part        | Desktop                                                                                                                                                                                                                                                                | Tablet                              | Mobile                                     |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- | ------------------------------------------ |
+| Card size   | **282 × 440**                                                                                                                                                                                                                                                          | **342 × 302**                       | **350 × 300**                              |
+| Box         | Ink fill; 1px Slate `#2f3031` border; radius 16; padding 20; vertical gap 12                                                                                                                                                                                           | Same                                | Same                                       |
+| Number row  | Full width × 14, horizontal, gap 8, at the inline start: number (`font-mono text-landing-mono-step`, 14 / 1, Electric Sky `#63a1ff`, LTR), connector line 1px Info Blue `#56c2ff` filling the row, then a 6 × 6 Info Blue dot (line and dot only when `showConnector`) | Row 300 wide                        | Row 308 wide                               |
+| Visual      | 240 × 136, radius 12, Obsidian behind the image                                                                                                                                                                                                                        | 300 × 136                           | 308 × 136                                  |
+| Title       | `text-landing-card-title` (20 / 1.3, 600), white                                                                                                                                                                                                                       | Same                                | Same                                       |
+| Description | `text-landing-body-large` (18 / 1.5), Text/Secondary                                                                                                                                                                                                                   | `text-landing-body-base` (16 / 1.5) | `text-landing-body-base-mobile` (15 / 1.5) |
 
-**Order (RTL):**
+The Desktop Step Card is taller (440) because the four cards share one row and their text wraps
+in 240.
 
-- **Features:** card 01 at the inline start (right).
-- **How It Works:** step 01 at the inline start; Figma Desktop draws 01 at the right.
+### 4.3 Sections and grids
 
-LTR mirrors both.
+| Breakpoint    | Features                                                                                                                                                                     | How It Works                           |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
+| Desktop (xl+) | Content 1200; padding block 64; gap 40. Intro 900, gap 16: heading `section-desktop` (40 / 1.2), description `body-intro` (24 / 1.5), white, centred. Grid **3 × 2**, gap 24 | Same, gap 48; **4 in one row**, gap 24 |
+| Tablet (rail) | Padding 64 / 32; gap 32. Intro 704: heading `section-tablet` (32), description `body-large` (18). Grid **2 per row, 3 rows**, gap 20                                         | Same; **2 × 2**, gap 20                |
+| Mobile        | Padding 48 / 20; gap 28. Intro 350: heading `section-mobile` (26), description `body-base-mobile` (15). **1 column**, gap 16                                                 | Same; **1 column**, gap 16             |
 
-**Tokens:** all typography utilities exist since Increment 1 (`typography-landing.css`). The
-colours are existing tokens, plus the Landing-local `#363739` border (approved). No new token.
+**Order:** card or step 01 at the inline start (right in RTL), in reading order; LTR mirrors it.
+Figma Tablet rows confirm it (row 01: card 02 drawn at left, 01 at right).
+
+### 4.4 Images
+
+- **Assets:** six feature visuals and four step visuals, each 1376 × 768 in Figma. **Yousef**
+  exports them as WebP or AVIF and passes them as `LandingImage` props. Mariam never exports or
+  adds image files.
+- **Rendering:** `next/image`, `fill` with `object-fit: cover` inside the visual box (Figma
+  `FILL`); `sizes` from §4.1 and §4.2.
+- **`alt`:** from props, decided at integration.
 
 ## 5. Test expectations (her files)
 
@@ -142,10 +154,10 @@ colours are existing tokens, plus the Landing-local `#363739` border (approved).
 - **Integration (Yousef):** E2E geometry at 1440 / 768 / 390, ar and en, no overflow at 320, and
   screenshot comparison per breakpoint.
 
-## 6. Open points before sending
+## 6. Before sending
 
-- **Card text sizes:** Tablet and Mobile description sizes inside the cards are read per instance
-  when the contract is finalized.
-- **Image `alt` text:** decided per image at integration (decorative or descriptive, from approved
-  copy).
-- **Baseline commit hash:** recorded in `DELIVERY.md` when the starter is made.
+- **Owner approval** of §4: done (2026-11-19).
+- **Starter package:** made with `git archive` from the merged baseline, and logged in
+  TEAM_COLLABORATION.md. The baseline commit hash goes into `DELIVERY.md`.
+- **Image `alt` text:** decided per image at integration (decorative or descriptive, from
+  approved copy).

@@ -113,6 +113,9 @@ placeholders.
 | P07-D11 | **Arabic copy and typography.** The exact Figma strings are preserved, **including their original punctuation and spacing** (for example "كيف يعمل ؟ " in the navigation and "كيف يعمل؟" in the footer). The approved responsive typography is preserved. **No silent normalization or rewriting**                                                                                                                                                                   | **APPROVED**                         |
 | P07-D12 | **Mobile and Tablet navigation.** Reuse the existing shared navigation or `Sheet` infrastructure **only where its interaction contract fits** Landing navigation (anchor links close the menu and scroll to the section; Esc and focus return; no app-shell coupling). Do not reuse a product-specific sheet that would create incorrect Landing behaviour. The approved mobile Figma dimensions and interactions are preserved. The fit is evaluated in Increment 1 | **APPROVED CONDITIONALLY**           |
 | P07-D13 | **Mariam delegation.** An isolated assignment for the Features Section, the How It Works Section and their focused tests (§8). No unrelated Landing architecture is delegated. **The starter is not sent** until the component contracts and the baseline (after Increment 1) are final                                                                                                                                                                              | **APPROVED**                         |
+| P07-D14 | **Hero temporary background:** Near Black `#040506` until the approved video exists; no invented image; not presented as the final visual ([hero contract](phase-07-hero-contract.md) §8)                                                                                                                                                                                                                                                                            | **APPROVED**                         |
+| P07-D15 | **Pause/Play control:** 40 px dark circle; approved ar/en labels; Hero corner, never over the text or CTAs; hidden while no playable video exists                                                                                                                                                                                                                                                                                                                    | **APPROVED**                         |
+| P07-D16 | **Pause icon:** a minimal two-bar geometric SVG in the icon set's style; no dependency                                                                                                                                                                                                                                                                                                                                                                               | **APPROVED**                         |
 
 **Section order (final, all breakpoints):**
 
@@ -180,7 +183,7 @@ send**. The starter package goes out only after both of these exist:
 `121:32` with its `Show Connector`, and the per-breakpoint widths in design-values §16.3). It is
 prepared after Increment 1, from the starter package (offline procedure).
 
-## 8a. Increment 1 outcome (Landing foundation, in review)
+## 8a. Increment 1 outcome (Landing foundation, COMPLETE: PR #50, `60044cc`)
 
 - **Built:**
   - `src/features/landing`: header (Desktop floating bar at `xl`+, the compact Tablet / Mobile
