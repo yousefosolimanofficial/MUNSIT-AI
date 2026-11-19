@@ -180,7 +180,7 @@ send**. The starter package goes out only after both of these exist:
 `121:32` with its `Show Connector`, and the per-breakpoint widths in design-values §16.3). It is
 prepared after Increment 1, from the starter package (offline procedure).
 
-## 8a. Increment 1 outcome (Landing foundation, in review)
+## 8a. Increment 1 outcome (Landing foundation, COMPLETE: PR #50, `60044cc`)
 
 - **Built:**
   - `src/features/landing`: header (Desktop floating bar at `xl`+, the compact Tablet / Mobile

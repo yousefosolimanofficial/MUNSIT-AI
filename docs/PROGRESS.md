@@ -20,16 +20,19 @@ Single resume point. A new session starts by reading this file, the latest phase
 
     These are all public-launch blockers.
 
-  - **Increment 1 (Landing foundation): in review** on `feat/phase-07-landing-foundation`
-    (owner authorization, 2026-11-19).
+  - **Increment 1 (Landing foundation): COMPLETE** (PR #50, `60044cc`; approved and merged
+    2026-11-19; post-merge CI green).
     - **Built:** header (Desktop, Tablet, Mobile), menu (shared `Sheet`), footer (legal items as
       non-interactive text), section boundaries in the approved order, metadata and Open Graph
       infrastructure (no image), static generation, Landing typography tokens, and the `landing`
       messages (Arabic verbatim; English PROPOSED and gated out of production).
     - **Navigation weight:** measured, 400 (design-values §16.5).
-    - **Mariam:** the draft contract is
-      [phases/phase-07-mariam-contract.md](phases/phase-07-mariam-contract.md); not sent until
-      Increment 1 is merged and the card specifications are approved.
+    - **Mariam:** card specifications ready for owner approval in
+      [phases/phase-07-mariam-contract.md](phases/phase-07-mariam-contract.md); the starter is not
+      sent until they are approved.
+  - **Increment 2 (Hero): NOT STARTED.** Contract for review:
+    [phases/phase-07-hero-contract.md](phases/phase-07-hero-contract.md). Decisions P07-D14 to
+    P07-D16 are needed: interim visual, Pause/Play copy and look, pause icon.
 - **Phase 06:** Shared states & overlay/guard infrastructure — **CLOSED — Development Complete,
   Production QA Outstanding.**
   - **Closure:** approved by the product owner on 2026-11-19; final code `main` `6cda86c` (PR #47);
