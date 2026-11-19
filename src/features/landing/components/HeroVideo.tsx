@@ -4,7 +4,11 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 import { Icon } from "@/shared/ui/Icon";
 
-import { HERO_PORTRAIT_MEDIA, type HeroVideoAsset } from "../model/hero-media";
+import {
+  HERO_LANDSCAPE_MEDIA,
+  HERO_PORTRAIT_MEDIA,
+  type HeroVideoAsset,
+} from "../model/hero-media";
 import { FOCUS_RING } from "./landing-styles";
 import { PauseIcon } from "./PauseIcon";
 
@@ -16,8 +20,11 @@ import { PauseIcon } from "./PauseIcon";
  * - Sources: portrait below `rail`, landscape above (WebM first when present, then MP4);
  *   `object-fit: cover` with the asset's `object-position` per orientation (P07-D10).
  * - No `autoplay` attribute: playback starts from the client with `play()`, and only when motion
- *   is allowed and the user has not paused it. Under `prefers-reduced-motion: reduce` it never
- *   plays and the poster (rendered by the Hero beneath this element) stays visible.
+ *   is allowed and the user has not paused it. Under `prefers-reduced-motion: reduce` (and on the
+ *   server) no <video> is rendered, so nothing downloads; the poster beneath stays visible.
+ * - Landscape-only assets (no portrait master) are restricted to `rail` and up with
+ *   `<source media>`: Mobile matches no source and downloads nothing.
+ * - The video fades in (opacity, `flip` duration) once it actually plays.
  * - The video is transparent until it actually plays, so the poster shows before playback and
  *   when autoplay is blocked.
  * - Pause/Play (P07-D7, P07-D15): a 40 px dark circle at the Hero's bottom inline-end corner,
@@ -102,6 +109,14 @@ export function HeroVideo({ asset, labels }: HeroVideoProps) {
     "--hero-position-portrait": asset.position?.portrait ?? "center",
   } as React.CSSProperties;
 
+  // Reduced motion (and the server render, which assumes it): no <video> at all, so nothing is
+  // downloaded; the poster beneath stays visible.
+  if (reducedMotion) return null;
+
+  const portrait = asset.portrait;
+  // A landscape-only asset applies from `rail` up; Mobile matches no source and fetches nothing.
+  const landscapeMedia = portrait ? undefined : HERO_LANDSCAPE_MEDIA;
+
   return (
     <>
       <video
@@ -124,17 +139,23 @@ export function HeroVideo({ asset, labels }: HeroVideoProps) {
         className={[
           "absolute inset-0 z-[1] h-full w-full object-cover",
           "object-[var(--hero-position-portrait)] rail:object-[var(--hero-position-landscape)]",
+          "transition-opacity duration-flip ease-standard",
+          portrait ? "" : "hidden rail:block",
           started ? "opacity-100" : "opacity-0",
         ].join(" ")}
       >
-        {asset.portrait.webm ? (
-          <source src={asset.portrait.webm} type="video/webm" media={HERO_PORTRAIT_MEDIA} />
+        {portrait?.webm ? (
+          <source src={portrait.webm} type="video/webm" media={HERO_PORTRAIT_MEDIA} />
         ) : null}
-        <source src={asset.portrait.mp4} type="video/mp4" media={HERO_PORTRAIT_MEDIA} />
-        {asset.landscape.webm ? <source src={asset.landscape.webm} type="video/webm" /> : null}
-        <source src={asset.landscape.mp4} type="video/mp4" />
+        {portrait ? (
+          <source src={portrait.mp4} type="video/mp4" media={HERO_PORTRAIT_MEDIA} />
+        ) : null}
+        {asset.landscape.webm ? (
+          <source src={asset.landscape.webm} type="video/webm" media={landscapeMedia} />
+        ) : null}
+        <source src={asset.landscape.mp4} type="video/mp4" media={landscapeMedia} />
       </video>
-      {playable && !reducedMotion ? (
+      {playable ? (
         <button
           type="button"
           data-landing-hero-control=""

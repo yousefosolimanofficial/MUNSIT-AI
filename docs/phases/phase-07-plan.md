@@ -271,11 +271,12 @@ prepared after Increment 1, from the starter package (offline procedure).
 - **Mariam:** her starter is SENT / AWAITING IMPLEMENTATION (§8c). Her delivery is not
   received, reviewed or accepted.
 
-## 8e. Landing Visual Refinement (approved planning, NOT STARTED)
+## 8e. Landing Visual Refinement (IN REVIEW)
 
-Approved by the owner on 2026-11-19 (P07-D17) as **planning work only**: nothing below is
-implemented. It is a separate PR, started only after ClickUp project management is established
-and on the owner's go-ahead.
+Approved by the owner on 2026-11-19 (P07-D17) as planning; the go-ahead came on 2026-11-20 (after
+the ClickUp setup). Implemented on `feat/phase-07-hero-media-visual-refinement` with the Hero
+video as a **provisional development asset** (hidden in production). Details, measurements and
+the open owner decisions: [phase-07-hero-media.md](phase-07-hero-media.md).
 
 - Ambient glows and subtle animated gradients.
 - Smooth transitions and scroll-reveal animations.

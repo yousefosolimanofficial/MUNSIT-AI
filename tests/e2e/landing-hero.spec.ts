@@ -7,9 +7,10 @@ import enLanding from "../../src/i18n/messages/en/landing.json" with { type: "js
 
 /*
  * Phase 07 Increment 2: Landing Hero (approved contract docs/phases/phase-07-hero-contract.md;
- * Figma Desktop `28:3`, Tablet `200:559`, Mobile `200:713`, design-values §16.1). No approved
- * video exists yet (P07-D14): the Hero is Near Black, with no video and no Pause/Play control.
- * The video component (poster, reduced motion, control) is covered by HeroVideo.test.tsx.
+ * Figma Desktop `28:3`, Tablet `200:559`, Mobile `200:713`, design-values §16.1). The Hero video
+ * is a PROVISIONAL development asset (landscape only, hidden in production): Desktop and Tablet
+ * play it; Mobile and reduced motion keep the Near Black base with its ambient glow. Media
+ * behaviour in depth: landing-visual-refinement.spec.ts and HeroVideo.test.tsx.
  */
 
 const LOCALES = [
@@ -225,16 +226,26 @@ for (const { locale, dir, path, m } of LOCALES) {
       await context.close();
     });
 
-    test("no approved video: Near Black background, no video, no Pause/Play control (P07-D14)", async ({
+    test("provisional video: plays on Desktop over the Near Black base, with a Pause control", async ({
       page,
     }) => {
       await open(page, path, 1440);
-      await expect(hero(page).locator("video")).toHaveCount(0);
-      await expect(hero(page).locator("[data-landing-hero-control]")).toHaveCount(0);
+      const video = hero(page).locator("video");
+      await expect(video).toHaveCount(1);
+      await expect.poll(() => video.evaluate((v: HTMLVideoElement) => !v.paused)).toBe(true);
+      await expect(hero(page).getByRole("button", { name: m.hero.videoPause })).toBeVisible();
       const bg = await page
         .locator("[data-landing-hero-media]")
         .evaluate((el) => getComputedStyle(el).backgroundColor);
       expect(bg).toBe("rgb(4, 5, 6)");
+    });
+
+    test("Mobile: no portrait master, so no video plays and no control renders", async ({
+      page,
+    }) => {
+      await open(page, path, 390);
+      await expect(hero(page).locator("video")).toBeHidden();
+      await expect(hero(page).locator("[data-landing-hero-control]")).toHaveCount(0);
     });
 
     test("reduced motion: the Hero is static (no video, no control)", async ({ page }) => {
@@ -262,7 +273,11 @@ for (const { locale, dir, path, m } of LOCALES) {
       await expect.poll(() => page.evaluate(() => location.hash)).toBe("#how-it-works");
     });
 
-    test("text contrast on the temporary background meets WCAG AA", async ({ page }) => {
+    test("text contrast on the Near Black base (Mobile, reduced motion) meets WCAG AA", async ({
+      page,
+    }) => {
+      // Over the video, contrast is measured offline on every frame of the graded loop
+      // (docs/phases/phase-07-hero-media.md): it passes at the brightest pixel under each element.
       await open(page, path, 1440);
       // White heading and 90% white description on Near Black: measured from computed colours.
       const ratio = await hero(page)

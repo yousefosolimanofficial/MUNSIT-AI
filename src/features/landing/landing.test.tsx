@@ -10,10 +10,12 @@ import { LandingFooter } from "./components/LandingFooter";
 import { LandingHeader } from "./components/LandingHeader";
 import { LandingMenu } from "./components/LandingMenu";
 import {
+  isHeroVideoVisible,
   isLandingEnglishPublished,
   isPlaceholderPricingVisible,
   LANDING_ENGLISH_APPROVED,
 } from "./model/gates";
+import { HERO_VIDEO } from "./model/hero-media";
 import { LANDING_ANCHORS, LANDING_SECTIONS } from "./model/sections";
 
 /*
@@ -70,6 +72,14 @@ describe("gates (P07-D1 English, P07-D4 placeholder pricing)", () => {
     expect(isLandingEnglishPublished("development")).toBe(true);
     expect(isLandingEnglishPublished("test")).toBe(true);
     expect(isLandingEnglishPublished("production", true)).toBe(true);
+  });
+
+  it("the provisional Hero video never plays in production; an approved one would", () => {
+    expect(HERO_VIDEO?.provisional).toBe(true);
+    expect(isHeroVideoVisible("production", true)).toBe(false);
+    expect(isHeroVideoVisible("development", true)).toBe(true);
+    expect(isHeroVideoVisible("test", true)).toBe(true);
+    expect(isHeroVideoVisible("production", false)).toBe(true);
   });
 
   it("placeholder pricing never renders in production", () => {

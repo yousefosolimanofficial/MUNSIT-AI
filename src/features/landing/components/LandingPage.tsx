@@ -5,14 +5,20 @@ import { publicEnv } from "@/config/env";
 import type { AppLocale } from "@/i18n/routing";
 import { SkipLink } from "@/shared/a11y/SkipLink";
 
-import { isLandingEnglishPublished, isPlaceholderPricingVisible } from "../model/gates";
+import {
+  isHeroVideoVisible,
+  isLandingEnglishPublished,
+  isPlaceholderPricingVisible,
+} from "../model/gates";
 import { LANDING_ANCHORS, LANDING_SECTIONS } from "../model/sections";
 import { LandingFooter } from "./LandingFooter";
 import { LandingHeader } from "./LandingHeader";
 import { LandingHero } from "./LandingHero";
+import { LandingReveal } from "./LandingReveal";
 import { LandingShowcase } from "./LandingShowcase";
 import { LandingUseCases } from "./LandingUseCases";
 import { HERO_VIDEO } from "../model/hero-media";
+import { AMBIENT, AMBIENT_LAYER, REVEAL_FADE } from "./landing-styles";
 
 /*
  * Landing page (Phase 07). Server Component, statically generated per locale.
@@ -28,6 +34,9 @@ import { HERO_VIDEO } from "../model/hero-media";
  *   illustration and copy only; images from Figma (model/landing-images.ts).
  *   Gaps above them as in Figma: Showcase 35 (Desktop) / 32 (Tablet) / 24 (Mobile) below the
  *   Hero; Use Cases 0 / 32 / 24 below How It Works.
+ * - Visual Refinement (P07-D17, plan §8e): restrained ambient glows (token colours only) behind
+ *   the Hero, Showcase and Use Cases; scroll reveal (LandingReveal; off under reduced motion).
+ *   The Hero video is provisional and hidden in production (gates.ts).
  * - Pricing boundary: rendered only where placeholder pricing may appear (P07-D4).
  * - English: served only when published (P07-D1); otherwise 404.
  */
@@ -65,6 +74,8 @@ export async function LandingPage({ locale }: { locale: AppLocale }) {
   }));
   const languageNames = { en: shell("languageNames.en"), ar: shell("languageNames.ar") };
   const showPricing = isPlaceholderPricingVisible(appEnv);
+  const heroVideo =
+    HERO_VIDEO && isHeroVideoVisible(appEnv, HERO_VIDEO.provisional ?? false) ? HERO_VIDEO : null;
 
   return (
     <>
@@ -101,7 +112,7 @@ export async function LandingPage({ locale }: { locale: AppLocale }) {
                 className="relative isolate mt-[24px] min-h-[538px] overflow-hidden rail:mt-[32px] rail:min-h-[640px] xl:mt-0 xl:min-h-[900px]"
               >
                 <LandingHero
-                  video={HERO_VIDEO}
+                  video={heroVideo}
                   copy={{
                     heading: t("hero.heading"),
                     description: t("hero.description"),
@@ -121,8 +132,15 @@ export async function LandingPage({ locale }: { locale: AppLocale }) {
                 id={id}
                 aria-labelledby="landing-showcase-heading"
                 data-landing-section={key}
-                className="mt-[24px] rail:mt-[32px] xl:mt-[35px]"
+                className="relative isolate mt-[24px] rail:mt-[32px] xl:mt-[35px]"
               >
+                <div
+                  aria-hidden="true"
+                  data-reveal=""
+                  data-landing-ambient="showcase"
+                  className={`${AMBIENT_LAYER} ${REVEAL_FADE}`}
+                  style={AMBIENT.showcase}
+                />
                 <LandingShowcase
                   copy={{
                     heading: t("showcase.heading"),
@@ -153,8 +171,15 @@ export async function LandingPage({ locale }: { locale: AppLocale }) {
                 id={id}
                 aria-labelledby="landing-use-cases-heading"
                 data-landing-section={key}
-                className="mt-[24px] rail:mt-[32px] xl:mt-0"
+                className="relative isolate mt-[24px] rail:mt-[32px] xl:mt-0"
               >
+                <div
+                  aria-hidden="true"
+                  data-reveal=""
+                  data-landing-ambient="use-cases"
+                  className={`${AMBIENT_LAYER} ${REVEAL_FADE}`}
+                  style={AMBIENT.useCases}
+                />
                 <LandingUseCases
                   copy={{
                     heading: t("useCases.heading"),
@@ -172,6 +197,7 @@ export async function LandingPage({ locale }: { locale: AppLocale }) {
           return <section key={key} id={id} data-landing-section={key} />;
         })}
       </main>
+      <LandingReveal />
       <LandingFooter
         links={footerLinks}
         labels={{

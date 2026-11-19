@@ -10,8 +10,8 @@ import { HERO_PAUSED_KEY, HeroVideo } from "./HeroVideo";
 import { LandingHero } from "./LandingHero";
 
 /*
- * Phase 07 Increment 2: Hero video behaviour (contract §4–§5). No approved asset exists yet, so
- * these tests use a sample asset object (paths only; no media file is added to the repository).
+ * Phase 07: Hero video behaviour (contract §4–§5). These tests use sample asset objects (paths
+ * only), with and without a portrait master; the provisional asset itself is covered by E2E.
  * jsdom has no media playback or matchMedia: both are stubbed.
  */
 
@@ -22,6 +22,11 @@ const ASSET: HeroVideoAsset = {
     landscape: "/landing/hero/poster-landscape.jpg",
     portrait: "/landing/hero/poster-portrait.jpg",
   },
+};
+/** Landscape-only asset (no portrait master), like the provisional development asset. */
+const LANDSCAPE_ONLY: HeroVideoAsset = {
+  landscape: ASSET.landscape,
+  poster: { landscape: ASSET.poster.landscape },
 };
 const LABELS = {
   pause: MESSAGES.ar.landing.hero.videoPause,
@@ -49,8 +54,8 @@ beforeEach(() => {
 
 afterEach(cleanup);
 
-function renderVideo() {
-  const view = render(<HeroVideo asset={ASSET} labels={LABELS} />);
+function renderVideo(asset: HeroVideoAsset = ASSET) {
+  const view = render(<HeroVideo asset={asset} labels={LABELS} />);
   const video = view.container.querySelector("video");
   if (!video) throw new Error("video missing");
   return { ...view, video };
@@ -107,13 +112,27 @@ describe("HeroVideo", () => {
     expect(play).toHaveBeenCalled();
   });
 
-  it("reduced motion: never plays and renders no control; the video stays transparent (poster shows)", () => {
+  it("reduced motion: renders no video at all (nothing downloads), never plays, no control", () => {
     reduced = true;
-    const { video } = renderVideo();
-    fireEvent(video, new Event("loadedmetadata"));
+    const { container } = render(<HeroVideo asset={ASSET} labels={LABELS} />);
+    expect(container.querySelector("video")).toBeNull();
     expect(play).not.toHaveBeenCalled();
     expect(screen.queryByRole("button")).toBeNull();
-    expect(video.className).toContain("opacity-0");
+  });
+
+  it("landscape-only asset: sources restricted to rail and up (Mobile fetches nothing); hidden below rail", () => {
+    const { video } = renderVideo(LANDSCAPE_ONLY);
+    const sources = [...video.querySelectorAll("source")].map((s) => [
+      s.getAttribute("src"),
+      s.getAttribute("type"),
+      s.getAttribute("media"),
+    ]);
+    expect(sources).toEqual([
+      ["/landing/hero/landscape.webm", "video/webm", "(min-width: 45rem)"],
+      ["/landing/hero/landscape.mp4", "video/mp4", "(min-width: 45rem)"],
+    ]);
+    expect(video.className).toContain("hidden");
+    expect(video.className).toContain("rail:block");
   });
 
   it("a paused choice in this session is respected: no play() on mount, the control offers Play", () => {
@@ -176,6 +195,28 @@ describe("LandingHero", () => {
     expect(container.querySelector("video")).toBeNull();
     expect(container.querySelector("picture")).toBeNull();
     expect(screen.queryByRole("button")).toBeNull();
+  });
+
+  it("landscape-only asset: CSS poster declared from rail up (no <img>, no Mobile fetch)", () => {
+    const { container } = renderHero(LANDSCAPE_ONLY);
+    const poster = container.querySelector<HTMLElement>("[data-landing-hero-poster]");
+    expect(container.querySelector("picture")).toBeNull();
+    expect(container.querySelector("img")).toBeNull();
+    expect(poster?.className).toContain("rail:bg-(image:--hero-poster)");
+    expect(poster?.style.getPropertyValue("--hero-poster")).toBe(
+      `url(${LANDSCAPE_ONLY.poster.landscape})`,
+    );
+  });
+
+  it("ambient base and bottom fade are decorative layers", () => {
+    const { container } = renderHero(null);
+    expect(container.querySelector("[data-landing-ambient=hero]")).not.toBeNull();
+    const fades = [...container.querySelectorAll("[data-landing-hero-fade]")];
+    expect(fades.map((fade) => fade.getAttribute("data-landing-hero-fade"))).toEqual([
+      "top",
+      "bottom",
+    ]);
+    expect(fades.every((fade) => fade.getAttribute("aria-hidden") === "true")).toBe(true);
   });
 
   it("with an asset: poster picture (portrait source first) and the video render", () => {

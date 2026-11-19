@@ -7,7 +7,7 @@ import {
   type LanguageNames,
 } from "./LandingActions";
 import { LandingMenu, type LandingMenuLink } from "./LandingMenu";
-import { FOCUS_RING, NAV_BORDER } from "./landing-styles";
+import { FOCUS_RING, INTERACTIVE_TRANSITION, NAV_BORDER } from "./landing-styles";
 
 /*
  * Landing header (Phase 07 Increment 1). Figma: Desktop `27:2`, Tablet `200:543`, Mobile `200:697`
@@ -51,6 +51,9 @@ const DESKTOP_BAR = [
 
 const DESKTOP_LINK = [
   "rounded-sm whitespace-nowrap text-ui-navigation text-text-primary",
+  // Hover (Visual Refinement): colour only, no movement.
+  INTERACTIVE_TRANSITION,
+  "hover:text-accent-electric-sky",
   FOCUS_RING,
 ].join(" ");
 

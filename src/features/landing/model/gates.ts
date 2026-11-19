@@ -32,3 +32,13 @@ export function isLandingEnglishPublished(
 export function isPlaceholderPricingVisible(appEnv: AppEnv): boolean {
   return appEnv !== "production";
 }
+
+/**
+ * Hero video (D-P07-HERO-01, P07-D14): the current asset is a PROVISIONAL development asset, not
+ * owner-approved for production. It plays in development and preview only; production keeps the
+ * Near Black Hero until the owner approves a production video (then set the asset's
+ * `provisional` to false).
+ */
+export function isHeroVideoVisible(appEnv: AppEnv, provisional: boolean): boolean {
+  return !provisional || appEnv !== "production";
+}
