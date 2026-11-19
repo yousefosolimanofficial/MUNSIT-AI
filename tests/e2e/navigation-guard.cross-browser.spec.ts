@@ -98,6 +98,9 @@ test.describe("navigation guard · cross-browser contract", () => {
     await page.getByTestId("guard-programmatic").click();
     await expect(dialog(page)).toBeVisible();
     await stay(page).click();
+    // Wait until the dialog has fully closed: during its exit the page behind is still inert, so
+    // an immediate click can be lost on a slow runner (CI WebKit flake, PR #51 run 44541715616).
+    await expect(dialog(page)).toHaveCount(0);
     expect(path(page)).toBe(FIXTURE);
     await page.getByTestId("guard-programmatic").click();
     await leave(page).click();

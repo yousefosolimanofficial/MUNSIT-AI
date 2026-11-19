@@ -33,6 +33,10 @@ the Figma box. The visually hidden `h1` becomes the visible heading.
 | Heading block | Max 760 wide; gap 36 (heading text box 651)          | 704 wide; gap 36                   | 350 wide; gap 36                              |
 | Actions       | Row, centred, gap 37, padding inline 48              | Same                               | Column, full width 350, gap 12, primary first |
 
+**Desktop description (implementation, final review):** Figma's fixed 760 × 33 box with a 132 gap
+is reproduced as normal flow with a 98 gap (the two-line text is 67.2), so the result is identical
+and text can never overlap the CTAs.
+
 **Widths between breakpoints:**
 
 - the text column keeps its maximum width and centres;

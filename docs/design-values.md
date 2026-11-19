@@ -793,6 +793,13 @@ Frames: Desktop `5:3` (1440 × 7669), Tablet `200:527` (768 × 9332), Mobile `20
 | Outline button  | "اكتشف كيف يعمل": 186 × 48; no fill; Mist 1px border; radius 16; padding 9 / 13; white `UI/Button` label                                             | As Desktop                                             | 350 × 48                                                |
 | Order (RTL)     | Primary at the inline start (right), outline at the end                                                                                              | As Desktop                                             | Primary above outline                                   |
 
+**Desktop text boxes (read 2026-11-19):**
+
+- **Heading:** a FIXED, top-aligned 651 × 143 box (two lines of 67.2 inside).
+- **Description:** a FIXED, top-aligned 760 × 33 box. Figma renders the description on two lines
+  that overflow the box; auto layout uses the box height, so the actions stay at y 688.
+- **Tablet and Mobile:** both texts hug their content.
+
 ### 16.2 Navigation
 
 | Item    | Desktop `27:2` (component)                                                                                                                                                                            | Tablet `200:543` / Mobile `200:697`                                                                                                                               |

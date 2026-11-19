@@ -9,6 +9,8 @@ import { isLandingEnglishPublished, isPlaceholderPricingVisible } from "../model
 import { LANDING_ANCHORS, LANDING_SECTIONS } from "../model/sections";
 import { LandingFooter } from "./LandingFooter";
 import { LandingHeader } from "./LandingHeader";
+import { LandingHero } from "./LandingHero";
+import { HERO_VIDEO } from "../model/hero-media";
 
 /*
  * Landing page (Phase 07). Server Component, statically generated per locale.
@@ -18,9 +20,8 @@ import { LandingHeader } from "./LandingHeader";
  * their content is built in later increments, from approved copy and assets only. Nothing in
  * them is production-ready yet.
  *
- * - Hero boundary: it reserves the Figma Hero box (Desktop 900 at y 0 under the floating header;
- *   Tablet 640 after a 32 gap; Mobile 538 after a 24 gap). It holds the page `h1` (the approved
- *   Hero heading), visually hidden until Increment 2 renders the Hero.
+ * - Hero (Increment 2): the Figma Hero box (Desktop 900 at y 0 under the floating header; Tablet
+ *   640 after a 32 gap; Mobile 538 after a 24 gap), with the page `h1`. See LandingHero.
  * - Pricing boundary: rendered only where placeholder pricing may appear (P07-D4).
  * - English: served only when published (P07-D1); otherwise 404.
  */
@@ -79,12 +80,19 @@ export async function LandingPage({ locale }: { locale: AppLocale }) {
                 id={id}
                 aria-labelledby="landing-hero-heading"
                 data-landing-section={key}
-                className="mt-[24px] min-h-[538px] rail:mt-[32px] rail:min-h-[640px] xl:mt-0 xl:min-h-[900px]"
+                className="relative isolate mt-[24px] min-h-[538px] overflow-hidden rail:mt-[32px] rail:min-h-[640px] xl:mt-0 xl:min-h-[900px]"
               >
-                {/* Temporary (Increment 1): the Hero heading is the page h1; Increment 2 shows it. */}
-                <h1 id="landing-hero-heading" className="sr-only">
-                  {t("hero.heading")}
-                </h1>
+                <LandingHero
+                  video={HERO_VIDEO}
+                  copy={{
+                    heading: t("hero.heading"),
+                    description: t("hero.description"),
+                    ctaPrimary: t("hero.ctaPrimary"),
+                    ctaSecondary: t("hero.ctaSecondary"),
+                    videoPause: t("hero.videoPause"),
+                    videoPlay: t("hero.videoPlay"),
+                  }}
+                />
               </section>
             );
           }
