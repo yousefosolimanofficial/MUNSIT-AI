@@ -29,11 +29,17 @@ Single resume point. A new session starts by reading this file, the latest phase
     - **Navigation weight:** measured, 400 (design-values §16.5).
     - **Mariam:** card specifications **APPROVED** (2026-11-19) in
       [phases/phase-07-mariam-contract.md](phases/phase-07-mariam-contract.md). Starter
-      `munsit-starter-01453f4.zip` is **READY TO SEND** (approved for delivery; plan §8c; delivery
-      log v7). Not marked SENT until the owner confirms delivery.
+      `munsit-starter-01453f4.zip` is **SENT / AWAITING IMPLEMENTATION** (send confirmed by the
+      owner on 2026-11-19, exact send time not recorded; plan §8c; delivery log v7).
   - **Increment 2 (Hero): COMPLETE** (PR #52, approved 2026-11-19). The contract is **APPROVED**
     ([phases/phase-07-hero-contract.md](phases/phase-07-hero-contract.md)), with P07-D14 to
     P07-D16: near-black temporary background, the 40 px Pause/Play control, the two-bar pause icon.
+  - **Increment 3 (Showcase and Use Cases): IN REVIEW** (PR "feat: Phase 07 Product Showcase
+    and Use Cases"; not merged). Static illustration and Figma copy only; four Figma images
+    exported to WebP (design-values §16.4); outcome in plan §8d; differences in
+    design-values §16.6.
+  - **Next:** Increment 4 (integrate Mariam's Features and How It Works delivery, once it
+    arrives) or Increment 5 (FAQ, Pricing, Final CTA): owner's choice.
 - **Phase 06:** Shared states & overlay/guard infrastructure — **CLOSED — Development Complete,
   Production QA Outstanding.**
   - **Closure:** approved by the product owner on 2026-11-19; final code `main` `6cda86c` (PR #47);

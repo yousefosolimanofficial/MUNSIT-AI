@@ -143,12 +143,12 @@ The development work can proceed without them.
 
 ## 7. Assets
 
-| Asset                                                                 | Status                                                                                                                      |
-| --------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| Hero video (landscape and portrait masters) + 2 posters               | **Pending:** production per the brief; owner approval                                                                       |
-| Logo                                                                  | **Exists:** `public/brand/Munsit_Logo_Horizontal.png`, 908 × 236, the same size as the Figma brand image (design-values §6) |
-| Showcase screen, 6 feature visuals, 4 step visuals, 3 use-case images | **In Figma**, 1376 × 768 each. Export at implementation (WebP/AVIF), with alt text per image                                |
-| OG image (metadata)                                                   | **Not in Figma:** owner to provide or approve (part of P07-D1 review)                                                       |
+| Asset                                                                 | Status                                                                                                                                                            |
+| --------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Hero video (landscape and portrait masters) + 2 posters               | **Pending:** production per the brief; owner approval                                                                                                             |
+| Logo                                                                  | **Exists:** `public/brand/Munsit_Logo_Horizontal.png`, 908 × 236, the same size as the Figma brand image (design-values §6)                                       |
+| Showcase screen, 6 feature visuals, 4 step visuals, 3 use-case images | **In Figma**, 1376 × 768 each. Showcase screen and 3 use-case images **exported** (Increment 3, WebP; design-values §16.4). Feature and step visuals: Increment 4 |
+| OG image (metadata)                                                   | **Not in Figma:** owner to provide or approve (part of P07-D1 review)                                                                                             |
 
 ## 8. Mariam: Features and How It Works (P07-D13, APPROVED)
 
@@ -232,8 +232,8 @@ prepared after Increment 1, from the starter package (offline procedure).
     overlap and no overflow.
   - **Hero buttons:** 131 / 186 wide with the Arabic labels (the Figma label box is wider than the
     glyphs). Reproduced as minimum widths, so longer labels never clip.
-- **Mariam starter:** prepared from the baseline `01453f4` and verified in an empty folder. Not sent
-  (§8c).
+- **Mariam starter:** prepared from the baseline `01453f4` and verified in an empty folder. Sent
+  afterwards (§8c).
 
 ## 8c. Mariam starter (Features and How It Works)
 
@@ -243,8 +243,29 @@ prepared after Increment 1, from the starter package (offline procedure).
     approved assignment).
 - **Checks:** no forbidden paths, and none of the eight delegated files pre-created. Verified in an
   empty folder: frozen install, then `pnpm check` 1182/1182.
-- **Status: READY TO SEND** (approved for delivery by the owner, 2026-11-19; re-verified:
-  SHA-256, baseline, contents). It is marked SENT only when the owner confirms delivery.
+- **Status: SENT / AWAITING IMPLEMENTATION.** Approved for delivery by the owner on 2026-11-19
+  (re-verified: SHA-256, baseline, contents). The owner confirmed on 2026-11-19 that it was sent;
+  the exact send time is not recorded. No delivery has been received yet.
+
+## 8d. Increment 3 outcome (Showcase and Use Cases, IN REVIEW)
+
+- **Built:**
+  - `LandingShowcase` (server): Desktop and Tablet app window, Mobile live-transcript card;
+  - `LandingUseCases` (server): intro and three rows (alternating on Desktop, stacked below);
+  - `model/landing-images.ts`: the four exported images.
+- **Assets:** four Figma originals, matched by image hash and converted to WebP at the source size
+  (design-values §16.4).
+- **No fake functionality:** the app window is an `aria-hidden` illustration, with no control or
+  focusable element. Its demo copy is the Figma copy from the `landing` messages.
+- **Accessibility:**
+  - `h2` per section, an `h3` per Use Case;
+  - decorative images (`alt=""`): the Use Case photos sit beside their own title and text;
+  - axe WCAG 2.2 AA clean at 390, 768 and 1440 in both locales;
+  - no horizontal overflow from 320 to 1440;
+  - nothing animates.
+- **Figma match:** geometry is exact for Arabic at 1440, 768 and 390, within ±1 px. The
+  documented differences are in design-values §16.6.
+- **Owner note:** motion in these sections is deliberately none (design-values §16.6, item 8).
 
 ## 9. Increments and PR boundaries
 

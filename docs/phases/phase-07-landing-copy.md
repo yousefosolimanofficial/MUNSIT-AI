@@ -24,7 +24,8 @@ note otherwise.
   returns 404 for `/en` and shows no language link.
 - **Exact Figma details kept:**
   - the Showcase heading contains a **U+2028 line separator** between "ذكي" and "كل" (a forced
-    line break), not a space;
+    line break), not a space. CSS does not break at U+2028, so the page keeps the character in the
+    text and adds a `<br>` after it (Increment 3);
   - the copyright line is the exact string, rendered with a **left-to-right base direction**, as
     Figma draws it.
 

@@ -10,6 +10,8 @@ import { LANDING_ANCHORS, LANDING_SECTIONS } from "../model/sections";
 import { LandingFooter } from "./LandingFooter";
 import { LandingHeader } from "./LandingHeader";
 import { LandingHero } from "./LandingHero";
+import { LandingShowcase } from "./LandingShowcase";
+import { LandingUseCases } from "./LandingUseCases";
 import { HERO_VIDEO } from "../model/hero-media";
 
 /*
@@ -22,11 +24,27 @@ import { HERO_VIDEO } from "../model/hero-media";
  *
  * - Hero (Increment 2): the Figma Hero box (Desktop 900 at y 0 under the floating header; Tablet
  *   640 after a 32 gap; Mobile 538 after a 24 gap), with the page `h1`. See LandingHero.
+ * - Showcase and Use Cases (Increment 3): see LandingShowcase and LandingUseCases. Static
+ *   illustration and copy only; images from Figma (model/landing-images.ts).
+ *   Gaps above them as in Figma: Showcase 35 (Desktop) / 32 (Tablet) / 24 (Mobile) below the
+ *   Hero; Use Cases 0 / 32 / 24 below How It Works.
  * - Pricing boundary: rendered only where placeholder pricing may appear (P07-D4).
  * - English: served only when published (P07-D1); otherwise 404.
  */
 
 export const LANDING_MAIN_ID = "main-content";
+
+/** Showcase menu items, in Figma order (messages `landing.showcase.sidebar.*`). */
+const SHOWCASE_SIDEBAR = [
+  "dashboard",
+  "lectures",
+  "live",
+  "summaries",
+  "questions",
+  "history",
+] as const;
+/** Use Case rows, in Figma order (messages `landing.useCases.items.*`). */
+const USE_CASE_ITEMS = ["1", "2", "3"] as const;
 
 export async function LandingPage({ locale }: { locale: AppLocale }) {
   const appEnv = publicEnv.appEnv;
@@ -91,6 +109,61 @@ export async function LandingPage({ locale }: { locale: AppLocale }) {
                     ctaSecondary: t("hero.ctaSecondary"),
                     videoPause: t("hero.videoPause"),
                     videoPlay: t("hero.videoPlay"),
+                  }}
+                />
+              </section>
+            );
+          }
+          if (key === "showcase") {
+            return (
+              <section
+                key={key}
+                id={id}
+                aria-labelledby="landing-showcase-heading"
+                data-landing-section={key}
+                className="mt-[24px] rail:mt-[32px] xl:mt-[35px]"
+              >
+                <LandingShowcase
+                  copy={{
+                    heading: t("showcase.heading"),
+                    description: t("showcase.description"),
+                    recording: t("showcase.recording"),
+                    timer: t("showcase.timer"),
+                    lectureTitle: t("showcase.lectureTitle"),
+                    sidebarTitle: t("showcase.sidebarTitle"),
+                    sidebar: SHOWCASE_SIDEBAR.map((item) => t(`showcase.sidebar.${item}`)),
+                    mobile: {
+                      live: t("showcase.mobile.live"),
+                      heading: t("showcase.mobile.heading"),
+                      lines: [
+                        { time: t("showcase.mobile.time1"), text: t("showcase.mobile.line1") },
+                        { time: t("showcase.mobile.time2"), text: t("showcase.mobile.line2") },
+                      ],
+                      pause: t("showcase.mobile.pause"),
+                    },
+                  }}
+                />
+              </section>
+            );
+          }
+          if (key === "useCases") {
+            return (
+              <section
+                key={key}
+                id={id}
+                aria-labelledby="landing-use-cases-heading"
+                data-landing-section={key}
+                className="mt-[24px] rail:mt-[32px] xl:mt-0"
+              >
+                <LandingUseCases
+                  copy={{
+                    heading: t("useCases.heading"),
+                    description: t("useCases.description"),
+                    items: USE_CASE_ITEMS.map((n) => ({
+                      eyebrow: t(`useCases.items.${n}.eyebrow`),
+                      title: t(`useCases.items.${n}.title`),
+                      text: t(`useCases.items.${n}.text`),
+                    })),
                   }}
                 />
               </section>
