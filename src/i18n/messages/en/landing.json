@@ -10,7 +10,9 @@
     "heading": "Every word matters, and Munsit doesn't miss a single one",
     "description": "Your smart platform for understanding lectures and turning them into organized summaries and interactive questions that help you learn more efficiently",
     "ctaPrimary": "Get started free",
-    "ctaSecondary": "See how it works"
+    "ctaSecondary": "See how it works",
+    "videoPause": "Pause background video",
+    "videoPlay": "Play background video"
   },
   "showcase": {
     "heading": "Your lecture becomes smart content: everything you need in one place",

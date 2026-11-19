@@ -48,6 +48,14 @@ note otherwise.
 | hero.ctaPrimary   | ابدأ مجانًا                                                                                     | Get started free                                                                                                                                        |
 | hero.ctaSecondary | اكتشف كيف يعمل                                                                                 | See how it works                                                                                                                                        |
 
+**Hero video control labels.** These are not Figma copy. The owner approved them (P07-D15,
+2026-11-19), and they are final in both languages:
+
+| Key             | Arabic              | English                |
+| --------------- | ------------------- | ---------------------- |
+| hero.videoPause | إيقاف الفيديو مؤقتًا | Pause background video |
+| hero.videoPlay  | تشغيل الفيديو       | Play background video  |
+
 ## 3. Product Showcase
 
 | Key                  | Arabic (Figma)                                                                                                                 | English (PROPOSED)                                                                                                                                                                            |
