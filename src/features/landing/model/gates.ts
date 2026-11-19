@@ -1,0 +1,34 @@
+import type { AppEnv } from "@/config/env";
+
+/*
+ * Publication gates for content that is approved for development only (Phase 07 plan §6).
+ * Driven by `NEXT_PUBLIC_APP_ENV` (src/config/env.ts): a production deployment must set
+ * `production`; development and preview deployments keep `development` / `test`.
+ */
+
+/**
+ * P07-D1: the English Landing copy is PROPOSED, PENDING FINAL APPROVAL. Set to `true` only
+ * when the owner approves it (and update docs/phases/phase-07-landing-copy.md).
+ */
+export const LANDING_ENGLISH_APPROVED = false;
+
+/**
+ * Whether the English Landing may be served. Until P07-D1 is approved, production serves the
+ * Arabic Landing only: `/en` returns 404 and the header shows no language link, so no
+ * unapproved English copy reaches real visitors.
+ */
+export function isLandingEnglishPublished(
+  appEnv: AppEnv,
+  approved: boolean = LANDING_ENGLISH_APPROVED,
+): boolean {
+  return approved || appEnv !== "production";
+}
+
+/**
+ * P07-D4: the Pricing section holds placeholder content (Figma "تُحدد لاحقًا"). It renders in
+ * development and preview only, and never in production, until approved commercial content
+ * exists (a public-launch blocker).
+ */
+export function isPlaceholderPricingVisible(appEnv: AppEnv): boolean {
+  return appEnv !== "production";
+}

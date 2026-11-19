@@ -1,12 +1,17 @@
 import type { Metadata } from "next";
+import { hasLocale } from "next-intl";
+import { notFound } from "next/navigation";
 
-import { placeholderMetadata, RoutePlaceholder } from "@/app/[locale]/_components/RoutePlaceholder";
+import { LandingPage, landingMetadata } from "@/features/landing";
+import { routing } from "@/i18n/routing";
 
-/** Phase 04 placeholder (route key `landing`; path in `src/i18n/routes.ts`). Not implemented yet. */
+/** Landing (route key `landing`, Phase 07). Thin route: the page lives in `features/landing`. */
 export function generateMetadata(): Promise<Metadata> {
-  return placeholderMetadata("landing");
+  return landingMetadata();
 }
 
-export default function Page() {
-  return <RoutePlaceholder routeKey="landing" />;
+export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) notFound();
+  return <LandingPage locale={locale} />;
 }

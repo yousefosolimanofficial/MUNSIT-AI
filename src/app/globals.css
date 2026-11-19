@@ -6,5 +6,6 @@
  */
 @import "../design-system/tokens.css";
 @import "../design-system/typography.css";
+@import "../design-system/typography-landing.css";
 @import "../design-system/motion.css";
 @import "../design-system/base.css";

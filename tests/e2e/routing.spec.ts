@@ -37,9 +37,12 @@ const LOCALES: readonly { locale: Locale; dir: "rtl" | "ltr"; prefix: string }[]
 const DESTINATIONS = Object.keys(arNav.destinations);
 const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 
-/** Approved placeholder routes with a concrete sample URL (dynamic ids filled). */
+/**
+ * Approved placeholder routes with a concrete sample URL (dynamic ids filled). The Landing is no
+ * longer a placeholder (Phase 07); landing.spec.ts covers its structure, axe and viewports.
+ */
 const PLACEHOLDERS = Object.entries(ROUTES)
-  .filter(([key]) => !key.startsWith("dev."))
+  .filter(([key]) => !key.startsWith("dev.") && key !== "landing")
   .map(([key, path]) => ({ key, url: path.replace(/\[[^\]]+\]/g, "sample-1") }));
 
 function expectedTitle(locale: Locale, key: string): string {
@@ -177,7 +180,6 @@ for (const { locale, dir, prefix } of LOCALES) {
 
   test.describe(`placeholders: accessibility and keyboard (${locale})`, () => {
     const AXE_URLS = [
-      "/",
       "/login",
       "/dashboard",
       "/lectures/sample-1",
@@ -211,12 +213,7 @@ for (const { locale, dir, prefix } of LOCALES) {
 
   test.describe(`placeholders: viewports (${locale})`, () => {
     for (const width of [1440, 768, 390, 320]) {
-      for (const url of [
-        "/",
-        "/dashboard",
-        "/settings/subscription",
-        "/flashcards/sample-1/study",
-      ]) {
+      for (const url of ["/dashboard", "/settings/subscription", "/flashcards/sample-1/study"]) {
         const path = localized(prefix, url);
         test(`${width}px ${path}: no horizontal overflow, card inside the viewport`, async ({
           page,

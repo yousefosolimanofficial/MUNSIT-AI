@@ -587,7 +587,11 @@ for (const { locale, dir, prefix, nav, shell } of LOCALES) {
         await page.setViewportSize(DESKTOP);
         await page.goto(`${prefix}${path}`);
         await expect(page.locator("[data-shell]")).toHaveCount(0);
-        await expect(page.getByRole("link", { name: shell.skipToContent })).toHaveCount(0);
+        // The Landing (Phase 07) has its own skip link, outside any shell (landing.spec.ts);
+        // the other shell-less routes have none.
+        if (path !== "/") {
+          await expect(page.getByRole("link", { name: shell.skipToContent })).toHaveCount(0);
+        }
         await expect(page.getByRole("main")).toHaveCount(1);
       });
     }

@@ -1,0 +1,183 @@
+{
+  "nav": {
+    "home": "Home",
+    "features": "Features",
+    "howItWorks": "How it works",
+    "faq": "FAQ",
+    "login": "Log in"
+  },
+  "hero": {
+    "heading": "Every word matters, and Munsit doesn't miss a single one",
+    "description": "Your smart platform for understanding lectures and turning them into organized summaries and interactive questions that help you learn more efficiently",
+    "ctaPrimary": "Get started free",
+    "ctaSecondary": "See how it works"
+  },
+  "showcase": {
+    "heading": "Your lecture becomes smart content: everything you need in one place",
+    "description": "Munsit helps you turn your lectures into instant transcripts, highlights the key information, and prepares organized summaries and interactive questions so you review and understand faster.",
+    "recording": "Recording",
+    "timer": "00:12:34",
+    "lectureTitle": "Introduction to Artificial Intelligence\nLive lecture",
+    "sidebarTitle": "Main menu",
+    "sidebar": {
+      "dashboard": "Dashboard",
+      "lectures": "Lectures",
+      "live": "Live recording",
+      "summaries": "Smart summaries",
+      "questions": "Question bank",
+      "history": "Chat history"
+    },
+    "mobile": {
+      "live": "Live",
+      "heading": "Live lecture transcript",
+      "time1": "01:12",
+      "line1": "Welcome to today's lecture on artificial intelligence and its applications.",
+      "time2": "02:05",
+      "line2": "It's very important to understand how these models are trained on huge amounts of data.",
+      "pause": "Pause"
+    }
+  },
+  "features": {
+    "heading": "Smart tools for every step of your learning.",
+    "description": "From recording and transcribing lectures to highlighting key information and creating summaries and interactive questions.\nMunsit helps you get the most out of every lecture.",
+    "items": {
+      "1": {
+        "title": "Live lecture transcription",
+        "text": "Turn the lecture audio into live text,\nand go back to any part of it easily."
+      },
+      "2": {
+        "title": "Smart highlights",
+        "text": "Mark the key points automatically,\nand focus on what deserves review."
+      },
+      "3": {
+        "title": "Smart, organized summaries",
+        "text": "Turn your lectures into clear summaries\nthat help you review and understand faster."
+      },
+      "4": {
+        "title": "Interactive question bank",
+        "text": "Test your understanding with smart questions\ndrawn from your lecture content."
+      },
+      "5": {
+        "title": "Your smart learning assistant",
+        "text": "Ask about anything in your lecture,\nand get an explanation that helps you understand it."
+      },
+      "6": {
+        "title": "Lecture slide viewer",
+        "text": "Follow your lecture slides easily,\nand keep the content in one place."
+      }
+    }
+  },
+  "howItWorks": {
+    "heading": "How does Munsit work?",
+    "description": "From recording the lecture to reviewing and testing your understanding, Munsit makes your learning journey easier and smarter in four steps.",
+    "steps": {
+      "1": {
+        "number": "01",
+        "title": "Start recording your lecture",
+        "text": "Record your lecture live and focus on the lecturer instead of writing down every word."
+      },
+      "2": {
+        "number": "02",
+        "title": "Let Munsit analyze",
+        "text": "Munsit turns the lecture audio into written text and helps you mark the key information automatically."
+      },
+      "3": {
+        "number": "03",
+        "title": "Review your lecture smartly",
+        "text": "Get organized summaries and return to the important information easily, so you review and understand faster."
+      },
+      "4": {
+        "number": "04",
+        "title": "Test your understanding and progress",
+        "text": "Test yourself with questions from your lecture content, and use the smart assistant to understand the hard parts."
+      }
+    }
+  },
+  "useCases": {
+    "heading": "Munsit is with you at every step of your learning journey.",
+    "description": "Whether you're in a lecture, studying or preparing for an exam, Munsit helps you learn smartly and make the most of your time.",
+    "items": {
+      "1": {
+        "eyebrow": "01 — During the lecture",
+        "title": "Focus on the explanation… and leave the rest to Munsit.",
+        "text": "Instead of being busy writing every word, focus on the lecturer while Munsit helps you record the lecture and turn it into organized text you can return to anytime."
+      },
+      "2": {
+        "eyebrow": "02 — Study time",
+        "title": "Organized studying without wasted time.",
+        "text": "Return to your lectures easily and review the key information through smart summaries and automatically marked points, so you take in the content faster."
+      },
+      "3": {
+        "eyebrow": "03 — Before the exam",
+        "title": "Test your understanding before you walk into the exam.",
+        "text": "Review with interactive questions drawn from your lectures, and use the smart assistant to understand the hard parts and strengthen your level."
+      }
+    }
+  },
+  "faq": {
+    "heading": "Still have questions about Munsit?",
+    "description": "We've gathered answers to the most important questions so you can start your journey with Munsit clearly.",
+    "items": {
+      "1": {
+        "question": "What is Munsit?",
+        "answer": "Munsit is a learning platform that uses AI to help you record and transcribe lectures, organize information, and create summaries and interactive questions that make studying and review easier."
+      },
+      "2": {
+        "question": "Does Munsit turn lectures into written text?",
+        "answer": "Yes. Munsit helps you turn the lecture audio into written text that you can return to and review easily."
+      },
+      "3": {
+        "question": "How does Munsit identify the important information?",
+        "answer": "It uses AI techniques to analyze the lecture content and help mark the important points so you can focus on them while reviewing."
+      },
+      "4": {
+        "question": "Can I create a summary of my lecture?",
+        "answer": "Yes. Munsit helps you organize the lecture content and turn it into clear summaries that make reviewing the main ideas easier."
+      },
+      "5": {
+        "question": "Can Munsit help me prepare for exams?",
+        "answer": "Munsit helps you review with interactive questions based on your lecture content, so you can test your understanding and find the points you need to revisit."
+      },
+      "6": {
+        "question": "Can I ask Munsit about something I don't understand?",
+        "answer": "Yes. You can use the smart learning assistant to ask about difficult information and get an explanation that helps you understand it better."
+      }
+    }
+  },
+  "pricing": {
+    "eyebrow": "Plans",
+    "heading": "Choose the plan that fits your learning journey.",
+    "description": "Flexible plans that help you use Munsit in the way that suits your learning needs.",
+    "note": "Plan details, prices and usage limits will be set before the official launch.",
+    "plan": {
+      "label": "Starter",
+      "name": "Starter",
+      "text": "Your first step toward a smarter learning experience.",
+      "price": "—",
+      "priceNote": "Price and usage details to be announced",
+      "feature": "Plan feature — to be announced",
+      "cta": "Get started free"
+    },
+    "badge": "Featured plan"
+  },
+  "cta": {
+    "heading": "Ready to make every lecture a step forward?",
+    "description": "Start your journey with Munsit, and let AI help you organize your lectures, understand your material and review more smartly.",
+    "secondary": "Explore features",
+    "primary": "Get started free"
+  },
+  "footer": {
+    "brandText": "Munsit, your smart learning assistant for understanding your lectures, organizing your studies and preparing for exams more smartly.",
+    "platformTitle": "Platform",
+    "home": "Home",
+    "features": "Features",
+    "howItWorks": "How it works",
+    "faq": "FAQ",
+    "accountTitle": "Your account",
+    "login": "Log in",
+    "register": "Create account",
+    "terms": "Terms and conditions",
+    "privacy": "Privacy policy",
+    "copyright": "© 2026 Munsit AI. All rights reserved."
+  }
+}

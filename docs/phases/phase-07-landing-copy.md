@@ -14,6 +14,20 @@
 Desktop `5:3` is the source. Tablet and Mobile use the same strings, except where §8 and §11
 note otherwise.
 
+## 0. Where the copy lives (Increment 1)
+
+- **Files:** `src/i18n/messages/ar/landing.json` (Arabic, final, Figma verbatim; checked
+  string-by-string against Figma on 2026-11-19) and `src/i18n/messages/en/landing.json` (the
+  English below, **PROPOSED**).
+- **English gate (P07-D1):** English is served only outside production
+  (`src/features/landing/model/gates.ts`, `LANDING_ENGLISH_APPROVED = false`). A production build
+  returns 404 for `/en` and shows no language link.
+- **Exact Figma details kept:**
+  - the Showcase heading contains a **U+2028 line separator** between "ذكي" and "كل" (a forced
+    line break), not a space;
+  - the copyright line is the exact string, rendered with a **left-to-right base direction**, as
+    Figma draws it.
+
 ## 1. Navigation
 
 | Key            | Arabic (Figma)  | English (PROPOSED) | Note                                                                                                   |
