@@ -20,9 +20,16 @@ Single resume point. A new session starts by reading this file, the latest phase
 
     These are all public-launch blockers.
 
-  - **Increment 1 (Landing foundation): NOT STARTED.** It begins only on the owner's
-    authorization. The Mariam assignment (Features and How It Works) is approved, but the starter
-    is not sent until the Increment 1 baseline and the component contracts are final.
+  - **Increment 1 (Landing foundation): in review** on `feat/phase-07-landing-foundation`
+    (owner authorization, 2026-11-19).
+    - **Built:** header (Desktop, Tablet, Mobile), menu (shared `Sheet`), footer (legal items as
+      non-interactive text), section boundaries in the approved order, metadata and Open Graph
+      infrastructure (no image), static generation, Landing typography tokens, and the `landing`
+      messages (Arabic verbatim; English PROPOSED and gated out of production).
+    - **Navigation weight:** measured, 400 (design-values §16.5).
+    - **Mariam:** the draft contract is
+      [phases/phase-07-mariam-contract.md](phases/phase-07-mariam-contract.md); not sent until
+      Increment 1 is merged and the card specifications are approved.
 - **Phase 06:** Shared states & overlay/guard infrastructure — **CLOSED — Development Complete,
   Production QA Outstanding.**
   - **Closure:** approved by the product owner on 2026-11-19; final code `main` `6cda86c` (PR #47);

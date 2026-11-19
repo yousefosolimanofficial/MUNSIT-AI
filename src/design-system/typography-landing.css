@@ -1,0 +1,179 @@
+/*
+ * MUNSIT AI — Landing typography tokens (Phase 07 Increment 1).
+ *
+ * Source: docs/design-values.md §0.4.3 (Foundation styles used by the Landing), §0.4.4
+ * (`Landing/*`) and §16.5 (navigation weights measured against Figma, 2026-11-19). Values are
+ * read from Figma Landing Desktop `5:3`, Tablet `200:527` and Mobile `200:683`; none is invented.
+ *
+ * Same rules as typography.css: one Figma style = one utility; the name follows the Figma style
+ * (`Landing/Footer/Link` → `--text-landing-footer-link`, `UI/Navigation` → `--text-ui-navigation`);
+ * line heights are Figma percentages written as ratios; tracking is 0 (never tracked Arabic).
+ * Families come from `font-sans` (Inter first, Cairo for Arabic glyphs) and `font-mono`
+ * (Geist Mono) for `Landing/Mono/Step`.
+ *
+ * Kept apart from typography.css, whose `Dashboard/*` set must match the Design System Reference
+ * exactly (typography.test.ts). Imported after it in globals.css.
+ */
+
+@theme static {
+  /* ---------------------------------------------- Foundation styles used by the Landing */
+  /* Heading/Display — Cairo SemiBold 600, 56 / 120% — Hero heading (Desktop) */
+  --text-heading-display: 56px;
+  --text-heading-display--line-height: 1.2;
+  --text-heading-display--letter-spacing: 0px;
+  --text-heading-display--font-weight: 600;
+
+  /* Heading/Medium — Cairo SemiBold 600, 24 / 140% — footer "المنصة", Hero description */
+  --text-heading-medium: 24px;
+  --text-heading-medium--line-height: 1.4;
+  --text-heading-medium--letter-spacing: 0px;
+  --text-heading-medium--font-weight: 600;
+
+  /* UI/Button — Cairo Medium 500, 20 / 140% — header actions, Hero buttons */
+  --text-ui-button: 20px;
+  --text-ui-button--line-height: 1.4;
+  --text-ui-button--letter-spacing: 0px;
+  --text-ui-button--font-weight: 500;
+
+  /* UI/Navigation — Cairo 20 / 140%; the Figma face is named "ExtraBold" but renders at
+     weight 400 (measured, design-values §16.5) */
+  --text-ui-navigation: 20px;
+  --text-ui-navigation--line-height: 1.4;
+  --text-ui-navigation--letter-spacing: 0px;
+  --text-ui-navigation--font-weight: 400;
+
+  /* -------------------------------------------------------------------- Landing/* */
+  --text-landing-heading-section-desktop: 40px;
+  --text-landing-heading-section-desktop--line-height: 1.2;
+  --text-landing-heading-section-desktop--letter-spacing: 0px;
+  --text-landing-heading-section-desktop--font-weight: 600;
+
+  --text-landing-heading-section-tablet: 32px;
+  --text-landing-heading-section-tablet--line-height: 1.2;
+  --text-landing-heading-section-tablet--letter-spacing: 0px;
+  --text-landing-heading-section-tablet--font-weight: 600;
+
+  --text-landing-heading-section-mobile: 26px;
+  --text-landing-heading-section-mobile--line-height: 1.2;
+  --text-landing-heading-section-mobile--letter-spacing: 0px;
+  --text-landing-heading-section-mobile--font-weight: 600;
+
+  --text-landing-heading-subsection: 28px;
+  --text-landing-heading-subsection--line-height: 1.4;
+  --text-landing-heading-subsection--letter-spacing: 0px;
+  --text-landing-heading-subsection--font-weight: 600;
+
+  --text-landing-body-intro: 24px;
+  --text-landing-body-intro--line-height: 1.5;
+  --text-landing-body-intro--letter-spacing: 0px;
+  --text-landing-body-intro--font-weight: 400;
+
+  --text-landing-body-lead: 20px;
+  --text-landing-body-lead--line-height: 1.5;
+  --text-landing-body-lead--letter-spacing: 0px;
+  --text-landing-body-lead--font-weight: 400;
+
+  --text-landing-body-large: 18px;
+  --text-landing-body-large--line-height: 1.5;
+  --text-landing-body-large--letter-spacing: 0px;
+  --text-landing-body-large--font-weight: 400;
+
+  --text-landing-body-feature-desktop: 18px;
+  --text-landing-body-feature-desktop--line-height: 1.45;
+  --text-landing-body-feature-desktop--letter-spacing: 0px;
+  --text-landing-body-feature-desktop--font-weight: 400;
+
+  --text-landing-body-feature-tablet: 16px;
+  --text-landing-body-feature-tablet--line-height: 1.45;
+  --text-landing-body-feature-tablet--letter-spacing: 0px;
+  --text-landing-body-feature-tablet--font-weight: 400;
+
+  --text-landing-body-feature-mobile: 15px;
+  --text-landing-body-feature-mobile--line-height: 1.45;
+  --text-landing-body-feature-mobile--letter-spacing: 0px;
+  --text-landing-body-feature-mobile--font-weight: 400;
+
+  --text-landing-body-reading: 16px;
+  --text-landing-body-reading--line-height: 1.6;
+  --text-landing-body-reading--letter-spacing: 0px;
+  --text-landing-body-reading--font-weight: 400;
+
+  --text-landing-body-base: 16px;
+  --text-landing-body-base--line-height: 1.5;
+  --text-landing-body-base--letter-spacing: 0px;
+  --text-landing-body-base--font-weight: 400;
+
+  --text-landing-body-base-mobile: 15px;
+  --text-landing-body-base-mobile--line-height: 1.5;
+  --text-landing-body-base-mobile--letter-spacing: 0px;
+  --text-landing-body-base-mobile--font-weight: 400;
+
+  --text-landing-body-small: 14px;
+  --text-landing-body-small--line-height: 1.5;
+  --text-landing-body-small--letter-spacing: 0px;
+  --text-landing-body-small--font-weight: 400;
+
+  --text-landing-card-title: 20px;
+  --text-landing-card-title--line-height: 1.3;
+  --text-landing-card-title--letter-spacing: 0px;
+  --text-landing-card-title--font-weight: 600;
+
+  --text-landing-label-title: 20px;
+  --text-landing-label-title--line-height: 1.4;
+  --text-landing-label-title--letter-spacing: 0px;
+  --text-landing-label-title--font-weight: 600;
+
+  --text-landing-label-strong: 16px;
+  --text-landing-label-strong--line-height: 1.4;
+  --text-landing-label-strong--letter-spacing: 0px;
+  --text-landing-label-strong--font-weight: 600;
+
+  --text-landing-button-default: 16px;
+  --text-landing-button-default--line-height: 1.5;
+  --text-landing-button-default--letter-spacing: 0px;
+  --text-landing-button-default--font-weight: 500;
+
+  --text-landing-badge-label: 12px;
+  --text-landing-badge-label--line-height: 1.4;
+  --text-landing-badge-label--letter-spacing: 0px;
+  --text-landing-badge-label--font-weight: 500;
+
+  --text-landing-pricing-plan-title: 24px;
+  --text-landing-pricing-plan-title--line-height: 1.3;
+  --text-landing-pricing-plan-title--letter-spacing: 0px;
+  --text-landing-pricing-plan-title--font-weight: 600;
+
+  /* Inter styles (Latin): plan label and price */
+  --text-landing-pricing-plan-label: 12px;
+  --text-landing-pricing-plan-label--line-height: 1;
+  --text-landing-pricing-plan-label--letter-spacing: 0px;
+  --text-landing-pricing-plan-label--font-weight: 500;
+
+  --text-landing-pricing-price: 48px;
+  --text-landing-pricing-price--line-height: 1;
+  --text-landing-pricing-price--letter-spacing: 0px;
+  --text-landing-pricing-price--font-weight: 600;
+
+  /* Geist Mono (use with font-mono): step numbers */
+  --text-landing-mono-step: 14px;
+  --text-landing-mono-step--line-height: 1;
+  --text-landing-mono-step--letter-spacing: 0px;
+  --text-landing-mono-step--font-weight: 400;
+
+  --text-landing-footer-link: 16px;
+  --text-landing-footer-link--line-height: 1.4;
+  --text-landing-footer-link--letter-spacing: 0px;
+  --text-landing-footer-link--font-weight: 400;
+
+  --text-landing-footer-legal: 12px;
+  --text-landing-footer-legal--line-height: 1.4;
+  --text-landing-footer-legal--letter-spacing: 0px;
+  --text-landing-footer-legal--font-weight: 400;
+
+  /* Landing/Navigation/Tablet — Cairo "ExtraBold" 15 / 140%, renders at weight 800 (measured,
+     §16.5) */
+  --text-landing-navigation-tablet: 15px;
+  --text-landing-navigation-tablet--line-height: 1.4;
+  --text-landing-navigation-tablet--letter-spacing: 0px;
+  --text-landing-navigation-tablet--font-weight: 800;
+}

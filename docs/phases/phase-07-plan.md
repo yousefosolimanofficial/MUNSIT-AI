@@ -180,6 +180,35 @@ send**. The starter package goes out only after both of these exist:
 `121:32` with its `Show Connector`, and the per-breakpoint widths in design-values §16.3). It is
 prepared after Increment 1, from the starter package (offline procedure).
 
+## 8a. Increment 1 outcome (Landing foundation, in review)
+
+- **Built:**
+  - `src/features/landing`: header (Desktop floating bar at `xl`+, the compact Tablet / Mobile
+    bar), menu, footer, page with the section boundaries in the approved order, metadata;
+  - the `landing` message namespace;
+  - `typography-landing.css`, 30 tokens.
+- **Static generation:** `/ar` and `/en` are SSG (`●`). Production gates verified with
+  `NEXT_PUBLIC_APP_ENV=production`: `/en` is 404, and there is no language link and no Pricing
+  boundary.
+- **P07-D6 (done):** `UI/Navigation` renders at weight **400**, `Landing/Navigation/Tablet` at
+  **800**, measured against Figma (design-values §16.5).
+- **P07-D12 (evaluated, reused):** the shared Phase 03 `Sheet` fits Landing navigation:
+  - a generic native modal dialog (Esc, scrim, close button, focus kept off the page behind,
+    focus return, scroll lock);
+  - the anchor links close the sheet and the browser follows the fragment;
+  - the product's `MoreSheet` is not reused;
+  - copy reuses the approved shell strings (open/close menu, "القائمة").
+- **Verbatim Arabic (P07-D11):** all 109 values were checked against Figma, including instance
+  overrides. Two exact details are kept:
+  - the Showcase heading's U+2028 line separator;
+  - the copyright line, which Figma renders with a left-to-right base direction.
+- **Hero boundary:** it reserves the Figma Hero box and holds the visually hidden `h1`. Increment 2
+  renders the Hero.
+- **Breakpoints:** ADR-004, so 1024 uses the Tablet bar (the Desktop bar's content does not fit
+  below about 1060 px).
+- **Mariam:** draft contract in [phase-07-mariam-contract.md](phase-07-mariam-contract.md) (not
+  sent).
+
 ## 9. Increments and PR boundaries
 
 | #   | Increment                     | Content                                                                                                                                                                                                                                                       | Depends on                       |

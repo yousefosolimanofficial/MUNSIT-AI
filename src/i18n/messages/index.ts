@@ -5,11 +5,14 @@
  *
  * Copy rules: Arabic text verbatim from Figma / Handoff only. Do not invent final copy for
  * unfinished modules. The `dev` namespace holds development-only fixtures for the temporary
- * /dev/tokens route and tests — never use it in product screens.
+ * /dev/tokens route and tests — never use it in product screens. The `landing` namespace's English
+ * values are PROPOSED (Phase 07 P07-D1) and gated out of production until approved
+ * (src/features/landing/model/gates.ts).
  */
 import arCommon from "./ar/common.json";
 import arDev from "./ar/dev.json";
 import arErrors from "./ar/errors.json";
+import arLanding from "./ar/landing.json";
 import arNav from "./ar/nav.json";
 import arPages from "./ar/pages.json";
 import arPatterns from "./ar/patterns.json";
@@ -17,6 +20,7 @@ import arShell from "./ar/shell.json";
 import enCommon from "./en/common.json";
 import enDev from "./en/dev.json";
 import enErrors from "./en/errors.json";
+import enLanding from "./en/landing.json";
 import enNav from "./en/nav.json";
 import enPages from "./en/pages.json";
 import enPatterns from "./en/patterns.json";
@@ -32,6 +36,7 @@ export const MESSAGES = {
     pages: arPages,
     patterns: arPatterns,
     errors: arErrors,
+    landing: arLanding,
     shell: arShell,
   },
   en: {
@@ -41,6 +46,7 @@ export const MESSAGES = {
     pages: enPages,
     patterns: enPatterns,
     errors: enErrors,
+    landing: enLanding,
     shell: enShell,
   },
 } as const satisfies Record<AppLocale, Record<string, unknown>>;

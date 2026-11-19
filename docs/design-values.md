@@ -129,46 +129,47 @@ consuming screen is built (Heading / Small: Phase 09).
 Separate Figma styles from the spaced Inter set above, despite similar names. Bound on the
 Design System page `10:4` and Landing frames.
 
-| Figma style     | Family     | Weight                            | Size | LH   | Tracking | Label                                               |
-| --------------- | ---------- | --------------------------------- | ---- | ---- | -------- | --------------------------------------------------- |
-| Heading/Display | Cairo      | SemiBold 600                      | 56   | 120% | 0        | FIGMA                                               |
-| Heading/Medium  | Cairo      | SemiBold 600                      | 24   | 140% | 0        | FIGMA                                               |
-| Body/Regular    | Cairo      | Regular 400                       | 20   | 160% | 0        | FIGMA                                               |
-| UI/Button       | Cairo      | Medium 500                        | 20   | 140% | 0        | FIGMA                                               |
-| UI/Navigation   | Cairo      | style "ExtraBold", weight **400** | 20   | 140% | 0        | **NOT VERIFIED** — style name and weight conflict   |
-| Mono/Metadata   | Geist Mono | Regular 400                       | 16   | 160% | 0.2px    | FIGMA (Reference's 12px is Mono / Metadata, spaced) |
+| Figma style     | Family     | Weight                               | Size | LH   | Tracking | Label                                               |
+| --------------- | ---------- | ------------------------------------ | ---- | ---- | -------- | --------------------------------------------------- |
+| Heading/Display | Cairo      | SemiBold 600                         | 56   | 120% | 0        | FIGMA                                               |
+| Heading/Medium  | Cairo      | SemiBold 600                         | 24   | 140% | 0        | FIGMA                                               |
+| Body/Regular    | Cairo      | Regular 400                          | 20   | 160% | 0        | FIGMA                                               |
+| UI/Button       | Cairo      | Medium 500                           | 20   | 140% | 0        | FIGMA                                               |
+| UI/Navigation   | Cairo      | Regular 400 (face named "ExtraBold") | 20   | 140% | 0        | **VERIFIED** (measured, §16.5; Phase 07)            |
+| Mono/Metadata   | Geist Mono | Regular 400                          | 16   | 160% | 0.2px    | FIGMA (Reference's 12px is Mono / Metadata, spaced) |
 
-#### 0.4.4 Extracted, NOT yet tokens — `Landing/*` (Phase 07)
+#### 0.4.4 `Landing/*` — tokens since Phase 07 Increment 1 (`src/design-system/typography-landing.css`)
 
 Read on Landing Desktop `5:3`, Tablet `200:527`, Mobile `200:683`. All tracking 0.
 
-| Figma style                     | Family     | Weight       | Size | LH   |
-| ------------------------------- | ---------- | ------------ | ---- | ---- |
-| Landing/Heading/Section Desktop | Cairo      | SemiBold 600 | 40   | 120% |
-| Landing/Heading/Section Tablet  | Cairo      | SemiBold 600 | 32   | 120% |
-| Landing/Heading/Section Mobile  | Cairo      | SemiBold 600 | 26   | 120% |
-| Landing/Heading/Subsection      | Cairo      | SemiBold 600 | 28   | 140% |
-| Landing/Body/Intro              | Cairo      | Regular 400  | 24   | 150% |
-| Landing/Body/Lead               | Cairo      | Regular 400  | 20   | 150% |
-| Landing/Body/Large              | Cairo      | Regular 400  | 18   | 150% |
-| Landing/Body/Feature Desktop    | Cairo      | Regular 400  | 18   | 145% |
-| Landing/Body/Feature Tablet     | Cairo      | Regular 400  | 16   | 145% |
-| Landing/Body/Feature Mobile     | Cairo      | Regular 400  | 15   | 145% |
-| Landing/Body/Reading            | Cairo      | Regular 400  | 16   | 160% |
-| Landing/Body/Base               | Cairo      | Regular 400  | 16   | 150% |
-| Landing/Body/Base Mobile        | Cairo      | Regular 400  | 15   | 150% |
-| Landing/Body/Small              | Cairo      | Regular 400  | 14   | 150% |
-| Landing/Card/Title              | Cairo      | SemiBold 600 | 20   | 130% |
-| Landing/Label/Title             | Cairo      | SemiBold 600 | 20   | 140% |
-| Landing/Label/Strong            | Cairo      | SemiBold 600 | 16   | 140% |
-| Landing/Button/Default          | Cairo      | Medium 500   | 16   | 150% |
-| Landing/Badge/Label             | Cairo      | Medium 500   | 12   | 140% |
-| Landing/Pricing/Plan Title      | Cairo      | SemiBold 600 | 24   | 130% |
-| Landing/Pricing/Plan Label      | Inter      | Medium 500   | 12   | 100% |
-| Landing/Pricing/Price           | Inter      | SemiBold 600 | 48   | 100% |
-| Landing/Mono/Step               | Geist Mono | Regular 400  | 14   | 100% |
-| Landing/Footer/Link             | Cairo      | Regular 400  | 16   | 140% |
-| Landing/Footer/Legal            | Cairo      | Regular 400  | 12   | 140% |
+| Figma style                     | Family     | Weight        | Size | LH   |
+| ------------------------------- | ---------- | ------------- | ---- | ---- |
+| Landing/Heading/Section Desktop | Cairo      | SemiBold 600  | 40   | 120% |
+| Landing/Heading/Section Tablet  | Cairo      | SemiBold 600  | 32   | 120% |
+| Landing/Heading/Section Mobile  | Cairo      | SemiBold 600  | 26   | 120% |
+| Landing/Heading/Subsection      | Cairo      | SemiBold 600  | 28   | 140% |
+| Landing/Body/Intro              | Cairo      | Regular 400   | 24   | 150% |
+| Landing/Body/Lead               | Cairo      | Regular 400   | 20   | 150% |
+| Landing/Body/Large              | Cairo      | Regular 400   | 18   | 150% |
+| Landing/Body/Feature Desktop    | Cairo      | Regular 400   | 18   | 145% |
+| Landing/Body/Feature Tablet     | Cairo      | Regular 400   | 16   | 145% |
+| Landing/Body/Feature Mobile     | Cairo      | Regular 400   | 15   | 145% |
+| Landing/Body/Reading            | Cairo      | Regular 400   | 16   | 160% |
+| Landing/Body/Base               | Cairo      | Regular 400   | 16   | 150% |
+| Landing/Body/Base Mobile        | Cairo      | Regular 400   | 15   | 150% |
+| Landing/Body/Small              | Cairo      | Regular 400   | 14   | 150% |
+| Landing/Card/Title              | Cairo      | SemiBold 600  | 20   | 130% |
+| Landing/Label/Title             | Cairo      | SemiBold 600  | 20   | 140% |
+| Landing/Label/Strong            | Cairo      | SemiBold 600  | 16   | 140% |
+| Landing/Button/Default          | Cairo      | Medium 500    | 16   | 150% |
+| Landing/Badge/Label             | Cairo      | Medium 500    | 12   | 140% |
+| Landing/Pricing/Plan Title      | Cairo      | SemiBold 600  | 24   | 130% |
+| Landing/Pricing/Plan Label      | Inter      | Medium 500    | 12   | 100% |
+| Landing/Pricing/Price           | Inter      | SemiBold 600  | 48   | 100% |
+| Landing/Mono/Step               | Geist Mono | Regular 400   | 14   | 100% |
+| Landing/Footer/Link             | Cairo      | Regular 400   | 16   | 140% |
+| Landing/Footer/Legal            | Cairo      | Regular 400   | 12   | 140% |
+| Landing/Navigation/Tablet       | Cairo      | ExtraBold 800 | 15   | 140% |
 
 #### 0.4.5 Extracted, NOT yet tokens — `Auth/*` (Phase 08)
 
@@ -849,3 +850,33 @@ Tablet and Mobile column counts are read from the frames at implementation.
 **Colours outside the 19 tokens:** the navigation border `#363739`, and the Cyan `#06B6D4` named
 in the Hero video direction. All other colours read map to tokens: Void Black, Ink, Obsidian,
 Slate, Iron, Mist, Electric Sky, Cobalt Edge.
+
+### 16.5 Navigation font weight — measured (P07-D6, 2026-11-19)
+
+Figma names both navigation faces "Cairo ExtraBold", but reports different numeric weights:
+
+- `UI/Navigation` (Desktop, Mobile): **400**;
+- `Landing/Navigation/Tablet`: **800**.
+
+The weight was measured by rendering the same strings in the project's Cairo variable font, in
+Chromium, and comparing the widths with Figma's auto-width text boxes:
+
+| String @ size          | Figma width | 400   | 500   | 600   | 700   | 800   |
+| ---------------------- | ----------- | ----- | ----- | ----- | ----- | ----- |
+| "الأسئلة الشائعة" @ 20 | 127         | 126.4 | 128.1 | 129.9 | 139.1 | 143.5 |
+| "كيف يعمل ؟" @ 20      | 103         | 102.8 | 103.8 | 104.8 | 110.2 | 112.8 |
+| "المميزات" @ 20        | 71          | 71.0  | 71.9  | 72.9  | 78.0  | 80.4  |
+| "الرئيسية" @ 20        | 63          | 62.8  | 64.3  | 65.8  | 74.0  | 77.9  |
+| "الأسئلة الشائعة" @ 15 | 108         | 94.8  | 96.1  | 97.4  | 104.4 | 107.7 |
+| "المميزات" @ 15        | 61          | 53.2  | 54.0  | 54.7  | 58.5  | 60.3  |
+| "الرئيسية" @ 15        | 59          | 47.1  | 48.2  | 49.4  | 55.5  | 58.4  |
+
+**Result:**
+
+- `UI/Navigation` renders at **400** (tokens: `--text-ui-navigation`).
+- `Landing/Navigation/Tablet` renders at **800** (tokens: `--text-landing-navigation-tablet`).
+
+In Figma the Tablet and Mobile inline links are hidden layers (the menu button replaces them).
+
+**Navigation border** `#363739` (Desktop bar): a Landing-local constant (owner approval,
+2026-11-19), not a token.
