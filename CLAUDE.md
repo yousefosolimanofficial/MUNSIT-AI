@@ -175,3 +175,14 @@ overflow check, keyboard pass, automated a11y). Never report a check as passing 
 - Only `NEXT_PUBLIC_*` variables in client code, and they must never hold secrets.
 - Sanitize rendered rich content (AI output, notes). No tokens or PII in logs.
 - Do not publish personal local file paths in committed files.
+
+## ClickUp Sync (MUNSIT AI Frontend)
+
+- Space "MUNSIT AI — Development." / Folder ID 1200420000064458. Details: docs/project-management/clickup-workflow.md
+- Before any frontend task: find the existing ClickUp task. Never create a duplicate.
+- Work starts → in progress. PR opened → in review + write PR number. PR merged → complete.
+- Verify CI via GitHub before writing its state. If not verified, write "NOT VERIFIED".
+- If a ClickUp update fails, do NOT claim success; report "ClickUp sync: FAILED" with what is pending.
+- Every final report ends with a "ClickUp sync status" line.
+- Mariam's tasks: change status only after Yousef integrates and merges her delivery.
+- Do not modify the Roadmap or invent phases.
