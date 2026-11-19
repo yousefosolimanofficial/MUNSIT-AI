@@ -166,6 +166,65 @@ for (const { locale, dir, path, m } of LOCALES) {
       expect(font).toBe("32px");
     });
 
+    test("Desktop text never overlaps the CTAs: the description is in flow; enlarged text pushes the actions down", async ({
+      page,
+    }) => {
+      const measure = () =>
+        page.evaluate(() => {
+          const p = document.querySelector<HTMLElement>("[data-landing-hero-text] p");
+          const actions = document.querySelector("[data-landing-hero-actions]");
+          if (!p || !actions) throw new Error("hero parts missing");
+          const range = document.createRange();
+          range.selectNodeContents(p);
+          return {
+            textBottom: range.getBoundingClientRect().bottom,
+            boxBottom: p.getBoundingClientRect().bottom,
+            actionsTop: actions.getBoundingClientRect().top,
+            clipped: p.scrollHeight > p.clientHeight + 1,
+          };
+        });
+      for (const width of [1280, 1440]) {
+        await open(page, path, width);
+        const normal = await measure();
+        expect(normal.clipped).toBe(false);
+        expect(normal.boxBottom).toBeGreaterThanOrEqual(normal.textBottom - 1); // text inside its box
+        expect(normal.actionsTop).toBeGreaterThan(normal.textBottom);
+      }
+      // Text-only zoom at 200% (WCAG 1.4.4): the viewport stays wide, the text doubles.
+      await page.locator("[data-landing-hero-text] p").evaluate((el) => {
+        el.style.fontSize = "48px";
+      });
+      const zoomed = await measure();
+      expect(zoomed.clipped).toBe(false);
+      expect(zoomed.actionsTop).toBeGreaterThan(zoomed.textBottom);
+    });
+
+    test("200% browser zoom (1440 × 900 → 720 CSS px): Tablet layout, no overlap, no overflow", async ({
+      browser,
+    }) => {
+      const context = await browser.newContext({
+        viewport: { width: 720, height: 450 },
+        deviceScaleFactor: 2,
+      });
+      const zoomed = await context.newPage();
+      await zoomed.goto(path);
+      await zoomed.evaluate(() => document.fonts.ready);
+      const r = await zoomed.evaluate(() => {
+        const p = document.querySelector<HTMLElement>("[data-landing-hero-text] p");
+        const actions = document.querySelector("[data-landing-hero-actions]");
+        if (!p || !actions) throw new Error("hero parts missing");
+        const range = document.createRange();
+        range.selectNodeContents(p);
+        return {
+          gap: actions.getBoundingClientRect().top - range.getBoundingClientRect().bottom,
+          overflow: document.documentElement.scrollWidth - innerWidth,
+        };
+      });
+      expect(r.gap).toBeGreaterThan(0);
+      expect(r.overflow).toBeLessThanOrEqual(0);
+      await context.close();
+    });
+
     test("no approved video: Near Black background, no video, no Pause/Play control (P07-D14)", async ({
       page,
     }) => {

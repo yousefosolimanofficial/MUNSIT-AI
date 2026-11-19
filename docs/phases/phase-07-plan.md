@@ -212,7 +212,7 @@ prepared after Increment 1, from the starter package (offline procedure).
 - **Mariam:** draft contract in [phase-07-mariam-contract.md](phase-07-mariam-contract.md) (not
   sent).
 
-## 8b. Increment 2 outcome (Hero, in review)
+## 8b. Increment 2 outcome (Hero, COMPLETE through PR #52)
 
 - **Built:**
   - `LandingHero` (server): layout per breakpoint, typography, CTAs, poster layer;
@@ -223,9 +223,13 @@ prepared after Increment 1, from the starter package (offline procedure).
   temporary background is not the final visual.
 - **Figma evidence:**
   - **Desktop heading:** a fixed, top-aligned 651 × 143 text box (reproduced with min-height).
-  - **Desktop description:** a fixed 760 × 33 box. Figma renders it on two lines that overflow
-    into the 132 gap, and the layout follows the box. Reproduced with the box height and visible
-    overflow, so the actions sit at y 688 and the Hero is 900 high.
+  - **Desktop description:** Figma lays out a fixed 760 × 33 box with a 132 gap, while the text
+    renders on two lines (67.2) that overflow the box. Final review (owner request): the
+    description stays in **normal flow** with a Desktop gap of **98** (33 + 132 = 67.2 + 97.8).
+    Arabic is identical to Figma (actions at y 688, Hero 900). Enlarged text, as in text-only
+    zoom (WCAG 1.4.4), now pushes the actions down instead of overlapping them, as the fixed box
+    would have; regression tests cover it. At 200% browser zoom the Tablet layout applies, with no
+    overlap and no overflow.
   - **Hero buttons:** 131 / 186 wide with the Arabic labels (the Figma label box is wider than the
     glyphs). Reproduced as minimum widths, so longer labels never clip.
 - **Mariam starter:** prepared from the baseline `01453f4` and verified in an empty folder. Not sent
@@ -239,7 +243,8 @@ prepared after Increment 1, from the starter package (offline procedure).
     approved assignment).
 - **Checks:** no forbidden paths, and none of the eight delegated files pre-created. Verified in an
   empty folder: frozen install, then `pnpm check` 1182/1182.
-- **Status: PREPARED, NOT SENT.** Yousef sends it and records the send date.
+- **Status: READY TO SEND** (approved for delivery by the owner, 2026-11-19; re-verified:
+  SHA-256, baseline, contents). It is marked SENT only when the owner confirms delivery.
 
 ## 9. Increments and PR boundaries
 

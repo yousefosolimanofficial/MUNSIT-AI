@@ -17,7 +17,11 @@ import { FOCUS_RING } from "./landing-styles";
  *
  * Content, a centred column:
  * - padding 344 / 126 (Desktop), 200 / 100 (Tablet), 150 / 64 (Mobile); inline 20 / 32;
- * - gap to the actions 132 / 56 / 40;
+ * - gap to the actions 56 (Tablet) / 40 (Mobile). Desktop: Figma lays out a FIXED 760 × 33
+ *   description box with a 132 gap, while the text renders on two lines (67.2) that overflow the
+ *   box. The description stays in normal flow with a gap of 98 (33 + 132 = 67.2 + 97.8), so the
+ *   actions sit at Figma's y 688 and enlarged text (text-only zoom, WCAG 1.4.4) pushes them down
+ *   instead of overlapping them;
  * - heading block 760 / 704 / 350 wide, gap 36.
  *
  * - Heading (`h1`): `Heading/Display` 56 in Figma's fixed, top-aligned 651 × 143 text box (min-height,
@@ -97,7 +101,7 @@ export function LandingHero({ copy, video }: LandingHeroProps) {
         <HeroVideo asset={video} labels={{ pause: copy.videoPause, play: copy.videoPlay }} />
       ) : null}
 
-      <div className="relative z-[1] flex flex-col items-center gap-[40px] px-[20px] pt-[150px] pb-[64px] rail:gap-[56px] rail:px-[32px] rail:pt-[200px] rail:pb-[100px] xl:gap-[132px] xl:pt-[344px] xl:pb-[126px]">
+      <div className="relative z-[1] flex flex-col items-center gap-[40px] px-[20px] pt-[150px] pb-[64px] rail:gap-[56px] rail:px-[32px] rail:pt-[200px] rail:pb-[100px] xl:gap-[98px] xl:pt-[344px] xl:pb-[126px]">
         <div
           className="flex w-full max-w-[350px] flex-col items-center gap-[36px] text-center rail:max-w-[704px] xl:max-w-[760px]"
           data-landing-hero-text=""
@@ -108,10 +112,7 @@ export function LandingHero({ copy, video }: LandingHeroProps) {
           >
             {copy.heading}
           </h1>
-          {/* Desktop: Figma's fixed, top-aligned 760 × 33 box; Figma renders the text on two lines that
-              overflow the box into the 132 gap, and the layout follows the box. Reproduced with the box
-              height and visible overflow (nothing is clipped). */}
-          <p className="text-landing-label-strong text-text-primary/90 rail:text-landing-label-title xl:h-[33px] xl:text-heading-medium">
+          <p className="text-landing-label-strong text-text-primary/90 rail:text-landing-label-title xl:text-heading-medium">
             {copy.description}
           </p>
         </div>
