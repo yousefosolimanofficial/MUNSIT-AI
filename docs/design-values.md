@@ -961,8 +961,9 @@ bars (heights 8, 16, 24, 14, 20, 10, 18, 12, 22, 9; radius 2; gap 3) at the end.
    31 vertical padding plus the 1px border, so it is 340 with the image at y 32.
 7. **U+2028 in the Showcase heading.** CSS does not break at U+2028; the character stays in the
    text and a `<br>` follows it.
-8. **Motion.** None in these sections: the waveform and the recording dot stay still, because
-   animating them would suggest live recording. Owner may request ambient motion later
-   (reduced-motion safe).
+8. **Motion (P07-D17, APPROVED).** None in these sections: the waveform and the recording dot
+   stay still, because the Showcase is a static illustration, not an active recorder.
+   Section-level ambient motion belongs to the separate Landing Visual Refinement increment
+   (plan §8e), never to the recording UI.
 9. **Mobile Showcase image.** Figma hides the image fill on Mobile; the image is not shown there
    (lazy-loaded and `display: none`, so it is not downloaded).

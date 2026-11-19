@@ -34,12 +34,19 @@ Single resume point. A new session starts by reading this file, the latest phase
   - **Increment 2 (Hero): COMPLETE** (PR #52, approved 2026-11-19). The contract is **APPROVED**
     ([phases/phase-07-hero-contract.md](phases/phase-07-hero-contract.md)), with P07-D14 to
     P07-D16: near-black temporary background, the 40 px Pause/Play control, the two-bar pause icon.
-  - **Increment 3 (Showcase and Use Cases): IN REVIEW** (PR "feat: Phase 07 Product Showcase
-    and Use Cases"; not merged). Static illustration and Figma copy only; four Figma images
-    exported to WebP (design-values §16.4); outcome in plan §8d; differences in
-    design-values §16.6.
-  - **Next:** Increment 4 (integrate Mariam's Features and How It Works delivery, once it
-    arrives) or Increment 5 (FAQ, Pricing, Final CTA): owner's choice.
+  - **Increment 3 (Showcase and Use Cases): COMPLETE** (PR #53, approved 2026-11-19). Static
+    illustration and Figma copy only; four Figma images exported to WebP (design-values
+    §16.4); outcome in plan §8d; differences in design-values §16.6.
+  - **P07-D17 (APPROVED):** the Showcase recording waveform and indicator stay static (not an
+    active recorder). A Landing Visual Refinement increment (ambient glows, gradients,
+    transitions, scroll reveals, hover, Hero video integration, nav centring check) is
+    **approved planning, NOT STARTED** (plan §8e).
+  - **Next (owner, 2026-11-19):** set up ClickUp project management for all frontend work
+    first. Increment 5 and the visual-refinement PR wait until then; Increment 4 waits for
+    Mariam's delivery.
+  - **Maintenance (recommended, not done):** add `.playwright-mcp/` (local output of the
+    Playwright MCP browser tool: page snapshots and console logs) to `.gitignore` in a
+    separate change; untracked, it fails `prettier --check` and lint.
 - **Phase 06:** Shared states & overlay/guard infrastructure — **CLOSED — Development Complete,
   Production QA Outstanding.**
   - **Closure:** approved by the product owner on 2026-11-19; final code `main` `6cda86c` (PR #47);
