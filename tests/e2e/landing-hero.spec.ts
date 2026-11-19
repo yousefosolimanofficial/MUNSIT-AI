@@ -84,7 +84,8 @@ for (const { locale, dir, path, m } of LOCALES) {
       const actions = await box(page.locator("[data-landing-hero-actions]"));
       expect(actions.h).toBe(86);
       if (locale === "ar") expect(actions.y).toBe(688);
-      expect(actions.x + actions.w / 2).toBeCloseTo(720, 0);
+      // Centred: box() rounds x and width, so an odd width can put the centre at .5 (±1).
+      expect(Math.abs(actions.x + actions.w / 2 - 720)).toBeLessThanOrEqual(1);
       const p = await box(primary(page));
       const s = await box(secondary(page));
       expect(p.h).toBe(46);
