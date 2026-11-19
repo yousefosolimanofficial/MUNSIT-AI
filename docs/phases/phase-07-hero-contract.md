@@ -1,6 +1,7 @@
 # Phase 07 — Increment 2: Hero implementation contract
 
-- **Status:** **DRAFT for owner review.** It is not implemented, and no video is generated.
+- **Status:** **APPROVED** (owner, 2026-11-19), with decisions P07-D14 to P07-D16 (§8).
+  Implementation: Increment 2 (`feat/phase-07-landing-hero`). No video is generated.
 - **Sources:**
   - Figma Hero Desktop `28:3`, Tablet `200:559`, Mobile `200:713` (read-only; values in
     [design-values §16.1](../design-values.md));
@@ -100,10 +101,10 @@ Focus: the D-B2 ring. Hover is not designed: no change.
   - **Placement:** the bottom inline-end corner of the Hero, **outside** the text and CTA safe
     areas, at every breakpoint. Proposed inset 24 (Desktop, Tablet) and 12 (Mobile). At 390 the
     actions end at y 474 of 538, which leaves room for a 40 control.
-  - **Look (not designed; PROPOSED):** 40 × 40 circle, Void Black 60% fill, 1px Mist 30% border,
+  - **Look (P07-D15, approved):** 40 × 40 circle, Void Black 60% fill, 1px Mist 30% border,
     white pause or play icon 16. It meets WCAG 2.5.8 (≥ 24) and a 3:1 non-text contrast against
     the video.
-  - **Copy (PROPOSED, needs approval, P07-D15):**
+  - **Copy (P07-D15, approved):**
     - "إيقاف الفيديو مؤقتًا" / "Pause background video";
     - "تشغيل الفيديو" / "Play background video".
   - **Icons:** `play` exists in the icon set (Figma `2205:83`, never mirrored). **`pause` does
@@ -153,13 +154,13 @@ The measurements are recorded in the Increment 2 PR.
   - axe;
   - screenshot comparison per breakpoint (poster state).
 
-## 8. Decisions needed before Increment 2
+## 8. Owner decisions (2026-11-19)
 
-| ID      | Decision                                                                       | Proposal                                                                |
-| ------- | ------------------------------------------------------------------------------ | ----------------------------------------------------------------------- |
-| P07-D14 | **Interim visual** until the video and poster are approved                     | Void Black only (no unapproved image)                                   |
-| P07-D15 | **Pause/Play copy and look** (undesigned): §5 labels, 40 circle, inset 24 / 12 | Approve as proposed                                                     |
-| P07-D16 | **Pause icon** (`play` exists; `pause` is not in the icon set)                 | Export from Figma if present; otherwise approve a simple geometric icon |
+| ID      | Decision                                                                                                                                                                                                                                                                                                                                       | Status       |
+| ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| P07-D14 | **Temporary background:** Near Black `#040506` (Void Black token) until the approved video asset exists. No replacement image is invented, and the temporary background is not presented as the final Hero visual                                                                                                                              | **APPROVED** |
+| P07-D15 | **Pause/Play control:** 40 px circle with a dark background consistent with the Design System; labels "إيقاف الفيديو مؤقتًا" / "تشغيل الفيديو" (ar) and "Pause background video" / "Play background video" (en); placed in the approved Hero corner without obstructing the text or CTAs. **Not rendered while no playable video is available** | **APPROVED** |
+| P07-D16 | **Pause icon:** a minimal geometric SVG of two vertical bars, in the existing icon styling and tokens. No icon dependency                                                                                                                                                                                                                      | **APPROVED** |
 
 The Tablet heading's local value (44 / 1.2, 600) needs no decision: it is the Figma value, and it
 has no text style.

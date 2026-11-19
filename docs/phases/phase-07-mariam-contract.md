@@ -1,10 +1,9 @@
 # Phase 07 — Mariam assignment contract: Features and How It Works (DRAFT)
 
-- **Status:** **SPECIFICATIONS READY FOR OWNER APPROVAL. Not sent.**
-  - The assignment is approved (P07-D13).
-  - Increment 1 is merged (`60044cc`), so the baseline condition is met.
-  - The starter package is created and sent only after the owner approves the Feature Card and
-    Step Card specifications in §4.
+- **Status:** **APPROVED** (owner, 2026-11-19). The Feature Card and Step Card specifications in
+  §4 are approved, and the assignment scope is unchanged (P07-D13). The starter package is
+  prepared from the verified `main` after this record merges. It is **not sent** by Claude: Yousef
+  sends it.
 - **Ownership:**
   - **Mariam writes:** the files in §2.
   - **Yousef provides:** the route, the copy wiring, the images, the tokens and all integration.
@@ -88,7 +87,7 @@ export interface HowItWorksSectionProps {
 - the sections render **inside** the existing `<section id>` boundaries (`LandingPage`), so they
   do not set `id`s themselves.
 
-## 4. Figma specification (for owner approval)
+## 4. Figma specification (APPROVED, 2026-11-19)
 
 Read-only from the component masters and their Tablet and Mobile instances (2026-11-19). All
 typography utilities exist (`typography-landing.css`, Increment 1). The colours are tokens, plus
@@ -157,7 +156,7 @@ Figma Tablet rows confirm it (row 01: card 02 drawn at left, 01 at right).
 
 ## 6. Before sending
 
-- **Owner approval** of §4 (this document).
+- **Owner approval** of §4: done (2026-11-19).
 - **Starter package:** made with `git archive` from the merged baseline, and logged in
   TEAM_COLLABORATION.md. The baseline commit hash goes into `DELIVERY.md`.
 - **Image `alt` text:** decided per image at integration (decorative or descriptive, from
