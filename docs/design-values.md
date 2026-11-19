@@ -854,6 +854,24 @@ Tablet and Mobile column counts are read from the frames at implementation.
 | `HOW_IT_WORKS_01…04`                   | 1376 × 768  | 240 × 136 / 300 × 136 / 308 × 136        | FILL       |
 | `USE_CASE_01…03`                       | 1376 × 768  | 500 × 276 / 654 × 280 / 316 × 200        | FILL       |
 
+**Exported (Phase 07 Increment 3, 2026-11-19).** The Figma originals were downloaded read-only
+and matched to the image fills by the Figma image hash (the SHA-1 of the bytes). Each was then
+converted to WebP (quality 82, source size kept, aspect ratio 1376 : 768 unchanged) with the
+`sharp` build bundled with Next.js (no new dependency). Figma is not modified.
+
+| File (`public/landing/…`)           | Figma node                              | Image hash (SHA-1)                         | Source          | WebP     | SHA-256 (WebP, first 16) |
+| ----------------------------------- | --------------------------------------- | ------------------------------------------ | --------------- | -------- | ------------------------ |
+| `showcase/app-live-transcript.webp` | `39:14` `App / Main Content` (Showcase) | `c7b2cd9842121b67de0dda38be9d7516eef763c5` | JPEG, 523,339 B | 46,650 B | `473769fc008f5047`       |
+| `use-cases/during-lecture.webp`     | `123:69` `USE_CASE_01_LECTURE`          | `01b2eac60b2f6e2a36b6d8ec951d1f5a10906022` | JPEG, 653,151 B | 53,644 B | `8c531257ee093ba9`       |
+| `use-cases/studying.webp`           | `123:75` `USE_CASE_02_STUDYING`         | `c3bea92a890daf188e946a33ba9e0332921bcc75` | JPEG, 683,877 B | 61,860 B | `1282bd876e9be202`       |
+| `use-cases/exam-preparation.webp`   | `123:81` `USE_CASE_03_EXAM`             | `7a7e8eec82fa9b74d12fd856f307cd1adab5c496` | JPEG, 664,428 B | 52,514 B | `be7e7660843b51b7`       |
+
+- All four are 1376 × 768 and are referenced once, from `src/features/landing/model/landing-images.ts`
+  (a unit test checks each file's WebP size and that no source repeats).
+- Figma also holds 344 × 192 thumbnails of the same images; they are not used.
+- The Feature and How It Works visuals are not exported here: they belong to Mariam's delivery
+  (Increment 4).
+
 **Colours outside the 19 tokens:** the navigation border `#363739`, and the Cyan `#06B6D4` named
 in the Hero video direction. All other colours read map to tokens: Void Black, Ink, Obsidian,
 Slate, Iron, Mist, Electric Sky, Cobalt Edge.
@@ -887,3 +905,65 @@ In Figma the Tablet and Mobile inline links are hidden layers (the menu button r
 
 **Navigation border** `#363739` (Desktop bar): a Landing-local constant (owner approval,
 2026-11-19), not a token.
+
+### 16.6 Showcase and Use Cases — implementation (Phase 07 Increment 3, 2026-11-19)
+
+Frames: Showcase Desktop `36:169`, Tablet `200:568`, Mobile `200:722`; Use Cases Desktop `123:64`,
+Tablet `200:616`, Mobile `200:765`. Components: `LandingShowcase`, `LandingUseCases`.
+
+**Showcase.**
+
+| Item          | Desktop                                                                                                                                   | Tablet                                                | Mobile                                                                                |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| Section       | 1331 centred, padding 43 / 80, gap 39; 35 below the Hero                                                                                  | Padding 64 / 32, gap 32; 32 below the Hero            | Padding 48 / 20, gap 28; 24 below the Hero                                            |
+| Heading       | 40 / 600, auto line height, fixed box 161 (min-height)                                                                                    | 32, box 120                                           | 26, box 98                                                                            |
+| Description   | `Landing/Body/Intro` 24, box 80                                                                                                           | `Landing/Body/Large` 18, box 54                       | `Landing/Body/Base Mobile` 15, box 69                                                 |
+| Window        | 1171 × 560; Ink, 1px `#363739`, radius 16, clips                                                                                          | Full width × 436                                      | 350 × 366 (minimum)                                                                   |
+| Header        | 84, Obsidian, padding 10 / 24; pill at the inline end, the title 438 after it                                                             | 74; title at the inline start, pill at the inline end | 114, vertical, gap 6, padding 12 / 16; pill above the title, at the inline start      |
+| Pill          | 254 × 54, Graphite, radius 6, padding 10 / 7, gap 8: label `Heading/Medium` Text/Secondary, time Geist Mono 16 / 160% LTR, 8 px coral dot | As Desktop                                            | 177 × 40: label 14 / 600, time 12 / 160%                                              |
+| Lecture title | 20 / 160% regular, two lines: white, then Text/Secondary                                                                                  | `Landing/Body/Reading` 16 / 160%                      | 14 / 160%                                                                             |
+| Body          | 470: screen 918 (cover at 50% 70.5%, Figma CROP) + menu 251 at the inline start                                                           | 360: screen only (cover, centred); menu hidden        | 250, Void Black, padding 12, gap 10: transcript card (no image; Figma hides its fill) |
+| Menu          | Obsidian; title `Heading/Medium` white at y 6; list radius 8, padding 8 / 12, gap 25; six items `Heading/Medium` Text/Secondary, 40 high  | —                                                     | —                                                                                     |
+
+Mobile transcript card (Figma values): heading row 24 (`Dashboard/Card Title` heading at the
+inline start; live chip at the end: `#ff6b6b` 14%, radius 999, padding 3 / 8, gap 5, coral 6 px dot
+and 12 / 140% coral label); card Obsidian, white 8% border, radius 12, padding 10, gap 10, two
+snippets (`Dashboard/Body` line, `Dashboard/Meta` Muted Readable time, LTR, at the inline end);
+controls 44, Graphite, radius 12, padding 8 / 12: pause glyph (28 px coral circle, two 3 × 10
+white bars) with the 12 / 140% Muted Readable caption at the inline start, ten 3 px Electric Sky
+bars (heights 8, 16, 24, 14, 20, 10, 18, 12, 22, 9; radius 2; gap 3) at the end.
+
+**Use Cases.**
+
+| Item    | Desktop                                                                                                                         | Tablet                                       | Mobile                                       |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- | -------------------------------------------- |
+| Section | 1200, padding 72 / 80, gap 48; directly below How It Works                                                                      | Padding 64 / 32, gap 32; 32 below            | Padding 48 / 20, gap 24; 24 below            |
+| Intro   | 900: `Section Desktop` 40 + `Body/Lead` 20, gap 16                                                                              | 704: 32 + `Body/Large` 18                    | 350: 26 + `Base Mobile` 15                   |
+| Row     | 1200 × 340, Ink, 1px Slate, radius 20, padding 32, gap 40, centred; image 500 × 276 radius 16                                   | Stacked: padding 24, gap 24; image 654 × 280 | Stacked: padding 16, gap 20; image 316 × 200 |
+| Content | Eyebrow `Label/Strong` Electric Sky; title `Heading/Subsection` 28 (h3); text `Body/Large` Text/Secondary; gap 20; inline start | As Desktop                                   | As Desktop                                   |
+| Order   | Rows 1 and 3: image at the inline end; row 2: at the inline start                                                               | Image above the content                      | Image above the content                      |
+
+**Justified differences from Figma (documented, not hidden):**
+
+1. **Desktop header width.** Figma's header is 1161 inside a 1169 window, leaving an 8 px Ink
+   strip at the inline-start edge. The header fills the window.
+2. **Pill width.** It renders 252.5 wide against Figma's 254 (Geist Mono and Cairo glyph metrics),
+   so the title sits 1.5 px off Figma's x 716. The rule (title 438 after the pill) is kept and
+   tested.
+3. **Fluid widths between the drawn frames.** Figma draws 1440, 768 and 390 only. Between 720 and
+   1279, the window and cards fill the content width (the screen stays cover, centred). From 1280
+   to 1439 the Desktop window narrows with the viewport (1120 at 1280).
+4. **Minimum heights on Mobile** (window, header, transcript). At 390 they equal Figma; on
+   narrower screens (320) the content grows instead of clipping.
+5. **Fixed text boxes as minimum heights** (Showcase intro), so larger text pushes content down
+   instead of overlapping it.
+6. **Use Case row height.** Figma's fixed 340 row excludes the stroke from layout; the row uses a
+   31 vertical padding plus the 1px border, so it is 340 with the image at y 32.
+7. **U+2028 in the Showcase heading.** CSS does not break at U+2028; the character stays in the
+   text and a `<br>` follows it.
+8. **Motion (P07-D17, APPROVED).** None in these sections: the waveform and the recording dot
+   stay still, because the Showcase is a static illustration, not an active recorder.
+   Section-level ambient motion belongs to the separate Landing Visual Refinement increment
+   (plan §8e), never to the recording UI.
+9. **Mobile Showcase image.** Figma hides the image fill on Mobile; the image is not shown there
+   (lazy-loaded and `display: none`, so it is not downloaded).
