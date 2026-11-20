@@ -13,8 +13,9 @@ import enLanding from "../../src/i18n/messages/en/landing.json" with { type: "js
  * overflow only.
  *
  * P07-D22 (2026-11-20): the Showcase illustration is the native Mobile live-transcription card on
- * every breakpoint (no Desktop/Tablet screenshot or menu). On Tablet and Desktop it is 520 / 600
- * wide and centred in a stage that keeps the former window's height (436 / 560).
+ * every breakpoint (no Desktop/Tablet screenshot or menu). It sits in a stage that keeps the former
+ * window's height (Tablet 436, Desktop 560): Tablet 520 wide, centred; Desktop (owner-approved
+ * Candidate B) 700 wide, 48 below the stage top.
  */
 
 const LOCALES = [
@@ -154,7 +155,7 @@ for (const { locale, dir, path, m } of LOCALES) {
       await expect(showcase(page).locator("img")).toHaveCount(0);
     });
 
-    test("Desktop 1440: the native card, 600 wide, centred in the 1171 × 560 stage; alternating Use Case rows", async ({
+    test("Desktop 1440: the native card, 700 wide, 48 below the top of the 1171 × 560 stage (Candidate B); alternating Use Case rows", async ({
       page,
     }) => {
       await open(page, path, 1440);
@@ -163,9 +164,9 @@ for (const { locale, dir, path, m } of LOCALES) {
       near(area.w, 1171, "stage width");
       near(area.h, 560, "stage height");
       near(area.x, 134.5, "stage x");
-      near(win.w, 600, "card width");
+      near(win.w, 700, "card width");
       near(win.x + win.w / 2, 720, "card centred horizontally");
-      near(win.y + win.h / 2, area.y + area.h / 2, "card centred vertically");
+      near(win.y, area.y + 48, "card 48 below the stage top");
 
       // Rows 1 and 3: image at the inline end; row 2: at the inline start.
       for (let index = 0; index < 3; index += 1) {
@@ -186,6 +187,15 @@ for (const { locale, dir, path, m } of LOCALES) {
         near(section.h, 942, "showcase height");
         near(area.y, 935 + 339, "stage y (the former window's position)");
         near(win.h, 304.8, "card height (content)");
+        // About 99 from the description's last line to the card (Candidate B).
+        const descriptionBottom = await page.locator("[data-showcase-intro] p").evaluate((el) => {
+          const range = document.createRange();
+          range.selectNodeContents(el);
+          return Math.max(...[...range.getClientRects()].map((r) => r.bottom));
+        });
+        near(win.y - descriptionBottom, 99, "description to card");
+        // The section height and every later section keep their positions.
+        near((await box(page.locator("section#features"))).y, 1967, "Features y");
         const intro = await box(page.locator("[data-showcase-intro]"));
         near(intro.w, 900, "intro width");
         near(intro.h, 257, "intro height");
@@ -196,6 +206,23 @@ for (const { locale, dir, path, m } of LOCALES) {
         for (let index = 0; index < 3; index += 1) {
           near((await box(rows(page).nth(index))).h, 340, `row ${index + 1} height`);
         }
+      }
+    });
+
+    test("Desktop 1280: the 700 card, centred, 48 below the stage top; section unchanged", async ({
+      page,
+    }) => {
+      await open(page, path, 1280);
+      const win = await expectNativeCard(page, m, dir);
+      const area = await box(stage(page));
+      near(area.h, 560, "stage height");
+      near(win.w, 700, "card width");
+      near(win.x + win.w / 2, 640, "card centred horizontally");
+      near(win.y, area.y + 48, "card 48 below the stage top");
+      if (locale === "ar") {
+        const section = await box(showcase(page));
+        near(section.y, 935, "showcase y");
+        near(section.h, 942, "showcase height");
       }
     });
 
@@ -292,6 +319,35 @@ for (const { locale, dir, path, m } of LOCALES) {
         expect(win.x + win.w).toBeLessThanOrEqual(width);
       });
     }
+
+    test("no layout shift from the Showcase at 1440, 768 and 390", async ({ page }) => {
+      await page.addInitScript(() => {
+        const w = window as unknown as { showcaseShift: number };
+        w.showcaseShift = 0;
+        new PerformanceObserver((list) => {
+          for (const entry of list.getEntries() as unknown as {
+            value: number;
+            sources?: { node?: Node | null }[];
+          }[]) {
+            const inShowcase = entry.sources?.some((s) =>
+              s.node instanceof Element ? s.node.closest("section#showcase") !== null : false,
+            );
+            if (inShowcase) w.showcaseShift += entry.value;
+          }
+        }).observe({ type: "layout-shift", buffered: true });
+      });
+      for (const width of [1440, 768, 390]) {
+        await page.setViewportSize({ width, height: 1000 });
+        await page.goto(path);
+        await page.evaluate(() => document.fonts.ready);
+        await showcase(page).scrollIntoViewIfNeeded();
+        await page.waitForLoadState("networkidle");
+        expect(
+          await page.evaluate(() => (window as unknown as { showcaseShift: number }).showcaseShift),
+          `layout shift at ${width}`,
+        ).toBe(0);
+      }
+    });
 
     test("reduced motion: nothing animates in either section", async ({ page }) => {
       await page.emulateMedia({ reducedMotion: "reduce" });

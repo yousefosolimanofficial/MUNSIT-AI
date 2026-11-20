@@ -16,10 +16,14 @@ import { NAV_BORDER, REVEAL } from "./landing-styles";
  * - Card: the Figma Mobile card. It has a stacked header (the pill above the two-tone title, at the
  *   inline start) and the transcript body (heading and live chip, two lines, the pause bar and the
  *   waveform). Mobile: 350 wide and at least 366 high (it grows at 320 instead of clipping).
- * - Tablet (720–1279) and Desktop (≥ 1280): the same card, unchanged inside, at 520 / 600 wide.
- *   Its height follows its content (no Mobile 366 minimum, which would leave an empty band once the
- *   lines wrap less). It is centred in a stage that keeps the former window's height (436 / 560),
- *   so the section and everything below it keep their Figma positions.
+ * - Tablet (720–1279) and Desktop (≥ 1280): the same card, unchanged inside. Its height follows its
+ *   content (no Mobile 366 minimum, which would leave an empty band once the lines wrap less). It
+ *   sits in a stage that keeps the former window's height (436 / 560), so the section and everything
+ *   below it keep their Figma positions.
+ *   - Tablet: 520 wide, centred in the stage.
+ *   - Desktop (owner-approved Candidate B, P07-D22): 700 wide, 48 below the stage top, so it stays
+ *     close to the description (about 99 between the text and the card); the remaining space falls
+ *     below it, over the section's ambient glow.
  *
  * Intro: Figma uses auto line height (Cairo "normal") in fixed text boxes, reproduced as minimum
  * heights (Desktop 161 / 80, Tablet 120 / 54, Mobile 98 / 69) so larger text pushes the card down
@@ -171,16 +175,17 @@ export function LandingShowcase({ copy }: { copy: LandingShowcaseCopy }) {
         </p>
       </div>
 
-      {/* Stage: the former window's height on Tablet and Desktop, with the card centred in it. */}
+      {/* Stage: the former window's height on Tablet and Desktop; the card is centred on Tablet and
+          48 below the top on Desktop (P07-D22, Candidate B). */}
       <div
-        className="flex w-full justify-center rail:h-[436px] rail:items-center xl:h-[560px]"
+        className="flex w-full justify-center rail:h-[436px] rail:items-center xl:h-[560px] xl:items-start xl:pt-[48px]"
         data-showcase-stage=""
       >
         <div
           aria-hidden="true"
           data-showcase-window=""
           data-reveal=""
-          className={`${REVEAL} flex min-h-[366px] w-full max-w-[350px] flex-col overflow-hidden rounded-[16px] border bg-surface-ink ${NAV_BORDER} rail:min-h-0 rail:max-w-[520px] xl:max-w-[600px]`}
+          className={`${REVEAL} flex min-h-[366px] w-full max-w-[350px] flex-col overflow-hidden rounded-[16px] border bg-surface-ink ${NAV_BORDER} rail:min-h-0 rail:max-w-[520px] xl:max-w-[700px]`}
         >
           <div
             className="flex min-h-[114px] shrink-0 flex-col items-start gap-[6px] bg-surface-obsidian px-[16px] py-[12px]"
