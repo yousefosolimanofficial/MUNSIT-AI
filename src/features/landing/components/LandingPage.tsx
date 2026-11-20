@@ -42,7 +42,8 @@ import { AMBIENT, AMBIENT_LAYER, REVEAL, REVEAL_FADE } from "./landing-styles";
  *   Hero; Use Cases 0 / 32 / 24 below How It Works.
  * - Visual Refinement (P07-D17, plan §8e): restrained ambient glows (token colours only) behind
  *   the Hero, Showcase and Use Cases; scroll reveal (LandingReveal; off under reduced motion).
- *   The Hero video is provisional and hidden in production (gates.ts).
+ *   The Hero shows the static Figma image (P07-D21), hidden in production until verified
+ *   (gates.ts).
  * - Features and How It Works (Increment 4): Mariam's FeaturesSection and HowItWorksSection
  *   (her delivered files, unchanged), with Figma images (model/landing-images.ts) and the page's
  *   landmark names and section gaps (Desktop 90 / 0, Tablet 32, Mobile 24).

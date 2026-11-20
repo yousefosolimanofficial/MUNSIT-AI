@@ -12,14 +12,14 @@ approved Figma image instead of a background video. This replaces the Hero video
 
 ## 2. Source (Figma, read-only)
 
-| Item          | Value                                                                                                     |
-| ------------- | --------------------------------------------------------------------------------------------------------- |
+| Item          | Value                                                                                                                                                         |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Layer         | "Hero / Video Container (Hero Vedio.mp4 — asset pending)" in Desktop `28:3`, Tablet `200:559`, Mobile `200:713` (nodes `2481:3465`, `2481:3470`, `2481:3475`) |
-| Image         | one image fill, hash `0c56986f38980fa0b0a789a58f2909124affd790` (verified: the SHA-1 of the downloaded original) |
-| Original size | **666 × 412** PNG (aspect 1.6165)                                                                         |
-| Filters       | exposure −0.27, saturation 0.79, highlights −1.0, shadows −0.12 (identical in all three frames)          |
-| Framing       | Desktop **FIT** (contain) in 1440 × 900; Tablet **FILL** (cover) in 768 × 640; Mobile **FILL** in 390 × 538 over Void Black; centred, no transform |
-| Variants      | none: the same image in every frame                                                                       |
+| Image         | one image fill, hash `0c56986f38980fa0b0a789a58f2909124affd790` (verified: the SHA-1 of the downloaded original)                                              |
+| Original size | **666 × 412** PNG (aspect 1.6165)                                                                                                                             |
+| Filters       | exposure −0.27, saturation 0.79, highlights −1.0, shadows −0.12 (identical in all three frames)                                                               |
+| Framing       | Desktop **FIT** (contain) in 1440 × 900; Tablet **FILL** (cover) in 768 × 640; Mobile **FILL** in 390 × 538 over Void Black; centred, no transform            |
+| Variants      | none: the same image in every frame                                                                                                                           |
 
 The provisional video poster was **not** used.
 
@@ -78,11 +78,11 @@ Heading and CTA positions are unchanged: Desktop h1 at x 395, y 344.
 **Contrast over the image** (every pixel under the text's line boxes; the 1st percentile is
 reported):
 
-| Text                                | 1440       | 768           | 390        | Requirement                       |
-| ----------------------------------- | ---------- | ------------- | ---------- | --------------------------------- |
-| Heading (large)                     | 3.74       | 4.62          | 3.79       | 3:1, passes                       |
-| Description                         | 3.58 (24 px, large) | **3.57** (20 px) | 6.89 (16 px) | 3:1 large / 4.5:1 normal |
-| Outline CTA label                   | 7.14       | 7.09          | 7.05       | 4.5:1, passes                     |
+| Text              | 1440                | 768              | 390          | Requirement              |
+| ----------------- | ------------------- | ---------------- | ------------ | ------------------------ |
+| Heading (large)   | 3.74                | 4.62             | 3.79         | 3:1, passes              |
+| Description       | 3.58 (24 px, large) | **3.57** (20 px) | 6.89 (16 px) | 3:1 large / 4.5:1 normal |
+| Outline CTA label | 7.14                | 7.09             | 7.05         | 4.5:1, passes            |
 
 **Open finding (owner decision):** on Tablet (768 to 1279, including 1024), part of the 20 px
 description crosses the laptop-screen glow in the image. There, 5% of the background pixels give
