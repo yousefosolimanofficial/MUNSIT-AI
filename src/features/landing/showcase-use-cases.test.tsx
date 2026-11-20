@@ -30,8 +30,6 @@ function showcaseCopy(locale: Locale): LandingShowcaseCopy {
     recording: s.recording,
     timer: s.timer,
     lectureTitle: s.lectureTitle,
-    sidebarTitle: s.sidebarTitle,
-    sidebar: Object.values(s.sidebar),
     mobile: {
       live: s.mobile.live,
       heading: s.mobile.heading,
@@ -63,18 +61,21 @@ describe.each(["ar", "en"] as const)("LandingShowcase (%s)", (locale) => {
     expect(screen.getByText(copy.description).tagName).toBe("P");
   });
 
-  it("the app window is a hidden, non-interactive illustration", () => {
+  it("the native card is a hidden, non-interactive illustration (no screenshot, no menu)", () => {
     const { container } = render(<LandingShowcase copy={copy} />);
     const win = container.querySelector("[data-showcase-window]");
     expect(win?.getAttribute("aria-hidden")).toBe("true");
     expect(container.querySelectorAll(FOCUSABLE)).toHaveLength(0);
-    expect(win?.querySelector("img")?.getAttribute("alt")).toBe("");
-    expect(win?.querySelector("img")?.getAttribute("src")).toContain(
-      encodeURIComponent(SHOWCASE_SCREEN.src),
-    );
+    // P07-D22: no raster screenshot and no Desktop menu, on any breakpoint.
+    expect(container.querySelector("img")).toBeNull();
+    expect(container.querySelector("[data-showcase-screen]")).toBeNull();
+    expect(container.querySelector("[data-showcase-sidebar]")).toBeNull();
+    // One card for every breakpoint: nothing in it is hidden per breakpoint.
+    expect(win?.outerHTML).not.toMatch(/(rail|xl):hidden/);
+    expect(win?.querySelector("[data-showcase-mobile]")).not.toBeNull();
   });
 
-  it("illustration copy: timer LTR, two-tone title, menu and transcript in Figma order", () => {
+  it("illustration copy: timer LTR, two-tone title and transcript in Figma order", () => {
     const { container } = render(<LandingShowcase copy={copy} />);
     const timer = within(container).getByText(copy.timer);
     expect(timer.getAttribute("dir")).toBe("ltr");
@@ -83,8 +84,6 @@ describe.each(["ar", "en"] as const)("LandingShowcase (%s)", (locale) => {
     expect([...(title?.children ?? [])].map((line) => line.textContent)).toEqual([first, second]);
     expect(title?.children[0]?.className).toContain("text-text-primary");
     expect(title?.children[1]?.className).toContain("text-text-secondary");
-    const menu = container.querySelectorAll("[data-showcase-sidebar] li");
-    expect([...menu].map((item) => item.textContent)).toEqual(copy.sidebar);
     const mobile = container.querySelector("[data-showcase-mobile]");
     for (const line of copy.mobile.lines) {
       expect(mobile?.textContent).toContain(line.text);

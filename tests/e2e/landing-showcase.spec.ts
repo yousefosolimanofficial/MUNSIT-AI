@@ -11,6 +11,10 @@ import enLanding from "../../src/i18n/messages/en/landing.json" with { type: "js
  * Arabic is the Figma copy, so its geometry is exact (±1 for sub-pixel centring and text-driven
  * heights). English has no Figma frames and longer proposed copy (P07-D1): structure, order and
  * overflow only.
+ *
+ * P07-D22 (2026-11-20): the Showcase illustration is the native Mobile live-transcription card on
+ * every breakpoint (no Desktop/Tablet screenshot or menu). On Tablet and Desktop it is 520 / 600
+ * wide and centred in a stage that keeps the former window's height (436 / 560).
  */
 
 const LOCALES = [
@@ -40,6 +44,35 @@ async function open(page: Page, path: string, width: number, height = 1000) {
 const showcase = (page: Page) => page.locator("section#showcase");
 const casesSection = (page: Page) => page.locator("section#use-cases");
 const appWindow = (page: Page) => page.locator("[data-showcase-window]");
+const stage = (page: Page) => page.locator("[data-showcase-stage]");
+
+/** The same native card on Tablet and Desktop: stacked header, transcript body, no screenshot. */
+async function expectNativeCard(page: Page, m: typeof arLanding, dir: string) {
+  const win = await box(appWindow(page));
+  await expect(showcase(page).locator("img")).toHaveCount(0);
+  await expect(page.locator("[data-showcase-screen]")).toHaveCount(0);
+  await expect(page.locator("[data-showcase-sidebar]")).toHaveCount(0);
+  const card = page.locator("[data-showcase-mobile]");
+  await expect(card).toBeVisible();
+  await expect(card).toContainText(m.showcase.mobile.heading);
+  await expect(page.locator("[data-showcase-waveform] > span")).toHaveCount(10);
+  // Mobile hierarchy kept: the pill above the title, both at the inline start (17 from the edge).
+  const status = await box(page.locator("[data-showcase-status]"));
+  const title = await box(page.locator("[data-showcase-title]"));
+  expect(status.y).toBeLessThan(title.y);
+  near(status.h, 40, "status height (Mobile value)");
+  if (dir === "rtl") near(status.x + status.w, win.x + win.w - 17, "status inline start");
+  else near(status.x, win.x + 17, "status inline start");
+  near((await box(page.locator("[data-showcase-header]"))).h, 114.8, "header height");
+  // Same type sizes as Mobile.
+  expect(
+    await card
+      .locator("p")
+      .first()
+      .evaluate((e) => getComputedStyle(e).fontSize),
+  ).toBe("16px");
+  return win;
+}
 const rows = (page: Page) => page.locator("[data-use-case]");
 
 for (const { locale, dir, path, m } of LOCALES) {
@@ -62,9 +95,8 @@ for (const { locale, dir, path, m } of LOCALES) {
       await expect(showcase(page).getByText(m.showcase.description)).toBeVisible();
       await expect(appWindow(page)).toContainText(m.showcase.recording);
       await expect(appWindow(page)).toContainText(m.showcase.timer);
-      await expect(appWindow(page)).toContainText(m.showcase.sidebarTitle);
-      for (const item of Object.values(m.showcase.sidebar)) {
-        await expect(appWindow(page)).toContainText(item);
+      for (const key of ["heading", "live", "line1", "line2", "time1", "time2", "pause"] as const) {
+        await expect(appWindow(page)).toContainText(m.showcase.mobile[key]);
       }
 
       await expect(casesSection(page)).toHaveAttribute(
@@ -118,43 +150,22 @@ for (const { locale, dir, path, m } of LOCALES) {
           .toBe(true);
         await expect(image).toHaveCSS("object-fit", "cover");
       }
-      const screen = showcase(page).locator("[data-showcase-screen] img");
-      await screen.scrollIntoViewIfNeeded();
-      await expect(screen).toHaveAttribute("alt", "");
-      await expect(screen).toHaveAttribute("src", /showcase%2Fapp-live-transcript\.webp/);
-      await expect
-        .poll(() => screen.evaluate((e: HTMLImageElement) => e.complete && e.naturalWidth > 0))
-        .toBe(true);
-      // Figma CROP on Desktop: cover, anchored at 50% 70.5%.
-      await expect(screen).toHaveCSS("object-position", "50% 70.5%");
+      // P07-D22: the Showcase has no raster image; its illustration is native HTML.
+      await expect(showcase(page).locator("img")).toHaveCount(0);
     });
 
-    test("Desktop 1440: window with header, menu and screen; alternating Use Case rows", async ({
+    test("Desktop 1440: the native card, 600 wide, centred in the 1171 × 560 stage; alternating Use Case rows", async ({
       page,
     }) => {
       await open(page, path, 1440);
-      const win = await box(appWindow(page));
-      near(win.w, 1171, "window width");
-      near(win.h, 560, "window height");
-      near(win.x, 134.5, "window x");
-      const header = await box(page.locator("[data-showcase-header]"));
-      near(header.h, 84, "header height");
-      const sidebar = await box(page.locator("[data-showcase-sidebar]"));
-      const screen = await box(page.locator("[data-showcase-screen]"));
-      near(sidebar.w, 251, "menu width");
-      near(screen.w, 918, "screen width");
-      near(screen.h, 470, "screen height");
-      // The menu is at the inline start (right in RTL, left in LTR).
-      if (dir === "rtl") expect(sidebar.x).toBeGreaterThan(screen.x);
-      else expect(sidebar.x).toBeLessThan(screen.x);
-      const status = await box(page.locator("[data-showcase-status]"));
-      const title = await box(page.locator("[data-showcase-title]"));
-      // Status pill at the inline end, 24 from the window edge.
-      if (dir === "rtl") near(status.x, win.x + 25, "status x");
-      else near(status.x + status.w, win.x + win.w - 25, "status end");
-      near(status.h, 54, "status height");
-      // Mobile transcript card is not shown.
-      await expect(page.locator("[data-showcase-mobile]")).toBeHidden();
+      const win = await expectNativeCard(page, m, dir);
+      const area = await box(stage(page));
+      near(area.w, 1171, "stage width");
+      near(area.h, 560, "stage height");
+      near(area.x, 134.5, "stage x");
+      near(win.w, 600, "card width");
+      near(win.x + win.w / 2, 720, "card centred horizontally");
+      near(win.y + win.h / 2, area.y + area.h / 2, "card centred vertically");
 
       // Rows 1 and 3: image at the inline end; row 2: at the inline start.
       for (let index = 0; index < 3; index += 1) {
@@ -173,14 +184,11 @@ for (const { locale, dir, path, m } of LOCALES) {
         const section = await box(showcase(page));
         near(section.y, 935, "showcase y");
         near(section.h, 942, "showcase height");
-        near(win.y, 935 + 339, "window y");
+        near(area.y, 935 + 339, "stage y (the former window's position)");
+        near(win.h, 304.8, "card height (content)");
         const intro = await box(page.locator("[data-showcase-intro]"));
         near(intro.w, 900, "intro width");
         near(intro.h, 257, "intro height");
-        // Figma: the title starts 438 after the pill (x 716). The pill renders 252.5 wide here
-        // (Figma 254: Geist Mono and Cairo glyph metrics), so the rule is asserted, not x.
-        near(title.x, status.x + status.w + 438, "title after a 438 gap");
-        expect(Math.abs(status.w - 254)).toBeLessThanOrEqual(2);
         const uc = await box(casesSection(page));
         near(uc.h, 1410, "use cases height");
         const first = await box(rows(page).nth(0));
@@ -191,23 +199,18 @@ for (const { locale, dir, path, m } of LOCALES) {
       }
     });
 
-    test("Tablet 768: window 704 × 436, image only (no menu); stacked Use Case cards", async ({
+    test("Tablet 768: the native card, 520 wide, centred in the 704 × 436 stage; stacked Use Case cards", async ({
       page,
     }) => {
       await open(page, path, 768);
-      const win = await box(appWindow(page));
-      expect(win).toMatchObject({ x: 32, w: 704 });
-      near(win.h, 436, "window height");
-      near((await box(page.locator("[data-showcase-header]"))).h, 74, "header height");
-      const screen = await box(page.locator("[data-showcase-screen]"));
-      near(screen.w, 702, "screen width");
-      near(screen.h, 360, "screen height");
-      await expect(page.locator("[data-showcase-sidebar]")).toBeHidden();
-      await expect(page.locator("[data-showcase-mobile]")).toBeHidden();
-      // Title at the inline start, status at the inline end.
-      const status = await box(page.locator("[data-showcase-status]"));
-      const title = await box(page.locator("[data-showcase-title]"));
-      expect(dir === "rtl" ? title.x > status.x : title.x < status.x).toBe(true);
+      const win = await expectNativeCard(page, m, dir);
+      const area = await box(stage(page));
+      expect(area).toMatchObject({ x: 32, w: 704 });
+      near(area.h, 436, "stage height");
+      near(win.w, 520, "card width");
+      near(win.x + win.w / 2, 384, "card centred horizontally");
+      near(win.y + win.h / 2, area.y + area.h / 2, "card centred vertically");
+      if (locale === "ar") near(win.h, 326.8, "card height (content)");
 
       for (let index = 0; index < 3; index += 1) {
         const row = await box(rows(page).nth(index));

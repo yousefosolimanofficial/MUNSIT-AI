@@ -1017,3 +1017,30 @@ Frames: FAQ Desktop `124:94` (fixed 989), Tablet `200:629`, Mobile `200:778`; Pr
    and at 100% there; the owner-approved Cobalt Edge 20% glow is centred on every breakpoint.
 7. **Featured card base:** the component uses `#000000`; the placed instances use Obsidian, which
    is used (a token).
+
+### 16.8 Product Showcase — native card on every breakpoint (P07-D22, 2026-11-20)
+
+Owner design decision **P07-D22**: replace only the Desktop and Tablet application screenshot with
+the approved native Mobile live-transcription card. The heading, description, copy and section
+order are unchanged.
+
+| Item                | Desktop (≥ 1280)                                                                                   | Tablet (720–1279)                    | Mobile (< 720)              |
+| ------------------- | -------------------------------------------------------------------------------------------------- | ------------------------------------ | --------------------------- |
+| Former illustration | window 1171 × 560: header, menu, screenshot                                                        | window 704 × 436: header, screenshot | the native card (unchanged) |
+| Stage (layout box)  | 1171 × 560 (the former window box)                                                                 | 704 × 436                            | none (the card is in flow)  |
+| Card                | 600 wide, height from content (304.8 Arabic), centred                                              | 520 wide (326.8 Arabic), centred     | 350 × 366 minimum (Figma)   |
+| Card inside         | the Mobile card: header 114.8 (pill 40 above the two-tone title), transcript body, same type sizes | same                                 | Figma Mobile                |
+
+**Differences from Figma (documented):**
+
+1. On Desktop and Tablet the Figma app window (header row, 251 menu, screenshot) is replaced by the
+   Mobile card. There is no Figma frame for a wider card: the 520 / 600 widths and the centring are
+   implementation values.
+2. The card has no 366 minimum height from Tablet up; it follows its content, so no empty band
+   appears once the lines wrap less.
+3. The stage keeps the former window's box, so the section heights (Desktop 942, Tablet 786) and
+   the positions of every later section are unchanged. The card sits with equal space above and
+   below it (Desktop about 128 each, Tablet about 55).
+
+The Showcase screenshot file (`public/landing/showcase/app-live-transcript.webp`) and its model
+entry are kept, unreferenced, as history.

@@ -45,6 +45,10 @@ Single resume point. A new session starts by reading this file, the latest phase
     2026-11-20). The Hero video is a **provisional development asset**; production approval is
     DENIED (gate closed) until a product-accurate replacement and a portrait master exist.
     Report: [phases/phase-07-hero-media.md](phases/phase-07-hero-media.md).
+  - **Showcase design revision (P07-D22): IN REVIEW** (branch `feat/phase-07-showcase-native-ui`;
+    PR open, not merged). The native Mobile live-transcription card replaces the Desktop and Tablet
+    screenshot. Mobile is pixel-identical, and the section heights and positions are unchanged.
+    Values: design-values §16.8. This is tracked separately from Increment 3 (complete).
   - **Increment 4 (Features and How It Works): COMPLETE** (PR #56, merged as `b364cd5`; owner
     approved 2026-11-20; post-merge CI green). Original implementation by **Mariam** (delivery
     v1, **ACCEPTED / INTEGRATED**, byte-identical); integration by Yousef (Figma visuals, page

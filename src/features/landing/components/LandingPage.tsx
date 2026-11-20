@@ -57,15 +57,6 @@ import { AMBIENT, AMBIENT_LAYER, REVEAL, REVEAL_FADE } from "./landing-styles";
 
 export const LANDING_MAIN_ID = "main-content";
 
-/** Showcase menu items, in Figma order (messages `landing.showcase.sidebar.*`). */
-const SHOWCASE_SIDEBAR = [
-  "dashboard",
-  "lectures",
-  "live",
-  "summaries",
-  "questions",
-  "history",
-] as const;
 /** Use Case rows, in Figma order (messages `landing.useCases.items.*`). */
 const USE_CASE_ITEMS = ["1", "2", "3"] as const;
 /** Feature cards, in Figma order (messages `landing.features.items.*`). */
@@ -171,8 +162,6 @@ export async function LandingPage({ locale }: { locale: AppLocale }) {
                     recording: t("showcase.recording"),
                     timer: t("showcase.timer"),
                     lectureTitle: t("showcase.lectureTitle"),
-                    sidebarTitle: t("showcase.sidebarTitle"),
-                    sidebar: SHOWCASE_SIDEBAR.map((item) => t(`showcase.sidebar.${item}`)),
                     mobile: {
                       live: t("showcase.mobile.live"),
                       heading: t("showcase.mobile.heading"),
