@@ -1,7 +1,8 @@
 # Phase 07 — Static Figma Hero image (P07-D21)
 
-Status: **IN REVIEW** (branch `feat/phase-07-static-hero-image`). The production gate stays
-**closed** until the owner verifies the implementation.
+Status: **IMPLEMENTATION COMPLETE** (PR #60, merged as `c712bd7`, 2026-11-20). **Production
+activation is not approved**: the gate stays **closed** until owner visual approval (§5b). Open
+visual-quality review item: the 666 × 412 source resolution (§5a).
 
 ## 1. Decision
 
