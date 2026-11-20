@@ -67,6 +67,15 @@ export const AMBIENT = {
       `radial-gradient(ellipse 55% 14% at 50% 7%, ${cobalt(24)}, transparent 100%)`,
     ].join(", "),
   },
+  /** Final CTA panel glow (Figma `126:105`: ellipse 520 × 160, Cobalt Edge 20%, blur 120), as a
+   *  radial gradient centred where Figma draws it (104 px from the panel top). No blur filter. */
+  ctaGlow: {
+    backgroundImage: `radial-gradient(ellipse 400px 170px at 50% 104px, ${cobalt(20)}, transparent 100%)`,
+  },
+  /** Featured plan card (Figma `131:127`): Cobalt Edge radial 28% → 0, centred, over Obsidian. */
+  featuredPlan: {
+    backgroundImage: `radial-gradient(closest-side, ${cobalt(28)}, transparent)`,
+  },
 } satisfies Record<string, CSSProperties>;
 
 /**
