@@ -153,3 +153,7 @@ release blocker `123ru7v2pnv`, Mobile portrait `123ru7v2pm8`).
 8. Check text contrast and CTA readability on real frames (Hero contract §6).
 9. Check media performance (sizes, loading, Mobile and reduced-motion behaviour).
 10. Request explicit owner approval before enabling production playback (`provisional: false`).
+
+**Review prepared (2026-11-20):** steps 1–4 and 7–8 assessed, and the requirements for steps 5,
+6 and 9 written, in [phase-07-landing-review.md](phase-07-landing-review.md) §4–§5. No asset
+was replaced; step 10 (owner approval) is pending.

@@ -119,6 +119,7 @@ placeholders.
 | P07-D17 | **Showcase motion (2026-11-19).** The recording waveform and the recording indicator in the Product Showcase are **not animated**: the Showcase is a static illustration, not an active recorder, and must not imply that a recording session is live. Ambient glows, subtle animated gradients, smooth transitions, scroll reveals, hover interactions, the Hero background video integration and a navigation-centring check are **approved as planning** for a separate Landing Visual Refinement increment (§8e), after ClickUp project management is established; none of it is implemented | **APPROVED**                         |
 | P07-D18 | **FAQ accordion (2026-11-20).** Item 01 is expanded on load; only one item is expanded at a time; opening another closes the previous one; activating the expanded item closes it; all items may be collapsed                                                                                                                                                                                                                                                                                                                                                                                    | **APPROVED**                         |
 | P07-D19 | **Pricing, development and preview only (2026-11-20).** The three Figma plan cards (Starter; Plus, Featured; Pro) are implemented with the approved Figma placeholder content only (price "—", "to be decided" notes, four placeholder feature rows). No prices, periods, entitlements, limits, payment or checkout. Hidden in production by the existing P07-D4 gate; not in the navigation or metadata. Actions go to Register with no plan parameter (P07-D3)                                                                                                                                 | **APPROVED**                         |
+| P07-D20 | **Pricing CTA labels, development preview only (2026-11-20).** The owner accepts the Figma labels "اختار بلس" and "اختار برو" for the development preview; they are not changed at Increment 5 closure. Before public pricing is enabled, review actual prices, plan entitlements, commercial claims, billing details, CTA wording and the registration and subscription flow. P07-D4 is preserved: Pricing stays hidden in production until explicitly approved. The existing "ابدأ مجانًا" claim (copy finding F-2) is flagged for commercial verification before launch                        | **APPROVED**                         |
 
 **Section order (final, all breakpoints):**
 
@@ -322,7 +323,10 @@ no new dependency without approval. The Showcase recording waveform and indicato
     Figma Tablet and How It Works put 01 at the inline start. The approved contract (§4,
     "card or step 01 at the inline start") is followed.
 
-## 8g. Increment 5 outcome (FAQ, Pricing, Final CTA, IN REVIEW)
+## 8g. Increment 5 outcome (FAQ, Pricing, Final CTA, COMPLETE)
+
+Merged as PR #58 (`5b17b27`), owner approved 2026-11-20; label decision P07-D20. The full
+Landing and Hero video review that followed: [phase-07-landing-review.md](phase-07-landing-review.md).
 
 - **FAQ (P07-D18):** six verbatim questions and answers; a client accordion with native buttons in
   `h3`s, `aria-expanded` / `aria-controls`, labelled answer regions, `visibility: hidden` when

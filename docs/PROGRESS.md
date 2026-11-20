@@ -50,15 +50,20 @@ Single resume point. A new session starts by reading this file, the latest phase
     v1, **ACCEPTED / INTEGRATED**, byte-identical); integration by Yousef (Figma visuals, page
     wiring, E2E). Typography differences accepted as known, non-blocking (plan §8f; ClickUp
     "Phase 07 — Investigate Arabic Typography and Font Fallback", fix not approved).
-  - **Increment 5 (FAQ, Pricing, Final CTA): IN REVIEW** (branch
-    `feat/phase-07-faq-pricing-final-cta`; PR open, not merged). Owner approval 2026-11-20 with
-    P07-D18 (FAQ accordion) and P07-D19 (Pricing development only; production gate unchanged).
-    Outcome: plan §8g; Figma values: design-values §16.7.
-  - **Next after Increment 5:** a dedicated Hero Video Review (plan in
-    [phases/phase-07-hero-media.md](phases/phase-07-hero-media.md) §8), then Increment 6.
+  - **Increment 5 (FAQ, Pricing, Final CTA): COMPLETE** (PR #58, merged as `5b17b27`; owner
+    approved 2026-11-20; post-merge CI green). Decisions P07-D18 (FAQ accordion), P07-D19
+    (Pricing development only; production gate unchanged), P07-D20 (Figma plan labels accepted
+    for the development preview; commercial review before public pricing). Outcome: plan §8g;
+    Figma values: design-values §16.7.
+  - **Full Landing and Hero video review: PREPARED FOR OWNER REVIEW** (2026-11-20):
+    [phases/phase-07-landing-review.md](phases/phase-07-landing-review.md). It covers local review
+    access, the production gates, the Hero video assessment, production video requirements, the
+    Visual Refinement and typography findings, and the remaining blockers. The provisional video
+    is not production-approved.
   - **Increment 6 (Verification and closure): NOT STARTED.**
   - **ClickUp:** set up 2026-11-19 (docs/project-management/clickup-workflow.md).
-  - **Next:** owner decision on the Increment 5 proposal.
+  - **Next:** owner review of the full Landing page and the Hero video, and decisions on the
+    video replacement and the typography fix. Increment 6 starts only on owner approval.
   - **Maintenance (recommended, not done):** add `.playwright-mcp/` (local output of the
     Playwright MCP browser tool: page snapshots and console logs) to `.gitignore` in a
     separate change; untracked, it fails `prettier --check` and lint.
