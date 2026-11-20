@@ -227,8 +227,11 @@ for (const { locale, dir, path, m } of LOCALES) {
 
     for (const [width, fit] of [
       [1440, "contain"],
+      [1280, "contain"],
+      [1024, "cover"],
       [768, "cover"],
       [390, "cover"],
+      [320, "cover"],
     ] as const) {
       test(`static Figma image at ${width}: ${fit}, loaded, over the Near Black base; no video or control`, async ({
         page,

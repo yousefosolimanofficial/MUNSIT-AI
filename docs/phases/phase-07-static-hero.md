@@ -84,23 +84,83 @@ reported):
 | Description       | 3.58 (24 px, large) | **3.57** (20 px) | 6.89 (16 px) | 3:1 large / 4.5:1 normal |
 | Outline CTA label | 7.14                | 7.09             | 7.05         | 4.5:1, passes            |
 
-**Open finding (owner decision):** on Tablet (768 to 1279, including 1024), part of the 20 px
-description crosses the laptop-screen glow in the image. There, 5% of the background pixels give
-less than 4.0:1 and the lowest 1% 3.57:1, below the 4.5:1 required for normal text. Figma has the
-same text over the same filtered image, so this is inherited from the design, not introduced by
-the implementation. Options, none implemented:
+**Tablet contrast correction (owner instruction 2026-11-20; "accept as designed" was rejected).**
+Before the correction, part of the 20 px Tablet description crossed the laptop-screen glow in the
+image: the lowest 1% of background pixels gave 3.57:1, below the 4.5:1 required for normal text.
 
-- (a) a subtle text shadow on the Hero description;
-- (b) a stronger image grade on Tablet;
-- (c) accept as designed.
+- **Treatment:** a soft, localized Void Black radial darkening behind the description only, as its
+  own `::before` layer, from 720 to 1279 px (`AMBIENT.heroTextScrim`). It is 40% in its flat centre
+  and fades to transparent at its edges, so there is no visible rectangle and no blur. The image,
+  composition, cropping, text and CTA positions, fades and glows are unchanged.
+- **Strength:** the smallest step with a margin: 0.30 fails (weakest pixel 4.37), 0.35 passes
+  with only 0.03 to spare (4.53), and 0.40 passes with a margin (4.68).
+- **Measured on the composited page** (text hidden, the real page screenshotted, every pixel under
+  the description's line boxes compared with its colour):
 
-Until decided, the production gate stays closed.
+| Width (Tablet) | Before: min / 1st percentile | After: min / 1st percentile |
+| -------------- | ---------------------------- | --------------------------- |
+| ar 720         | 3.41 / 3.55                  | **5.85 / 6.76**             |
+| ar 768         | 3.47 / 3.58                  | **6.22 / 7.05**             |
+| ar 900, 1024   | 3.39 / 3.56                  | **6.02 / 6.98**             |
+| ar 1100        | 3.42 / 3.58                  | **6.02 / 6.75**             |
+| ar 1279        | 3.39 / 3.56                  | **4.86 / 6.03**             |
+| en 720         | 3.35 / 3.55                  | **4.68 / 5.22**             |
+| en 768         | 3.35 / 3.58                  | **6.54 / 7.09**             |
+| en 1279        | 3.12 / 3.55                  | **5.53 / 6.48**             |
 
-E2E asserts the passing cases (heading everywhere; description on Desktop and Mobile).
+- **Desktop and Mobile unaffected:** the values are identical before and after, and the Hero
+  screenshots at 1440, 1280, 390 and 320 (ar and en, including reduced motion) are pixel-identical.
+  On Tablet, only the band around the description changes.
+- **Remaining pixel-level notes, not corrected (outside this scope):**
+  - Heading (large text, 3:1): the 1st percentile is 3.6 or more everywhere, but single pixels
+    under its line boxes reach 2.72 on Desktop and upper Tablet (bright glints).
+  - English Mobile at 320: the description's 1st percentile is 4.58, with a minimum pixel of 3.41.
+    English copy is unapproved and gated in production (P07-D1).
+
+E2E asserts:
+
+- the composited Tablet description at 4.5:1 or more at every pixel (720, 768, 1024, 1279);
+- the scrim on Tablet only;
+- the heading everywhere and the description on Desktop and Mobile over the image.
+
+## 5a. Image quality (browser rendering, 2026-11-20)
+
+The Figma source is **666 × 412**. The 2880 × 1782 export enlarges it and adds **no detail**.
+
+- **Sharpness:** visibly soft at every size. Desktop enlarges the source about ×2.16 (and ×4.3 on
+  2× screens): the hologram panels' small text is a blur and edges are soft. Mobile and Tablet
+  crop to the centre and enlarge it more (Mobile ×1.31 of the source height, then cover-cropped).
+  The softness matches Figma, which enlarges the same source. **Remaining visual-quality
+  limitation:** a sharper image needs a higher-resolution original from the designer. No AI
+  upscaling was done (owner approval would be required).
+- **Cropping:** as Figma at every width (contain at 1280 and 1440; cover at 1024, 768, 390, 320).
+- **Colour:** Figma's own filtered export (no CSS grade); the measured mean difference from Figma
+  renders is 5.6–14.1 of 255, from the fades and antialiasing.
+- **Glow integration:** the cobalt ambient sits behind the image and shows only in the contain
+  margins. The top and bottom fades blend the edges into the page. No colour clash.
+- **Seams:** at 1280 (contain, 1280 × 792 in 900) about 54 px of page shows under the image, and
+  the original image's own rounded dark frame is visible along its edges. It comes from the
+  source image (also visible, smaller, at 1440). It is not a rendering seam.
+
+## 5b. Production gate (unchanged)
+
+`HERO_IMAGE.provisional = true`: production renders the existing dark fallback (Near Black with
+the ambient glow); development and preview show the image. To activate it in production, all of
+these are needed:
+
+1. owner visual approval of the merged implementation (this report, the screenshots and the Tablet
+   correction);
+2. a separate change setting `provisional: false` in `src/features/landing/model/hero-media.ts`,
+   with CI green;
+3. the release blocker "English copy approval (P07-D1) and Hero image verification (P07-D21)"
+   updated.
 
 ## 6. Evidence
 
-Local captures (git-ignored) in `assets/review/static-hero-2026-11-20/`:
+Local captures (git-ignored) in `assets/review/static-hero-2026-11-20/` (before the Tablet
+correction) and `assets/review/static-hero-final-2026-11-20/` (final, with
+`tablet-contrast-before-*`, `tablet-contrast-after-*`, `tablet-contrast-compare-*` and the 1:1
+`quality-*` crops):
 
 - `after-*`: the Hero at 1440, 1280, 1024, 768, 390 and 320, ar and en, including reduced motion;
 - `before-*`: the provisional video;

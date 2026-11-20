@@ -82,6 +82,91 @@ async function contrastOverImage(page: Page, selector: string) {
   }, selector);
 }
 
+/**
+ * WCAG contrast of an element's text over the COMPOSITED page (image, fades, glows and the Tablet
+ * scrim): the text is made transparent, its line boxes are screenshotted, and every pixel is
+ * compared with the text colour (decoded in the page, no extra dependency). Returns the minimum.
+ */
+async function compositedContrast(page: Page, selector: string) {
+  const el = page.locator(selector);
+  const info = await el.evaluate((node) => {
+    const probe = document.createElement("canvas").getContext("2d");
+    if (!probe) return { color: [255, 255, 255, 255], rects: [] };
+    probe.fillStyle = getComputedStyle(node).color;
+    probe.fillRect(0, 0, 1, 1);
+    const color = [...probe.getImageData(0, 0, 1, 1).data];
+    const range = document.createRange();
+    range.selectNodeContents(node);
+    const rects = [...range.getClientRects()].map((r) => ({
+      x: r.left,
+      y: r.top,
+      w: r.width,
+      h: r.height,
+    }));
+    return { color, rects };
+  });
+  const xs = info.rects.map((r) => r.x);
+  const ys = info.rects.map((r) => r.y);
+  const x = Math.max(0, Math.floor(Math.min(...xs)));
+  const y = Math.max(0, Math.floor(Math.min(...ys)));
+  const clip = {
+    x,
+    y,
+    width: Math.ceil(Math.max(...info.rects.map((r) => r.x + r.w))) - x,
+    height: Math.ceil(Math.max(...info.rects.map((r) => r.y + r.h))) - y,
+  };
+  const hide = await page.addStyleTag({
+    content: `${selector}{color:transparent !important}`,
+  });
+  const png = await page.screenshot({ clip });
+  await hide.evaluate((node) => (node as Element).remove());
+  return page.evaluate(
+    async ({ b64, info, clip }) => {
+      const img = new Image();
+      img.src = `data:image/png;base64,${b64}`;
+      await img.decode();
+      const canvas = document.createElement("canvas");
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      const ctx = canvas.getContext("2d", { willReadFrequently: true });
+      if (!ctx) return 0;
+      ctx.drawImage(img, 0, 0);
+      const scale = img.naturalWidth / clip.width;
+      const lin = (v: number) => {
+        const c = v / 255;
+        return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+      };
+      const lum = (r: number, g: number, b: number) =>
+        0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+      const [fr = 255, fg = 255, fb = 255, fa8 = 255] = info.color;
+      const fa = fa8 / 255;
+      let min = Infinity;
+      for (const r of info.rects) {
+        const x0 = Math.max(0, Math.floor((r.x - clip.x) * scale));
+        const y0 = Math.max(0, Math.floor((r.y - clip.y) * scale));
+        const w = Math.min(canvas.width - x0, Math.ceil(r.w * scale));
+        const h = Math.min(canvas.height - y0, Math.ceil(r.h * scale));
+        if (w <= 0 || h <= 0) continue;
+        const d = ctx.getImageData(x0, y0, w, h).data;
+        for (let i = 0; i < d.length; i += 4) {
+          const br = d[i] ?? 0;
+          const bg = d[i + 1] ?? 0;
+          const bb = d[i + 2] ?? 0;
+          const text = lum(
+            fr * fa + br * (1 - fa),
+            fg * fa + bg * (1 - fa),
+            fb * fa + bb * (1 - fa),
+          );
+          const back = lum(br, bg, bb);
+          min = Math.min(min, (Math.max(text, back) + 0.05) / (Math.min(text, back) + 0.05));
+        }
+      }
+      return min;
+    },
+    { b64: png.toString("base64"), info, clip },
+  );
+}
+
 test.describe("Hero media (static Figma image, P07-D21)", () => {
   for (const width of [1440, 768, 390]) {
     test(`${width}: no video, poster or control; no video download; the image loads`, async ({
@@ -138,10 +223,10 @@ test.describe("Hero media (static Figma image, P07-D21)", () => {
     );
   });
 
-  // WCAG over the image (1st percentile of the per-pixel ratios). The heading is large text
+  // WCAG over the image alone (1st percentile of the per-pixel ratios). The heading is large text
   // (3:1) everywhere. The description is large on Desktop (24 px, 3:1) and normal text on Mobile
-  // (16 px, 4.5:1). The Tablet description (20 px) is an OPEN finding: measured and documented in
-  // docs/phases/phase-07-static-hero.md, not asserted here.
+  // (16 px, 4.5:1). The Tablet description (20 px) is corrected by a scrim, so it is asserted on the
+  // composited page below.
   for (const [width, description] of [
     [1440, 3],
     [390, 4.5],
@@ -159,6 +244,41 @@ test.describe("Hero media (static Figma image, P07-D21)", () => {
       );
     });
   }
+
+  // Tablet contrast correction: every pixel behind the 20 px description, on the composited page,
+  // gives at least 4.5:1, across the whole Tablet range.
+  for (const width of [720, 768, 1024, 1279]) {
+    test(`Tablet ${width}: description ≥ 4.5:1 at every pixel of the composited page`, async ({
+      page,
+    }) => {
+      await page.emulateMedia({ reducedMotion: "reduce" });
+      await open(page, width);
+      await expect
+        .poll(() => heroImage(page).evaluate((img: HTMLImageElement) => img.complete))
+        .toBe(true);
+      expect(
+        await compositedContrast(page, "[data-landing-hero-description]"),
+      ).toBeGreaterThanOrEqual(4.5);
+    });
+  }
+
+  test("the description scrim exists on Tablet only (Desktop and Mobile unchanged)", async ({
+    page,
+  }) => {
+    const scrim = () =>
+      page.locator("[data-landing-hero-description]").evaluate((el) => {
+        const s = getComputedStyle(el, "::before");
+        return { display: s.display, content: s.content, image: s.backgroundImage };
+      });
+    await open(page, 768);
+    const tablet = await scrim();
+    expect(tablet.display).not.toBe("none");
+    expect(tablet.image).toContain("radial-gradient");
+    await open(page, 1440);
+    expect((await scrim()).display).toBe("none");
+    await open(page, 390);
+    expect((await scrim()).content).toBe("none");
+  });
 
   test("768: heading contrast over the image ≥ 3", async ({ page }) => {
     await open(page, 768);

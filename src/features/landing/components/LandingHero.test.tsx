@@ -62,6 +62,21 @@ describe("LandingHero", () => {
     expect(img?.className).not.toMatch(/animate-|transition/);
   });
 
+  it("Tablet contrast correction: a scrim layer behind the description, Tablet only", () => {
+    const { container } = renderHero(HERO_IMAGE);
+    const description = container.querySelector<HTMLElement>("[data-landing-hero-description]");
+    expect(description?.textContent).toBe(ar.description);
+    const classes = description?.className.split(" ") ?? [];
+    // Drawn as the description's own ::before layer from `rail` up, behind the text.
+    expect(classes).toContain("rail:before:absolute");
+    expect(classes).toContain("rail:before:-z-10");
+    expect(classes).toContain("rail:before:bg-(image:--hero-text-scrim)");
+    // Not on Desktop; nothing on Mobile (every scrim class is `rail:`-prefixed).
+    expect(classes).toContain("xl:before:hidden");
+    expect(classes.filter((c) => c.startsWith("before:"))).toEqual([]);
+    expect(description?.style.getPropertyValue("--hero-text-scrim")).toContain("radial-gradient");
+  });
+
   it("no video, no poster and no Pause/Play control (P07-D21)", () => {
     const { container } = renderHero(HERO_IMAGE);
     expect(container.querySelector("video")).toBeNull();

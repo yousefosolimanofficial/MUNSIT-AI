@@ -41,6 +41,15 @@ export const AMBIENT = {
       `radial-gradient(ellipse 60% 40% at 50% 92%, ${sky(9)}, transparent 70%)`,
     ].join(", "),
   },
+  /** Hero description, Tablet only (owner-approved contrast correction for P07-D21, 2026-11-20): a
+   *  soft, localized Void Black darkening behind the 20 px description. It is flat at 40% in its
+   *  centre and transparent at its edges (no visible box), so the white text keeps at least 4.5:1
+   *  over the static image at every pixel from 720 to 1279 (measured on the composited page).
+   *  0.40 is the smallest step with a margin: 0.30 fails, and 0.35 leaves 0.03 at the weakest pixel. */
+  heroTextScrim: {
+    backgroundImage:
+      "radial-gradient(closest-side, rgb(4 5 6 / 0.4) 0%, rgb(4 5 6 / 0.4) 65%, rgb(4 5 6 / 0) 100%)",
+  },
   /** Hero bottom edge: fades the media into the page base, so the section boundary disappears. */
   heroFade: {
     backgroundImage: "linear-gradient(to bottom, transparent, var(--color-surface-void-black))",

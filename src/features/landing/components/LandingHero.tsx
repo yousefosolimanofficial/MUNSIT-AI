@@ -123,7 +123,15 @@ export function LandingHero({ copy, image }: LandingHeroProps) {
           >
             {copy.heading}
           </h1>
-          <p className="text-landing-label-strong text-text-primary/90 rail:text-landing-label-title xl:text-heading-medium">
+          {/* Tablet contrast correction (P07-D21): a soft scrim behind the description only, drawn
+              as its own ::before layer (outside the text; the Hero clips its overflow). */}
+          <p
+            className="text-landing-label-strong text-text-primary/90 rail:relative rail:isolate rail:text-landing-label-title rail:before:pointer-events-none rail:before:absolute rail:before:-inset-x-[96px] rail:before:-inset-y-[24px] rail:before:-z-10 rail:before:bg-(image:--hero-text-scrim) xl:text-heading-medium xl:before:hidden"
+            style={
+              { "--hero-text-scrim": AMBIENT.heroTextScrim.backgroundImage } as React.CSSProperties
+            }
+            data-landing-hero-description=""
+          >
             {copy.description}
           </p>
         </div>
