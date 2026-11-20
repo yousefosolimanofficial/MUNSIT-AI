@@ -2,7 +2,7 @@ import Image from "next/image";
 import { Fragment } from "react";
 
 import { SHOWCASE_SCREEN } from "../model/landing-images";
-import { NAV_BORDER } from "./landing-styles";
+import { NAV_BORDER, REVEAL } from "./landing-styles";
 
 /*
  * Product Showcase (Phase 07 Increment 3). Figma Desktop `36:169`, Tablet `200:568`, Mobile
@@ -30,8 +30,9 @@ import { NAV_BORDER } from "./landing-styles";
  * Menu: Figma's sidebar (481 high, padding 16) overflows the 470 body; its title sits at y 6 and
  * the list at y 63, reproduced with a 6 top padding.
  *
- * Motion: none. The waveform and the recording dot stay still on purpose: animating them would
- * suggest live recording, which this illustration does not do.
+ * Motion: the intro and the window fade up once on entry (scroll reveal, Visual Refinement). The
+ * waveform and the recording dot stay still (P07-D17): animating them would suggest live
+ * recording, which this illustration does not do.
  */
 
 export interface LandingShowcaseCopy {
@@ -165,8 +166,9 @@ export function LandingShowcase({ copy }: { copy: LandingShowcaseCopy }) {
   return (
     <div className="mx-auto flex w-full max-w-[1331px] flex-col items-center gap-[28px] px-[20px] py-[48px] rail:gap-[32px] rail:px-[32px] rail:py-[64px] xl:gap-[39px] xl:px-[80px] xl:py-[43px]">
       <div
-        className="flex w-full max-w-[350px] flex-col gap-[16px] text-center text-text-primary rail:max-w-[704px] xl:max-w-[900px]"
+        className={`flex w-full max-w-[350px] flex-col gap-[16px] text-center text-text-primary rail:max-w-[704px] xl:max-w-[900px] ${REVEAL}`}
         data-showcase-intro=""
+        data-reveal=""
       >
         <h2
           id="landing-showcase-heading"
@@ -182,7 +184,8 @@ export function LandingShowcase({ copy }: { copy: LandingShowcaseCopy }) {
       <div
         aria-hidden="true"
         data-showcase-window=""
-        className={`flex min-h-[366px] w-full max-w-[350px] flex-col overflow-hidden rounded-[16px] border bg-surface-ink ${NAV_BORDER} rail:h-[436px] rail:max-w-none xl:h-[560px] xl:max-w-[1171px]`}
+        data-reveal=""
+        className={`${REVEAL} flex min-h-[366px] w-full max-w-[350px] flex-col overflow-hidden rounded-[16px] border bg-surface-ink ${NAV_BORDER} rail:h-[436px] rail:max-w-none xl:h-[560px] xl:max-w-[1171px]`}
       >
         <div
           className="flex min-h-[114px] shrink-0 flex-col items-start gap-[6px] bg-surface-obsidian px-[16px] py-[12px] rail:h-[74px] rail:min-h-0 rail:flex-row rail:items-center rail:justify-between rail:gap-[24px] rail:px-[24px] rail:py-[10px] xl:h-[84px] xl:justify-end xl:gap-[438px]"

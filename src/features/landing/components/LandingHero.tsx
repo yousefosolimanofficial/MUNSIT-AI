@@ -5,15 +5,17 @@ import { ROUTES } from "@/i18n/routes";
 
 import { HERO_PORTRAIT_MEDIA, type HeroVideoAsset } from "../model/hero-media";
 import { HeroVideo } from "./HeroVideo";
-import { FOCUS_RING } from "./landing-styles";
+import { AMBIENT, CTA_GLOW, FOCUS_RING, INTERACTIVE_TRANSITION } from "./landing-styles";
 
 /*
  * Landing Hero (Phase 07 Increment 2). Approved contract: docs/phases/phase-07-hero-contract.md;
  * Figma Desktop `28:3`, Tablet `200:559`, Mobile `200:713` (design-values §16.1).
  *
  * Box (the `#top` section): Desktop 900 at y 0 under the floating header; Tablet 640 after a 32
- * gap; Mobile 538 after a 24 gap. Background: Near Black `#040506` (P07-D14) until the approved
- * video exists. The temporary background is not the final visual.
+ * gap; Mobile 538 after a 24 gap. Background: Near Black `#040506` (P07-D14) with a restrained
+ * ambient glow (Visual Refinement), then the poster and the video where an asset applies. The
+ * current asset is PROVISIONAL (hero-media.ts): development and preview only; Mobile has no
+ * portrait master, so it shows the ambient background. A bottom fade blends the Hero into the page.
  *
  * Content, a centred column:
  * - padding 344 / 126 (Desktop), 200 / 100 (Tablet), 150 / 64 (Mobile); inline 20 / 32;
@@ -54,6 +56,10 @@ export interface LandingHeroProps {
 const PRIMARY = [
   "inline-flex h-[46px] items-center justify-center rounded-lg border border-neutral-iron bg-neutral-mist px-[20px]",
   "text-ui-button whitespace-nowrap text-surface-ink",
+  // Hover (Visual Refinement): lighter fill and a soft Electric Sky glow; no movement.
+  INTERACTIVE_TRANSITION,
+  "hover:bg-text-primary",
+  CTA_GLOW,
   // Figma widths with the Arabic labels (the label box is wider than the glyphs): minimums, so
   // longer labels are never clipped.
   "w-full rail:w-auto rail:min-w-[131px]",
@@ -63,12 +69,24 @@ const PRIMARY = [
 const OUTLINE = [
   "inline-flex h-[48px] items-center justify-center rounded-lg border border-neutral-mist px-[13px]",
   "text-ui-button whitespace-nowrap text-text-primary",
+  INTERACTIVE_TRANSITION,
+  "hover:border-accent-electric-sky hover:bg-accent-electric-sky/10",
   "w-full rail:w-auto rail:min-w-[186px]",
   FOCUS_RING,
 ].join(" ");
 
 /** Poster layer (art direction: portrait below `rail`). Decorative. */
 function HeroPoster({ poster }: { poster: HeroVideoAsset["poster"] }) {
+  if (!poster.portrait) {
+    // Landscape-only asset: a CSS background declared from `rail` up, so Mobile never fetches it.
+    return (
+      <div
+        data-landing-hero-poster=""
+        className="absolute inset-0 hidden bg-cover bg-center rail:block rail:bg-(image:--hero-poster)"
+        style={{ "--hero-poster": `url(${poster.landscape})` } as React.CSSProperties}
+      />
+    );
+  }
   const common = { alt: "", sizes: "100vw", priority: true } as const;
   const {
     props: { srcSet: landscape },
@@ -77,7 +95,7 @@ function HeroPoster({ poster }: { poster: HeroVideoAsset["poster"] }) {
     props: { srcSet: portrait, ...rest },
   } = getImageProps({ ...common, src: poster.portrait, width: 1080, height: 1490 });
   return (
-    <picture>
+    <picture data-landing-hero-poster="">
       <source media={HERO_PORTRAIT_MEDIA} srcSet={portrait} />
       <source srcSet={landscape} />
       {/* getImageProps art direction, as in the Next.js Image docs. */}
@@ -95,11 +113,27 @@ export function LandingHero({ copy, video }: LandingHeroProps) {
         className="absolute inset-0 bg-surface-void-black"
         data-landing-hero-media=""
       >
+        {/* Ambient base (Visual Refinement): what Mobile, reduced motion and the pre-playback
+            moment show where no poster applies. */}
+        <div className="absolute inset-0" style={AMBIENT.hero} data-landing-ambient="hero" />
         {video ? <HeroPoster poster={video.poster} /> : null}
       </div>
       {video ? (
         <HeroVideo asset={video} labels={{ pause: copy.videoPause, play: copy.videoPlay }} />
       ) : null}
+      {/* Top and bottom fades into the page base (decorative; outside the text boxes). */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-[64px] rail:h-[88px]"
+        style={AMBIENT.heroFadeTop}
+        data-landing-hero-fade="top"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-[96px] rail:h-[120px]"
+        style={AMBIENT.heroFade}
+        data-landing-hero-fade="bottom"
+      />
 
       <div className="relative z-[1] flex flex-col items-center gap-[40px] px-[20px] pt-[150px] pb-[64px] rail:gap-[56px] rail:px-[32px] rail:pt-[200px] rail:pb-[100px] xl:gap-[98px] xl:pt-[344px] xl:pb-[126px]">
         <div

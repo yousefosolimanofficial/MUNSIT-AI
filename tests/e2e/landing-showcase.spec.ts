@@ -44,6 +44,11 @@ const rows = (page: Page) => page.locator("[data-use-case]");
 
 for (const { locale, dir, path, m } of LOCALES) {
   test.describe(`Landing Showcase and Use Cases (${locale})`, () => {
+    // Layout is measured settled: with motion allowed, elements below the fold are still in their
+    // scroll-reveal start state (12 px low, transparent). Reduced motion turns the reveal off. The
+    // reveal itself is covered with motion on in landing-visual-refinement.spec.ts.
+    test.use({ reducedMotion: "reduce" });
+
     test("copy: verbatim headings (h2, h3), descriptions and illustration copy", async ({
       page,
     }) => {

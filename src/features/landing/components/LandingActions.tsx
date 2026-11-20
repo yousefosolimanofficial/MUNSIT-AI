@@ -3,7 +3,7 @@ import { ROUTES } from "@/i18n/routes";
 import type { AppLocale } from "@/i18n/routing";
 import { Logo } from "@/shared/ui/Logo";
 
-import { FOCUS_RING } from "./landing-styles";
+import { FOCUS_RING, INTERACTIVE_TRANSITION } from "./landing-styles";
 
 /*
  * Landing header actions (Phase 07 Increment 1). Figma: Desktop `27:2`, Tablet `200:543`,
@@ -24,12 +24,16 @@ import { FOCUS_RING } from "./landing-styles";
 const LOGIN_CLASSES = [
   "inline-flex h-[46px] shrink-0 items-center justify-center rounded-[17px] border border-neutral-mist px-[12px]",
   "text-ui-button whitespace-nowrap text-text-primary",
+  INTERACTIVE_TRANSITION,
+  "hover:border-accent-electric-sky hover:bg-accent-electric-sky/10",
   FOCUS_RING,
 ].join(" ");
 
 const LANGUAGE_CLASSES = [
   "inline-flex h-[45px] w-[38px] shrink-0 items-center justify-center rounded-[10px] border border-neutral-mist",
   "text-ui-button text-text-primary",
+  INTERACTIVE_TRANSITION,
+  "hover:border-accent-electric-sky hover:bg-accent-electric-sky/10",
   FOCUS_RING,
 ].join(" ");
 

@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 import { USE_CASE_IMAGES } from "../model/landing-images";
+import { REVEAL } from "./landing-styles";
 
 /*
  * Use Cases (Phase 07 Increment 3). Figma Desktop `123:64`, Tablet `200:616`, Mobile `200:765`
@@ -36,8 +37,9 @@ export function LandingUseCases({ copy }: { copy: LandingUseCasesCopy }) {
   return (
     <div className="mx-auto flex w-full max-w-[1200px] flex-col items-center gap-[24px] px-[20px] py-[48px] rail:gap-[32px] rail:px-[32px] rail:py-[64px] xl:gap-[48px] xl:px-0 xl:pt-[72px] xl:pb-[80px]">
       <div
-        className="flex w-full max-w-[350px] flex-col gap-[16px] text-center text-text-primary rail:max-w-[704px] xl:max-w-[900px]"
+        className={`flex w-full max-w-[350px] flex-col gap-[16px] text-center text-text-primary rail:max-w-[704px] xl:max-w-[900px] ${REVEAL}`}
         data-use-cases-intro=""
+        data-reveal=""
       >
         <h2
           id="landing-use-cases-heading"
@@ -58,7 +60,8 @@ export function LandingUseCases({ copy }: { copy: LandingUseCasesCopy }) {
             <li
               key={item.title}
               data-use-case={index + 1}
-              className="flex flex-col gap-[20px] rounded-[20px] border border-neutral-slate bg-surface-ink p-[16px] rail:gap-[24px] rail:p-[24px] xl:flex-row xl:items-center xl:gap-[40px] xl:px-[32px] xl:py-[31px]"
+              data-reveal=""
+              className={`${REVEAL} flex flex-col gap-[20px] rounded-[20px] border border-neutral-slate bg-surface-ink p-[16px] rail:gap-[24px] rail:p-[24px] xl:flex-row xl:items-center xl:gap-[40px] xl:px-[32px] xl:py-[31px]`}
             >
               {image ? (
                 <div
