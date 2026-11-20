@@ -7,10 +7,9 @@ import enLanding from "../../src/i18n/messages/en/landing.json" with { type: "js
 
 /*
  * Phase 07 Increment 2: Landing Hero (approved contract docs/phases/phase-07-hero-contract.md;
- * Figma Desktop `28:3`, Tablet `200:559`, Mobile `200:713`, design-values §16.1). The Hero video
- * is a PROVISIONAL development asset (landscape only, hidden in production): Desktop and Tablet
- * play it; Mobile and reduced motion keep the Near Black base with its ambient glow. Media
- * behaviour in depth: landing-visual-refinement.spec.ts and HeroVideo.test.tsx.
+ * Figma Desktop `28:3`, Tablet `200:559`, Mobile `200:713`, design-values §16.1). P07-D21: the Hero
+ * background is the original static Figma image (Desktop FIT, Tablet and Mobile FILL); no video,
+ * poster or Pause/Play control. Image behaviour in depth: landing-visual-refinement.spec.ts.
  */
 
 const LOCALES = [
@@ -226,31 +225,38 @@ for (const { locale, dir, path, m } of LOCALES) {
       await context.close();
     });
 
-    test("provisional video: plays on Desktop over the Near Black base, with a Pause control", async ({
-      page,
-    }) => {
-      await open(page, path, 1440);
-      const video = hero(page).locator("video");
-      await expect(video).toHaveCount(1);
-      await expect.poll(() => video.evaluate((v: HTMLVideoElement) => !v.paused)).toBe(true);
-      await expect(hero(page).getByRole("button", { name: m.hero.videoPause })).toBeVisible();
-      const bg = await page
-        .locator("[data-landing-hero-media]")
-        .evaluate((el) => getComputedStyle(el).backgroundColor);
-      expect(bg).toBe("rgb(4, 5, 6)");
-    });
+    for (const [width, fit] of [
+      [1440, "contain"],
+      [1280, "contain"],
+      [1024, "cover"],
+      [768, "cover"],
+      [390, "cover"],
+      [320, "cover"],
+    ] as const) {
+      test(`static Figma image at ${width}: ${fit}, loaded, over the Near Black base; no video or control`, async ({
+        page,
+      }) => {
+        await open(page, path, width);
+        const image = hero(page).locator("img[data-landing-hero-image]");
+        await expect
+          .poll(() => image.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth))
+          .toBeGreaterThan(0);
+        expect(await image.evaluate((img) => getComputedStyle(img).objectFit)).toBe(fit);
+        expect(await box(image)).toEqual(await box(hero(page)));
+        await expect(hero(page).locator("video")).toHaveCount(0);
+        await expect(hero(page).locator("[data-landing-hero-control]")).toHaveCount(0);
+        await expect(hero(page).getByRole("button")).toHaveCount(0);
+        const bg = await page
+          .locator("[data-landing-hero-media]")
+          .evaluate((el) => getComputedStyle(el).backgroundColor);
+        expect(bg).toBe("rgb(4, 5, 6)");
+      });
+    }
 
-    test("Mobile: no portrait master, so no video plays and no control renders", async ({
-      page,
-    }) => {
-      await open(page, path, 390);
-      await expect(hero(page).locator("video")).toBeHidden();
-      await expect(hero(page).locator("[data-landing-hero-control]")).toHaveCount(0);
-    });
-
-    test("reduced motion: the Hero is static (no video, no control)", async ({ page }) => {
+    test("reduced motion: the same static image; no video and no control", async ({ page }) => {
       await page.emulateMedia({ reducedMotion: "reduce" });
       await open(page, path, 390);
+      await expect(hero(page).locator("img[data-landing-hero-image]")).toBeVisible();
       await expect(hero(page).locator("video")).toHaveCount(0);
       await expect(hero(page).locator("[data-landing-hero-control]")).toHaveCount(0);
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
@@ -276,8 +282,8 @@ for (const { locale, dir, path, m } of LOCALES) {
     test("text contrast on the Near Black base (Mobile, reduced motion) meets WCAG AA", async ({
       page,
     }) => {
-      // Over the video, contrast is measured offline on every frame of the graded loop
-      // (docs/phases/phase-07-hero-media.md): it passes at the brightest pixel under each element.
+      // Contrast over the static image itself: landing-visual-refinement.spec.ts and
+      // docs/phases/phase-07-static-hero.md.
       await open(page, path, 1440);
       // White heading and 90% white description on Near Black: measured from computed colours.
       const ratio = await hero(page)

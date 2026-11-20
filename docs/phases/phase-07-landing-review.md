@@ -76,6 +76,9 @@ with the same widths if needed).
 
 ## 4. Hero video: visual assessment of the provisional asset
 
+> **Superseded by P07-D21:** the owner chose the original static Figma image instead of a video
+> ([phase-07-static-hero.md](phase-07-static-hero.md)). §4 and §5 are kept as a record.
+
 Asset: `public/landing/hero/hero-ambient-1280x720.{webm,mp4}`. Derived from the owner's file:
 9 s loop, 1280 × 720, graded, no audio (hero-media §2). In the page it played muted and looping
 (WebM) at 1440, 1280, 1024 and 768. No video was rendered at 390 or under reduced motion.

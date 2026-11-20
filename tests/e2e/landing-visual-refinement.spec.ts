@@ -2,102 +2,342 @@ import AxeBuilder from "@axe-core/playwright";
 import type { Page } from "@playwright/test";
 
 import { expect, test } from "./test";
-import arLanding from "../../src/i18n/messages/ar/landing.json" with { type: "json" };
 
 /*
  * Phase 07 Visual Refinement and Hero media (P07-D17, plan §8e). Motion is allowed in this file
- * unless a test emulates reduced motion. The Hero video is the PROVISIONAL development asset
- * (landscape only; production hides it, see gates.ts). Its offline inspection and per-frame
- * contrast are in docs/phases/phase-07-hero-media.md.
+ * unless a test emulates reduced motion. P07-D21: the Hero background is the original static Figma
+ * image (no video, poster or control; production gate in gates.ts). Measurements:
+ * docs/phases/phase-07-static-hero.md.
  */
 
 const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
-const m = arLanding;
-const HERO_MEDIA = /\/landing\/hero\//;
+/** Any request for the superseded video files or their poster. */
+const VIDEO_MEDIA = /\.(mp4|webm)(\?|$)|hero-ambient/;
 
-async function open(page: Page, width: number, height = 1000) {
+async function open(page: Page, width: number, height = 1000, path = "/") {
   await page.setViewportSize({ width, height });
-  await page.goto("/");
+  await page.goto(path);
   await page.evaluate(() => document.fonts.ready);
 }
 
 const hero = (page: Page) => page.locator("section#top");
-const video = (page: Page) => hero(page).locator("video");
+const heroImage = (page: Page) => hero(page).locator("img[data-landing-hero-image]");
 
-test.describe("Hero media (provisional asset)", () => {
-  test("Desktop: muted, looping, inline WebM plays over the poster; Pause/Play toggles and is remembered", async ({
-    page,
-  }) => {
-    await open(page, 1440);
-    await expect.poll(() => video(page).evaluate((v: HTMLVideoElement) => !v.paused)).toBe(true);
-    const state = await video(page).evaluate((v: HTMLVideoElement) => ({
-      muted: v.muted,
-      loop: v.loop,
-      inline: v.hasAttribute("playsinline"),
-      src: v.currentSrc,
-      hidden: v.getAttribute("aria-hidden"),
-      tabIndex: v.tabIndex,
+/**
+ * WCAG contrast of an element's text over the Hero image as displayed (object-fit, centred),
+ * sampled at every pixel of its line boxes. Returns the 1st percentile: the lowest 1% of ratios
+ * (glyph-edge and highlight noise) is ignored.
+ */
+async function contrastOverImage(page: Page, selector: string) {
+  return page.evaluate((sel) => {
+    const img = document.querySelector<HTMLImageElement>("img[data-landing-hero-image]");
+    const el = document.querySelector<HTMLElement>(sel);
+    if (!img || !el) return 0;
+    const ib = img.getBoundingClientRect();
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.round(ib.width);
+    canvas.height = Math.round(ib.height);
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    if (!ctx) return 0;
+    ctx.fillStyle = "#040506";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    const pick = getComputedStyle(img).objectFit === "contain" ? Math.min : Math.max;
+    const s = pick(ib.width / img.naturalWidth, ib.height / img.naturalHeight);
+    const w = img.naturalWidth * s;
+    const h = img.naturalHeight * s;
+    ctx.drawImage(img, (ib.width - w) / 2, (ib.height - h) / 2, w, h);
+    const probe = document.createElement("canvas").getContext("2d");
+    if (!probe) return 0;
+    probe.fillStyle = getComputedStyle(el).color;
+    probe.fillRect(0, 0, 1, 1);
+    const [fr = 0, fg = 0, fb = 0, fa8 = 255] = probe.getImageData(0, 0, 1, 1).data;
+    const fa = fa8 / 255;
+    const lin = (v: number) => {
+      const c = v / 255;
+      return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+    };
+    const lum = (r: number, g: number, b: number) =>
+      0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    const ratios: number[] = [];
+    for (const r of range.getClientRects()) {
+      const x = Math.max(0, Math.floor(r.left - ib.left));
+      const y = Math.max(0, Math.floor(r.top - ib.top));
+      const rw = Math.min(canvas.width - x, Math.ceil(r.width));
+      const rh = Math.min(canvas.height - y, Math.ceil(r.height));
+      if (rw <= 0 || rh <= 0) continue;
+      const d = ctx.getImageData(x, y, rw, rh).data;
+      for (let i = 0; i < d.length; i += 4) {
+        const br = d[i] ?? 0;
+        const bg = d[i + 1] ?? 0;
+        const bb = d[i + 2] ?? 0;
+        const text = lum(fr * fa + br * (1 - fa), fg * fa + bg * (1 - fa), fb * fa + bb * (1 - fa));
+        const back = lum(br, bg, bb);
+        ratios.push((Math.max(text, back) + 0.05) / (Math.min(text, back) + 0.05));
+      }
+    }
+    ratios.sort((a, b) => a - b);
+    return ratios[Math.floor(0.01 * (ratios.length - 1))] ?? 0;
+  }, selector);
+}
+
+/**
+ * WCAG contrast of an element's text over the COMPOSITED page (image, fades, glows and the Tablet
+ * scrim): the text is made transparent, its line boxes are screenshotted, and every pixel is
+ * compared with the text colour (decoded in the page, no extra dependency). Returns the minimum.
+ */
+async function compositedContrast(page: Page, selector: string) {
+  const el = page.locator(selector);
+  const info = await el.evaluate((node) => {
+    const probe = document.createElement("canvas").getContext("2d");
+    if (!probe) return { color: [255, 255, 255, 255], rects: [] };
+    probe.fillStyle = getComputedStyle(node).color;
+    probe.fillRect(0, 0, 1, 1);
+    const color = [...probe.getImageData(0, 0, 1, 1).data];
+    const range = document.createRange();
+    range.selectNodeContents(node);
+    const rects = [...range.getClientRects()].map((r) => ({
+      x: r.left,
+      y: r.top,
+      w: r.width,
+      h: r.height,
     }));
-    expect(state).toMatchObject({ muted: true, loop: true, inline: true, hidden: "true" });
-    expect(state.tabIndex).toBe(-1);
-    expect(state.src).toMatch(/hero-ambient-1280x720\.webm$/);
-    const poster = await page
-      .locator("[data-landing-hero-poster]")
-      .evaluate((el) => getComputedStyle(el).backgroundImage);
-    expect(poster).toContain("hero-ambient-poster-1280x720.webp");
-
-    const pause = hero(page).getByRole("button", { name: m.hero.videoPause });
-    await pause.click();
-    await expect.poll(() => video(page).evaluate((v: HTMLVideoElement) => v.paused)).toBe(true);
-    await expect(hero(page).getByRole("button", { name: m.hero.videoPlay })).toBeFocused();
-    await page.reload();
-    await page.evaluate(() => document.fonts.ready);
-    await expect(hero(page).getByRole("button", { name: m.hero.videoPlay })).toBeVisible();
-    expect(await video(page).evaluate((v: HTMLVideoElement) => v.paused)).toBe(true);
+    return { color, rects };
   });
+  const xs = info.rects.map((r) => r.x);
+  const ys = info.rects.map((r) => r.y);
+  const x = Math.max(0, Math.floor(Math.min(...xs)));
+  const y = Math.max(0, Math.floor(Math.min(...ys)));
+  const clip = {
+    x,
+    y,
+    width: Math.ceil(Math.max(...info.rects.map((r) => r.x + r.w))) - x,
+    height: Math.ceil(Math.max(...info.rects.map((r) => r.y + r.h))) - y,
+  };
+  const hide = await page.addStyleTag({
+    content: `${selector}{color:transparent !important}`,
+  });
+  const png = await page.screenshot({ clip });
+  await hide.evaluate((node) => (node as Element).remove());
+  return page.evaluate(
+    async ({ b64, info, clip }) => {
+      const img = new Image();
+      img.src = `data:image/png;base64,${b64}`;
+      await img.decode();
+      const canvas = document.createElement("canvas");
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      const ctx = canvas.getContext("2d", { willReadFrequently: true });
+      if (!ctx) return 0;
+      ctx.drawImage(img, 0, 0);
+      const scale = img.naturalWidth / clip.width;
+      const lin = (v: number) => {
+        const c = v / 255;
+        return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+      };
+      const lum = (r: number, g: number, b: number) =>
+        0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+      const [fr = 255, fg = 255, fb = 255, fa8 = 255] = info.color;
+      const fa = fa8 / 255;
+      let min = Infinity;
+      for (const r of info.rects) {
+        const x0 = Math.max(0, Math.floor((r.x - clip.x) * scale));
+        const y0 = Math.max(0, Math.floor((r.y - clip.y) * scale));
+        const w = Math.min(canvas.width - x0, Math.ceil(r.w * scale));
+        const h = Math.min(canvas.height - y0, Math.ceil(r.h * scale));
+        if (w <= 0 || h <= 0) continue;
+        const d = ctx.getImageData(x0, y0, w, h).data;
+        for (let i = 0; i < d.length; i += 4) {
+          const br = d[i] ?? 0;
+          const bg = d[i + 1] ?? 0;
+          const bb = d[i + 2] ?? 0;
+          const text = lum(
+            fr * fa + br * (1 - fa),
+            fg * fa + bg * (1 - fa),
+            fb * fa + bb * (1 - fa),
+          );
+          const back = lum(br, bg, bb);
+          min = Math.min(min, (Math.max(text, back) + 0.05) / (Math.min(text, back) + 0.05));
+        }
+      }
+      return min;
+    },
+    { b64: png.toString("base64"), info, clip },
+  );
+}
 
-  test("keyboard: the Pause/Play control is reachable, labelled and has a visible focus ring", async ({
+test.describe("Hero media (static Figma image, P07-D21)", () => {
+  for (const width of [1440, 768, 390]) {
+    test(`${width}: no video, poster or control; no video download; the image loads`, async ({
+      page,
+    }) => {
+      const requests: string[] = [];
+      page.on("request", (request) => {
+        if (VIDEO_MEDIA.test(request.url())) requests.push(request.url());
+      });
+      await open(page, width);
+      await page.waitForLoadState("networkidle");
+      expect(requests).toEqual([]);
+      await expect(hero(page).locator("video")).toHaveCount(0);
+      await expect(hero(page).locator("[data-landing-hero-poster]")).toHaveCount(0);
+      await expect(hero(page).locator("[data-landing-hero-control]")).toHaveCount(0);
+      await expect
+        .poll(() =>
+          heroImage(page).evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth),
+        )
+        .toBeGreaterThan(0);
+      expect(await heroImage(page).evaluate((img: HTMLImageElement) => img.currentSrc)).toContain(
+        encodeURIComponent("/landing/hero/hero-figma-2880x1782.webp"),
+      );
+    });
+  }
+
+  test("the image is static (no animation or transition) and causes no layout shift", async ({
     page,
   }) => {
+    await page.addInitScript(() => {
+      const w = window as unknown as { heroShift: number };
+      w.heroShift = 0;
+      new PerformanceObserver((list) => {
+        for (const entry of list.getEntries() as unknown as {
+          value: number;
+          sources?: { node?: Node | null }[];
+        }[]) {
+          const inHero = entry.sources?.some((s) =>
+            s.node instanceof Element ? s.node.closest("section#top") !== null : false,
+          );
+          if (inHero) w.heroShift += entry.value;
+        }
+      }).observe({ type: "layout-shift", buffered: true });
+    });
     await open(page, 1440);
-    const control = hero(page).locator("[data-landing-hero-control]");
-    await expect(control).toBeVisible();
-    await control.focus();
-    await page.keyboard.press("Enter");
-    await expect(hero(page).getByRole("button", { name: m.hero.videoPlay })).toBeFocused();
-    const outline = await control.evaluate((el) => getComputedStyle(el).outlineStyle);
-    expect(outline).toBe("solid");
+    await page.waitForLoadState("networkidle");
+    const state = await heroImage(page).evaluate((img) => ({
+      animations: img.getAnimations().length,
+      animation: getComputedStyle(img).animationName,
+    }));
+    expect(state).toEqual({ animations: 0, animation: "none" });
+    expect(await page.evaluate(() => (window as unknown as { heroShift: number }).heroShift)).toBe(
+      0,
+    );
   });
 
-  test("Mobile: no portrait master, so no Hero media is requested at all", async ({ page }) => {
-    const requests: string[] = [];
-    page.on("request", (request) => {
-      if (HERO_MEDIA.test(request.url())) requests.push(request.url());
+  // WCAG over the image alone (1st percentile of the per-pixel ratios). The heading is large text
+  // (3:1) everywhere. The description is large on Desktop (24 px, 3:1) and normal text on Mobile
+  // (16 px, 4.5:1). The Tablet description (20 px) is corrected by a scrim, so it is asserted on the
+  // composited page below.
+  for (const [width, description] of [
+    [1440, 3],
+    [390, 4.5],
+  ] as const) {
+    test(`${width}: text contrast over the image (heading ≥ 3; description ≥ ${description})`, async ({
+      page,
+    }) => {
+      await open(page, width);
+      await expect
+        .poll(() => heroImage(page).evaluate((img: HTMLImageElement) => img.complete))
+        .toBe(true);
+      expect(await contrastOverImage(page, "#landing-hero-heading")).toBeGreaterThanOrEqual(3);
+      expect(await contrastOverImage(page, "[data-landing-hero-text] p")).toBeGreaterThanOrEqual(
+        description,
+      );
     });
+  }
+
+  // Tablet contrast correction: every pixel behind the 20 px description, on the composited page,
+  // gives at least 4.5:1, across the whole Tablet range.
+  for (const width of [720, 768, 1024, 1279]) {
+    test(`Tablet ${width}: description ≥ 4.5:1 at every pixel of the composited page`, async ({
+      page,
+    }) => {
+      await page.emulateMedia({ reducedMotion: "reduce" });
+      await open(page, width);
+      await expect
+        .poll(() => heroImage(page).evaluate((img: HTMLImageElement) => img.complete))
+        .toBe(true);
+      expect(
+        await compositedContrast(page, "[data-landing-hero-description]"),
+      ).toBeGreaterThanOrEqual(4.5);
+    });
+  }
+
+  // Heading (large text, 3:1) and Mobile description (16 px, 4.5:1), every pixel of the composited
+  // page, in both languages (English is development-only, P07-D1).
+  for (const [path, width] of [
+    ["/", 390],
+    ["/", 768],
+    ["/", 1279],
+    ["/", 1440],
+    ["/", 1920],
+    ["/en", 768],
+    ["/en", 1024],
+    ["/en", 1440],
+  ] as const) {
+    test(`heading ${path} ${width}: ≥ 3:1 at every pixel of the composited page`, async ({
+      page,
+    }) => {
+      await page.emulateMedia({ reducedMotion: "reduce" });
+      await open(page, width, 1000, path);
+      await expect
+        .poll(() => heroImage(page).evaluate((img: HTMLImageElement) => img.complete))
+        .toBe(true);
+      expect(await compositedContrast(page, "#landing-hero-heading")).toBeGreaterThanOrEqual(3);
+    });
+  }
+
+  for (const [path, width] of [
+    ["/en", 320],
+    ["/en", 390],
+    ["/", 320],
+    ["/", 390],
+  ] as const) {
+    test(`Mobile description ${path} ${width}: ≥ 4.5:1 at every pixel of the composited page`, async ({
+      page,
+    }) => {
+      await page.emulateMedia({ reducedMotion: "reduce" });
+      await open(page, width, 1000, path);
+      await expect
+        .poll(() => heroImage(page).evaluate((img: HTMLImageElement) => img.complete))
+        .toBe(true);
+      expect(
+        await compositedContrast(page, "[data-landing-hero-description]"),
+      ).toBeGreaterThanOrEqual(4.5);
+    });
+  }
+
+  test("contrast scrims: heading on every breakpoint; description on Mobile and Tablet, not Desktop", async ({
+    page,
+  }) => {
+    const scrim = (selector: string) =>
+      page.locator(selector).evaluate((el) => {
+        const s = getComputedStyle(el, "::before");
+        return { display: s.display, image: s.backgroundImage };
+      });
+    const description = "[data-landing-hero-description]";
+    const heading = "#landing-hero-heading";
+    for (const width of [390, 768, 1440]) {
+      await open(page, width);
+      const h = await scrim(heading);
+      expect(h.display, `heading scrim at ${width}`).not.toBe("none");
+      expect(h.image).toContain("radial-gradient");
+    }
     await open(page, 390);
-    await page.waitForLoadState("networkidle");
-    expect(requests).toEqual([]);
-    await expect(hero(page).locator("[data-landing-hero-control]")).toHaveCount(0);
-    await expect(page.locator("[data-landing-ambient=hero]")).toHaveCount(1);
+    expect((await scrim(description)).image).toContain("radial-gradient");
+    await open(page, 768);
+    const tablet = await scrim(description);
+    expect(tablet.display).not.toBe("none");
+    expect(tablet.image).toContain("radial-gradient");
+    await open(page, 1440);
+    expect((await scrim(description)).display).toBe("none");
   });
 
-  test("reduced motion: no <video> and no video download; the poster is shown", async ({
-    page,
-  }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
-    const requests: string[] = [];
-    page.on("request", (request) => {
-      if (/\.(mp4|webm)(\?|$)/.test(request.url())) requests.push(request.url());
-    });
-    await open(page, 1440);
-    await page.waitForLoadState("networkidle");
-    await expect(video(page)).toHaveCount(0);
-    expect(requests).toEqual([]);
-    await expect(hero(page).locator("[data-landing-hero-control]")).toHaveCount(0);
-    const poster = await page
-      .locator("[data-landing-hero-poster]")
-      .evaluate((el) => getComputedStyle(el).backgroundImage);
-    expect(poster).toContain("hero-ambient-poster-1280x720.webp");
+  test("768: heading contrast over the image ≥ 3", async ({ page }) => {
+    await open(page, 768);
+    await expect
+      .poll(() => heroImage(page).evaluate((img: HTMLImageElement) => img.complete))
+      .toBe(true);
+    expect(await contrastOverImage(page, "#landing-hero-heading")).toBeGreaterThanOrEqual(3);
   });
 });
 
@@ -245,7 +485,7 @@ test.describe("Interactions", () => {
   });
 });
 
-test.describe("Responsive and accessibility with motion and video", () => {
+test.describe("Responsive and accessibility with motion", () => {
   for (const width of [320, 390, 768, 1024, 1440]) {
     test(`${width}px: no horizontal overflow`, async ({ page }) => {
       await open(page, width);

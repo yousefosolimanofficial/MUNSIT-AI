@@ -1,9 +1,43 @@
 /*
- * Hero video media (Phase 07; D-P07-HERO-01, P07-D10, P07-D14). Production brief:
- * docs/phases/phase-07-hero-video-brief.md.
+ * Hero media (Phase 07).
  *
- * Adding an asset: put the files under `public/landing/hero/` and set `HERO_VIDEO` below. The Hero
- * renders the video, the poster and the Pause/Play control from this object.
+ * P07-D21 (owner decision 2026-11-20): the Hero uses the ORIGINAL static Figma image
+ * (`HERO_IMAGE`). The video plan is superseded: the Hero no longer renders a video, a poster or the
+ * Pause/Play control. The video model, `HeroVideo` and the provisional files under
+ * `public/landing/hero/` are kept unreferenced, as history (docs/phases/phase-07-hero-media.md).
+ */
+
+export interface HeroImage {
+  src: string;
+  width: number;
+  height: number;
+  /** Not yet verified by the owner for production (hidden in production, see gates.ts). */
+  provisional?: boolean;
+}
+
+/**
+ * The original Hero background from Figma (P07-D21). It is the image fill of
+ * "Hero / Video Container" in Desktop `28:3`, Tablet `200:559` and Mobile `200:713`, image hash
+ * `0c56986f38980fa0b0a789a58f2909124affd790` (the SHA-1 of the 666 × 412 original). Exported by
+ * Figma at 2× with its image filters baked in (exposure −0.27, saturation 0.79, highlights −1,
+ * shadows −0.12), so no CSS grade or overlay is added (P07-D8). Figma's FIT letterbox rows were
+ * cropped, leaving the image's own 1.6165 aspect, and the result was encoded as WebP q90.
+ * `next/image` serves resized variants.
+ *
+ * Framing, as Figma: Desktop FIT (contain), Tablet and Mobile FILL (cover), centred.
+ * `provisional` keeps the existing production gate closed until the owner verifies the
+ * implementation; then set it to `false`.
+ */
+export const HERO_IMAGE: HeroImage = {
+  src: "/landing/hero/hero-figma-2880x1782.webp",
+  width: 2880,
+  height: 1782,
+  provisional: true,
+};
+
+/*
+ * Hero video media (superseded by P07-D21; not rendered). Former production brief:
+ * docs/phases/phase-07-hero-video-brief.md.
  */
 
 export interface HeroVideoSource {

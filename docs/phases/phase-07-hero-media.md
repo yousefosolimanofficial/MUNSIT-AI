@@ -1,5 +1,9 @@
 # Phase 07 — Hero media and Visual Refinement (provisional)
 
+> **Superseded by P07-D21 (2026-11-20):** the Hero now uses the original static Figma image
+> ([phase-07-static-hero.md](phase-07-static-hero.md)). The video below is no longer rendered; its
+> files and component are kept as history. The Hero Video Review (§8) is closed as superseded.
+
 Status: **COMPLETE** (PR #55, merged as `0826ab1`, post-merge CI green; owner accepted
 2026-11-20). The video stays a **provisional development asset**: production approval is DENIED
 (gate closed) until a product-accurate replacement exists. Owner instruction

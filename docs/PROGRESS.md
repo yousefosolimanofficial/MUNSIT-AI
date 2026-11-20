@@ -60,6 +60,12 @@ Single resume point. A new session starts by reading this file, the latest phase
     access, the production gates, the Hero video assessment, production video requirements, the
     Visual Refinement and typography findings, and the remaining blockers. The provisional video
     is not production-approved.
+  - **Static Figma Hero image (P07-D21): IN REVIEW** (branch `feat/phase-07-static-hero-image`;
+    PR open, not merged). The original Figma image replaces the Hero video, and the video plan is
+    superseded. The production gate stays closed until the owner visually approves it. Contrast
+    corrections: Tablet and Mobile description, and the heading, meet WCAG at every pixel. Image softness
+    (666 × 412 source) remains a known limitation:
+    [phases/phase-07-static-hero.md](phases/phase-07-static-hero.md).
   - **Increment 6 (Verification and closure): NOT STARTED.**
   - **ClickUp:** set up 2026-11-19 (docs/project-management/clickup-workflow.md).
   - **Next:** owner review of the full Landing page and the Hero video, and decisions on the
