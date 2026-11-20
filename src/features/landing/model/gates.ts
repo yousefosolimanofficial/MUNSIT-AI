@@ -34,7 +34,17 @@ export function isPlaceholderPricingVisible(appEnv: AppEnv): boolean {
 }
 
 /**
- * Hero video (D-P07-HERO-01, P07-D14): the current asset is a PROVISIONAL development asset, not
+ * Hero image (P07-D21): the original Figma image. While `provisional` (pending owner verification
+ * of the implementation), it renders in development and preview only; production keeps the Near
+ * Black Hero with its ambient glow.
+ */
+export function isHeroImageVisible(appEnv: AppEnv, provisional: boolean): boolean {
+  return !provisional || appEnv !== "production";
+}
+
+/**
+ * Hero video (superseded by P07-D21; the page no longer renders a video). Kept for history.
+ * (D-P07-HERO-01, P07-D14): the current asset is a PROVISIONAL development asset, not
  * owner-approved for production. It plays in development and preview only; production keeps the
  * Near Black Hero until the owner approves a production video (then set the asset's
  * `provisional` to false).

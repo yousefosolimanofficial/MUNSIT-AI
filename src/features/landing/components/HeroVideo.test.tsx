@@ -1,16 +1,16 @@
 // @vitest-environment jsdom
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { NextIntlClientProvider } from "next-intl";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { MESSAGES } from "@/i18n/messages";
 
 import type { HeroVideoAsset } from "../model/hero-media";
 import { HERO_PAUSED_KEY, HeroVideo } from "./HeroVideo";
-import { LandingHero } from "./LandingHero";
 
 /*
- * Phase 07: Hero video behaviour (contract §4–§5). These tests use sample asset objects (paths
+ * Phase 07: Hero video component behaviour (contract §4–§5). P07-D21 superseded the video: the
+ * page no longer renders HeroVideo (LandingHero.test.tsx); the component and these tests are kept
+ * as history. These tests use sample asset objects (paths
  * only), with and without a portrait master; the provisional asset itself is covered by E2E.
  * jsdom has no media playback or matchMedia: both are stubbed.
  */
@@ -148,83 +148,5 @@ describe("HeroVideo", () => {
     const { video } = renderVideo();
     await act(async () => {});
     expect(video.className).toContain("opacity-0");
-  });
-});
-
-describe("LandingHero", () => {
-  const ar = MESSAGES.ar.landing.hero;
-  const copy = {
-    heading: ar.heading,
-    description: ar.description,
-    ctaPrimary: ar.ctaPrimary,
-    ctaSecondary: ar.ctaSecondary,
-    videoPause: ar.videoPause,
-    videoPlay: ar.videoPlay,
-  };
-
-  function renderHero(video: HeroVideoAsset | null) {
-    return render(
-      <NextIntlClientProvider locale="ar" messages={null}>
-        <LandingHero copy={copy} video={video} />
-      </NextIntlClientProvider>,
-    );
-  }
-
-  it("renders the verbatim h1, description and CTAs; primary → Register, outline → #how-it-works", () => {
-    renderHero(null);
-    expect(screen.getByRole("heading", { level: 1 }).textContent).toBe(ar.heading);
-    expect(screen.getByText(ar.description)).toBeTruthy();
-    expect(screen.getByRole("link", { name: ar.ctaPrimary }).getAttribute("href")).toBe(
-      "/register",
-    );
-    expect(screen.getByRole("link", { name: ar.ctaSecondary }).getAttribute("href")).toBe(
-      "#how-it-works",
-    );
-  });
-
-  it("primary CTA comes first (inline start)", () => {
-    renderHero(null);
-    const links = screen.getAllByRole("link").map((a) => a.textContent);
-    expect(links).toEqual([ar.ctaPrimary, ar.ctaSecondary]);
-  });
-
-  it("no approved asset: Near Black media layer only — no video, no poster, no control (P07-D14)", () => {
-    const { container } = renderHero(null);
-    const media = container.querySelector("[data-landing-hero-media]");
-    expect(media?.className).toContain("bg-surface-void-black");
-    expect(container.querySelector("video")).toBeNull();
-    expect(container.querySelector("picture")).toBeNull();
-    expect(screen.queryByRole("button")).toBeNull();
-  });
-
-  it("landscape-only asset: CSS poster declared from rail up (no <img>, no Mobile fetch)", () => {
-    const { container } = renderHero(LANDSCAPE_ONLY);
-    const poster = container.querySelector<HTMLElement>("[data-landing-hero-poster]");
-    expect(container.querySelector("picture")).toBeNull();
-    expect(container.querySelector("img")).toBeNull();
-    expect(poster?.className).toContain("rail:bg-(image:--hero-poster)");
-    expect(poster?.style.getPropertyValue("--hero-poster")).toBe(
-      `url(${LANDSCAPE_ONLY.poster.landscape})`,
-    );
-  });
-
-  it("ambient base and bottom fade are decorative layers", () => {
-    const { container } = renderHero(null);
-    expect(container.querySelector("[data-landing-ambient=hero]")).not.toBeNull();
-    const fades = [...container.querySelectorAll("[data-landing-hero-fade]")];
-    expect(fades.map((fade) => fade.getAttribute("data-landing-hero-fade"))).toEqual([
-      "top",
-      "bottom",
-    ]);
-    expect(fades.every((fade) => fade.getAttribute("aria-hidden") === "true")).toBe(true);
-  });
-
-  it("with an asset: poster picture (portrait source first) and the video render", () => {
-    const { container } = renderHero(ASSET);
-    const sources = [...container.querySelectorAll("picture source")].map((s) =>
-      s.getAttribute("media"),
-    );
-    expect(sources[0]).toBe("(max-width: 44.99rem)");
-    expect(container.querySelector("video")).not.toBeNull();
   });
 });

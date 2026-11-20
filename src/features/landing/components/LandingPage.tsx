@@ -6,7 +6,7 @@ import type { AppLocale } from "@/i18n/routing";
 import { SkipLink } from "@/shared/a11y/SkipLink";
 
 import {
-  isHeroVideoVisible,
+  isHeroImageVisible,
   isLandingEnglishPublished,
   isPlaceholderPricingVisible,
 } from "../model/gates";
@@ -22,7 +22,7 @@ import { LandingPricing, type PricingPlan } from "./LandingPricing";
 import { LandingReveal } from "./LandingReveal";
 import { LandingShowcase } from "./LandingShowcase";
 import { LandingUseCases } from "./LandingUseCases";
-import { HERO_VIDEO } from "../model/hero-media";
+import { HERO_IMAGE } from "../model/hero-media";
 import { FEATURE_IMAGES, STEP_IMAGES } from "../model/landing-images";
 import { AMBIENT, AMBIENT_LAYER, REVEAL, REVEAL_FADE } from "./landing-styles";
 
@@ -99,8 +99,7 @@ export async function LandingPage({ locale }: { locale: AppLocale }) {
   }));
   const languageNames = { en: shell("languageNames.en"), ar: shell("languageNames.ar") };
   const showPricing = isPlaceholderPricingVisible(appEnv);
-  const heroVideo =
-    HERO_VIDEO && isHeroVideoVisible(appEnv, HERO_VIDEO.provisional ?? false) ? HERO_VIDEO : null;
+  const heroImage = isHeroImageVisible(appEnv, HERO_IMAGE.provisional ?? false) ? HERO_IMAGE : null;
 
   return (
     <>
@@ -137,14 +136,12 @@ export async function LandingPage({ locale }: { locale: AppLocale }) {
                 className="relative isolate mt-[24px] min-h-[538px] overflow-hidden rail:mt-[32px] rail:min-h-[640px] xl:mt-0 xl:min-h-[900px]"
               >
                 <LandingHero
-                  video={heroVideo}
+                  image={heroImage}
                   copy={{
                     heading: t("hero.heading"),
                     description: t("hero.description"),
                     ctaPrimary: t("hero.ctaPrimary"),
                     ctaSecondary: t("hero.ctaSecondary"),
-                    videoPause: t("hero.videoPause"),
-                    videoPlay: t("hero.videoPlay"),
                   }}
                 />
               </section>

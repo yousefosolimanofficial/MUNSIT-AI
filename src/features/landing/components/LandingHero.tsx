@@ -1,10 +1,9 @@
-import { getImageProps } from "next/image";
+import Image from "next/image";
 
 import { Link } from "@/i18n/navigation";
 import { ROUTES } from "@/i18n/routes";
 
-import { HERO_PORTRAIT_MEDIA, type HeroVideoAsset } from "../model/hero-media";
-import { HeroVideo } from "./HeroVideo";
+import type { HeroImage } from "../model/hero-media";
 import { AMBIENT, CTA_GLOW, FOCUS_RING, INTERACTIVE_TRANSITION } from "./landing-styles";
 
 /*
@@ -13,9 +12,9 @@ import { AMBIENT, CTA_GLOW, FOCUS_RING, INTERACTIVE_TRANSITION } from "./landing
  *
  * Box (the `#top` section): Desktop 900 at y 0 under the floating header; Tablet 640 after a 32
  * gap; Mobile 538 after a 24 gap. Background: Near Black `#040506` (P07-D14) with a restrained
- * ambient glow (Visual Refinement), then the poster and the video where an asset applies. The
- * current asset is PROVISIONAL (hero-media.ts): development and preview only; Mobile has no
- * portrait master, so it shows the ambient background. A bottom fade blends the Hero into the page.
+ * ambient glow (Visual Refinement), then the original static Figma image (P07-D21, hero-media.ts)
+ * framed as Figma: Desktop FIT (contain), Tablet and Mobile FILL (cover), centred. It is never
+ * animated and there is no video. Top and bottom fades blend the Hero into the page.
  *
  * Content, a centred column:
  * - padding 344 / 126 (Desktop), 200 / 100 (Tablet), 150 / 64 (Mobile); inline 20 / 32;
@@ -46,11 +45,9 @@ export interface LandingHeroProps {
     description: string;
     ctaPrimary: string;
     ctaSecondary: string;
-    videoPause: string;
-    videoPlay: string;
   };
-  /** The approved video, or `null` (Near Black, no video, no control). */
-  video: HeroVideoAsset | null;
+  /** The Hero image, or `null` (Near Black with the ambient glow). */
+  image: HeroImage | null;
 }
 
 const PRIMARY = [
@@ -75,52 +72,32 @@ const OUTLINE = [
   FOCUS_RING,
 ].join(" ");
 
-/** Poster layer (art direction: portrait below `rail`). Decorative. */
-function HeroPoster({ poster }: { poster: HeroVideoAsset["poster"] }) {
-  if (!poster.portrait) {
-    // Landscape-only asset: a CSS background declared from `rail` up, so Mobile never fetches it.
-    return (
-      <div
-        data-landing-hero-poster=""
-        className="absolute inset-0 hidden bg-cover bg-center rail:block rail:bg-(image:--hero-poster)"
-        style={{ "--hero-poster": `url(${poster.landscape})` } as React.CSSProperties}
-      />
-    );
-  }
-  const common = { alt: "", sizes: "100vw", priority: true } as const;
-  const {
-    props: { srcSet: landscape },
-  } = getImageProps({ ...common, src: poster.landscape, width: 1920, height: 1200 });
-  const {
-    props: { srcSet: portrait, ...rest },
-  } = getImageProps({ ...common, src: poster.portrait, width: 1080, height: 1490 });
-  return (
-    <picture data-landing-hero-poster="">
-      <source media={HERO_PORTRAIT_MEDIA} srcSet={portrait} />
-      <source srcSet={landscape} />
-      {/* getImageProps art direction, as in the Next.js Image docs. */}
-      <img {...rest} alt="" className="absolute inset-0 h-full w-full object-cover" />
-    </picture>
-  );
-}
-
-export function LandingHero({ copy, video }: LandingHeroProps) {
+export function LandingHero({ copy, image }: LandingHeroProps) {
   return (
     <>
-      {/* Media layer: Near Black, then the poster (when an approved asset exists). */}
+      {/* Media layer: Near Black, the ambient glow, then the static Figma image. */}
       <div
         aria-hidden="true"
         className="absolute inset-0 bg-surface-void-black"
         data-landing-hero-media=""
       >
-        {/* Ambient base (Visual Refinement): what Mobile, reduced motion and the pre-playback
-            moment show where no poster applies. */}
+        {/* Ambient base (Visual Refinement): shows where the contained Desktop image leaves room,
+            and wherever no image applies. */}
         <div className="absolute inset-0" style={AMBIENT.hero} data-landing-ambient="hero" />
-        {video ? <HeroPoster poster={video.poster} /> : null}
+        {image ? (
+          // The LCP element: preloaded; it fills a box of fixed height, so it never shifts layout.
+          <Image
+            src={image.src}
+            width={image.width}
+            height={image.height}
+            alt=""
+            sizes="100vw"
+            preload
+            data-landing-hero-image=""
+            className="absolute inset-0 h-full w-full object-cover object-center xl:object-contain"
+          />
+        ) : null}
       </div>
-      {video ? (
-        <HeroVideo asset={video} labels={{ pause: copy.videoPause, play: copy.videoPlay }} />
-      ) : null}
       {/* Top and bottom fades into the page base (decorative; outside the text boxes). */}
       <div
         aria-hidden="true"
