@@ -13,12 +13,15 @@ import {
 import { LANDING_ANCHORS, LANDING_SECTIONS } from "../model/sections";
 import { LandingFooter } from "./LandingFooter";
 import { LandingHeader } from "./LandingHeader";
+import { FeaturesSection } from "./FeaturesSection";
+import { HowItWorksSection } from "./HowItWorksSection";
 import { LandingHero } from "./LandingHero";
 import { LandingReveal } from "./LandingReveal";
 import { LandingShowcase } from "./LandingShowcase";
 import { LandingUseCases } from "./LandingUseCases";
 import { HERO_VIDEO } from "../model/hero-media";
-import { AMBIENT, AMBIENT_LAYER, REVEAL_FADE } from "./landing-styles";
+import { FEATURE_IMAGES, STEP_IMAGES } from "../model/landing-images";
+import { AMBIENT, AMBIENT_LAYER, REVEAL, REVEAL_FADE } from "./landing-styles";
 
 /*
  * Landing page (Phase 07). Server Component, statically generated per locale.
@@ -37,6 +40,9 @@ import { AMBIENT, AMBIENT_LAYER, REVEAL_FADE } from "./landing-styles";
  * - Visual Refinement (P07-D17, plan §8e): restrained ambient glows (token colours only) behind
  *   the Hero, Showcase and Use Cases; scroll reveal (LandingReveal; off under reduced motion).
  *   The Hero video is provisional and hidden in production (gates.ts).
+ * - Features and How It Works (Increment 4): Mariam's FeaturesSection and HowItWorksSection
+ *   (her delivered files, unchanged), with Figma images (model/landing-images.ts) and the page's
+ *   landmark names and section gaps (Desktop 90 / 0, Tablet 32, Mobile 24).
  * - Pricing boundary: rendered only where placeholder pricing may appear (P07-D4).
  * - English: served only when published (P07-D1); otherwise 404.
  */
@@ -54,6 +60,10 @@ const SHOWCASE_SIDEBAR = [
 ] as const;
 /** Use Case rows, in Figma order (messages `landing.useCases.items.*`). */
 const USE_CASE_ITEMS = ["1", "2", "3"] as const;
+/** Feature cards, in Figma order (messages `landing.features.items.*`). */
+const FEATURE_ITEMS = ["1", "2", "3", "4", "5", "6"] as const;
+/** How It Works steps, in reading order (messages `landing.howItWorks.steps.*`). */
+const STEP_ITEMS = ["1", "2", "3", "4"] as const;
 
 export async function LandingPage({ locale }: { locale: AppLocale }) {
   const appEnv = publicEnv.appEnv;
@@ -161,6 +171,59 @@ export async function LandingPage({ locale }: { locale: AppLocale }) {
                     },
                   }}
                 />
+              </section>
+            );
+          }
+          if (key === "features") {
+            // Mariam's FeaturesSection (Increment 4). The page owns the landmark: named from the
+            // section heading (her delivery request), with the Figma gap above it. Desktop: Figma's
+            // section frames are fixed-height (Features 1000, How It Works 820) with empty space
+            // below the content, reproduced as minimum heights so the sections below keep their
+            // Figma positions.
+            return (
+              <section
+                key={key}
+                id={id}
+                aria-label={t("features.heading")}
+                data-landing-section={key}
+                className="mt-[24px] rail:mt-[32px] xl:mt-[90px] xl:min-h-[1000px]"
+              >
+                <div data-reveal="" className={REVEAL}>
+                  <FeaturesSection
+                    heading={t("features.heading")}
+                    description={t("features.description")}
+                    items={FEATURE_ITEMS.map((n, index) => ({
+                      title: t(`features.items.${n}.title`),
+                      text: t(`features.items.${n}.text`),
+                      // Decorative: each visual sits beside its own title and text.
+                      visual: { src: FEATURE_IMAGES[index]?.src ?? "", alt: "" },
+                    }))}
+                  />
+                </div>
+              </section>
+            );
+          }
+          if (key === "howItWorks") {
+            return (
+              <section
+                key={key}
+                id={id}
+                aria-label={t("howItWorks.heading")}
+                data-landing-section={key}
+                className="mt-[24px] rail:mt-[32px] xl:mt-0 xl:min-h-[820px]"
+              >
+                <div data-reveal="" className={REVEAL}>
+                  <HowItWorksSection
+                    heading={t("howItWorks.heading")}
+                    description={t("howItWorks.description")}
+                    steps={STEP_ITEMS.map((n, index) => ({
+                      number: t(`howItWorks.steps.${n}.number`),
+                      title: t(`howItWorks.steps.${n}.title`),
+                      text: t(`howItWorks.steps.${n}.text`),
+                      visual: { src: STEP_IMAGES[index]?.src ?? "", alt: "" },
+                    }))}
+                  />
+                </div>
               </section>
             );
           }

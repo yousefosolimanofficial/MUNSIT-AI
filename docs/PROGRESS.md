@@ -41,14 +41,17 @@ Single resume point. A new session starts by reading this file, the latest phase
     active recorder). A Landing Visual Refinement increment (ambient glows, gradients,
     transitions, scroll reveals, hover, Hero video integration, nav centring check) was approved
     as planning, then started on 2026-11-20.
-  - **Visual Refinement and Hero media: IN REVIEW** (branch
-    `feat/phase-07-hero-media-visual-refinement`; not merged). The owner's Hero video is
-    integrated as a **provisional development asset** (graded, seamless loop, no audio;
-    production hides it). Ambient glows, scroll reveal, hover states. Report and open owner
-    decisions: [phases/phase-07-hero-media.md](phases/phase-07-hero-media.md).
+  - **Visual Refinement and Hero media: COMPLETE** (PR #55, merged as `0826ab1`; owner accepted
+    2026-11-20). The Hero video is a **provisional development asset**; production approval is
+    DENIED (gate closed) until a product-accurate replacement and a portrait master exist.
+    Report: [phases/phase-07-hero-media.md](phases/phase-07-hero-media.md).
+  - **Increment 4 (Features and How It Works): IN PROGRESS** (branch
+    `feat/phase-07-mariam-integration`; PR open, not merged). Mariam's delivery is
+    **DELIVERED / AWAITING REVIEW**, applied verbatim; integration adds the Figma visuals and page
+    wiring. Outcome and the typography finding: plan §8f.
   - **ClickUp:** set up 2026-11-19 (docs/project-management/clickup-workflow.md).
-  - **Next:** owner review of the refinement PR and the video decisions; Increment 4 waits for
-    Mariam's delivery; Increment 5 (FAQ, Pricing, Final CTA) not started.
+  - **Next:** owner review of the Increment 4 PR; Increment 5 (FAQ, Pricing, Final CTA) not
+    started.
   - **Maintenance (recommended, not done):** add `.playwright-mcp/` (local output of the
     Playwright MCP browser tool: page snapshots and console logs) to `.gitignore` in a
     separate change; untracked, it fails `prettier --check` and lint.

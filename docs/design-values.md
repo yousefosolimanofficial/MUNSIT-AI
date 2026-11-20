@@ -869,8 +869,24 @@ converted to WebP (quality 82, source size kept, aspect ratio 1376 : 768 unchang
 - All four are 1376 × 768 and are referenced once, from `src/features/landing/model/landing-images.ts`
   (a unit test checks each file's WebP size and that no source repeats).
 - Figma also holds 344 × 192 thumbnails of the same images; they are not used.
-- The Feature and How It Works visuals are not exported here: they belong to Mariam's delivery
-  (Increment 4).
+- **Feature and How It Works visuals (Increment 4, 2026-11-20):** exported the same way
+  (originals matched by image hash; opaque PNGs stored as RGB; WebP quality 82 at 1376 × 768),
+  from `model/landing-images.ts`:
+
+  | File (`public/landing/…`)          | Figma node (image hash, first 10)           | WebP     |
+  | ---------------------------------- | ------------------------------------------- | -------- |
+  | `features/live-transcription.webp` | `114:12` (`8cc8577743`)                     | 66,020 B |
+  | `features/smart-highlights.webp`   | `114:16` (`8c8b5442de`)                     | 83,392 B |
+  | `features/smart-summaries.webp`    | `114:20` (`e02277d86b`)                     | 58,538 B |
+  | `features/question-bank.webp`      | `114:25` (`9a96787d5f`)                     | 66,726 B |
+  | `features/ai-tutor.webp`           | `114:29` (`4131f36479`)                     | 64,342 B |
+  | `features/lecture-slides.webp`     | `114:33` (`592481e3fd`)                     | 79,870 B |
+  | `how-it-works/record.webp`         | `HOW_IT_WORKS_01_RECORD` (`e96873f2fa`)     | 57,974 B |
+  | `how-it-works/processing.webp`     | `HOW_IT_WORKS_02_PROCESSING` (`48c4cbe507`) | 60,798 B |
+  | `how-it-works/review.webp`         | `HOW_IT_WORKS_03_REVIEW` (`70c64b9a9c`)     | 74,910 B |
+  | `how-it-works/practice.webp`       | `HOW_IT_WORKS_04_PRACTICE` (`59953bfae9`)   | 78,638 B |
+
+  Feature visuals are mapped to `landing.features.items` 1–6 by their Figma card titles.
 
 **Colours outside the 19 tokens:** the navigation border `#363739`, and the Cyan `#06B6D4` named
 in the Hero video direction. All other colours read map to tokens: Void Black, Ink, Obsidian,
