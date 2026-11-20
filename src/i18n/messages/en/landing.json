@@ -151,16 +151,30 @@
     "heading": "Choose the plan that fits your learning journey.",
     "description": "Flexible plans that help you use Munsit in the way that suits your learning needs.",
     "note": "Plan details, prices and usage limits will be set before the official launch.",
-    "plan": {
-      "label": "Starter",
-      "name": "Starter",
-      "text": "Your first step toward a smarter learning experience.",
-      "price": "—",
-      "priceNote": "Price and usage details to be announced",
-      "feature": "Plan feature — to be announced",
-      "cta": "Get started free"
-    },
-    "badge": "Featured plan"
+    "price": "—",
+    "priceNote": "Price and usage details to be announced",
+    "feature": "Plan feature — to be announced",
+    "badge": "Featured plan",
+    "plans": {
+      "starter": {
+        "label": "Starter",
+        "name": "Starter",
+        "text": "Your first step toward a smarter learning experience.",
+        "cta": "Get started free"
+      },
+      "plus": {
+        "label": "Plus",
+        "name": "Plus",
+        "text": "More tools that help you get the most out of every lecture.",
+        "cta": "Choose Plus"
+      },
+      "pro": {
+        "label": "Pro",
+        "name": "Pro",
+        "text": "A more flexible experience for advanced learning and review needs.",
+        "cta": "Choose Pro"
+      }
+    }
   },
   "cta": {
     "heading": "Ready to make every lecture a step forward?",

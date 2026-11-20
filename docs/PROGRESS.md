@@ -50,8 +50,12 @@ Single resume point. A new session starts by reading this file, the latest phase
     v1, **ACCEPTED / INTEGRATED**, byte-identical); integration by Yousef (Figma visuals, page
     wiring, E2E). Typography differences accepted as known, non-blocking (plan §8f; ClickUp
     "Phase 07 — Investigate Arabic Typography and Font Fallback", fix not approved).
-  - **Increment 5 (FAQ, Pricing, Final CTA): NOT STARTED.** Proposal for owner review:
-    [phases/phase-07-increment-5-proposal.md](phases/phase-07-increment-5-proposal.md).
+  - **Increment 5 (FAQ, Pricing, Final CTA): IN REVIEW** (branch
+    `feat/phase-07-faq-pricing-final-cta`; PR open, not merged). Owner approval 2026-11-20 with
+    P07-D18 (FAQ accordion) and P07-D19 (Pricing development only; production gate unchanged).
+    Outcome: plan §8g; Figma values: design-values §16.7.
+  - **Next after Increment 5:** a dedicated Hero Video Review (plan in
+    [phases/phase-07-hero-media.md](phases/phase-07-hero-media.md) §8), then Increment 6.
   - **Increment 6 (Verification and closure): NOT STARTED.**
   - **ClickUp:** set up 2026-11-19 (docs/project-management/clickup-workflow.md).
   - **Next:** owner decision on the Increment 5 proposal.

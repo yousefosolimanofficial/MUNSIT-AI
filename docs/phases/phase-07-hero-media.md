@@ -136,3 +136,20 @@ The Pause/Play control keeps its own dark fill and border (≥ 3:1 non-text).
 4. **Portrait master** for Mobile (none exists; nothing invented).
 5. **Navigation links:** keep Figma's placement (default) or centre the links on the bar.
 6. Production approval of the video (then set `provisional: false`).
+
+## 8. Next: dedicated Hero Video Review (owner request 2026-11-20)
+
+Scheduled after the Landing sections are complete; not part of Increment 5. The production gate
+stays closed throughout. Tracked in the existing ClickUp Hero tasks (production approval and
+release blocker `123ru7v2pnv`, Mobile portrait `123ru7v2pm8`).
+
+1. Review the completed Landing page visually (all sections, 1440 / 768 / 390, ar and en).
+2. Inspect the current provisional Hero video in the page.
+3. Evaluate the 9 s loop and its 1 s crossfade in a real browser (not only frame metrics).
+4. Compare the video with the authentic MUNSIT AI interface (Arabic, RTL, real screens).
+5. Prepare a high-quality landscape replacement (16:10, preferably ≥ 1920 × 1200; no upscaling).
+6. Prepare a dedicated portrait version for Mobile.
+7. Evaluate the poster images (landscape and portrait, first frame of the final cut).
+8. Check text contrast and CTA readability on real frames (Hero contract §6).
+9. Check media performance (sizes, loading, Mobile and reduced-motion behaviour).
+10. Request explicit owner approval before enabling production playback (`provisional: false`).

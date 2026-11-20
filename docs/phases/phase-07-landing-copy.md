@@ -176,19 +176,29 @@ The ⏎ symbol marks a line break drawn in Figma.
 | pricing.description | خطط مرنة تساعدك تستفيد من منصت بالطريقة اللي تناسب احتياجاتك التعليمية.  | Flexible plans that help you use Munsit in the way that suits your learning needs. |
 | pricing.note        | تفاصيل الباقات والأسعار وحدود الاستخدام سيتم تحديدها قبل الإطلاق الرسمي. | Plan details, prices and usage limits will be set before the official launch.      |
 
-**Plan cards:** all three variants (Standard, Featured, Secondary) carry the **same placeholder
-copy** in Figma (P07-D4).
+**Plan cards (updated in Increment 5, 2026-11-20):** the component variants (Standard, Featured,
+Secondary) carry the Starter placeholder, but the **placed Tablet and Mobile instances** override it
+with three plans. Prices, notes and feature rows are the same placeholders on every card (P07-D4,
+P07-D19).
 
-| Key                    | Arabic (Figma)                     | English (PROPOSED)                                    |
-| ---------------------- | ---------------------------------- | ----------------------------------------------------- |
-| pricing.plan.label     | Starter                            | Starter                                               |
-| pricing.plan.name      | البداية                            | Starter                                               |
-| pricing.plan.text      | خطوتك الأولى نحو تجربة تعلم أذكى.  | Your first step toward a smarter learning experience. |
-| pricing.plan.price     | —                                  | —                                                     |
-| pricing.plan.priceNote | السعر وتفاصيل الاستخدام تُحدد لاحقًا | Price and usage details to be announced               |
-| pricing.plan.feature   | ميزة الخطة — تُحدد لاحقًا (× 4)      | Plan feature — to be announced (× 4)                  |
-| pricing.plan.cta       | ابدأ مجانًا                         | Get started free                                      |
-| pricing.badge          | الخطة المميزة (Featured only)      | Featured plan                                         |
+| Key                         | Arabic (Figma)                                        | English (PROPOSED)                                                 |
+| --------------------------- | ----------------------------------------------------- | ------------------------------------------------------------------ |
+| pricing.price               | —                                                     | —                                                                  |
+| pricing.priceNote           | السعر وتفاصيل الاستخدام تُحدد لاحقًا                    | Price and usage details to be announced                            |
+| pricing.feature             | ميزة الخطة — تُحدد لاحقًا (× 4)                         | Plan feature — to be announced (× 4)                               |
+| pricing.badge               | الخطة المميزة (Plus, Featured only)                   | Featured plan                                                      |
+| pricing.plans.starter.label | Starter                                               | Starter                                                            |
+| pricing.plans.starter.name  | البداية                                               | Starter                                                            |
+| pricing.plans.starter.text  | خطوتك الأولى نحو تجربة تعلم أذكى.                     | Your first step toward a smarter learning experience.              |
+| pricing.plans.starter.cta   | ابدأ مجانًا                                            | Get started free                                                   |
+| pricing.plans.plus.label    | Plus                                                  | Plus                                                               |
+| pricing.plans.plus.name     | بلس                                                   | Plus                                                               |
+| pricing.plans.plus.text     | أدوات أكثر تساعدك تستفيد من كل محاضرة.                | More tools that help you get the most out of every lecture.        |
+| pricing.plans.plus.cta      | اختار بلس                                             | Choose Plus                                                        |
+| pricing.plans.pro.label     | Pro                                                   | Pro                                                                |
+| pricing.plans.pro.name      | برو                                                   | Pro                                                                |
+| pricing.plans.pro.text      | تجربة أكثر مرونة لاحتياجات التعلّم والمراجعة المتقدمة. | A more flexible experience for advanced learning and review needs. |
+| pricing.plans.pro.cta       | اختار برو                                             | Choose Pro                                                         |
 
 ## 9. Final CTA
 

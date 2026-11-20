@@ -117,6 +117,8 @@ placeholders.
 | P07-D15 | **Pause/Play control:** 40 px dark circle; approved ar/en labels; Hero corner, never over the text or CTAs; hidden while no playable video exists                                                                                                                                                                                                                                                                                                                                                                                                                                                | **APPROVED**                         |
 | P07-D16 | **Pause icon:** a minimal two-bar geometric SVG in the icon set's style; no dependency                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | **APPROVED**                         |
 | P07-D17 | **Showcase motion (2026-11-19).** The recording waveform and the recording indicator in the Product Showcase are **not animated**: the Showcase is a static illustration, not an active recorder, and must not imply that a recording session is live. Ambient glows, subtle animated gradients, smooth transitions, scroll reveals, hover interactions, the Hero background video integration and a navigation-centring check are **approved as planning** for a separate Landing Visual Refinement increment (§8e), after ClickUp project management is established; none of it is implemented | **APPROVED**                         |
+| P07-D18 | **FAQ accordion (2026-11-20).** Item 01 is expanded on load; only one item is expanded at a time; opening another closes the previous one; activating the expanded item closes it; all items may be collapsed                                                                                                                                                                                                                                                                                                                                                                                    | **APPROVED**                         |
+| P07-D19 | **Pricing, development and preview only (2026-11-20).** The three Figma plan cards (Starter; Plus, Featured; Pro) are implemented with the approved Figma placeholder content only (price "—", "to be decided" notes, four placeholder feature rows). No prices, periods, entitlements, limits, payment or checkout. Hidden in production by the existing P07-D4 gate; not in the navigation or metadata. Actions go to Register with no plan parameter (P07-D3)                                                                                                                                 | **APPROVED**                         |
 
 **Section order (final, all breakpoints):**
 
@@ -319,6 +321,24 @@ no new dependency without approval. The Showcase recording waveform and indicato
   - **Figma inconsistency:** the Desktop Features frame draws card 01 on the left (mirrored), while
     Figma Tablet and How It Works put 01 at the inline start. The approved contract (§4,
     "card or step 01 at the inline start") is followed.
+
+## 8g. Increment 5 outcome (FAQ, Pricing, Final CTA, IN REVIEW)
+
+- **FAQ (P07-D18):** six verbatim questions and answers; a client accordion with native buttons in
+  `h3`s, `aria-expanded` / `aria-controls`, labelled answer regions, `visibility: hidden` when
+  collapsed (out of the tab order and the accessibility tree), height via CSS grid rows (no fixed
+  heights; instant under reduced motion). Figma states Collapsed, Hover (Obsidian / Iron),
+  Expanded (minus in Electric Sky); focus ring D-B2.
+- **Pricing (P07-D19, development only):** three cards in reading order Starter → Plus (Featured,
+  badge) → Pro. **Copy finding:** the Figma Tablet and Mobile instances carry plan names,
+  descriptions and buttons for Plus ("بلس", "اختار بلس") and Pro ("برو", "اختار برو") that the
+  Increment 0 copy package had not captured (it read the component defaults). They were added
+  verbatim (Arabic from Figma code points; English PROPOSED, P07-D1). Prices, notes and feature
+  rows stay the approved placeholders. Owner note: the "اختار بلس" / "اختار برو" labels read as plan
+  selection while the link carries no plan (P07-D3); kept verbatim for development review.
+- **Final CTA:** the Figma panel; the Cobalt Edge 20% glow as a radial gradient (no blur filter);
+  primary at the inline start → Register, outline → `#features`; Mobile stacks (primary first).
+- **Figma match and differences:** design-values §16.7.
 
 ## 9. Increments and PR boundaries
 

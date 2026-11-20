@@ -15,7 +15,10 @@ import { LandingFooter } from "./LandingFooter";
 import { LandingHeader } from "./LandingHeader";
 import { FeaturesSection } from "./FeaturesSection";
 import { HowItWorksSection } from "./HowItWorksSection";
+import { LandingFaq } from "./LandingFaq";
+import { LandingFinalCta } from "./LandingFinalCta";
 import { LandingHero } from "./LandingHero";
+import { LandingPricing, type PricingPlan } from "./LandingPricing";
 import { LandingReveal } from "./LandingReveal";
 import { LandingShowcase } from "./LandingShowcase";
 import { LandingUseCases } from "./LandingUseCases";
@@ -43,6 +46,10 @@ import { AMBIENT, AMBIENT_LAYER, REVEAL, REVEAL_FADE } from "./landing-styles";
  * - Features and How It Works (Increment 4): Mariam's FeaturesSection and HowItWorksSection
  *   (her delivered files, unchanged), with Figma images (model/landing-images.ts) and the page's
  *   landmark names and section gaps (Desktop 90 / 0, Tablet 32, Mobile 24).
+ * - FAQ, Pricing and Final CTA (Increment 5): the P07-D18 accordion; Pricing as an approved
+ *   development-only placeholder (P07-D19); the Final CTA panel. Figma gaps: FAQ 18 / 32 / 24 above,
+ *   Desktop FAQ minimum height 989 (fixed Figma frame); Pricing 42 / 32 / 24 above; Final CTA frame
+ *   padding 32 + 32 / 64 + 32 (Tablet), 24 + 24 / 48 + 24 (Mobile), and 86 to the footer on Desktop.
  * - Pricing boundary: rendered only where placeholder pricing may appear (P07-D4).
  * - English: served only when published (P07-D1); otherwise 404.
  */
@@ -64,6 +71,14 @@ const USE_CASE_ITEMS = ["1", "2", "3"] as const;
 const FEATURE_ITEMS = ["1", "2", "3", "4", "5", "6"] as const;
 /** How It Works steps, in reading order (messages `landing.howItWorks.steps.*`). */
 const STEP_ITEMS = ["1", "2", "3", "4"] as const;
+/** FAQ items, in Figma order (messages `landing.faq.items.*`). */
+const FAQ_ITEMS = ["1", "2", "3", "4", "5", "6"] as const;
+/** Pricing plans in reading order, with their Figma card styles (messages `landing.pricing.plans.*`). */
+const PRICING_PLANS = [
+  { key: "starter", style: "standard" },
+  { key: "plus", style: "featured" },
+  { key: "pro", style: "secondary" },
+] as const satisfies readonly { key: string; style: PricingPlan["style"] }[];
 
 export async function LandingPage({ locale }: { locale: AppLocale }) {
   const appEnv = publicEnv.appEnv;
@@ -254,6 +269,86 @@ export async function LandingPage({ locale }: { locale: AppLocale }) {
                     })),
                   }}
                 />
+              </section>
+            );
+          }
+          if (key === "faq") {
+            return (
+              <section
+                key={key}
+                id={id}
+                aria-labelledby="landing-faq-heading"
+                data-landing-section={key}
+                className="mt-[24px] rail:mt-[32px] xl:mt-[18px] xl:min-h-[989px]"
+              >
+                <div data-reveal="" className={REVEAL}>
+                  <LandingFaq
+                    copy={{
+                      heading: t("faq.heading"),
+                      description: t("faq.description"),
+                      items: FAQ_ITEMS.map((n) => ({
+                        question: t(`faq.items.${n}.question`),
+                        answer: t(`faq.items.${n}.answer`),
+                      })),
+                    }}
+                  />
+                </div>
+              </section>
+            );
+          }
+          if (key === "pricing") {
+            // Reached only where placeholder pricing is visible (P07-D4, P07-D19; see above).
+            return (
+              <section
+                key={key}
+                id={id}
+                aria-labelledby="landing-pricing-heading"
+                data-landing-section={key}
+                className="mt-[24px] rail:mt-[32px] xl:mt-[42px]"
+              >
+                <div data-reveal="" className={REVEAL}>
+                  <LandingPricing
+                    copy={{
+                      eyebrow: t("pricing.eyebrow"),
+                      heading: t("pricing.heading"),
+                      description: t("pricing.description"),
+                      note: t("pricing.note"),
+                      price: t("pricing.price"),
+                      priceNote: t("pricing.priceNote"),
+                      feature: t("pricing.feature"),
+                      badge: t("pricing.badge"),
+                      plans: PRICING_PLANS.map(({ key: plan, style }) => ({
+                        style,
+                        label: t(`pricing.plans.${plan}.label`),
+                        name: t(`pricing.plans.${plan}.name`),
+                        text: t(`pricing.plans.${plan}.text`),
+                        cta: t(`pricing.plans.${plan}.cta`),
+                      })),
+                    }}
+                  />
+                </div>
+              </section>
+            );
+          }
+          if (key === "cta") {
+            return (
+              <section
+                key={key}
+                id={id}
+                aria-labelledby="landing-cta-heading"
+                data-landing-section={key}
+                className="px-[20px] pt-[48px] pb-[72px] rail:px-[32px] rail:pt-[64px] rail:pb-[96px] xl:px-0 xl:pt-0 xl:pb-[86px]"
+              >
+                <div data-reveal="" className={REVEAL}>
+                  <LandingFinalCta
+                    copy={{
+                      heading: t("cta.heading"),
+                      description: t("cta.description"),
+                      primary: t("cta.primary"),
+                      secondary: t("cta.secondary"),
+                    }}
+                  />
+                </div>
               </section>
             );
           }

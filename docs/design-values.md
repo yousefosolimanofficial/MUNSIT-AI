@@ -983,3 +983,37 @@ bars (heights 8, 16, 24, 14, 20, 10, 18, 12, 22, 9; radius 2; gap 3) at the end.
    (plan §8e), never to the recording UI.
 9. **Mobile Showcase image.** Figma hides the image fill on Mobile; the image is not shown there
    (lazy-loaded and `display: none`, so it is not downloaded).
+
+### 16.7 FAQ, Pricing and Final CTA — implementation (Phase 07 Increment 5, 2026-11-20)
+
+Frames: FAQ Desktop `124:94` (fixed 989), Tablet `200:629`, Mobile `200:778`; Pricing component set
+`131:177` (Desktop has no section frame), Tablet `200:640`, Mobile `200:789`; Final CTA panel
+`126:104` (inside "Footer / Ambient Glow"), Tablet `200:651`, Mobile `200:800`.
+
+| Item        | Desktop                                                                             | Tablet                                         | Mobile                                                         |
+| ----------- | ----------------------------------------------------------------------------------- | ---------------------------------------------- | -------------------------------------------------------------- |
+| FAQ section | 18 below Use Cases; padding 80; gap 48; min-height 989                              | 32 below; padding 64 / 32; gap 32              | 24 below; padding 48 / 20; gap 28                              |
+| FAQ item    | 900; padding 20 / 24; radius 12; gap 13; collapsed 76                               | 704                                            | 350; padding 20 / 16                                           |
+| FAQ type    | question `Heading/Medium` 24 / 1.4; answer `Body/Regular` 20 / 1.6 (Text/Secondary) | same                                           | same                                                           |
+| Pricing     | 42 below FAQ; padding 64; gap 40; 3 × 384, gap 24                                   | 32 below; one column 520, gap 32               | 24 below; padding 48 / 20 / 56; gap 32; one column 350, gap 28 |
+| Plan card   | 384 × 520 (min); radius 20; padding 32; gap 24                                      | 520 × 520                                      | 350 × 520                                                      |
+| CTA panel   | 1200 × 366; padding 80 / 64; gap 24; radius 24; 86 to footer                        | 704 × 302; padding 56 / 32; frame 32 / 64 + 32 | 350 × 361; padding 40 / 20; gap 20; frame 24 / 48 + 24         |
+
+**Differences from Figma (documented):**
+
+1. **Desktop Pricing intro (P07-D5):** Figma's Desktop has only the card set; the Tablet intro
+   (eyebrow, heading, description, note) is reused on Desktop at the Desktop section scale (40 /
+   20). The Desktop Pricing section is therefore taller than the 602 set.
+2. **Desktop card height:** 532.8 instead of 520: at the 318 inner width the Plus and Pro
+   descriptions wrap to two lines (Figma's Desktop set shows only the one-line Starter copy); the
+   grid keeps the three cards equal.
+3. **FAQ line boxes:** Figma rounds the 33.6 question line to 34, so items are 0.8 shorter (75.2 /
+   151.2 vs 76 / 152).
+4. **Font stack (known, non-blocking; ClickUp typography task):** Mobile FAQ answer 01 wraps to 6
+   lines (Figma 5): item 01 is 279 instead of 248; FAQ Tablet section 866 vs 870.
+5. **Centring:** Figma places the Desktop FAQ at x 124 and the CTA panel at x 102 (off-centre by 4
+   and 18); both are centred.
+6. **CTA glow:** the Figma ellipse sits off-centre on Tablet and Mobile (x 340 in 704 / 350 panels)
+   and at 100% there; the owner-approved Cobalt Edge 20% glow is centred on every breakpoint.
+7. **Featured card base:** the component uses `#000000`; the placed instances use Obsidian, which
+   is used (a token).
