@@ -288,7 +288,7 @@ Constraints: CSS first with the existing motion tokens, full `prefers-reduced-mo
 no new dependency without approval. The Showcase recording waveform and indicator stay static
 (P07-D17).
 
-## 8f. Increment 4 outcome (Features and How It Works, IN REVIEW)
+## 8f. Increment 4 outcome (Features and How It Works, COMPLETE: PR #56, `b364cd5`)
 
 - **Mariam's delivery** `munsit-delivery-landing-features-how-it-works-20261119-v1.zip` (SHA-256
   `5546d504…`; baseline `01453f4`): the eight contract files, applied verbatim (byte-identical)
@@ -313,6 +313,9 @@ no new dependency without approval. The Showcase recording waveform and indicato
     Inter face a `unicode-range` that excludes the space and Arabic-context punctuation, so Cairo
     draws them while Latin letters and numerals stay in Inter; it needs app-wide regression
     evidence.
+  - **Owner decision (2026-11-20):** the typography differences are accepted as known,
+    non-blocking discrepancies for Increment 4; the investigation is tracked separately and the
+    `unicode-range` fix is not approved for implementation.
   - **Figma inconsistency:** the Desktop Features frame draws card 01 on the left (mirrored), while
     Figma Tablet and How It Works put 01 at the inline start. The approved contract (§4,
     "card or step 01 at the inline start") is followed.

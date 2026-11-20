@@ -45,13 +45,16 @@ Single resume point. A new session starts by reading this file, the latest phase
     2026-11-20). The Hero video is a **provisional development asset**; production approval is
     DENIED (gate closed) until a product-accurate replacement and a portrait master exist.
     Report: [phases/phase-07-hero-media.md](phases/phase-07-hero-media.md).
-  - **Increment 4 (Features and How It Works): IN PROGRESS** (branch
-    `feat/phase-07-mariam-integration`; PR open, not merged). Mariam's delivery is
-    **DELIVERED / AWAITING REVIEW**, applied verbatim; integration adds the Figma visuals and page
-    wiring. Outcome and the typography finding: plan §8f.
+  - **Increment 4 (Features and How It Works): COMPLETE** (PR #56, merged as `b364cd5`; owner
+    approved 2026-11-20; post-merge CI green). Original implementation by **Mariam** (delivery
+    v1, **ACCEPTED / INTEGRATED**, byte-identical); integration by Yousef (Figma visuals, page
+    wiring, E2E). Typography differences accepted as known, non-blocking (plan §8f; ClickUp
+    "Phase 07 — Investigate Arabic Typography and Font Fallback", fix not approved).
+  - **Increment 5 (FAQ, Pricing, Final CTA): NOT STARTED.** Proposal for owner review:
+    [phases/phase-07-increment-5-proposal.md](phases/phase-07-increment-5-proposal.md).
+  - **Increment 6 (Verification and closure): NOT STARTED.**
   - **ClickUp:** set up 2026-11-19 (docs/project-management/clickup-workflow.md).
-  - **Next:** owner review of the Increment 4 PR; Increment 5 (FAQ, Pricing, Final CTA) not
-    started.
+  - **Next:** owner decision on the Increment 5 proposal.
   - **Maintenance (recommended, not done):** add `.playwright-mcp/` (local output of the
     Playwright MCP browser tool: page snapshots and console logs) to `.gitignore` in a
     separate change; untracked, it fails `prettier --check` and lint.
