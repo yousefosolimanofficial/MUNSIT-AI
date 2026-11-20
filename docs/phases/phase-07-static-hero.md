@@ -111,17 +111,48 @@ image: the lowest 1% of background pixels gave 3.57:1, below the 4.5:1 required 
 - **Desktop and Mobile unaffected:** the values are identical before and after, and the Hero
   screenshots at 1440, 1280, 390 and 320 (ar and en, including reduced motion) are pixel-identical.
   On Tablet, only the band around the description changes.
-- **Remaining pixel-level notes, not corrected (outside this scope):**
-  - Heading (large text, 3:1): the 1st percentile is 3.6 or more everywhere, but single pixels
-    under its line boxes reach 2.72 on Desktop and upper Tablet (bright glints).
-  - English Mobile at 320: the description's 1st percentile is 4.58, with a minimum pixel of 3.41.
-    English copy is unapproved and gated in production (P07-D1).
+  **Final accessibility corrections (owner instruction 2026-11-20, before merge).** Two remaining
+  failures were corrected the same way: a soft, localized radial scrim drawn as the text's own
+  `::before` layer, with no change to the image, cropping, glows, dimensions, typography or positions.
 
-E2E asserts:
+- **Heading (large text, 3:1):** small clusters of bright hologram glints near the start of its
+  first line failed. They covered 17–72 px (0.02–0.11%) on Desktop and upper Tablet, and 1–3 px at
+  719–768.
+  - Correction: `AMBIENT.heroHeadingScrim`, 20% with a wide flat core (75%, 120 px beyond the
+    heading at each side), on every breakpoint.
+  - Strength: 0.15 and a narrower core fail on Desktop; 0.25 only adds margin.
+- **English Mobile description (16 px, 4.5:1):** at 320, the fifth line crossed a bright area
+  (0.95% of the pixels).
+  - Correction: `AMBIENT.heroTextScrimMobile`, 30%, under 720 px.
+  - Strength: 0.25 leaves only 0.07.
+  - Arabic Mobile layout is unchanged; its pixels are slightly darker behind the text.
+- **Unchanged:** the Tablet description (40%) and the Desktop description (no scrim: 24 px is large
+  text, already at or above 3:1).
 
-- the composited Tablet description at 4.5:1 or more at every pixel (720, 768, 1024, 1279);
-- the scrim on Tablet only;
-- the heading everywhere and the description on Desktop and Mobile over the image.
+Composited page, minimum pixel (before → after):
+
+| Width | Heading ar  | Heading en  | Description ar (threshold) | Description en (threshold) |
+| ----- | ----------- | ----------- | -------------------------- | -------------------------- |
+| 320   | 3.71 → 5.30 | 4.07 → 5.73 | 4.98 → 7.64 (4.5)          | **3.41 → 4.89** (4.5)      |
+| 390   | 3.01 → 4.40 | 3.87 → 5.52 | 4.91 → 7.58 (4.5)          | 5.13 → 7.22 (4.5)          |
+| 719   | 3.00 → 4.43 | 3.76 → 5.41 | 5.49 → 8.15 (4.5)          | 4.93 → 7.58 (4.5)          |
+| 720   | 3.19 → 4.64 | 2.96 → 4.31 | 5.85 (unchanged, 4.5)      | 4.68 (unchanged, 4.5)      |
+| 768   | 3.24 → 4.72 | 2.93 → 4.30 | 6.22 (unchanged, 4.5)      | 6.54 (unchanged, 4.5)      |
+| 1024  | 3.05 → 4.48 | 2.76 → 4.10 | 6.02 (unchanged, 4.5)      | 6.36 (unchanged, 4.5)      |
+| 1279  | 2.75 → 4.07 | 2.72 → 4.03 | 4.86 (unchanged, 4.5)      | 5.53 (unchanged, 4.5)      |
+| 1280  | 2.78 → 4.07 | 2.78 → 3.68 | 3.28 (unchanged, 3, large) | 3.27 (unchanged, 3, large) |
+| 1440  | 2.72 → 3.36 | 2.72 → 3.81 | 3.35 (unchanged, 3, large) | 3.21 (unchanged, 3, large) |
+| 1920  | 2.70 → 3.22 | 2.72 → 4.03 | 3.35 (unchanged, 3, large) | 3.24 (unchanged, 3, large) |
+
+No pixel under any Hero text's line boxes is below its threshold, at any measured width, in either
+language. Geometry is unchanged: heading and image boxes are the same, overflow 0, layout shift 0.
+
+E2E asserts, on the composited page at every pixel:
+
+- the Tablet description at 4.5:1 or more (720, 768, 1024, 1279);
+- the Mobile description at 4.5:1 or more (ar and en, 320 and 390);
+- the heading at 3:1 or more (ar 390, 768, 1279, 1440, 1920; en 768, 1024, 1440);
+- the scrim scope (heading everywhere; description on Mobile and Tablet, not Desktop).
 
 ## 5a. Image quality (browser rendering, 2026-11-20)
 

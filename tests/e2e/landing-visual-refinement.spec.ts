@@ -14,9 +14,9 @@ const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 /** Any request for the superseded video files or their poster. */
 const VIDEO_MEDIA = /\.(mp4|webm)(\?|$)|hero-ambient/;
 
-async function open(page: Page, width: number, height = 1000) {
+async function open(page: Page, width: number, height = 1000, path = "/") {
   await page.setViewportSize({ width, height });
-  await page.goto("/");
+  await page.goto(path);
   await page.evaluate(() => document.fonts.ready);
 }
 
@@ -262,22 +262,74 @@ test.describe("Hero media (static Figma image, P07-D21)", () => {
     });
   }
 
-  test("the description scrim exists on Tablet only (Desktop and Mobile unchanged)", async ({
+  // Heading (large text, 3:1) and Mobile description (16 px, 4.5:1), every pixel of the composited
+  // page, in both languages (English is development-only, P07-D1).
+  for (const [path, width] of [
+    ["/", 390],
+    ["/", 768],
+    ["/", 1279],
+    ["/", 1440],
+    ["/", 1920],
+    ["/en", 768],
+    ["/en", 1024],
+    ["/en", 1440],
+  ] as const) {
+    test(`heading ${path} ${width}: ≥ 3:1 at every pixel of the composited page`, async ({
+      page,
+    }) => {
+      await page.emulateMedia({ reducedMotion: "reduce" });
+      await open(page, width, 1000, path);
+      await expect
+        .poll(() => heroImage(page).evaluate((img: HTMLImageElement) => img.complete))
+        .toBe(true);
+      expect(await compositedContrast(page, "#landing-hero-heading")).toBeGreaterThanOrEqual(3);
+    });
+  }
+
+  for (const [path, width] of [
+    ["/en", 320],
+    ["/en", 390],
+    ["/", 320],
+    ["/", 390],
+  ] as const) {
+    test(`Mobile description ${path} ${width}: ≥ 4.5:1 at every pixel of the composited page`, async ({
+      page,
+    }) => {
+      await page.emulateMedia({ reducedMotion: "reduce" });
+      await open(page, width, 1000, path);
+      await expect
+        .poll(() => heroImage(page).evaluate((img: HTMLImageElement) => img.complete))
+        .toBe(true);
+      expect(
+        await compositedContrast(page, "[data-landing-hero-description]"),
+      ).toBeGreaterThanOrEqual(4.5);
+    });
+  }
+
+  test("contrast scrims: heading on every breakpoint; description on Mobile and Tablet, not Desktop", async ({
     page,
   }) => {
-    const scrim = () =>
-      page.locator("[data-landing-hero-description]").evaluate((el) => {
+    const scrim = (selector: string) =>
+      page.locator(selector).evaluate((el) => {
         const s = getComputedStyle(el, "::before");
-        return { display: s.display, content: s.content, image: s.backgroundImage };
+        return { display: s.display, image: s.backgroundImage };
       });
+    const description = "[data-landing-hero-description]";
+    const heading = "#landing-hero-heading";
+    for (const width of [390, 768, 1440]) {
+      await open(page, width);
+      const h = await scrim(heading);
+      expect(h.display, `heading scrim at ${width}`).not.toBe("none");
+      expect(h.image).toContain("radial-gradient");
+    }
+    await open(page, 390);
+    expect((await scrim(description)).image).toContain("radial-gradient");
     await open(page, 768);
-    const tablet = await scrim();
+    const tablet = await scrim(description);
     expect(tablet.display).not.toBe("none");
     expect(tablet.image).toContain("radial-gradient");
     await open(page, 1440);
-    expect((await scrim()).display).toBe("none");
-    await open(page, 390);
-    expect((await scrim()).content).toBe("none");
+    expect((await scrim(description)).display).toBe("none");
   });
 
   test("768: heading contrast over the image ≥ 3", async ({ page }) => {

@@ -117,18 +117,27 @@ export function LandingHero({ copy, image }: LandingHeroProps) {
           className="flex w-full max-w-[350px] flex-col items-center gap-[36px] text-center rail:max-w-[704px] xl:max-w-[760px]"
           data-landing-hero-text=""
         >
+          {/* Contrast corrections (P07-D21): soft scrims behind the heading (every breakpoint) and
+              the description (Mobile and Tablet), each drawn as the text's own ::before layer, so
+              nothing moves; the Hero clips their overflow. Values: landing-styles.ts. */}
           <h1
             id="landing-hero-heading"
-            className="text-landing-heading-section-tablet text-text-primary rail:text-[44px] xl:min-h-[143px] xl:max-w-[651px] xl:text-heading-display"
+            className="relative isolate text-landing-heading-section-tablet text-text-primary before:pointer-events-none before:absolute before:-inset-x-[120px] before:-inset-y-[24px] before:-z-10 before:bg-(image:--hero-heading-scrim) rail:text-[44px] xl:min-h-[143px] xl:max-w-[651px] xl:text-heading-display"
+            style={
+              {
+                "--hero-heading-scrim": AMBIENT.heroHeadingScrim.backgroundImage,
+              } as React.CSSProperties
+            }
           >
             {copy.heading}
           </h1>
-          {/* Tablet contrast correction (P07-D21): a soft scrim behind the description only, drawn
-              as its own ::before layer (outside the text; the Hero clips its overflow). */}
           <p
-            className="text-landing-label-strong text-text-primary/90 rail:relative rail:isolate rail:text-landing-label-title rail:before:pointer-events-none rail:before:absolute rail:before:-inset-x-[96px] rail:before:-inset-y-[24px] rail:before:-z-10 rail:before:bg-(image:--hero-text-scrim) xl:text-heading-medium xl:before:hidden"
+            className="relative isolate text-landing-label-strong text-text-primary/90 before:pointer-events-none before:absolute before:-inset-x-[96px] before:-inset-y-[24px] before:-z-10 before:bg-(image:--hero-text-scrim-mobile) rail:text-landing-label-title rail:before:bg-(image:--hero-text-scrim) xl:text-heading-medium xl:before:hidden"
             style={
-              { "--hero-text-scrim": AMBIENT.heroTextScrim.backgroundImage } as React.CSSProperties
+              {
+                "--hero-text-scrim": AMBIENT.heroTextScrim.backgroundImage,
+                "--hero-text-scrim-mobile": AMBIENT.heroTextScrimMobile.backgroundImage,
+              } as React.CSSProperties
             }
             data-landing-hero-description=""
           >

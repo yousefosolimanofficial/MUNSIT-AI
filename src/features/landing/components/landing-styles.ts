@@ -41,14 +41,28 @@ export const AMBIENT = {
       `radial-gradient(ellipse 60% 40% at 50% 92%, ${sky(9)}, transparent 70%)`,
     ].join(", "),
   },
-  /** Hero description, Tablet only (owner-approved contrast correction for P07-D21, 2026-11-20): a
-   *  soft, localized Void Black darkening behind the 20 px description. It is flat at 40% in its
-   *  centre and transparent at its edges (no visible box), so the white text keeps at least 4.5:1
-   *  over the static image at every pixel from 720 to 1279 (measured on the composited page).
-   *  0.40 is the smallest step with a margin: 0.30 fails, and 0.35 leaves 0.03 at the weakest pixel. */
+  /*
+   * Hero text contrast corrections over the static Figma image (owner-approved, P07-D21,
+   * 2026-11-20). Soft, localized Void Black radial darkening behind the text only: flat in the
+   * centre, transparent at the edges (no visible box, no blur). The image is not changed.
+   * Strengths are the smallest steps that keep every pixel under the text's line boxes at or above
+   * the WCAG threshold with a margin, measured on the composited page (phase-07-static-hero.md §5).
+   */
+  /** Description, Tablet (720–1279, 20 px, 4.5:1): 40%. 0.30 fails; 0.35 leaves 0.03. */
   heroTextScrim: {
     backgroundImage:
       "radial-gradient(closest-side, rgb(4 5 6 / 0.4) 0%, rgb(4 5 6 / 0.4) 65%, rgb(4 5 6 / 0) 100%)",
+  },
+  /** Description, Mobile (< 720, 16 px, 4.5:1): 30%. English at 320 needs it; 0.25 leaves 0.07. */
+  heroTextScrimMobile: {
+    backgroundImage:
+      "radial-gradient(closest-side, rgb(4 5 6 / 0.3) 0%, rgb(4 5 6 / 0.3) 65%, rgb(4 5 6 / 0) 100%)",
+  },
+  /** Heading, every breakpoint (large text, 3:1): 20% with a wide flat core (75%), so the bright
+   *  hologram glints near the heading's start are inside it. 0.15 and a narrower core fail. */
+  heroHeadingScrim: {
+    backgroundImage:
+      "radial-gradient(closest-side, rgb(4 5 6 / 0.2) 0%, rgb(4 5 6 / 0.2) 75%, rgb(4 5 6 / 0) 100%)",
   },
   /** Hero bottom edge: fades the media into the page base, so the section boundary disappears. */
   heroFade: {

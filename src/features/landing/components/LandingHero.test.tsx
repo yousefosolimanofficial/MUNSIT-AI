@@ -62,19 +62,31 @@ describe("LandingHero", () => {
     expect(img?.className).not.toMatch(/animate-|transition/);
   });
 
-  it("Tablet contrast correction: a scrim layer behind the description, Tablet only", () => {
+  it("contrast corrections: description scrim on Mobile (30%) and Tablet (40%), not Desktop", () => {
     const { container } = renderHero(HERO_IMAGE);
     const description = container.querySelector<HTMLElement>("[data-landing-hero-description]");
     expect(description?.textContent).toBe(ar.description);
     const classes = description?.className.split(" ") ?? [];
-    // Drawn as the description's own ::before layer from `rail` up, behind the text.
-    expect(classes).toContain("rail:before:absolute");
-    expect(classes).toContain("rail:before:-z-10");
+    // Drawn as the description's own ::before layer, behind the text.
+    expect(classes).toContain("before:absolute");
+    expect(classes).toContain("before:-z-10");
+    expect(classes).toContain("before:bg-(image:--hero-text-scrim-mobile)");
     expect(classes).toContain("rail:before:bg-(image:--hero-text-scrim)");
-    // Not on Desktop; nothing on Mobile (every scrim class is `rail:`-prefixed).
     expect(classes).toContain("xl:before:hidden");
-    expect(classes.filter((c) => c.startsWith("before:"))).toEqual([]);
-    expect(description?.style.getPropertyValue("--hero-text-scrim")).toContain("radial-gradient");
+    expect(description?.style.getPropertyValue("--hero-text-scrim")).toContain("/ 0.4)");
+    expect(description?.style.getPropertyValue("--hero-text-scrim-mobile")).toContain("/ 0.3)");
+  });
+
+  it("contrast corrections: heading scrim (20%) on every breakpoint; text unchanged", () => {
+    const { container } = renderHero(HERO_IMAGE);
+    const heading = container.querySelector<HTMLElement>("#landing-hero-heading");
+    expect(heading?.textContent).toBe(ar.heading);
+    const classes = heading?.className.split(" ") ?? [];
+    expect(classes).toContain("before:absolute");
+    expect(classes).toContain("before:-z-10");
+    expect(classes).toContain("before:bg-(image:--hero-heading-scrim)");
+    expect(classes.some((c) => c.endsWith("before:hidden"))).toBe(false);
+    expect(heading?.style.getPropertyValue("--hero-heading-scrim")).toContain("/ 0.2)");
   });
 
   it("no video, no poster and no Pause/Play control (P07-D21)", () => {
