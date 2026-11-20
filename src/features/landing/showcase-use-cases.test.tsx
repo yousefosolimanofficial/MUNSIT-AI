@@ -9,7 +9,12 @@ import { MESSAGES } from "@/i18n/messages";
 
 import { LandingShowcase, type LandingShowcaseCopy } from "./components/LandingShowcase";
 import { LandingUseCases, type LandingUseCasesCopy } from "./components/LandingUseCases";
-import { SHOWCASE_SCREEN, USE_CASE_IMAGES } from "./model/landing-images";
+import {
+  FEATURE_IMAGES,
+  SHOWCASE_SCREEN,
+  STEP_IMAGES,
+  USE_CASE_IMAGES,
+} from "./model/landing-images";
 
 /* Phase 07 Increment 3: Showcase and Use Cases units, with the real message catalogs. */
 
@@ -154,7 +159,7 @@ function webpSize(file: Buffer) {
 }
 
 describe("landing images", () => {
-  it.each([SHOWCASE_SCREEN, ...USE_CASE_IMAGES])(
+  it.each([SHOWCASE_SCREEN, ...USE_CASE_IMAGES, ...FEATURE_IMAGES, ...STEP_IMAGES])(
     "$src exists as WebP at its source size",
     (image) => {
       const file = readFileSync(join(process.cwd(), "public", image.src));
@@ -163,8 +168,15 @@ describe("landing images", () => {
     },
   );
 
+  it("six feature visuals and four step visuals, in card order", () => {
+    expect(FEATURE_IMAGES).toHaveLength(6);
+    expect(STEP_IMAGES).toHaveLength(4);
+  });
+
   it("every asset is used once (no duplicates)", () => {
-    const sources = [SHOWCASE_SCREEN, ...USE_CASE_IMAGES].map((image) => image.src);
+    const sources = [SHOWCASE_SCREEN, ...USE_CASE_IMAGES, ...FEATURE_IMAGES, ...STEP_IMAGES].map(
+      (image) => image.src,
+    );
     expect(new Set(sources).size).toBe(sources.length);
   });
 });
