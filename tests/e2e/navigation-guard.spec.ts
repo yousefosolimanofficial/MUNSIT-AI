@@ -38,17 +38,48 @@ async function openHarness(page: Page, prefix: string) {
   await waitForHydration(page, page.getByTestId("guard-toggle"));
 }
 
-/** Listeners of the types the guard may add (Chromium DevTools protocol listener registry). */
+/**
+ * Every Navigation Guard handler calls `departed()` (NavigationGuardProvider.tsx), and no framework
+ * listener does. The marker identifies the guard's own listeners, so listeners added by Next.js
+ * itself (for example its router's `popstate` listener, attached while a route compiles) are not
+ * counted. The E2E suite runs on `next dev`, which keeps the source identifiers.
+ */
+const GUARD_HANDLER = /\bdeparted\(\)/;
+
+/**
+ * Listeners OWNED BY THE GUARD, by type (Chromium DevTools protocol listener registry; each
+ * handler's source is read to keep only the guard's).
+ */
 async function guardListenerCounts(page: Page) {
   const cdp = await page.context().newCDPSession(page);
   const listenersOf = async (expression: string) => {
-    const { result } = await cdp.send("Runtime.evaluate", { expression });
+    // An object group is required for the protocol to return each listener's handler function.
+    const { result } = await cdp.send("Runtime.evaluate", {
+      expression,
+      objectGroup: "guard-listeners",
+    });
     if (!result.objectId) return [];
-    return (await cdp.send("DOMDebugger.getEventListeners", { objectId: result.objectId }))
-      .listeners;
+    const { listeners } = await cdp.send("DOMDebugger.getEventListeners", {
+      objectId: result.objectId,
+    });
+    const owned: typeof listeners = [];
+    for (const listener of listeners) {
+      const handler = listener.handler?.objectId;
+      if (!handler) continue;
+      const { result: source } = await cdp.send("Runtime.callFunctionOn", {
+        objectId: handler,
+        functionDeclaration: "function () { return Function.prototype.toString.call(this); }",
+        returnByValue: true,
+      });
+      if (typeof source.value === "string" && GUARD_HANDLER.test(source.value)) {
+        owned.push(listener);
+      }
+    }
+    return owned;
   };
   const onWindow = await listenersOf("window");
   const onNavigation = await listenersOf("window.navigation ?? null");
+  await cdp.send("Runtime.releaseObjectGroup", { objectGroup: "guard-listeners" });
   await cdp.detach();
   const count = (type: string, capture: boolean) =>
     onWindow.filter((l) => l.type === type && l.useCapture === capture).length;
@@ -135,6 +166,8 @@ for (const { locale, dir, prefix, nav, shell, guard } of LOCALES) {
       await harnessAfterDashboard(page, prefix);
       const length = await page.evaluate(() => history.length);
       const before = await guardListenerCounts(page);
+      // Guard off: it owns no listener at all.
+      expect(before).toEqual({ clickCapture: 0, popstate: 0, beforeunload: 0, navigate: 0 });
       await guardOn(page);
       expect(await guardListenerCounts(page)).toEqual({
         ...before,
@@ -476,13 +509,23 @@ for (const { locale, dir, prefix, nav, shell, guard } of LOCALES) {
       page,
     }) => {
       await page.goto(`${prefix}/dashboard`);
-      await page
+      // The click must be a client-side navigation, so all three entries share one document (a
+      // same-document jump is what the guard can cancel and ask about). Before hydration the
+      // link would fall back to a full page load: wait until the sidebar is hydrated first.
+      const lectures = page
         .locator('[data-shell="sidebar"]')
-        .getByRole("link", { name: nav.destinations.lectures })
-        .click();
+        .getByRole("link", { name: nav.destinations.lectures });
+      await waitForHydration(page, lectures);
+      await page.evaluate(() => {
+        (window as unknown as { sameDocument: boolean }).sameDocument = true;
+      });
+      await lectures.click();
       await expect(page).toHaveURL((url) => url.pathname === `${prefix}/lectures`);
-      await waitForHydration(page, page.locator('[data-shell="sidebar"] a').first());
       await clientNavigate(page, `${prefix}/dev/fixtures/navigation-guard`);
+      expect(
+        await page.evaluate(() => (window as unknown as { sameDocument?: boolean }).sameDocument),
+        "dashboard → lectures → harness stayed in one document",
+      ).toBe(true);
       await guardOn(page);
       await page.evaluate(() => history.go(-2));
       await expect(guardDialog(page)).toBeVisible();
@@ -594,6 +637,7 @@ for (const { locale, dir, prefix, nav, shell, guard } of LOCALES) {
     }) => {
       await openHarness(page, prefix);
       const before = await guardListenerCounts(page);
+      expect(before).toEqual({ clickCapture: 0, popstate: 0, beforeunload: 0, navigate: 0 });
       await guardOn(page);
       await page.getByTestId("guard-in-page-link").click();
       await leave(page).click();
