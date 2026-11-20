@@ -271,7 +271,7 @@ prepared after Increment 1, from the starter package (offline procedure).
 - **Mariam:** her starter is SENT / AWAITING IMPLEMENTATION (§8c). Her delivery is not
   received, reviewed or accepted.
 
-## 8e. Landing Visual Refinement (IN REVIEW)
+## 8e. Landing Visual Refinement (COMPLETE: PR #55)
 
 Approved by the owner on 2026-11-19 (P07-D17) as planning; the go-ahead came on 2026-11-20 (after
 the ClickUp setup). Implemented on `feat/phase-07-hero-media-visual-refinement` with the Hero
@@ -287,6 +287,35 @@ the open owner decisions: [phase-07-hero-media.md](phase-07-hero-media.md).
 Constraints: CSS first with the existing motion tokens, full `prefers-reduced-motion` support,
 no new dependency without approval. The Showcase recording waveform and indicator stay static
 (P07-D17).
+
+## 8f. Increment 4 outcome (Features and How It Works, IN REVIEW)
+
+- **Mariam's delivery** `munsit-delivery-landing-features-how-it-works-20261119-v1.zip` (SHA-256
+  `5546d504…`; baseline `01453f4`): the eight contract files, applied verbatim (byte-identical)
+  as their own commit. Code written by Mariam; the Git author is the integrator, as for earlier
+  deliveries. Her 41 unit tests pass on current `main`.
+- **Her open questions, checked in Figma:** the Feature Card stroke is `INSIDE` and outside the
+  layout (padding 24 from the outer edge), so her `p-[23px]` + 1px border is correct; the Step Card
+  stroke is inside the layout (20 + 1 = inner 240), correct; the connector dot is an `ELLIPSE`
+  (round), correct.
+- **Integration (Yousef):** the ten Figma visuals (matched by image hash, WebP at 1376 × 768,
+  design-values §16.4); page wiring with landmark names from the section headings (her request);
+  Figma section gaps (Desktop 90 / 0, Tablet 32, Mobile 24); Desktop minimum heights 1000 / 820,
+  because Figma's Desktop section frames are fixed-height with empty space below the content; the
+  approved scroll reveal on each section. Her files are unchanged.
+- **Figma match:** Arabic exact at 1440 / 768 / 390 (cards, visuals, section positions: Features
+  1967, How It Works 2967, Use Cases 3787 on Desktop), except:
+  - **Typography (documented, not changed):** the shared stack `Inter, Cairo` draws spaces and
+    Latin punctuation inside Arabic text with Inter (a deliberate Phase 02 rule for numerals and
+    Latin), so Arabic lines are ~2% wider than Figma. Effects: the Features intro wraps to 3 lines
+    on Desktop (Figma 2; absorbed by the 1000 minimum height), and steps 03–04 wrap to 3 lines at
+    768 (How It Works 916 vs 892). Proposed fix for a separate, approved design-system PR: give the
+    Inter face a `unicode-range` that excludes the space and Arabic-context punctuation, so Cairo
+    draws them while Latin letters and numerals stay in Inter; it needs app-wide regression
+    evidence.
+  - **Figma inconsistency:** the Desktop Features frame draws card 01 on the left (mirrored), while
+    Figma Tablet and How It Works put 01 at the inline start. The approved contract (§4,
+    "card or step 01 at the inline start") is followed.
 
 ## 9. Increments and PR boundaries
 

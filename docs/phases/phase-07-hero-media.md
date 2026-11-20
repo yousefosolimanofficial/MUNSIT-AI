@@ -1,6 +1,8 @@
 # Phase 07 — Hero media and Visual Refinement (provisional)
 
-Status: **IN REVIEW** (branch `feat/phase-07-hero-media-visual-refinement`). Owner instruction
+Status: **COMPLETE** (PR #55, merged as `0826ab1`, post-merge CI green; owner accepted
+2026-11-20). The video stays a **provisional development asset**: production approval is DENIED
+(gate closed) until a product-accurate replacement exists. Owner instruction
 2026-11-20: integrate the owner's existing Hero video as a **provisional development asset** and
 start the approved Visual Refinement (P07-D17, plan §8e). Nothing here is production-approved.
 
