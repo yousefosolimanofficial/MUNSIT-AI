@@ -23,7 +23,7 @@ import { FOCUS_RING, INTERACTIVE_TRANSITION } from "./landing-styles";
  * - Brand: the Horizontal logo, linking to the Landing.
  *
  * No hooks: these render in the server header and in the client menu sheet.
- * The primary "ابدأ مجانًا" CTA is in the Hero, never in the navigation (owner decision).
+ * The primary "ابدأ الآن" CTA (P07-D24) is in the Hero, never in the navigation (owner decision).
  */
 
 export type LandingActionVariant = "solid" | "outline";

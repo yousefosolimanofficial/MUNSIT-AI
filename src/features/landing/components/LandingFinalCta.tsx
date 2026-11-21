@@ -11,7 +11,7 @@ import { AMBIENT, CTA_GLOW, FOCUS_RING, INTERACTIVE_TRANSITION } from "./landing
  * 120) as a radial gradient (no blur filter). Heading `Landing/Heading/Section` 40 / 32 / 26;
  * description `Body/Lead` 20 (560 wide) / `Body/Large` 18 / `Base Mobile` 15, Text/Secondary.
  *
- * Actions (Figma order): "ابدأ مجانًا" first (inline start), "اكتشف المميزات" second; a row with gap
+ * Actions (Figma order): "ابدأ الآن" first (P07-D24; Figma "ابدأ مجانًا"), "اكتشف المميزات" second; a row with gap
  * 16 on Desktop and Tablet, a full-width column with gap 12 on Mobile. Both 48 high, radius 8,
  * padding 28: the primary is Mist with an Iron label → the Register route (P07-D3); the outline
  * has a Slate border and a white label → `#features`. Hover: the approved CTA transitions.

@@ -46,7 +46,7 @@ note otherwise.
 | ----------------- | ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | hero.heading      | كل كلمة ليها قيمة ومنصت مش بيفوّت كلمة                                                          | Every word matters, and Munsit doesn't miss a single one                                                                                                |
 | hero.description  | منصتك الذكية لفهم المحاضرات، وتحويلها إلى ملخصات منظمة وأسئلة تفاعلية تساعدك تتعلم بكفاءة أكبر | Your smart platform for understanding lectures and turning them into organized summaries and interactive questions that help you learn more efficiently |
-| hero.ctaPrimary   | ابدأ مجانًا                                                                                     | Get started free                                                                                                                                        |
+| hero.ctaPrimary   | ابدأ الآن (P07-D24; Figma: ابدأ مجانًا)                                                         | Get started                                                                                                                                             |
 | hero.ctaSecondary | اكتشف كيف يعمل                                                                                 | See how it works                                                                                                                                        |
 
 **Hero video control labels.** These are not Figma copy. The owner approved them (P07-D15,
@@ -207,7 +207,7 @@ P07-D19).
 | cta.heading     | جاهز تخلي كل محاضرة خطوة لقدّام؟                                                                    | Ready to make every lecture a step forward?                                                                                   |
 | cta.description | ابدأ رحلتك مع منصت، وخلّي الذكاء الاصطناعي يساعدك تنظم محاضراتك، تفهم معلوماتك، وتراجع بطريقة أذكى. | Start your journey with Munsit, and let AI help you organize your lectures, understand your material and review more smartly. |
 | cta.secondary   | اكتشف المميزات                                                                                     | Explore features                                                                                                              |
-| cta.primary     | ابدأ مجانًا                                                                                         | Get started free                                                                                                              |
+| cta.primary     | ابدأ الآن (P07-D24; Figma: ابدأ مجانًا)                                                             | Get started                                                                                                                   |
 
 ## 10. Footer
 

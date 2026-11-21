@@ -35,7 +35,8 @@ import { AMBIENT, CTA_GLOW, FOCUS_RING, INTERACTIVE_TRANSITION } from "./landing
  *   - Mobile: a full-width column, gap 12.
  *   - The primary is at the inline start (first).
  *   - The buttons are Landing-local (46 / 48 high, radius 16), not the shared 44-high `Button`.
- * - Primary "ابدأ مجانًا" → the approved Register route (P07-D3: no plan, no purchase wording).
+ * - Primary "ابدأ الآن" (P07-D24: replaces the Figma "ابدأ مجانًا", an unverified free claim) →
+ *   the approved Register route (P07-D3: no plan, no purchase wording).
  *   Outline "اكتشف كيف يعمل" → `#how-it-works`. The primary CTA is never in the navigation.
  */
 
