@@ -341,6 +341,78 @@ test.describe("Hero media (static Figma image, P07-D21)", () => {
   });
 });
 
+/**
+ * The largest jump in mean luminance (0–255) between adjacent rendered rows within 4 px of a
+ * horizontal page coordinate, over the middle half of the viewport (screenshot decoded in the
+ * page). A visible seam shows as a large jump; a smooth falloff does not.
+ */
+async function rowStep(page: Page, y: number) {
+  const width = page.viewportSize()?.width ?? 0;
+  const top = Math.round(y) - 4;
+  const png = await page.screenshot({
+    fullPage: true,
+    clip: { x: Math.round(width / 4), y: top, width: Math.round(width / 2), height: 8 },
+  });
+  return page.evaluate(async (b64) => {
+    const img = new Image();
+    img.src = `data:image/png;base64,${b64}`;
+    await img.decode();
+    const canvas = document.createElement("canvas");
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    if (!ctx) return 255;
+    ctx.drawImage(img, 0, 0);
+    const row = (r: number) => {
+      const d = ctx.getImageData(0, r, canvas.width, 1).data;
+      let sum = 0;
+      for (let i = 0; i < d.length; i += 4) {
+        sum += 0.2126 * (d[i] ?? 0) + 0.7152 * (d[i + 1] ?? 0) + 0.0722 * (d[i + 2] ?? 0);
+      }
+      return sum / (d.length / 4);
+    };
+    let largest = 0;
+    for (let r = 1; r < canvas.height; r += 1)
+      largest = Math.max(largest, Math.abs(row(r) - row(r - 1)));
+    return largest;
+  }, png.toString("base64"));
+}
+
+test.describe("Section transitions (no visible seams, 2026-11-21)", () => {
+  // Before: the Showcase glow was cut at the section edge (a jump of about 16 of 255 against
+  // Features); at 1280 the Hero letterbox showed the ambient haze as a lighter band (about 5).
+  for (const width of [1440, 1280, 768, 390]) {
+    test(`${width}: the Showcase glow fades out before Features (no edge)`, async ({ page }) => {
+      await page.emulateMedia({ reducedMotion: "reduce" });
+      await open(page, width);
+      // The glow layer ends with the Showcase section (Features starts after its own margin).
+      const boundary = await page
+        .locator("section#showcase")
+        .evaluate((el) => el.getBoundingClientRect().bottom + window.scrollY);
+      expect(await rowStep(page, boundary)).toBeLessThan(2);
+    });
+  }
+
+  test("1280: the Hero letterbox under the contained image is Void Black (no lighter band)", async ({
+    page,
+  }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await open(page, 1280, 900);
+    await expect
+      .poll(() => heroImage(page).evaluate((img: HTMLImageElement) => img.complete))
+      .toBe(true);
+    const imageBottom = await heroImage(page).evaluate((img: HTMLImageElement) => {
+      const box = img.getBoundingClientRect();
+      const scale = Math.min(box.width / img.naturalWidth, box.height / img.naturalHeight);
+      return box.top + window.scrollY + (box.height + img.naturalHeight * scale) / 2;
+    });
+    expect(await heroImage(page).evaluate((img) => getComputedStyle(img).backgroundColor)).toBe(
+      "rgb(4, 5, 6)",
+    );
+    expect(await rowStep(page, imageBottom)).toBeLessThan(2);
+  });
+});
+
 test.describe("Ambient backgrounds", () => {
   test("glows use token colours only (no cyan) and stay inside their sections", async ({
     page,

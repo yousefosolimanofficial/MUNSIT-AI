@@ -24,7 +24,13 @@ import { LandingShowcase } from "./LandingShowcase";
 import { LandingUseCases } from "./LandingUseCases";
 import { HERO_IMAGE } from "../model/hero-media";
 import { FEATURE_IMAGES, STEP_IMAGES } from "../model/landing-images";
-import { AMBIENT, AMBIENT_LAYER, REVEAL, REVEAL_FADE } from "./landing-styles";
+import {
+  AMBIENT,
+  AMBIENT_LAYER,
+  REVEAL,
+  REVEAL_FADE,
+  SHOWCASE_GLOW_FALLOFF,
+} from "./landing-styles";
 
 /*
  * Landing page (Phase 07). Server Component, statically generated per locale.
@@ -152,7 +158,7 @@ export async function LandingPage({ locale }: { locale: AppLocale }) {
                   aria-hidden="true"
                   data-reveal=""
                   data-landing-ambient="showcase"
-                  className={`${AMBIENT_LAYER} ${REVEAL_FADE}`}
+                  className={`${AMBIENT_LAYER} ${REVEAL_FADE} ${SHOWCASE_GLOW_FALLOFF}`}
                   style={AMBIENT.showcase}
                 />
                 <LandingShowcase
