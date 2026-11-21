@@ -45,6 +45,11 @@ Single resume point. A new session starts by reading this file, the latest phase
     2026-11-20). The Hero video is a **provisional development asset**; production approval is
     DENIED (gate closed) until a product-accurate replacement and a portrait master exist.
     Report: [phases/phase-07-hero-media.md](phases/phase-07-hero-media.md).
+  - **Showcase design revision (P07-D22): IN REVIEW** (PR #61, rebased onto `main` after #60;
+    not merged; owner-approved Candidate B implemented: Desktop card 760 (widened from 700), 48 below the stage top;
+    Tablet 520; owner visual approval of the final build pending). The native Mobile live-transcription card replaces the Desktop and Tablet
+    screenshot. Mobile is pixel-identical, and the section heights and positions are unchanged.
+    Values: design-values §16.8. This is tracked separately from Increment 3 (complete).
   - **Increment 4 (Features and How It Works): COMPLETE** (PR #56, merged as `b364cd5`; owner
     approved 2026-11-20; post-merge CI green). Original implementation by **Mariam** (delivery
     v1, **ACCEPTED / INTEGRATED**, byte-identical); integration by Yousef (Figma visuals, page
@@ -60,9 +65,10 @@ Single resume point. A new session starts by reading this file, the latest phase
     access, the production gates, the Hero video assessment, production video requirements, the
     Visual Refinement and typography findings, and the remaining blockers. The provisional video
     is not production-approved.
-  - **Static Figma Hero image (P07-D21): IN REVIEW** (branch `feat/phase-07-static-hero-image`;
-    PR open, not merged). The original Figma image replaces the Hero video, and the video plan is
-    superseded. The production gate stays closed until the owner visually approves it. Contrast
+  - **Static Figma Hero image (P07-D21): IMPLEMENTATION COMPLETE** (PR #60, merged as `c712bd7`;
+    owner approved for merge 2026-11-20; post-merge CI green). The original Figma image replaces the
+    Hero video, and the video plan is superseded. **Production activation is NOT approved**: the gate
+    stays closed (`provisional: true`) until owner visual approval. Contrast
     corrections: Tablet and Mobile description, and the heading, meet WCAG at every pixel. Image softness
     (666 × 412 source) remains a known limitation:
     [phases/phase-07-static-hero.md](phases/phase-07-static-hero.md).
