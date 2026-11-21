@@ -1,8 +1,8 @@
 # Phase 07 — Compact Landing navbar (owner visual refinement, 2026-11-21)
 
-Status: **IN REVIEW** (branch `feat/phase-07-compact-navbar`). A narrowly scoped visual refinement
-of the Landing header; nothing else on the page changes. The decision is to be added to the
-Phase 07 owner-decision table (plan §2) once PR #61, which edits the same table, is merged.
+Status: **IN REVIEW** (PR #64; owner approved for merge 2026-11-21 after the combined visual review
+with PR #61). A narrowly scoped visual refinement of the Landing header; nothing else on the page
+changes. Owner decision **P07-D23** in the Phase 07 decision table (plan §2).
 
 ## 1. Owner request
 
