@@ -54,3 +54,36 @@ export async function waitForHydration(page: Page, target: Locator): Promise<voi
     .toBe(true);
   await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(resolve)));
 }
+
+/**
+ * Waits until no CSS transition or animation is still running on the element (or, with
+ * `subtree`, inside it). A transition that a later state change cancels (for example the end of
+ * a tap's brief :active state while its transition runs) rejects its `finished` promise with an
+ * AbortError, per the Web Animations specification. That is not a product failure: that
+ * cancellation (AbortError only) is ignored and the replacement transition is awaited in the next
+ * round. Any other rejection is re-thrown and fails the test.
+ * Animations that have finished but hold their end state (fill: forwards) are not waited for.
+ * Bounded: it fails explicitly if animations keep restarting.
+ */
+export async function settleAnimations(
+  target: Locator,
+  options: { subtree?: boolean } = {},
+): Promise<void> {
+  await target.evaluate(async (element, subtree) => {
+    for (let round = 0; round < 20; round += 1) {
+      const running = element
+        .getAnimations({ subtree })
+        .filter((animation) => animation.playState === "running" || animation.pending);
+      if (running.length === 0) return;
+      await Promise.all(
+        running.map((animation) =>
+          animation.finished.catch((error: unknown) => {
+            // Only the expected cancellation is tolerated; any other failure is reported.
+            if (!(error instanceof DOMException && error.name === "AbortError")) throw error;
+          }),
+        ),
+      );
+    }
+    throw new Error("settleAnimations: animations kept restarting for 20 rounds");
+  }, options.subtree ?? false);
+}

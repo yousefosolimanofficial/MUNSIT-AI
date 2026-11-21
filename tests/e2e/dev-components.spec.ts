@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 import type { Locator, Page } from "@playwright/test";
 
-import { expect, test } from "./test";
+import { expect, settleAnimations, test } from "./test";
 
 /**
  * Button v1 integration checks on the temporary /dev/components gallery (contract §11,
@@ -61,7 +61,7 @@ const EXPECTED: Record<"primary" | "secondary", Record<State, { bg: string; bord
 
 /** Waits until every running CSS transition on the element has finished. */
 async function settle(locator: Locator): Promise<void> {
-  await locator.evaluate((el) => Promise.all(el.getAnimations().map((a) => a.finished)));
+  await settleAnimations(locator);
 }
 
 interface Measured {

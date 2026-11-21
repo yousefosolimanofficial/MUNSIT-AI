@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import AxeBuilder from "@axe-core/playwright";
 import type { Locator, Page } from "@playwright/test";
 
-import { expect, test } from "./test";
+import { expect, settleAnimations, test } from "./test";
 
 /**
  * Input V1 integration checks on the temporary /dev/components gallery (Input contract §11,
@@ -52,7 +52,7 @@ const GLOW = "rgba(99, 161, 255, 0.25) 0px 0px 6px 2px";
 type RGB = [number, number, number];
 
 async function settle(locator: Locator): Promise<void> {
-  await locator.evaluate((el) => Promise.all(el.getAnimations().map((a) => a.finished)));
+  await settleAnimations(locator);
 }
 
 interface Measured {

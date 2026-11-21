@@ -1,6 +1,6 @@
 import type { Locator, Page } from "@playwright/test";
 
-import { expect, test, waitForHydration } from "./test";
+import { expect, settleAnimations, test, waitForHydration } from "./test";
 import arShell from "../../src/i18n/messages/ar/shell.json" with { type: "json" };
 import enShell from "../../src/i18n/messages/en/shell.json" with { type: "json" };
 
@@ -58,9 +58,7 @@ const bar = (page: Page, width: number) =>
 
 async function geometry(panel: Locator, viewport: number, dir: "rtl" | "ltr") {
   // Measure the settled panel: the entrance transition (scale, slide) is in the bounding box.
-  await panel.evaluate((element) =>
-    Promise.all(element.getAnimations({ subtree: true }).map((animation) => animation.finished)),
-  );
+  await settleAnimations(panel, { subtree: true });
   const box = await panel.boundingBox();
   if (!box) throw new Error("panel not rendered");
   const edge = dir === "rtl" ? box.x : viewport - (box.x + box.width);
