@@ -1,7 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import type { Locator, Page } from "@playwright/test";
 
-import { expect, test, waitForHydration } from "./test";
+import { expect, settleAnimations, test, waitForHydration } from "./test";
 
 /**
  * Popover / Menu V1 browser checks on the temporary /dev/components gallery (contract
@@ -58,7 +58,7 @@ async function typeKey(page: Page, key: string): Promise<void> {
 }
 
 async function settle(locator: Locator): Promise<void> {
-  await locator.evaluate((el) => Promise.all(el.getAnimations().map((a) => a.finished)));
+  await settleAnimations(locator);
 }
 
 async function transitions(locator: Locator): Promise<[string, number][]> {
