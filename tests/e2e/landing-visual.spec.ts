@@ -52,7 +52,8 @@ const SHOT = {
 
 /** Lazy images below the fold load only when scrolled to: load them all before capturing. */
 async function loadAllImages(page: Page): Promise<void> {
-  await waitForHydration(page, page.locator("main img").first());
+  // Every image must be hydrated before `loading` changes, or React reports a mismatch (#3).
+  await waitForHydration(page, page.locator("main img"));
   await page.evaluate(() =>
     document.querySelectorAll("img").forEach((img) => {
       img.loading = "eager";
