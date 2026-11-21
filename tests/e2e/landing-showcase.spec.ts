@@ -15,7 +15,7 @@ import enLanding from "../../src/i18n/messages/en/landing.json" with { type: "js
  * P07-D22 (2026-11-20): the Showcase illustration is the native Mobile live-transcription card on
  * every breakpoint (no Desktop/Tablet screenshot or menu). It sits in a stage that keeps the former
  * window's height (Tablet 436, Desktop 560): Tablet 520 wide, centred; Desktop (owner-approved
- * Candidate B) 700 wide, 48 below the stage top.
+ * Candidate B, widened to 760 on 2026-11-21) 760 wide, 48 below the stage top.
  */
 
 const LOCALES = [
@@ -155,7 +155,7 @@ for (const { locale, dir, path, m } of LOCALES) {
       await expect(showcase(page).locator("img")).toHaveCount(0);
     });
 
-    test("Desktop 1440: the native card, 700 wide, 48 below the top of the 1171 × 560 stage (Candidate B); alternating Use Case rows", async ({
+    test("Desktop 1440: the native card, 760 wide, 48 below the top of the 1171 × 560 stage (Candidate B); alternating Use Case rows", async ({
       page,
     }) => {
       await open(page, path, 1440);
@@ -164,7 +164,7 @@ for (const { locale, dir, path, m } of LOCALES) {
       near(area.w, 1171, "stage width");
       near(area.h, 560, "stage height");
       near(area.x, 134.5, "stage x");
-      near(win.w, 700, "card width");
+      near(win.w, 760, "card width");
       near(win.x + win.w / 2, 720, "card centred horizontally");
       near(win.y, area.y + 48, "card 48 below the stage top");
 
@@ -209,14 +209,14 @@ for (const { locale, dir, path, m } of LOCALES) {
       }
     });
 
-    test("Desktop 1280: the 700 card, centred, 48 below the stage top; section unchanged", async ({
+    test("Desktop 1280: the 760 card, centred, 48 below the stage top; section unchanged", async ({
       page,
     }) => {
       await open(page, path, 1280);
       const win = await expectNativeCard(page, m, dir);
       const area = await box(stage(page));
       near(area.h, 560, "stage height");
-      near(win.w, 700, "card width");
+      near(win.w, 760, "card width");
       near(win.x + win.w / 2, 640, "card centred horizontally");
       near(win.y, area.y + 48, "card 48 below the stage top");
       if (locale === "ar") {

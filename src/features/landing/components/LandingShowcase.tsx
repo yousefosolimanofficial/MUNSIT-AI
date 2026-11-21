@@ -21,7 +21,8 @@ import { NAV_BORDER, REVEAL } from "./landing-styles";
  *   sits in a stage that keeps the former window's height (436 / 560), so the section and everything
  *   below it keep their Figma positions.
  *   - Tablet: 520 wide, centred in the stage.
- *   - Desktop (owner-approved Candidate B, P07-D22): 700 wide, 48 below the stage top, so it stays
+ *   - Desktop (owner-approved Candidate B, P07-D22; widened to 760 on 2026-11-21): 760 wide, 48 below
+ *     the stage top, so it stays
  *     close to the description (about 99 between the text and the card); the remaining space falls
  *     below it, over the section's ambient glow.
  *
@@ -185,7 +186,7 @@ export function LandingShowcase({ copy }: { copy: LandingShowcaseCopy }) {
           aria-hidden="true"
           data-showcase-window=""
           data-reveal=""
-          className={`${REVEAL} flex min-h-[366px] w-full max-w-[350px] flex-col overflow-hidden rounded-[16px] border bg-surface-ink ${NAV_BORDER} rail:min-h-0 rail:max-w-[520px] xl:max-w-[700px]`}
+          className={`${REVEAL} flex min-h-[366px] w-full max-w-[350px] flex-col overflow-hidden rounded-[16px] border bg-surface-ink ${NAV_BORDER} rail:min-h-0 rail:max-w-[520px] xl:max-w-[760px]`}
         >
           <div
             className="flex min-h-[114px] shrink-0 flex-col items-start gap-[6px] bg-surface-obsidian px-[16px] py-[12px]"
