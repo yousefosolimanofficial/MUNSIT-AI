@@ -99,19 +99,20 @@ for (const { locale, dir, path, other, m, shell, brand } of LOCALES) {
       await expect(page.locator('meta[property="og:image"]')).toHaveCount(0);
     });
 
-    test("Desktop 1440: floating bar geometry, verbatim links, login and language", async ({
+    test("Desktop 1440: compact floating bar geometry, verbatim links, solid login and language", async ({
       page,
     }) => {
       await open(page, path, 1440);
       const bar = page.locator("[data-landing-bar=desktop]");
       await expect(bar).toBeVisible();
       await expect(page.locator("[data-landing-bar=compact]")).toBeHidden();
-      expect(await box(bar)).toEqual({ x: 40, y: 18, w: 1361, h: 67 });
+      // Compact bar (owner visual refinement 2026-11-21): 32 from each edge, 58 high.
+      expect(await box(bar)).toEqual({ x: 32, y: 16, w: 1376, h: 58 });
       const style = await bar.evaluate((el) => {
         const s = getComputedStyle(el);
         return { border: s.borderTopColor, radius: s.borderTopLeftRadius, blur: s.backdropFilter };
       });
-      expect(style).toEqual({ border: "rgb(54, 55, 57)", radius: "16px", blur: "blur(48px)" });
+      expect(style).toEqual({ border: "rgb(54, 55, 57)", radius: "14px", blur: "blur(48px)" });
       const links = nav(page).getByRole("link");
       await expect(links).toHaveText([m.nav.home, m.nav.features, m.nav.howItWorks, m.nav.faq]);
       // Verbatim, including the navigation spacing (P07-D11).
@@ -120,14 +121,35 @@ for (const { locale, dir, path, other, m, shell, brand } of LOCALES) {
         const s = getComputedStyle(el);
         return [s.fontSize, s.fontWeight, s.lineHeight];
       });
-      expect(font).toEqual(["20px", "400", "28px"]); // UI/Navigation, weight measured (§16.5)
+      expect(font).toEqual(["14px", "500", "19.6px"]);
       const login = bar.locator("[data-landing-action=login]");
-      // Figma: 145 × 46 with the Arabic label; the button hugs its label in English.
-      expect(await box(login)).toMatchObject(locale === "ar" ? { w: 145, h: 46 } : { h: 46 });
+      expect((await box(login)).h).toBe(36);
       await expect(login).toHaveAttribute("href", locale === "ar" ? "/login" : "/en/login");
       const language = bar.locator("[data-landing-action=language]");
-      expect(await box(language)).toMatchObject({ w: 38, h: 45 });
+      expect((await box(language)).h).toBe(36);
+      expect((await box(language)).w).toBeGreaterThanOrEqual(38);
+      // Solid white controls with the Ink label (contrast far above 4.5:1).
+      for (const control of [login, language]) {
+        const look = await control.evaluate((el) => {
+          const s = getComputedStyle(el);
+          return [s.backgroundColor, s.color, s.fontWeight, s.borderTopLeftRadius];
+        });
+        expect(look).toEqual(["rgb(255, 255, 255)", "rgb(7, 8, 10)", "500", "10px"]);
+        // Keyboard focus keeps the Landing focus ring (2 px Electric Sky outline).
+        await control.focus();
+        const ring = await control.evaluate((el) => {
+          const s = getComputedStyle(el);
+          return [s.outlineStyle, s.outlineWidth, s.outlineColor];
+        });
+        expect(ring).toEqual(["solid", "2px", "rgb(99, 161, 255)"]);
+      }
       const brandBox = await box(bar.locator("[data-landing-brand]"));
+      expect(brandBox.h).toBe(30);
+      // Vertically aligned with the links and actions (centred in the 58 bar).
+      const linkBox = await box(links.first());
+      expect(
+        Math.abs(brandBox.y + brandBox.h / 2 - (linkBox.y + linkBox.h / 2)),
+      ).toBeLessThanOrEqual(1);
       const loginBox = await box(login);
       // RTL: actions at the right, logo at the left; LTR mirrors it.
       if (dir === "rtl") expect(brandBox.x).toBeLessThan(loginBox.x);
@@ -146,6 +168,14 @@ for (const { locale, dir, path, other, m, shell, brand } of LOCALES) {
         expect(await box(menuButton(page))).toMatchObject({ w: 46, h: 42 });
         await expect(bar.locator("[data-landing-action=login]")).toBeVisible();
         await expect(bar.locator("[data-landing-action=language]")).toBeVisible();
+        // Solid white controls on Tablet too (compact navbar refinement).
+        for (const action of ["login", "language"]) {
+          const control = bar.locator(`[data-landing-action=${action}]`);
+          expect((await box(control)).h).toBe(36);
+          expect(await control.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(
+            "rgb(255, 255, 255)",
+          );
+        }
         const brandBox = await box(bar.locator("[data-landing-brand]"));
         const menuBox = await box(menuButton(page));
         if (dir === "rtl") expect(brandBox.x).toBeLessThan(menuBox.x);
