@@ -30,6 +30,12 @@ const cobalt = (percent: number) =>
 /** Decorative glow layer: fills its (relative, isolated) section, never overflows it. */
 export const AMBIENT_LAYER = "pointer-events-none absolute inset-0 -z-10";
 
+/** Showcase glow falloff band (see AMBIENT.showcase): the layer's `::after`, at its bottom edge. */
+export const SHOWCASE_GLOW_FALLOFF = [
+  "after:absolute after:inset-x-0 after:bottom-0 after:h-[48px] rail:after:h-[96px] xl:after:h-[160px]",
+  "after:bg-linear-to-b after:from-transparent after:to-surface-void-black",
+].join(" ");
+
 export const AMBIENT = {
   /** Hero base (seen on Mobile, before playback and under reduced motion): a cobalt bloom from the
    *  top and a faint sky haze low behind the actions. */
@@ -82,6 +88,13 @@ export const AMBIENT = {
       `radial-gradient(ellipse 98% 66% at 50% 88%, ${cobalt(40)}, transparent 76%)`,
     ].join(", "),
   },
+  /*
+   * Showcase glow falloff (2026-11-21): the cobalt floor is still strong at the section's bottom
+   * edge, where the layer is clipped, so it ended in a hard line against Features. The layer's own
+   * `::after` band (SHOWCASE_GLOW_FALLOFF) fades it into the page base over the space below the card
+   * only: 48 Mobile, 96 Tablet, 160 Desktop. The glow around the card is unchanged; a band, not a
+   * mask, so no other pixel of the layer is re-composited (the Mobile card stays pixel-identical).
+   */
   /** Use Cases: two offset washes that give the stacked rows depth without competing with them. */
   useCases: {
     backgroundImage: [

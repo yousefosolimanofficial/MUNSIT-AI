@@ -1017,3 +1017,32 @@ Frames: FAQ Desktop `124:94` (fixed 989), Tablet `200:629`, Mobile `200:778`; Pr
    and at 100% there; the owner-approved Cobalt Edge 20% glow is centred on every breakpoint.
 7. **Featured card base:** the component uses `#000000`; the placed instances use Obsidian, which
    is used (a token).
+
+### 16.8 Product Showcase — native card on every breakpoint (P07-D22, 2026-11-20)
+
+Owner design decision **P07-D22**: replace only the Desktop and Tablet application screenshot with
+the approved native Mobile live-transcription card. The heading, description, copy and section
+order are unchanged.
+
+| Item                | Desktop (≥ 1280)                                                                                                                                        | Tablet (720–1279)                    | Mobile (< 720)              |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ | --------------------------- |
+| Former illustration | window 1171 × 560: header, menu, screenshot                                                                                                             | window 704 × 436: header, screenshot | the native card (unchanged) |
+| Stage (layout box)  | 1171 × 560 (the former window box)                                                                                                                      | 704 × 436                            | none (the card is in flow)  |
+| Card                | 760 wide (owner-approved Candidate B, widened from 700 on 2026-11-21), height from content (304.8 Arabic), centred horizontally, 48 below the stage top | 520 wide (326.8 Arabic), centred     | 350 × 366 minimum (Figma)   |
+| Card inside         | the Mobile card: header 114.8 (pill 40 above the two-tone title), transcript body, same type sizes                                                      | same                                 | Figma Mobile                |
+
+**Differences from Figma (documented):**
+
+1. On Desktop and Tablet the Figma app window (header row, 251 menu, screenshot) is replaced by the
+   Mobile card. There is no Figma frame for a wider card: the 520 / 760 widths and the placement are
+   implementation values (Desktop 48 from the stage top: owner-approved Candidate B, 2026-11-21,
+   chosen over a centred 600 card; its 700 width was widened to 760 by the owner the same day).
+2. The card has no 366 minimum height from Tablet up; it follows its content, so no empty band
+   appears once the lines wrap less.
+3. The stage keeps the former window's box, so the section heights (Desktop 942, Tablet 786) and
+   the positions of every later section are unchanged. Desktop: about 99 from the description's
+   last line to the card and about 250 from the card to the section end, over the ambient glow.
+   Tablet: centred, about 55 above and below.
+
+The Showcase screenshot file (`public/landing/showcase/app-live-transcript.webp`) and its model
+entry are kept, unreferenced, as history.

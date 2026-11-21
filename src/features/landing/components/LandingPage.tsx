@@ -24,7 +24,13 @@ import { LandingShowcase } from "./LandingShowcase";
 import { LandingUseCases } from "./LandingUseCases";
 import { HERO_IMAGE } from "../model/hero-media";
 import { FEATURE_IMAGES, STEP_IMAGES } from "../model/landing-images";
-import { AMBIENT, AMBIENT_LAYER, REVEAL, REVEAL_FADE } from "./landing-styles";
+import {
+  AMBIENT,
+  AMBIENT_LAYER,
+  REVEAL,
+  REVEAL_FADE,
+  SHOWCASE_GLOW_FALLOFF,
+} from "./landing-styles";
 
 /*
  * Landing page (Phase 07). Server Component, statically generated per locale.
@@ -57,15 +63,6 @@ import { AMBIENT, AMBIENT_LAYER, REVEAL, REVEAL_FADE } from "./landing-styles";
 
 export const LANDING_MAIN_ID = "main-content";
 
-/** Showcase menu items, in Figma order (messages `landing.showcase.sidebar.*`). */
-const SHOWCASE_SIDEBAR = [
-  "dashboard",
-  "lectures",
-  "live",
-  "summaries",
-  "questions",
-  "history",
-] as const;
 /** Use Case rows, in Figma order (messages `landing.useCases.items.*`). */
 const USE_CASE_ITEMS = ["1", "2", "3"] as const;
 /** Feature cards, in Figma order (messages `landing.features.items.*`). */
@@ -161,7 +158,7 @@ export async function LandingPage({ locale }: { locale: AppLocale }) {
                   aria-hidden="true"
                   data-reveal=""
                   data-landing-ambient="showcase"
-                  className={`${AMBIENT_LAYER} ${REVEAL_FADE}`}
+                  className={`${AMBIENT_LAYER} ${REVEAL_FADE} ${SHOWCASE_GLOW_FALLOFF}`}
                   style={AMBIENT.showcase}
                 />
                 <LandingShowcase
@@ -171,8 +168,6 @@ export async function LandingPage({ locale }: { locale: AppLocale }) {
                     recording: t("showcase.recording"),
                     timer: t("showcase.timer"),
                     lectureTitle: t("showcase.lectureTitle"),
-                    sidebarTitle: t("showcase.sidebarTitle"),
-                    sidebar: SHOWCASE_SIDEBAR.map((item) => t(`showcase.sidebar.${item}`)),
                     mobile: {
                       live: t("showcase.mobile.live"),
                       heading: t("showcase.mobile.heading"),

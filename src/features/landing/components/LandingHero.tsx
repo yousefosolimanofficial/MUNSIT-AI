@@ -86,6 +86,9 @@ export function LandingHero({ copy, image }: LandingHeroProps) {
         <div className="absolute inset-0" style={AMBIENT.hero} data-landing-ambient="hero" />
         {image ? (
           // The LCP element: preloaded; it fills a box of fixed height, so it never shifts layout.
+          // Desktop FIT (contain) leaves a letterbox; it is Void Black, as in Figma (the frame has no
+          // fill), so the ambient haze behind does not draw a lighter band under the image's own
+          // dark edge (visible at 1280, where the margin is 54 px).
           <Image
             src={image.src}
             width={image.width}
@@ -94,7 +97,7 @@ export function LandingHero({ copy, image }: LandingHeroProps) {
             sizes="100vw"
             preload
             data-landing-hero-image=""
-            className="absolute inset-0 h-full w-full object-cover object-center xl:object-contain"
+            className="absolute inset-0 h-full w-full object-cover object-center xl:bg-surface-void-black xl:object-contain"
           />
         ) : null}
       </div>
