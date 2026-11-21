@@ -14,14 +14,15 @@ import { FOCUS_RING, INTERACTIVE_TRANSITION, NAV_BORDER } from "./landing-styles
  * (design-values §16.2). Breakpoints follow ADR-004: Mobile < 720 (`rail`) ≤ Tablet < 1280
  * (`xl`) ≤ Desktop. At 1024 the Desktop bar does not fit its content, so the Tablet bar is used.
  *
- * - Desktop (xl+): a floating bar over the Hero, at y 18, 1361 wide (viewport − 78 when
- *   narrower), 67 high, radius 16, Ink 20% fill, background blur 48 (Figma's extra "glass" effect
- *   has no CSS equivalent), 1px `#363739` border (Landing-local). Padding block 8; inline start
- *   12 (the Figma content row ends 12 short of the border). Row gap 39: actions | links | logo.
- *   Links: `UI/Navigation` (Cairo 400, measured), gap 63, centred in the remaining width (861 at
- *   1440, as drawn). Actions: login, then language, gap 37.
- * - Tablet (rail–xl): in flow, 78 high, padding 16 / 32. Actions at the inline start (menu, login,
- *   language; gap 12); logo 150 × 39 at the end. The inline links are hidden layers in Figma.
+ * - Desktop (xl+), compact bar (owner visual refinement 2026-11-21, after the Figma 67-high bar; see
+ *   docs/phases/phase-07-navbar-refinement.md): a floating bar over the Hero, at y 16, 32 from
+ *   each viewport edge (1376 wide at 1440, at most 1376), 58 high, radius 14, Ink 20% fill,
+ *   background blur 48, 1px `#363739` border. Padding inline 10. Row gap 24: actions | links |
+ *   logo (30 high). Links: 14 / 500, gap 32, centred in the remaining width. Actions: solid white
+ *   login, then the solid white language switch, gap 8.
+ * - Tablet (rail–xl): in flow, 78 high, padding 16 / 32. Actions at the inline start (menu, then
+ *   the solid white login and language; gap 12); logo 150 × 39 at the end. The inline links are
+ *   hidden layers in Figma.
  * - Mobile (< rail): 70 high, padding 14 / 20. Logo at the inline start, menu at the end.
  * - RTL / LTR: logical properties only. The Arabic layout is the Figma one; English mirrors it.
  *
@@ -44,13 +45,13 @@ export interface LandingHeaderProps {
 }
 
 const DESKTOP_BAR = [
-  "absolute inset-x-[39px] top-[18px] z-10 mx-auto hidden h-[67px] max-w-[1361px] items-center gap-[39px]",
-  "rounded-lg border bg-surface-ink/20 py-[8px] ps-[12px] backdrop-blur-[48px] xl:flex",
+  "absolute inset-x-[32px] top-[16px] z-10 mx-auto hidden h-[58px] max-w-[1376px] items-center gap-[24px]",
+  "rounded-[14px] border bg-surface-ink/20 px-[10px] backdrop-blur-[48px] xl:flex",
   NAV_BORDER,
 ].join(" ");
 
 const DESKTOP_LINK = [
-  "rounded-sm whitespace-nowrap text-ui-navigation text-text-primary",
+  "rounded-sm whitespace-nowrap text-[14px] leading-[1.4] font-medium text-text-primary",
   // Hover (Visual Refinement): colour only, no movement.
   INTERACTIVE_TRANSITION,
   "hover:text-accent-electric-sky",
@@ -67,14 +68,18 @@ export function LandingHeader({ locale, links, labels, showLanguage }: LandingHe
     <header data-landing-header="" className="relative">
       {/* Desktop */}
       <div className={DESKTOP_BAR} data-landing-bar="desktop">
-        <div className="flex shrink-0 items-center gap-[37px]">
-          <LandingLoginLink label={labels.login} />
+        <div className="flex shrink-0 items-center gap-[8px]">
+          <LandingLoginLink label={labels.login} variant="solid" />
           {showLanguage ? (
-            <LandingLanguageLink locale={locale} languageNames={labels.languageNames} />
+            <LandingLanguageLink
+              locale={locale}
+              languageNames={labels.languageNames}
+              variant="solid"
+            />
           ) : null}
         </div>
         <nav aria-label={labels.navigation} className="flex min-w-0 flex-1 justify-center">
-          <ul className="flex items-center gap-[63px] py-[10px]">
+          <ul className="flex items-center gap-[32px] py-[8px]">
             {links.map((link) => (
               <li key={link.key}>
                 <a href={link.href} className={DESKTOP_LINK}>
@@ -84,7 +89,7 @@ export function LandingHeader({ locale, links, labels, showLanguage }: LandingHe
             ))}
           </ul>
         </nav>
-        <LandingBrand height={49} preload />
+        <LandingBrand height={30} preload />
       </div>
 
       {/* Tablet and Mobile */}
@@ -105,9 +110,13 @@ export function LandingHeader({ locale, links, labels, showLanguage }: LandingHe
           />
           {/* Tablet only (hidden layers on Mobile in Figma); the wrapper owns the display. */}
           <div className="hidden items-center gap-[12px] rail:flex">
-            <LandingLoginLink label={labels.login} />
+            <LandingLoginLink label={labels.login} variant="solid" />
             {showLanguage ? (
-              <LandingLanguageLink locale={locale} languageNames={labels.languageNames} />
+              <LandingLanguageLink
+                locale={locale}
+                languageNames={labels.languageNames}
+                variant="solid"
+              />
             ) : null}
           </div>
         </div>
