@@ -1,7 +1,7 @@
 # Phase 07 — Compact Landing navbar (owner visual refinement, 2026-11-21)
 
-Status: **IN REVIEW** (PR #64; owner approved for merge 2026-11-21 after the combined visual review
-with PR #61). A narrowly scoped visual refinement of the Landing header; nothing else on the page
+Status: **COMPLETE** (PR #64, merged as `f215a91`, 2026-11-21; owner approved after the combined
+visual review with PR #61; post-merge CI green). A narrowly scoped visual refinement of the Landing header; nothing else on the page
 changes. Owner decision **P07-D23** in the Phase 07 decision table (plan §2).
 
 ## 1. Owner request

@@ -50,8 +50,9 @@ Single resume point. A new session starts by reading this file, the latest phase
     the Desktop and Tablet screenshot: Desktop 760 wide, 48 below the stage top; Tablet 520; Mobile
     pixel-identical; section heights and positions unchanged. It includes the Showcase → Features
     glow falloff and the Hero letterbox fix. Values: design-values §16.8.
-  - **Compact Landing navbar (P07-D23): IN REVIEW** (PR #64; owner approved for merge 2026-11-21).
-    Details: [phases/phase-07-navbar-refinement.md](phases/phase-07-navbar-refinement.md).
+  - **Compact Landing navbar (P07-D23): COMPLETE** (PR #64, merged as `f215a91`; owner approved
+    2026-11-21; post-merge CI green). Details:
+    [phases/phase-07-navbar-refinement.md](phases/phase-07-navbar-refinement.md).
   - **Increment 4 (Features and How It Works): COMPLETE** (PR #56, merged as `b364cd5`; owner
     approved 2026-11-20; post-merge CI green). Original implementation by **Mariam** (delivery
     v1, **ACCEPTED / INTEGRATED**, byte-identical); integration by Yousef (Figma visuals, page
@@ -74,10 +75,13 @@ Single resume point. A new session starts by reading this file, the latest phase
     corrections: Tablet and Mobile description, and the heading, meet WCAG at every pixel. Image softness
     (666 × 412 source) remains a known limitation:
     [phases/phase-07-static-hero.md](phases/phase-07-static-hero.md).
-  - **Increment 6 (Verification and closure): NOT STARTED.**
+  - **Increment 6 (Verification and closure): NOT STARTED.** Readiness assessment and execution plan
+    (PROPOSED, awaiting owner approval):
+    [phases/phase-07-increment-6-plan.md](phases/phase-07-increment-6-plan.md).
   - **ClickUp:** set up 2026-11-19 (docs/project-management/clickup-workflow.md).
-  - **Next:** owner review of the full Landing page and the Hero video, and decisions on the
-    video replacement and the typography fix. Increment 6 starts only on owner approval.
+  - **Next:** owner approval of the Increment 6 plan; Increment 6 starts only after it. Owner
+    decisions pending: Hero image for production, English copy, pricing, the "ابدأ مجانًا" claim,
+    legal pages, Open Graph image.
   - **Maintenance (recommended, not done):** add `.playwright-mcp/` (local output of the
     Playwright MCP browser tool: page snapshots and console logs) to `.gitignore` in a
     separate change; untracked, it fails `prettier --check` and lint.
