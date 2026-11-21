@@ -75,9 +75,9 @@ Single resume point. A new session starts by reading this file, the latest phase
     corrections: Tablet and Mobile description, and the heading, meet WCAG at every pixel. Image softness
     (666 × 412 source) remains a known limitation:
     [phases/phase-07-static-hero.md](phases/phase-07-static-hero.md).
-  - **Increment 6 (Verification and closure): NOT STARTED.** Readiness assessment and execution plan
-    (PROPOSED, awaiting owner approval):
-    [phases/phase-07-increment-6-plan.md](phases/phase-07-increment-6-plan.md).
+  - **Increment 6 (Verification and closure): IN PROGRESS** (technical QA plan approved by the owner
+    2026-11-21: [phases/phase-07-increment-6-plan.md](phases/phase-07-increment-6-plan.md)). Evidence:
+    [phases/phase-07-qa-report.md](phases/phase-07-qa-report.md). Release readiness stays separate.
   - **ClickUp:** set up 2026-11-19 (docs/project-management/clickup-workflow.md).
   - **Next:** owner approval of the Increment 6 plan; Increment 6 starts only after it. Owner
     decisions pending: Hero image for production, English copy, pricing, the "ابدأ مجانًا" claim,
