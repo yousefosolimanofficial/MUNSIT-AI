@@ -91,8 +91,8 @@ Single resume point. A new session starts by reading this file, the latest phase
       does not authorize production activation of gated features.
   - **ClickUp:** set up 2026-11-19 (docs/project-management/clickup-workflow.md).
   - **Next:** manual evidence (real browsers, devices, screen readers; QA report §7). Owner
-    decisions pending: Hero image for production, English copy, pricing, legal pages, Open Graph
-    image and favicon.
+    decisions pending: Hero image for production, English copy, pricing, legal pages and Open
+    Graph image. Favicon resolved (F-1, PR #70, `76954ed`).
   - **Maintenance (recommended, not done):** add `.playwright-mcp/` (local output of the
     Playwright MCP browser tool: page snapshots and console logs) to `.gitignore` in a
     separate change; untracked, it fails `prettier --check` and lint.

@@ -248,7 +248,7 @@ Result: **70 passed, 0 failed** (35 per browser), after one documented exemption
 - **Merge:** this section was merged in PR #69 (`51a562b`). Post-merge CI run 45073164532:
   `check` and `e2e` passed (1070 passed, 1 skipped; production smoke 28 passed).
 
-#### F-1: missing favicon (fix proposed in PR #70, not merged)
+#### F-1: missing favicon (RESOLVED, PR #70)
 
 - **Finding:** real Chrome and Edge request `/favicon.ico` on every page; it returned 404 and
   logged a console error. The bundled Playwright Chromium used in CI does not request it, so CI
@@ -264,10 +264,12 @@ Result: **70 passed, 0 failed** (35 per browser), after one documented exemption
 - **Verified on a local production build:** `/favicon.ico` returns 200 `image/x-icon`. In the
   installed Chrome 157 and Edge 158 the icon shows in the tab and there is no console error on
   `/` or `/dashboard`.
-- **Resolved when PR #70 merges.** The Apple touch icon is not added: it needs an opaque
-  background, which is an owner decision.
+- **Resolved:** PR #70 merged as `76954ed` (2026-11-23). Post-merge CI run 45078120391: `check`
+  and `e2e` passed (1070 passed, 1 skipped; production smoke 29 passed, including the favicon
+  test).
+- **Apple touch icon:** deferred by the owner (2026-11-23).
 
-#### O-1: redirect loop with `next start -H 127.0.0.1` (framework behaviour, not a project defect)
+#### O-1: redirect loop with `next start -H 127.0.0.1` (deployment configuration limitation)
 
 - **Reproduce:**
   1. Run `NEXT_PUBLIC_APP_ENV=production next start --port 3201 -H 127.0.0.1`.
@@ -306,6 +308,8 @@ Result: **70 passed, 0 failed** (35 per browser), after one documented exemption
   - A self-hosted setup that binds `next start` to `127.0.0.1` behind a reverse proxy **would be
     affected**.
   - The deployment target is NOT VERIFIED.
+- **Owner decision (2026-11-23):** documented as a deployment configuration limitation; no
+  application routing change is authorized.
 - **Correction:**
   - No code or routing change. The proxy and next-intl behave as designed.
   - Configuration rule for any self-hosted deployment: do not bind `next start` to `127.0.0.1`.
@@ -327,7 +331,7 @@ Result: **70 passed, 0 failed** (35 per browser), after one documented exemption
    transition near the image's lower edge (owner review, 2026-11-22).
 5. English marketing approval (P07-D1).
 6. Commercial pricing approval (P07-D4, P07-D19, P07-D20).
-7. Social-share image (open) and favicon (F-1; fix proposed in PR #70, not merged).
+7. Social-share image (open). The favicon is resolved (F-1, PR #70, `76954ed`).
 8. Accepted technical risks (register in PROGRESS.md):
    - **W-1:** WebKit (Playwright) navigation guard, Leave after a cancelled Back reloads; `fixme`
      kept.
