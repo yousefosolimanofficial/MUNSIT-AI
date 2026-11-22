@@ -45,6 +45,20 @@ test.describe("production configuration", () => {
   test("English Landing stays gated: /en is 404", async ({ request }) => {
     expect((await request.get("/en")).status()).toBe(404);
   });
+
+  // F-1 (QA report §7.4): real Chrome and Edge request /favicon.ico on every page; the bundled
+  // Chromium does not, so the console guard cannot catch a missing favicon.
+  test("favicon: /favicon.ico is served and declared once", async ({ request }) => {
+    const icon = await request.get("/favicon.ico");
+    expect(icon.status()).toBe(200);
+    expect(icon.headers()["content-type"]).toMatch(/^image\/(x-icon|vnd\.microsoft\.icon)/);
+    // ICO header: reserved 0, type 1 (icon), three images (16, 32 and 48 px).
+    expect([...(await icon.body()).subarray(0, 6)]).toEqual([0, 0, 1, 0, 3, 0]);
+    const html = await (await request.get("/")).text();
+    expect(html.match(/<link rel="icon"[^>]*>/g)).toEqual([
+      expect.stringMatching(/href="\/favicon\.ico(\?[^"]*)?"/),
+    ]);
+  });
 });
 
 for (const { width, height, bar } of WIDTHS) {

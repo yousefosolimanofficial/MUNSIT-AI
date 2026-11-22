@@ -274,6 +274,17 @@ Files: the original exports stay in the local, git-ignored `assets/` folder (nev
 or tests); `public/brand/` holds the committed copies, verified against approved SHA-256
 checksums in `brand.test.ts` and `logo.spec.ts`.
 
+**Favicon** (`src/app/favicon.ico`, owner-approved fix for QA finding F-1, 2026-11-22): an export
+of the approved Symbol, not a new mark.
+
+- **Source:** the unmodified `Munsit_Logo_Symbol.png` (SHA-256 `3792279d…41836147`).
+- **Export:** the Symbol is centred on a transparent 372×372 square (68 px above and below), with
+  no recolouring, cropping or redrawing.
+- **Format:** ICO with 16, 32 and 48 px images, SHA-256 `29b0ac8d…686b2e1d`.
+- **Tooling:** exported once with Pillow; no project dependency was added.
+- **Head tag:** Next.js (app icon file convention) declares it as `<link rel="icon">`.
+- **Not added:** an Apple touch icon. It needs an opaque background, which is an owner decision.
+
 ## 2b. Icons — inventory (Phase 02 step 5, read-only Figma, 2026-11-13)
 
 Source: local components named `Icon / <name>` — 39 in `Dashboard / Components` (`2205:12`, page 03) plus `Icon / slides` (`2278:291`, page 05). All **24×24 outline icons, stroke 1.75, round caps
