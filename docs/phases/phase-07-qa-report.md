@@ -21,7 +21,7 @@ primary label "ابدأ الآن".
 | Automated accessibility (axe, keyboard)         | Pass                                                                                                              | A3                                                  |
 | Lighthouse (lab, localhost)                     | Recorded only                                                                                                     | A4                                                  |
 | Browser engines (Chromium, Firefox, WebKit)     | 15 passed (automation, not real browsers)                                                                         | A5                                                  |
-| Owner review of the baselines                   | **NOT VERIFIED** (pending; PR #67 stays draft)                                                                    | §7                                                  |
+| Owner review of the baselines                   | **APPROVED** by the product owner on 2026-11-22 (A1)                                                              | A1                                                  |
 | Real browsers and devices                       | **NOT VERIFIED**                                                                                                  | §7                                                  |
 | Screen readers                                  | **NOT VERIFIED**                                                                                                  | §7                                                  |
 
@@ -45,7 +45,17 @@ primary label "ابدأ الآن".
 - **After the Authentication gate (P07-D24):** the baselines are unchanged and still valid. They
   are development renderings, where every authentication entry point still shows; the gate
   changes production only. Production is covered by A7.
-- **Owner approval of the baselines is required** (Roadmap §8); they are not auto-accepted.
+- **Owner approval (Roadmap §8):** visual regression baselines approved by the product owner on
+  November 22, 2026, as references for the current approved development and production
+  configurations. This does not authorize production activation of gated features.
+  - Approved: Arabic 1440, 768 and 390; the English development layout only; the production Hero
+    with only the secondary CTA; the production two-column Footer; the compact Navbar (P07-D23);
+    the native Product Showcase (P07-D22).
+  - Not authorized: the production Hero image, English copy publication, Pricing publication,
+    commercial claims, legal-page publication and Phase 07 closure.
+  - Accepted for the development baselines only: the development Hero image shows a visible
+    horizontal transition near its lower edge and has a limited source resolution (666 × 412).
+    The Hero production gate stays closed (P07-D21, §8 item 4).
 
 ## A2. Figma comparison
 
@@ -187,8 +197,7 @@ guard) stays accepted; its `fixme` remains.
 | NVDA (Windows) full-page pass                      | NOT VERIFIED | Reading order, landmarks, FAQ, menu       |
 | VoiceOver (macOS and iOS)                          | NOT VERIFIED | As above                                  |
 | TalkBack (Android)                                 | NOT VERIFIED | As above                                  |
-| Hero image sharpness (666 × 412 source)            | NOT VERIFIED | Owner visual decision                     |
-| Final owner visual review of the baselines         | NOT VERIFIED | Owner approval                            |
+| Hero image sharpness (666 × 412 source)            | NOT VERIFIED | Owner visual decision (A1, §8 item 4)     |
 
 ## 8. Production release blockers (separate from technical QA)
 
@@ -201,7 +210,8 @@ guard) stays accepted; its `fixme` remains.
    - Both reopen together only when the owner sets `AUTHENTICATION_AVAILABLE`.
 2. Legal pages (P07-D2).
 3. Real-browser, device and screen-reader evidence (§7; R-3).
-4. Hero image production approval and sharpness (P07-D21).
+4. Hero image production approval (P07-D21): limited source resolution and a visible horizontal
+   transition near the image's lower edge (owner review, 2026-11-22).
 5. English marketing approval (P07-D1).
 6. Commercial pricing approval (P07-D4, P07-D19, P07-D20).
 7. Social-share image and favicon.

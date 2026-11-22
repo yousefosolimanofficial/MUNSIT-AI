@@ -86,8 +86,11 @@ Single resume point. A new session starts by reading this file, the latest phase
     - **Production smoke suite** (owner-approved 2026-11-22): `corepack pnpm test:e2e:prod`. It
       runs in the CI `e2e` job (QA report A7). **`e2e` is a required check** since 2026-11-22
       (owner-approved; the `main-protection` ruleset requires `check` and `e2e`).
+    - **Visual regression baselines approved** by the product owner on 2026-11-22 as references
+      for the current approved development and production configurations (QA report A1). This
+      does not authorize production activation of gated features.
   - **ClickUp:** set up 2026-11-19 (docs/project-management/clickup-workflow.md).
-  - **Next:** the owner reviews the Increment 6 evidence (QA report) and the baselines. Owner
+  - **Next:** manual evidence (real browsers, devices, screen readers; QA report §7). Owner
     decisions pending: Hero image for production, English copy, pricing, legal pages, Open Graph
     image and favicon.
   - **Maintenance (recommended, not done):** add `.playwright-mcp/` (local output of the
