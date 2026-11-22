@@ -42,6 +42,8 @@ export interface LandingHeaderProps {
     languageNames: LanguageNames;
   };
   showLanguage: boolean;
+  /** Whether the login link is shown (Authentication gate, P07-D24). */
+  showLogin?: boolean;
 }
 
 const DESKTOP_BAR = [
@@ -63,13 +65,19 @@ const COMPACT_BAR = [
   "rail:h-[78px] rail:px-[32px] rail:py-[16px]",
 ].join(" ");
 
-export function LandingHeader({ locale, links, labels, showLanguage }: LandingHeaderProps) {
+export function LandingHeader({
+  locale,
+  links,
+  labels,
+  showLanguage,
+  showLogin = true,
+}: LandingHeaderProps) {
   return (
     <header data-landing-header="" className="relative">
       {/* Desktop */}
       <div className={DESKTOP_BAR} data-landing-bar="desktop">
         <div className="flex shrink-0 items-center gap-[8px]">
-          <LandingLoginLink label={labels.login} variant="solid" />
+          {showLogin ? <LandingLoginLink label={labels.login} variant="solid" /> : null}
           {showLanguage ? (
             <LandingLanguageLink
               locale={locale}
@@ -99,6 +107,7 @@ export function LandingHeader({ locale, links, labels, showLanguage }: LandingHe
             locale={locale}
             links={links}
             showLanguage={showLanguage}
+            showLogin={showLogin}
             labels={{
               openMenu: labels.openMenu,
               closeMenu: labels.closeMenu,
@@ -110,7 +119,7 @@ export function LandingHeader({ locale, links, labels, showLanguage }: LandingHe
           />
           {/* Tablet only (hidden layers on Mobile in Figma); the wrapper owns the display. */}
           <div className="hidden items-center gap-[12px] rail:flex">
-            <LandingLoginLink label={labels.login} variant="solid" />
+            {showLogin ? <LandingLoginLink label={labels.login} variant="solid" /> : null}
             {showLanguage ? (
               <LandingLanguageLink
                 locale={locale}

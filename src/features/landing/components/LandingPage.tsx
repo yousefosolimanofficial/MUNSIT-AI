@@ -9,6 +9,7 @@ import {
   isHeroImageVisible,
   isLandingEnglishPublished,
   isPlaceholderPricingVisible,
+  landingAuthEntryPoints,
 } from "../model/gates";
 import { LANDING_ANCHORS, LANDING_SECTIONS } from "../model/sections";
 import { LandingFooter } from "./LandingFooter";
@@ -97,6 +98,8 @@ export async function LandingPage({ locale }: { locale: AppLocale }) {
   }));
   const languageNames = { en: shell("languageNames.en"), ar: shell("languageNames.ar") };
   const showPricing = isPlaceholderPricingVisible(appEnv);
+  // P07-D24: public authentication entry points only where Authentication is available.
+  const auth = landingAuthEntryPoints(appEnv);
   const heroImage = isHeroImageVisible(appEnv, HERO_IMAGE.provisional ?? false) ? HERO_IMAGE : null;
 
   return (
@@ -106,6 +109,7 @@ export async function LandingPage({ locale }: { locale: AppLocale }) {
         locale={locale}
         links={navLinks}
         showLanguage={englishPublished}
+        showLogin={auth.navLogin}
         labels={{
           navigation: shell("mainNavigation"),
           login: t("nav.login"),
@@ -124,6 +128,7 @@ export async function LandingPage({ locale }: { locale: AppLocale }) {
       >
         {LANDING_SECTIONS.map(({ id, key }) => {
           if (key === "pricing" && !showPricing) return null;
+          if (key === "cta" && !auth.finalCta) return null;
           if (key === "hero") {
             return (
               <section
@@ -134,6 +139,7 @@ export async function LandingPage({ locale }: { locale: AppLocale }) {
                 className="relative isolate mt-[24px] min-h-[538px] overflow-hidden rail:mt-[32px] rail:min-h-[640px] xl:mt-0 xl:min-h-[900px]"
               >
                 <LandingHero
+                  showPrimary={auth.heroPrimary}
                   image={heroImage}
                   copy={{
                     heading: t("hero.heading"),
@@ -361,6 +367,7 @@ export async function LandingPage({ locale }: { locale: AppLocale }) {
           privacy: t("footer.privacy"),
         }}
         copyright={t("footer.copyright")}
+        showAccount={auth.footerAccount}
       />
     </>
   );

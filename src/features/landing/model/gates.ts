@@ -34,6 +34,47 @@ export function isPlaceholderPricingVisible(appEnv: AppEnv): boolean {
 }
 
 /**
+ * P07-D24 (owner, 2026-11-22): Authentication is not operational yet. The Auth routes are Phase 04
+ * placeholders and Phase 08 (Authentication UI) has not started. Set to `true` only when the owner
+ * confirms a working sign-in and registration flow.
+ */
+export const AUTHENTICATION_AVAILABLE = false;
+
+/**
+ * Whether public authentication entry points may be shown. Production hides them until
+ * Authentication is operational; development and preview keep them.
+ */
+export function isAuthenticationAvailable(
+  appEnv: AppEnv,
+  available: boolean = AUTHENTICATION_AVAILABLE,
+): boolean {
+  return available || appEnv !== "production";
+}
+
+/** Every public authentication entry point on the Landing page. */
+export interface LandingAuthEntryPoints {
+  /** Navbar login: Desktop bar, Tablet bar and the Mobile menu sheet. */
+  navLogin: boolean;
+  /** Hero primary CTA "ابدأ الآن" → Register. */
+  heroPrimary: boolean;
+  /** Footer "حسابك" column (login and register). */
+  footerAccount: boolean;
+  /**
+   * Final CTA section. Its meaningful action is registration; without it only a link back to
+   * Features would remain, so the whole section is hidden.
+   */
+  finalCta: boolean;
+}
+
+export function landingAuthEntryPoints(
+  appEnv: AppEnv,
+  available: boolean = AUTHENTICATION_AVAILABLE,
+): LandingAuthEntryPoints {
+  const shown = isAuthenticationAvailable(appEnv, available);
+  return { navLogin: shown, heroPrimary: shown, footerAccount: shown, finalCta: shown };
+}
+
+/**
  * Hero image (P07-D21): the original Figma image. While `provisional` (pending owner verification
  * of the implementation), it renders in development and preview only; production keeps the Near
  * Black Hero with its ambient glow.

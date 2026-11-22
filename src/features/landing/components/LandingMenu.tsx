@@ -44,6 +44,8 @@ export interface LandingMenuProps {
   };
   /** Whether the language link is shown (P07-D1 gate). */
   showLanguage: boolean;
+  /** Whether the login link is shown (Authentication gate, P07-D24). */
+  showLogin?: boolean;
 }
 
 const MENU_BUTTON = [
@@ -60,7 +62,13 @@ const MENU_LINK = [
   FOCUS_RING,
 ].join(" ");
 
-export function LandingMenu({ locale, links, labels, showLanguage }: LandingMenuProps) {
+export function LandingMenu({
+  locale,
+  links,
+  labels,
+  showLanguage,
+  showLogin = true,
+}: LandingMenuProps) {
   const [open, setOpen] = useState(false);
   const close = () => setOpen(false);
 
@@ -91,12 +99,14 @@ export function LandingMenu({ locale, links, labels, showLanguage }: LandingMenu
               </li>
             ))}
           </ul>
-          <div className="mt-lg flex items-center gap-sm">
-            <LandingLoginLink label={labels.login} />
-            {showLanguage ? (
-              <LandingLanguageLink locale={locale} languageNames={labels.languageNames} />
-            ) : null}
-          </div>
+          {showLogin || showLanguage ? (
+            <div className="mt-lg flex items-center gap-sm">
+              {showLogin ? <LandingLoginLink label={labels.login} /> : null}
+              {showLanguage ? (
+                <LandingLanguageLink locale={locale} languageNames={labels.languageNames} />
+              ) : null}
+            </div>
+          ) : null}
         </nav>
       </Sheet>
     </>

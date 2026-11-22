@@ -1,49 +1,59 @@
-# Phase 07 — Primary CTA correction (P07-D24, 2026-11-21)
+# Phase 07 — Primary CTA correction and Authentication gate (P07-D24)
 
-Status: **IN REVIEW** (branch `fix/landing-cta-label`). Label correction implemented; the production
-destination is an **open owner decision**. Linked to the commercial release blocker (ClickUp
-"Release blocker: approved commercial pricing content").
+Status: **IN REVIEW** (PR #66, branch `fix/landing-cta-label`). Owner decisions are final
+(2026-11-22). Linked to the commercial release blocker (ClickUp "Release blocker: approved
+commercial pricing content").
 
 ## 1. Finding (production build audit, 2026-11-21)
 
 - "ابدأ مجانًا" ("start for free") was the primary label of the Hero CTA and the Final CTA in a
   `NEXT_PUBLIC_APP_ENV=production` build. A free offering has not been commercially approved.
-- The same label is on the Pricing Starter card. Pricing is development-only, hidden in production
-  (P07-D4, P07-D19), so that label is left to the pricing review.
-- English ("Get started free") is gated in production (P07-D1).
+- Every public authentication entry point leads to a non-operational page:
+  - `/register` and `/login` are **Phase 04 route placeholders**: they show the screen title and
+    say the feature is not implemented;
+  - Phase 08 (Authentication UI) has not started, and no backend or auth flow is verified.
+- No form was submitted and no account was created during the audit.
 
-## 2. Register destination
+## 2. Owner decisions (final, 2026-11-22)
 
-- Both primary CTAs link to `/register` (`auth.register`), the approved route (P07-D3).
-- `/register` is a **Phase 04 route placeholder**: it shows the screen title and says the feature is
-  not implemented. Phase 08 (Authentication UI) has not started, and no backend or auth flow is
-  verified. **Registration is not operational.** (The navbar login goes to `/login`, also a
-  placeholder.)
-- No form was submitted and no account was created during this audit.
+1. Replace "ابدأ مجانًا" with "ابدأ الآن".
+2. Hide the registration CTA in production until Authentication is operational.
+3. Hide the navbar login in production until Authentication is operational.
+4. Keep both in development.
+5. Hide the Final CTA in production if it has no meaningful functional action.
+6. Keep the approved Landing design and all responsive layouts.
 
-## 3. Correction made (this PR)
+## 3. Implementation
 
-- Hero and Final CTA primary label: "ابدأ مجانًا" → **"ابدأ الآن"** (owner's provisional label).
-  English (gated): "Get started free" → "Get started".
-- The design, positions, sizes, destination and every other piece of copy are unchanged. The
-  buttons keep their minimum widths (Hero 131), so the layout does not move.
-- This is a documented exception to the verbatim Figma copy (P07-D24).
+- **Label:** Hero and Final CTA primary "ابدأ الآن"; English (gated) "Get started". The Pricing
+  Starter label (development only, hidden in production) is left to the pricing review.
+- **Gate:** `AUTHENTICATION_AVAILABLE = false` and `isAuthenticationAvailable(appEnv)` in
+  `src/features/landing/model/gates.ts` (production → hidden; development and test → shown).
+  `landingAuthEntryPoints(appEnv)` gives the page one flag per entry point.
+- **Public authentication entry points, and what production does:**
 
-## 4. Open: the production destination (owner decision)
+| Entry point                             | Production                                                                    | Development |
+| --------------------------------------- | ----------------------------------------------------------------------------- | ----------- |
+| Navbar login, Desktop bar               | hidden                                                                        | shown       |
+| Navbar login, Tablet bar                | hidden                                                                        | shown       |
+| Login in the Mobile menu sheet          | hidden (the empty actions row is not rendered)                                | shown       |
+| Hero primary "ابدأ الآن" → Register     | hidden; the in-page "اكتشف كيف يعمل" stays                                    | shown       |
+| Footer "حسابك" column (login, register) | hidden; brand and section links stay                                          | shown       |
+| Final CTA section                       | **hidden**: without Register its only action would be a link back to Features | shown       |
+| Pricing plan buttons → Register         | already hidden (Pricing is development only, P07-D4)                          | shown       |
 
-The owner approved "ابدأ الآن" only for a genuinely usable registration destination. Until
-registration works, a primary CTA in production still leads to a "not implemented" page. Safe
-fallback options (none implemented):
+- **Activation:** set `AUTHENTICATION_AVAILABLE` to `true` in a separate change once the owner
+  confirms a working sign-in and registration flow (Phase 08).
 
-| Option | Production behaviour                                                                                                                                              | Trade-off                                                              |
-| ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| **A**  | Keep "ابدأ الآن" → `/register` until Phase 08 ships, and accept the placeholder as an interim destination                                                         | Simplest; the CTA leads to a "coming soon"-style page (no false claim) |
-| **B**  | Gate the primary CTAs in production (a new gate, like Pricing): hide them; keep the secondary CTAs ("اكتشف كيف يعمل" → How It Works, "اكتشف المميزات" → Features) | No dead end; the Hero and Final CTA show one button in production      |
-| **C**  | Keep the buttons, but point them in production to an in-page section with a neutral, approved label                                                               | Needs new approved copy for the label                                  |
+## 4. Verification
 
-**Recommendation: B** until Phase 08 delivers a working registration. It never sends visitors to a
-non-working page, it needs no new copy, and it is reversible with one gate. Development and preview
-keep the CTA to `/register`.
-
-Until the owner decides, a functional-looking CTA to a non-operational page remains in the
-production build, now without the free claim. This is recorded as an unresolved release risk.
+- **Unit (`auth-gate.test.tsx`):**
+  - the gate in production, development and test;
+  - the entry-point map in production and development;
+  - every entry-point component with the production flags (no login or register link anywhere,
+    including the opened Mobile menu sheet) and the development flags (all present).
+- **E2E (`landing-auth-entry.spec.ts`, development server):** all entry points present and linked
+  at 1440, 768 and 390 (menu sheet), ar and en.
+- **Production build** (`NEXT_PUBLIC_APP_ENV=production`): screenshots and HTML checks are in the PR
+  report; no `/login` or `/register` link in the page, no Final CTA section, Hero with the in-page
+  action only.
