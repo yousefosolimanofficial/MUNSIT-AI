@@ -242,14 +242,75 @@ Result: **70 passed, 0 failed** (35 per browser), after one documented exemption
 
 ### 7.4 Findings
 
-- **F-1 (open, linked to §8 item 7):** real Chrome and Edge request `/favicon.ico` on every page.
-  It returns 404 and logs a console error. The bundled Playwright Chromium used in CI does not
-  request it, so CI does not see this. The run above exempted exactly this URL in a temporary
-  copy of the console guard (not committed). It is resolved by the approved favicon asset; no
-  icon was invented.
-- **O-1 (observation, not a defect):** with `next start -H 127.0.0.1`, `/` answered 307 to itself
-  (the proxy rewrites to `localhost`). With the default host it answers 200. The deployment
-  host configuration is not verified.
+- **Record:** the owner accepted the Chrome 157 and Edge 158 evidence and the documented limits
+  on 2026-11-22. It is automated testing of installed real browsers, not a hands-on session.
+  Firefox, Safari, physical devices and screen readers remain **NOT VERIFIED**.
+- **Merge:** this section was merged in PR #69 (`51a562b`). Post-merge CI run 45073164532:
+  `check` and `e2e` passed (1070 passed, 1 skipped; production smoke 28 passed).
+
+#### F-1: missing favicon (fix proposed in PR #70, not merged)
+
+- **Finding:** real Chrome and Edge request `/favicon.ico` on every page; it returned 404 and
+  logged a console error. The bundled Playwright Chromium used in CI does not request it, so CI
+  did not see it. The §7.3 run exempted exactly this URL in a temporary copy of the console guard
+  (not committed).
+- **Fix (owner-approved, PR #70):**
+  - `src/app/favicon.ico` is exported from the approved Symbol (`Munsit_Logo_Symbol.png`): the
+    mark is centred on a transparent square, with no recolouring, cropping or redrawing. It holds
+    16, 32 and 48 px images.
+  - Next.js declares exactly one `<link rel="icon">`.
+  - A production smoke test covers the status, the content type and the single declaration.
+  - Provenance is recorded in design-values §2a.
+- **Verified on a local production build:** `/favicon.ico` returns 200 `image/x-icon`. In the
+  installed Chrome 157 and Edge 158 the icon shows in the tab and there is no console error on
+  `/` or `/dashboard`.
+- **Resolved when PR #70 merges.** The Apple touch icon is not added: it needs an opaque
+  background, which is an owner decision.
+
+#### O-1: redirect loop with `next start -H 127.0.0.1` (framework behaviour, not a project defect)
+
+- **Reproduce:**
+  1. Run `NEXT_PUBLIC_APP_ENV=production next start --port 3201 -H 127.0.0.1`.
+  2. Run `curl -I http://127.0.0.1:3201/`.
+- **Result:** `307`, `location: /`, `x-middleware-rewrite: http://localhost:3201/ar`. Following
+  the redirects loops on `/` (`curl -L --max-redirs 3` stops after 3 redirects, still 307).
+  `/dashboard` loops the same way; `/en` (404) is not affected.
+- **Comparison** (same build; `/` and `/dashboard`):
+
+  | Binding           | Host `localhost`               | Host `127.0.0.1`               |
+  | ----------------- | ------------------------------ | ------------------------------ |
+  | default (no `-H`) | 200, rewrite `/ar` (relative)  | 200, rewrite `/ar`             |
+  | `-H localhost`    | 200, rewrite `/ar`             | no connection (bound to `::1`) |
+  | `-H 0.0.0.0`      | 200, rewrite `/ar`             | 200, rewrite `/ar`             |
+  | `-H 127.0.0.1`    | **307 loop**, absolute rewrite | **307 loop**, absolute rewrite |
+
+  The Host header makes no difference. `/ar` is always 307 to `/`, which is the expected
+  next-intl redirect to the unprefixed URL.
+
+- **Root cause** (Next.js 16.4.6 source):
+  1. The router builds the request's base URL from the bound hostname, `http://127.0.0.1:3201`
+     (`server/lib/router-utils/resolve-routes.js`, `initUrl`).
+  2. `NextURL` normalises every loopback hostname (`127.x.x.x`, `[::1]`) to `localhost`
+     (`server/web/next-url.js`). The next-intl rewrite of `/` to `/ar` therefore comes back as
+     `http://localhost:3201/ar`.
+  3. The router turns a rewrite into a relative (internal) one only when its origin equals the
+     base URL (`getRelativeURL`). `localhost:3201` is not `127.0.0.1:3201`, so it is handled as
+     an external rewrite.
+  4. Next.js proxies that rewrite to `http://localhost:3201/ar`. That request is answered by the
+     next-intl redirect `/ar` → `/` (307), which reaches the browser and loops.
+  5. With the default binding, `-H localhost` or `-H 0.0.0.0`, the two origins match and the
+     rewrite stays internal.
+- **Normal deployment:**
+  - Not affected when the server binds to the default host, `0.0.0.0` (for example a container's
+    `HOSTNAME=0.0.0.0`) or `localhost`.
+  - A self-hosted setup that binds `next start` to `127.0.0.1` behind a reverse proxy **would be
+    affected**.
+  - The deployment target is NOT VERIFIED.
+- **Correction:**
+  - No code or routing change. The proxy and next-intl behave as designed.
+  - Configuration rule for any self-hosted deployment: do not bind `next start` to `127.0.0.1`.
+    Use the default, `0.0.0.0` (restricted by a firewall if needed) or `localhost`. Re-check this
+    when the deployment target is chosen.
 
 ## 8. Production release blockers (separate from technical QA)
 
@@ -266,7 +327,7 @@ Result: **70 passed, 0 failed** (35 per browser), after one documented exemption
    transition near the image's lower edge (owner review, 2026-11-22).
 5. English marketing approval (P07-D1).
 6. Commercial pricing approval (P07-D4, P07-D19, P07-D20).
-7. Social-share image and favicon.
+7. Social-share image (open) and favicon (F-1; fix proposed in PR #70, not merged).
 8. Accepted technical risks (register in PROGRESS.md):
    - **W-1:** WebKit (Playwright) navigation guard, Leave after a cancelled Back reloads; `fixme`
      kept.
