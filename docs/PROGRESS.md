@@ -78,10 +78,16 @@ Single resume point. A new session starts by reading this file, the latest phase
   - **Increment 6 (Verification and closure): IN PROGRESS** (technical QA plan approved by the owner
     2026-11-21: [phases/phase-07-increment-6-plan.md](phases/phase-07-increment-6-plan.md)). Evidence:
     [phases/phase-07-qa-report.md](phases/phase-07-qa-report.md). Release readiness stays separate.
+    - **P07-D24 merged** (PR #66, `66df53c`, 2026-11-22): primary label "ابدأ الآن"; the
+      Authentication gate hides every Landing authentication entry point and the Final CTA in
+      production; development keeps them.
+    - **Production smoke suite** (owner-approved 2026-11-22): `corepack pnpm test:e2e:prod`. It
+      runs in the required CI `e2e` job (QA report A7).
   - **ClickUp:** set up 2026-11-19 (docs/project-management/clickup-workflow.md).
-  - **Next:** owner approval of the Increment 6 plan; Increment 6 starts only after it. Owner
-    decisions pending: Hero image for production, English copy, pricing, the "ابدأ مجانًا" claim,
-    legal pages, Open Graph image.
+  - **Next:** the owner reviews the Increment 6 evidence (QA report) and the baselines. Owner
+    decisions pending: Hero image for production, English copy, pricing, legal pages, Open Graph
+    image and favicon, and the direct Auth placeholder routes (indexing and availability, proposed
+    as a separate PR).
   - **Maintenance (recommended, not done):** add `.playwright-mcp/` (local output of the
     Playwright MCP browser tool: page snapshots and console logs) to `.gitignore` in a
     separate change; untracked, it fails `prettier --check` and lint.

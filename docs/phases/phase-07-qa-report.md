@@ -5,8 +5,9 @@ Status: **IN PROGRESS** (owner approved the technical QA plan on 2026-11-21:
 from production release readiness. Phase 07 stays **IN PROGRESS** until the owner reviews this
 evidence and explicitly approves closure.
 
-Branch `phase/07-increment-6-qa`, built on the CTA correction branch (`fix/landing-cta-label`, PR
-#66), so the baselines show the corrected primary label. Base `main`: `a2d002a`.
+Branch `phase/07-increment-6-qa`, rebased onto `main` `66df53c` after the CTA correction and
+Authentication gate (PR #66, P07-D24) merged on 2026-11-22. The baselines show the corrected
+primary label "ابدأ الآن".
 
 ## A1. Landing visual baselines
 
@@ -22,6 +23,12 @@ Branch `phase/07-increment-6-qa`, built on the CTA correction branch (`fix/landi
 - **Baselines:** Windows (`-chromium-win32`) generated locally and stable (18/18 over 3 repeats).
   Linux (`-chromium-linux`) for CI come from the CI runner, as for `visual.spec.ts`; they are
   reviewed against the Windows set before commit.
+- **Windows and Linux differ only in font rasterisation:** glyph edges and, for English at 390, a
+  few line wraps (the Linux runner renders Inter slightly wider). Layout, sections and copy are the
+  same. Each platform compares only against its own set.
+- **After the Authentication gate (P07-D24):** the baselines are unchanged and still valid. They
+  are development renderings, where every authentication entry point still shows; the gate
+  changes production only. Production is covered by A7.
 - **Owner approval of the baselines is required** (Roadmap §8); they are not auto-accepted.
 
 ## A2. Figma comparison
@@ -57,22 +64,41 @@ No full-frame pixel overlay against the Figma frames was made in this pass. The 
 
 ## A4. Lighthouse (measurements only, D-12)
 
-Production configuration (`NEXT_PUBLIC_APP_ENV=production` build, `next start`, localhost),
-Lighthouse 12.8.2, Chromium 157 headless, simulated throttling. Reports:
-`assets/review/lighthouse-2026-11-21/` (local, git-ignored).
+Re-measured on 2026-11-22 after the Authentication gate (`main` `66df53c`). Production
+configuration (`NEXT_PUBLIC_APP_ENV=production` build, `next start`, localhost, Windows 11),
+Lighthouse 12.8.2 (`pnpm dlx`, not a project dependency), Playwright Chromium 157 headless.
+Mobile: 412 × 823, RTT 150 ms, 1.6 Mbps, CPU × 4. Desktop: the `desktop` preset.
 
-| Form factor | Performance | Accessibility | Best Practices | SEO | LCP   | CLS | TBT   | FCP   |
-| ----------- | ----------- | ------------- | -------------- | --- | ----- | --- | ----- | ----- |
-| Desktop     | 100         | 100           | 96             | 100 | 0.7 s | 0   | 0 ms  | 0.3 s |
-| Mobile      | 89          | 100           | 96             | 100 | 3.8 s | 0   | 60 ms | 1.1 s |
+| Run                                   | Performance | Accessibility | Best Practices | SEO | LCP   | CLS   | TBT    | FCP   |
+| ------------------------------------- | ----------- | ------------- | -------------- | --- | ----- | ----- | ------ | ----- |
+| Desktop, simulated                    | 100         | 100           | 96             | 100 | 0.8 s | 0     | 0 ms   | 0.3 s |
+| Mobile, simulated (run 1)             | 92          | 100           | 96             | 100 | 3.4 s | 0     | 70 ms  | 1.1 s |
+| Mobile, simulated (run 2)             | 90          | 100           | 96             | 100 | 3.6 s | 0     | —      | —     |
+| Mobile, DevTools throttling (applied) | 74          | 100           | 96             | 100 | 2.5 s | 0.003 | 810 ms | 2.5 s |
+| Before the gate, 2026-11-21 (Mobile)  | 89          | 100           | 96             | 100 | 3.8 s | 0     | 60 ms  | 1.1 s |
+| Before the gate, 2026-11-21 (Desktop) | 100         | 100           | 96             | 100 | 0.7 s | 0     | 0 ms   | 0.3 s |
 
 - **INP: not measured.** No field data exists (localhost); a lab navigation run cannot produce
   INP.
 - Best Practices 96: the only console error is **`/favicon.ico` 404** (no favicon). Adding one is a
   technical item that needs an approved icon.
-- Mobile LCP element: the Showcase heading text (simulated slow 4G). Recorded only; not a target.
-- Limits: one run per form factor on localhost; lab values vary between runs; the production Hero
-  image is gated off, so the measured page has no Hero image.
+- **Mobile LCP findings** (recorded; no change made, not a design target):
+  - The LCP text paints at **first paint**: the unthrottled trace shows FCP = LCP = 251 ms. The
+    simulated LCP (3.4–3.6 s, Showcase heading) is Lantern's estimate: it charges the 12 script
+    files (178 KB) requested before that paint to the LCP. Render delay is 86–87% of it; resource
+    load time is 0.
+  - With applied throttling, LCP = FCP = 2.5 s (Hero heading). The critical path is:
+    1. the document (TTFB 566 ms);
+    2. the render-blocking CSS (15 KB, ends at 1.6 s);
+    3. an 834 ms main-thread task right after it (style and layout, unattributed);
+    4. Cairo and Inter (30 + 47 KB, end at 1.8 and 2.1 s).
+  - The **horizontal logo PNG (100 KB, served unoptimized by design, high priority)** downloads at
+    the same time (0.7–3.0 s) and competes with the CSS and fonts on the slow link.
+  - Candidates for a separate, measured change: an optimized logo export with identical pixels (an
+    owner asset decision); profiling the 834 ms style and layout task; reducing the early script
+    requests (30 KB unused, 13 KB legacy polyfills); lazy-loading off-screen images (98 KB).
+- Limits: one or two runs per configuration on localhost; lab values vary between runs; the
+  production Hero image is gated off, so the measured page has no Hero image.
 
 ## A5. Cross-browser (Playwright engines)
 
@@ -80,6 +106,8 @@ New `tests/e2e/landing.cross-browser.spec.ts`, run in Chromium, Firefox and WebK
 emulation). It checks: section order, the navbar (58 high), the Hero image, no video, the Showcase
 card (760 Desktop, 520 Tablet), CTA and login destinations, in-page section navigation, the FAQ
 accordion by keyboard, the Mobile menu (open, Esc) and English LTR. **15 passed** (5 × 3 engines).
+It runs on the development server, where the CTA and login links are expected; production is
+covered by A7.
 
 This is engine automation, **not real Safari, Edge, Firefox or device verification**. W-1 (WebKit
 guard) stays accepted; its `fixme` remains.
@@ -90,6 +118,34 @@ guard) stays accepted; its `fixme` remains.
   animation settle helper (#63).
 - The language-switch test never failed in CI; its single local failure is unexplained (ClickUp
   task "intermittent Landing language-switch E2E failure"). CI keeps a trace on the first retry.
+
+## A7. Production smoke suite (owner-approved 2026-11-22)
+
+- **Config:** `playwright.production.config.ts`, kept separate from the development suite:
+  - its own folder `tests/e2e-production` (the development config never lists it), port 3200, and
+    report and output folders;
+  - it never reuses a running server.
+- **Server:** the config builds with `NEXT_PUBLIC_APP_ENV=production` and serves with
+  `next start`.
+- **Self-check:** the suite first proves that it runs against a production build (`/dev/tokens`
+  returns 404).
+- **Run:** `corepack pnpm test:e2e:prod`. In CI it is a step of the required `e2e` job, after the
+  development suite.
+- **Spec:** `tests/e2e-production/landing.prod.spec.ts`, 17 tests. At 1440, 768 and 390 it checks:
+  - no Login, Register, forgot-password or reset-password link in the DOM;
+  - no navbar or menu login, no Hero primary, no footer account column, no Final CTA and no
+    Pricing;
+  - no language link; the approved section order;
+  - the Hero secondary CTA scrolls to How it works;
+  - navigation (Desktop links; Mobile and Tablet menu: open, 4 section links, Esc, a link closes
+    it and navigates);
+  - no horizontal overflow;
+  - `lang="ar"`, `dir="rtl"`, the title and the Arabic description metadata;
+  - no console error, page error or hydration warning (shared fixture).
+- **English gate:** `/en` returns 404, checked over HTTP so the browser's 404 log is not mistaken
+  for a page error.
+- **Not covered:** visual baselines in production. The production page differs from the
+  development baselines only by the gated parts.
 
 ## 7. Manual QA checklist (all NOT VERIFIED until evidence exists)
 
@@ -109,8 +165,12 @@ guard) stays accepted; its `fixme` remains.
 
 ## 8. Production release blockers (separate from technical QA)
 
-1. "ابدأ الآن" / Register destination: registration is a placeholder (PR #66; P07-D24 destination
-   open).
+1. **Resolved for the Landing (PR #66, `66df53c`):** production hides every authentication entry
+   point until Authentication is operational (P07-D24). **Still open:**
+   - the Phase 04 placeholder routes (`/login`, `/register`, `/forgot-password`,
+     `/reset-password` and their `/en` forms) return 200 in production and have no `noindex`;
+   - the English placeholders are served even though the English Landing is gated.
+   - A separate route-indexing PR is proposed; it is not part of this QA branch.
 2. Legal pages (P07-D2).
 3. Real-browser, device and screen-reader evidence (§7; R-3).
 4. Hero image production approval and sharpness (P07-D21).
