@@ -5,24 +5,25 @@ Status: **IN PROGRESS** (owner approved the technical QA plan on 2026-11-21:
 from production release readiness. Phase 07 stays **IN PROGRESS** until the owner reviews this
 evidence and explicitly approves closure.
 
-Branch `phase/07-increment-6-qa`, rebased onto `main` `66df53c` after the CTA correction and
-Authentication gate (PR #66, P07-D24) merged on 2026-11-22. The baselines show the corrected
+Branch `phase/07-increment-6-qa`, rebased onto `main` `620e26f` (2026-11-22) after the CTA
+correction and Authentication gate (PR #66, P07-D24) and the Auth placeholder protection (PR #68,
+P07-D25) merged. The baselines show the corrected
 primary label "ابدأ الآن".
 
 ## Evidence summary (preliminary technical evidence, accepted by the owner 2026-11-22)
 
-| Evidence                                        | Result                                         | Where                                  |
-| ----------------------------------------------- | ---------------------------------------------- | -------------------------------------- |
-| `pnpm check` (types, lint, format, unit, build) | Pass; unit 1305/1305                           | Local and CI `check`                   |
-| Development E2E (`pnpm test:e2e`)               | 1061 passed, 1 skipped (W-1 `fixme`)           | CI run 45031190475 on `c866504`, `e2e` |
-| Production smoke (`pnpm test:e2e:prod`)         | 17 passed                                      | Same CI run, `e2e` job (A7)            |
-| Landing visual baselines (Linux in CI)          | Pass (part of the development E2E)             | A1                                     |
-| Automated accessibility (axe, keyboard)         | Pass                                           | A3                                     |
-| Lighthouse (lab, localhost)                     | Recorded only                                  | A4                                     |
-| Browser engines (Chromium, Firefox, WebKit)     | 15 passed (automation, not real browsers)      | A5                                     |
-| Owner review of the baselines                   | **NOT VERIFIED** (pending; PR #67 stays draft) | §7                                     |
-| Real browsers and devices                       | **NOT VERIFIED**                               | §7                                     |
-| Screen readers                                  | **NOT VERIFIED**                               | §7                                     |
+| Evidence                                        | Result                                                                                                            | Where                                               |
+| ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| `pnpm check` (types, lint, format, unit, build) | Pass; unit 1308/1308                                                                                              | Local on `main` `620e26f` + this branch; CI `check` |
+| Development E2E (`pnpm test:e2e`)               | 1070 passed, 1 skipped (W-1 `fixme`) after the rebase onto `620e26f`; before it, 1061 passed (CI run 45031190475) | Local; CI `e2e` (required) on the PR head           |
+| Production smoke (`pnpm test:e2e:prod`)         | 28 passed (Auth routes 11, from PR #68; Landing 17)                                                               | Local; CI `e2e` job (A7)                            |
+| Landing visual baselines (Linux in CI)          | Pass (part of the development E2E)                                                                                | A1                                                  |
+| Automated accessibility (axe, keyboard)         | Pass                                                                                                              | A3                                                  |
+| Lighthouse (lab, localhost)                     | Recorded only                                                                                                     | A4                                                  |
+| Browser engines (Chromium, Firefox, WebKit)     | 15 passed (automation, not real browsers)                                                                         | A5                                                  |
+| Owner review of the baselines                   | **NOT VERIFIED** (pending; PR #67 stays draft)                                                                    | §7                                                  |
+| Real browsers and devices                       | **NOT VERIFIED**                                                                                                  | §7                                                  |
+| Screen readers                                  | **NOT VERIFIED**                                                                                                  | §7                                                  |
 
 ## A1. Landing visual baselines
 
@@ -142,7 +143,8 @@ guard) stays accepted; its `fixme` remains.
 
 ## A7. Production smoke suite (owner-approved 2026-11-22)
 
-- **Config:** `playwright.production.config.ts`, kept separate from the development suite:
+- **Config:** `playwright.production.config.ts` (on `main` since PR #68, which shared it), kept
+  separate from the development suite:
   - its own folder `tests/e2e-production` (the development config never lists it), port 3200, and
     report and output folders;
   - it never reuses a running server.
@@ -151,10 +153,12 @@ guard) stays accepted; its `fixme` remains.
 - **Self-check:** the suite first proves that it runs against a production build (`/dev/tokens`
   returns 404).
 - **Run:** `corepack pnpm test:e2e:prod`. In CI it is a step of the `e2e` job, after the development
-  suite. **`e2e` is not a required status check**: the `main-protection` ruleset requires `check`
-  only. Making `e2e` required is a pending owner action (ClickUp), so a failing production smoke
-  run is visible on the PR but does not block a merge by itself.
-- **Spec:** `tests/e2e-production/landing.prod.spec.ts`, 17 tests. At 1440, 768 and 390 it checks:
+  suite. **`e2e` is a required status check** since 2026-11-22 (owner-approved; the
+  `main-protection` ruleset requires `check` and `e2e`, verified through the repository rules), so
+  a failing production smoke run blocks a merge into `main`.
+- **Specs:** `tests/e2e-production/auth-routes.prod.spec.ts` (11 tests, from PR #68: the Auth
+  routes return 404 in production, placeholders are `noindex`, the Landing is indexable) and
+  `tests/e2e-production/landing.prod.spec.ts` (this PR), 17 tests. At 1440, 768 and 390 it checks:
   - no Login, Register, forgot-password or reset-password link in the DOM;
   - no navbar or menu login, no Hero primary, no footer account column, no Final CTA and no
     Pricing;
@@ -188,12 +192,13 @@ guard) stays accepted; its `fixme` remains.
 
 ## 8. Production release blockers (separate from technical QA)
 
-1. **Resolved for the Landing (PR #66, `66df53c`):** production hides every authentication entry
-   point until Authentication is operational (P07-D24). **Still open:**
-   - the Phase 04 placeholder routes (`/login`, `/register`, `/forgot-password`,
-     `/reset-password` and their `/en` forms) return 200 in production and have no `noindex`;
-   - the English placeholders are served even though the English Landing is gated.
-   - A separate route-indexing PR is proposed; it is not part of this QA branch.
+1. **Resolved:**
+   - the Landing hides every authentication entry point in production (PR #66, `66df53c`,
+     P07-D24);
+   - the Auth placeholder routes (`/login`, `/register`, `/forgot-password`, `/reset-password`,
+     ar and en) return 404 in production, and every Phase 04 placeholder is `noindex, nofollow`
+     (PR #68, `620e26f`, P07-D25).
+   - Both reopen together only when the owner sets `AUTHENTICATION_AVAILABLE`.
 2. Legal pages (P07-D2).
 3. Real-browser, device and screen-reader evidence (§7; R-3).
 4. Hero image production approval and sharpness (P07-D21).

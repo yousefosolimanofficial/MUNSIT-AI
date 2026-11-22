@@ -81,15 +81,15 @@ Single resume point. A new session starts by reading this file, the latest phase
     - **P07-D24 merged** (PR #66, `66df53c`, 2026-11-22): primary label "ابدأ الآن"; the
       Authentication gate hides every Landing authentication entry point and the Final CTA in
       production; development keeps them.
+    - **P07-D25 merged** (PR #68, `620e26f`, 2026-11-22): the Auth placeholder routes return 404
+      in production until Authentication is available; every Phase 04 placeholder is `noindex`.
     - **Production smoke suite** (owner-approved 2026-11-22): `corepack pnpm test:e2e:prod`. It
-      runs in the CI `e2e` job (QA report A7). `e2e` is not a required check yet (the ruleset
-      requires `check` only; owner action pending), so a failure is visible but does not block a
-      merge on its own.
+      runs in the CI `e2e` job (QA report A7). **`e2e` is a required check** since 2026-11-22
+      (owner-approved; the `main-protection` ruleset requires `check` and `e2e`).
   - **ClickUp:** set up 2026-11-19 (docs/project-management/clickup-workflow.md).
   - **Next:** the owner reviews the Increment 6 evidence (QA report) and the baselines. Owner
     decisions pending: Hero image for production, English copy, pricing, legal pages, Open Graph
-    image and favicon, and the direct Auth placeholder routes (indexing and availability, proposed
-    as a separate PR).
+    image and favicon.
   - **Maintenance (recommended, not done):** add `.playwright-mcp/` (local output of the
     Playwright MCP browser tool: page snapshots and console logs) to `.gitignore` in a
     separate change; untracked, it fails `prettier --check` and lint.
