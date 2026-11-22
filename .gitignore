@@ -10,7 +10,9 @@ next-env.d.ts
 # test output
 coverage/
 test-results/
+test-results-production/
 playwright-report/
+playwright-report-production/
 blob-report/
 playwright/.cache/
 

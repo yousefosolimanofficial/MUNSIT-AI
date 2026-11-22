@@ -110,6 +110,11 @@ jobs:
       - name: Run the E2E suite
         run: pnpm test:e2e
 
+      - name: Run the production smoke suite (production build, next start)
+        # playwright.production.config.ts builds with NEXT_PUBLIC_APP_ENV=production and tests the
+        # production gates (Authentication, Pricing, English) on the real production server.
+        run: pnpm test:e2e:prod
+
       - name: Upload the Playwright report and traces (on failure)
         if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -118,5 +123,7 @@ jobs:
           path: |
             playwright-report/
             test-results/
+            playwright-report-production/
+            test-results-production/
           retention-days: 7
           if-no-files-found: ignore

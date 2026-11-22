@@ -45,7 +45,9 @@ export default defineConfig([
     "out/**",
     "coverage/**",
     "playwright-report/**",
+    "playwright-report-production/**",
     "test-results/**",
+    "test-results-production/**",
     "next-env.d.ts",
   ]),
 ]);

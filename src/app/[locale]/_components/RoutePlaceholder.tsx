@@ -23,10 +23,14 @@ async function routeTitle(routeKey: PlaceholderRouteKey): Promise<string> {
   }
 }
 
-/** Page `<title>`: the screen title, completed by the layout's "%s · MUNSIT AI" template. */
+/**
+ * Page `<title>` (the screen title, completed by the layout's "%s · MUNSIT AI" template) and
+ * `noindex, nofollow`: a placeholder is an unfinished screen and must never be indexed by search
+ * engines (P07-D25). The Landing is a real page and stays indexable.
+ */
 export async function placeholderMetadata(routeKey: PlaceholderRouteKey): Promise<Metadata> {
   if (routeKey === "landing") return {};
-  return { title: await routeTitle(routeKey) };
+  return { title: await routeTitle(routeKey), robots: { index: false, follow: false } };
 }
 
 /** Local layout constant (not a token): readable width of the placeholder card. */
