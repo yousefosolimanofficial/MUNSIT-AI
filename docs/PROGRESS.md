@@ -75,13 +75,24 @@ Single resume point. A new session starts by reading this file, the latest phase
     corrections: Tablet and Mobile description, and the heading, meet WCAG at every pixel. Image softness
     (666 × 412 source) remains a known limitation:
     [phases/phase-07-static-hero.md](phases/phase-07-static-hero.md).
-  - **Increment 6 (Verification and closure): NOT STARTED.** Readiness assessment and execution plan
-    (PROPOSED, awaiting owner approval):
-    [phases/phase-07-increment-6-plan.md](phases/phase-07-increment-6-plan.md).
+  - **Increment 6 (Verification and closure): IN PROGRESS** (technical QA plan approved by the owner
+    2026-11-21: [phases/phase-07-increment-6-plan.md](phases/phase-07-increment-6-plan.md)). Evidence:
+    [phases/phase-07-qa-report.md](phases/phase-07-qa-report.md). Release readiness stays separate.
+    - **P07-D24 merged** (PR #66, `66df53c`, 2026-11-22): primary label "ابدأ الآن"; the
+      Authentication gate hides every Landing authentication entry point and the Final CTA in
+      production; development keeps them.
+    - **P07-D25 merged** (PR #68, `620e26f`, 2026-11-22): the Auth placeholder routes return 404
+      in production until Authentication is available; every Phase 04 placeholder is `noindex`.
+    - **Production smoke suite** (owner-approved 2026-11-22): `corepack pnpm test:e2e:prod`. It
+      runs in the CI `e2e` job (QA report A7). **`e2e` is a required check** since 2026-11-22
+      (owner-approved; the `main-protection` ruleset requires `check` and `e2e`).
+    - **Visual regression baselines approved** by the product owner on 2026-11-22 as references
+      for the current approved development and production configurations (QA report A1). This
+      does not authorize production activation of gated features.
   - **ClickUp:** set up 2026-11-19 (docs/project-management/clickup-workflow.md).
-  - **Next:** owner approval of the Increment 6 plan; Increment 6 starts only after it. Owner
-    decisions pending: Hero image for production, English copy, pricing, the "ابدأ مجانًا" claim,
-    legal pages, Open Graph image.
+  - **Next:** manual evidence (real browsers, devices, screen readers; QA report §7). Owner
+    decisions pending: Hero image for production, English copy, pricing, legal pages, Open Graph
+    image and favicon.
   - **Maintenance (recommended, not done):** add `.playwright-mcp/` (local output of the
     Playwright MCP browser tool: page snapshots and console logs) to `.gitignore` in a
     separate change; untracked, it fails `prettier --check` and lint.
