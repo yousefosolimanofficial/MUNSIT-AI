@@ -123,6 +123,25 @@ describe("Arabic copy is Figma verbatim (P07-D11)", () => {
   });
 });
 
+describe("primary CTA label without the free claim (P07-D24, documented exception)", () => {
+  it("Hero and Final CTA use the owner's provisional label, not the unverified free claim", () => {
+    const { ar, en } = MESSAGES;
+    expect(ar.landing.hero.ctaPrimary).toBe("ابدأ الآن");
+    expect(ar.landing.cta.primary).toBe("ابدأ الآن");
+    // English is gated in production (P07-D1); it mirrors the correction.
+    expect(en.landing.hero.ctaPrimary).toBe("Get started");
+    expect(en.landing.cta.primary).toBe("Get started");
+    for (const label of [
+      ar.landing.hero.ctaPrimary,
+      ar.landing.cta.primary,
+      en.landing.hero.ctaPrimary,
+      en.landing.cta.primary,
+    ]) {
+      expect(label).not.toMatch(/مجان|free/i);
+    }
+  });
+});
+
 describe("LandingFooter", () => {
   function renderFooter(locale: Locale) {
     const f = MESSAGES[locale].landing.footer;

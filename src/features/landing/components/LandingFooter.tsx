@@ -38,6 +38,8 @@ export interface LandingFooterProps {
   };
   /** Copyright line, verbatim ("© 2026 Munsit AI. جميع الحقوق محفوظة."). */
   copyright: string;
+  /** Whether the account column (login, register) is shown (Authentication gate, P07-D24). */
+  showAccount?: boolean;
 }
 
 const LINK = ["rounded-sm text-landing-footer-link text-text-secondary", FOCUS_RING].join(" ");
@@ -45,7 +47,12 @@ const LINK = ["rounded-sm text-landing-footer-link text-text-secondary", FOCUS_R
 const COLUMN = "flex flex-col items-start gap-[20px]";
 const LIST = "flex flex-col items-start gap-[16px]";
 
-export function LandingFooter({ links, labels, copyright }: LandingFooterProps) {
+export function LandingFooter({
+  links,
+  labels,
+  copyright,
+  showAccount = true,
+}: LandingFooterProps) {
   return (
     <footer
       data-landing-footer=""
@@ -81,27 +88,32 @@ export function LandingFooter({ links, labels, copyright }: LandingFooterProps) 
             </ul>
           </nav>
 
-          <nav
-            aria-labelledby="landing-footer-account"
-            className={COLUMN}
-            data-landing-footer-column="account"
-          >
-            <h2 id="landing-footer-account" className="text-landing-label-title text-text-primary">
-              {labels.accountTitle}
-            </h2>
-            <ul className={LIST}>
-              <li>
-                <Link href={ROUTES["auth.login"]} className={LINK}>
-                  {labels.login}
-                </Link>
-              </li>
-              <li>
-                <Link href={ROUTES["auth.register"]} className={LINK}>
-                  {labels.register}
-                </Link>
-              </li>
-            </ul>
-          </nav>
+          {showAccount ? (
+            <nav
+              aria-labelledby="landing-footer-account"
+              className={COLUMN}
+              data-landing-footer-column="account"
+            >
+              <h2
+                id="landing-footer-account"
+                className="text-landing-label-title text-text-primary"
+              >
+                {labels.accountTitle}
+              </h2>
+              <ul className={LIST}>
+                <li>
+                  <Link href={ROUTES["auth.login"]} className={LINK}>
+                    {labels.login}
+                  </Link>
+                </li>
+                <li>
+                  <Link href={ROUTES["auth.register"]} className={LINK}>
+                    {labels.register}
+                  </Link>
+                </li>
+              </ul>
+            </nav>
+          ) : null}
         </div>
 
         <div className="flex flex-col items-start gap-[10px] border-t border-neutral-slate pt-[14px] rail:flex-row rail:items-center rail:justify-between">

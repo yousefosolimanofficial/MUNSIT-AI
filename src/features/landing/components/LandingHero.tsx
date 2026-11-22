@@ -35,7 +35,8 @@ import { AMBIENT, CTA_GLOW, FOCUS_RING, INTERACTIVE_TRANSITION } from "./landing
  *   - Mobile: a full-width column, gap 12.
  *   - The primary is at the inline start (first).
  *   - The buttons are Landing-local (46 / 48 high, radius 16), not the shared 44-high `Button`.
- * - Primary "ابدأ مجانًا" → the approved Register route (P07-D3: no plan, no purchase wording).
+ * - Primary "ابدأ الآن" (P07-D24: replaces the Figma "ابدأ مجانًا", an unverified free claim) →
+ *   the approved Register route (P07-D3: no plan, no purchase wording).
  *   Outline "اكتشف كيف يعمل" → `#how-it-works`. The primary CTA is never in the navigation.
  */
 
@@ -48,6 +49,8 @@ export interface LandingHeroProps {
   };
   /** The Hero image, or `null` (Near Black with the ambient glow). */
   image: HeroImage | null;
+  /** Whether the primary CTA to Register is shown (Authentication gate, P07-D24). */
+  showPrimary?: boolean;
 }
 
 const PRIMARY = [
@@ -72,7 +75,7 @@ const OUTLINE = [
   FOCUS_RING,
 ].join(" ");
 
-export function LandingHero({ copy, image }: LandingHeroProps) {
+export function LandingHero({ copy, image, showPrimary = true }: LandingHeroProps) {
   return (
     <>
       {/* Media layer: Near Black, the ambient glow, then the static Figma image. */}
@@ -151,9 +154,15 @@ export function LandingHero({ copy, image }: LandingHeroProps) {
           className="flex w-full max-w-[350px] flex-col items-center gap-[12px] rail:h-[86px] rail:w-auto rail:max-w-none rail:flex-row rail:gap-[37px] rail:px-[48px]"
           data-landing-hero-actions=""
         >
-          <Link href={ROUTES["auth.register"]} data-landing-hero-cta="primary" className={PRIMARY}>
-            {copy.ctaPrimary}
-          </Link>
+          {showPrimary ? (
+            <Link
+              href={ROUTES["auth.register"]}
+              data-landing-hero-cta="primary"
+              className={PRIMARY}
+            >
+              {copy.ctaPrimary}
+            </Link>
+          ) : null}
           <a href="#how-it-works" data-landing-hero-cta="secondary" className={OUTLINE}>
             {copy.ctaSecondary}
           </a>
