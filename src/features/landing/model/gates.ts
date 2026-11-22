@@ -1,3 +1,4 @@
+import { AUTHENTICATION_AVAILABLE, isAuthenticationAvailable } from "@/config/availability";
 import type { AppEnv } from "@/config/env";
 
 /*
@@ -33,23 +34,11 @@ export function isPlaceholderPricingVisible(appEnv: AppEnv): boolean {
   return appEnv !== "production";
 }
 
-/**
- * P07-D24 (owner, 2026-11-22): Authentication is not operational yet. The Auth routes are Phase 04
- * placeholders and Phase 08 (Authentication UI) has not started. Set to `true` only when the owner
- * confirms a working sign-in and registration flow.
+/*
+ * P07-D24: the Authentication availability gate lives in `@/config/availability` (shared with the
+ * Auth routes, P07-D25); it is re-exported here for the Landing.
  */
-export const AUTHENTICATION_AVAILABLE = false;
-
-/**
- * Whether public authentication entry points may be shown. Production hides them until
- * Authentication is operational; development and preview keep them.
- */
-export function isAuthenticationAvailable(
-  appEnv: AppEnv,
-  available: boolean = AUTHENTICATION_AVAILABLE,
-): boolean {
-  return available || appEnv !== "production";
-}
+export { AUTHENTICATION_AVAILABLE, isAuthenticationAvailable };
 
 /** Every public authentication entry point on the Landing page. */
 export interface LandingAuthEntryPoints {
