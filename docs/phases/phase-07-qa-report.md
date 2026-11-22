@@ -22,7 +22,7 @@ primary label "ابدأ الآن".
 | Lighthouse (lab, localhost)                     | Recorded only                                                                                                     | A4                                                  |
 | Browser engines (Chromium, Firefox, WebKit)     | 15 passed (automation, not real browsers)                                                                         | A5                                                  |
 | Owner review of the baselines                   | **APPROVED** by the product owner on 2026-11-22 (A1)                                                              | A1                                                  |
-| Real browsers and devices                       | **NOT VERIFIED**                                                                                                  | §7                                                  |
+| Real browsers and devices                       | **PARTIAL**: Chrome 157 and Edge 158 on Windows passed; other browsers and all devices NOT VERIFIED               | §7                                                  |
 | Screen readers                                  | **NOT VERIFIED**                                                                                                  | §7                                                  |
 
 ## A1. Landing visual baselines
@@ -184,20 +184,72 @@ guard) stays accepted; its `fixme` remains.
 - **Not covered:** visual baselines in production. The production page differs from the
   development baselines only by the gated parts.
 
-## 7. Manual QA checklist (all NOT VERIFIED until evidence exists)
+## 7. Manual QA checklist
 
-| Check                                              | Status       | Evidence required                         |
-| -------------------------------------------------- | ------------ | ----------------------------------------- |
-| Real Chrome (latest two majors), Windows and macOS | NOT VERIFIED | Version, screenshots, notes               |
-| Real Firefox (latest two majors)                   | NOT VERIFIED | Version, screenshots, notes               |
-| Real Edge (latest two majors)                      | NOT VERIFIED | Version, screenshots, notes               |
-| Real Safari macOS (latest two majors)              | NOT VERIFIED | Version, screenshots, notes (W-1 context) |
-| iOS Safari on a physical iPhone                    | NOT VERIFIED | Device, iOS version, screenshots          |
-| Android Chrome on a physical device                | NOT VERIFIED | Device, Android version, screenshots      |
-| NVDA (Windows) full-page pass                      | NOT VERIFIED | Reading order, landmarks, FAQ, menu       |
-| VoiceOver (macOS and iOS)                          | NOT VERIFIED | As above                                  |
-| TalkBack (Android)                                 | NOT VERIFIED | As above                                  |
-| Hero image sharpness (666 × 412 source)            | NOT VERIFIED | Owner visual decision (A1, §8 item 4)     |
+### 7.1 Status
+
+| Check                                              | Status       | Evidence                                                                   |
+| -------------------------------------------------- | ------------ | -------------------------------------------------------------------------- |
+| Real Chrome (latest two majors), Windows and macOS | **PARTIAL**  | Chrome 157 on Windows passed (§7.3); macOS and a second major NOT VERIFIED |
+| Real Firefox (latest two majors)                   | NOT VERIFIED | Not installed on the QA machine                                            |
+| Real Edge (latest two majors)                      | **PARTIAL**  | Edge 158 on Windows passed (§7.3); a second major NOT VERIFIED             |
+| Real Safari macOS (latest two majors)              | NOT VERIFIED | No macOS machine                                                           |
+| iOS Safari on a physical iPhone                    | NOT VERIFIED | No physical iPhone available                                               |
+| Android Chrome on a physical device                | NOT VERIFIED | No physical Android device available                                       |
+| NVDA (Windows) full-page pass                      | NOT VERIFIED | NVDA not installed                                                         |
+| VoiceOver (macOS and iOS)                          | NOT VERIFIED | No macOS or iOS device                                                     |
+| TalkBack (Android)                                 | NOT VERIFIED | No physical Android device available                                       |
+| Hero image sharpness (666 × 412 source)            | NOT VERIFIED | Owner visual decision (A1, §8 item 4)                                      |
+
+### 7.2 Environment (2026-11-22)
+
+- **Machine:** Windows 11 Pro 10.0.26300.
+- **Installed browsers:** Google Chrome 157.0.8103.79 and Microsoft Edge 158.0.4370.33. Firefox,
+  Safari and other browsers are not installed.
+- **Screen readers:** Windows Narrator only (built in). NVDA and JAWS are not installed. Narrator
+  was not used: no human listener, and it is not one of the target screen readers.
+- **Physical devices:** none connected for testing. No adb; the "spacedesk Android" entries in
+  Device Manager are a second-screen display driver, not a browser on a device.
+- **Build under test:** `main` `6997d34`, `next build` and `next start --port 3200` with
+  `NEXT_PUBLIC_APP_ENV=production`, in a clean worktree, served on `localhost`.
+
+### 7.3 Real-browser run (installed Chrome and Edge)
+
+**Method:** the installed Chrome and Edge binaries (Playwright `channel: chrome` and `msedge`,
+headed windows, fresh profiles) drove the production smoke suite (A7) plus supplementary checks.
+This is real-browser evidence for these two versions on Windows. It is automated, not a
+hands-on human session, and resized desktop windows are **not** mobile-device evidence.
+
+Result: **70 passed, 0 failed** (35 per browser), after one documented exemption (F-1).
+
+| Check (expected result)                                                                | Chrome 157 | Edge 158 |
+| -------------------------------------------------------------------------------------- | ---------- | -------- |
+| Landing returns 200; `lang="ar"`, `dir="rtl"`, title and description (1440, 768, 390)  | Pass       | Pass     |
+| Approved section order; no Login, Register, Final CTA, Pricing or language link        | Pass       | Pass     |
+| Hero secondary CTA scrolls to How it works (`#how-it-works` in view)                   | Pass       | Pass     |
+| Navigation: desktop bar link to FAQ; compact menu opens, Esc closes, link navigates    | Pass       | Pass     |
+| FAQ: 6 questions; click, Enter and Space toggle `aria-expanded` and the panel          | Pass       | Pass     |
+| Keyboard: first Tab lands on a nav control with a visible focus indicator              | Pass       | Pass     |
+| No horizontal overflow at 1440, 768, 390 and 320                                       | Pass       | Pass     |
+| Auth routes (ar and en) return 404, `noindex`, no form; `/ar/login` redirects to a 404 | Pass       | Pass     |
+| `/en` and `/dev/tokens` return 404; public placeholders are `noindex, nofollow`        | Pass       | Pass     |
+| Full-page screenshots at 1440, 768, 390 and 320: no layout or typography regression    | Pass       | Pass     |
+
+- **Evidence:** `assets/review/phase-07-manual-qa-2026-11-22/` (local, git-ignored): full-page
+  captures per browser and width, and the Playwright JSON results.
+- **Visual review:** layouts match the owner-approved production configuration (A1). The 390 and
+  320 windows render 375 and 305 px of content beside the desktop scrollbar.
+
+### 7.4 Findings
+
+- **F-1 (open, linked to §8 item 7):** real Chrome and Edge request `/favicon.ico` on every page.
+  It returns 404 and logs a console error. The bundled Playwright Chromium used in CI does not
+  request it, so CI does not see this. The run above exempted exactly this URL in a temporary
+  copy of the console guard (not committed). It is resolved by the approved favicon asset; no
+  icon was invented.
+- **O-1 (observation, not a defect):** with `next start -H 127.0.0.1`, `/` answered 307 to itself
+  (the proxy rewrites to `localhost`). With the default host it answers 200. The deployment
+  host configuration is not verified.
 
 ## 8. Production release blockers (separate from technical QA)
 
