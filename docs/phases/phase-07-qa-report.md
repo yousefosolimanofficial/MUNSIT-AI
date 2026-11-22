@@ -9,6 +9,21 @@ Branch `phase/07-increment-6-qa`, rebased onto `main` `66df53c` after the CTA co
 Authentication gate (PR #66, P07-D24) merged on 2026-11-22. The baselines show the corrected
 primary label "ابدأ الآن".
 
+## Evidence summary (preliminary technical evidence, accepted by the owner 2026-11-22)
+
+| Evidence                                        | Result                                         | Where                                  |
+| ----------------------------------------------- | ---------------------------------------------- | -------------------------------------- |
+| `pnpm check` (types, lint, format, unit, build) | Pass; unit 1305/1305                           | Local and CI `check`                   |
+| Development E2E (`pnpm test:e2e`)               | 1061 passed, 1 skipped (W-1 `fixme`)           | CI run 45031190475 on `c866504`, `e2e` |
+| Production smoke (`pnpm test:e2e:prod`)         | 17 passed                                      | Same CI run, `e2e` job (A7)            |
+| Landing visual baselines (Linux in CI)          | Pass (part of the development E2E)             | A1                                     |
+| Automated accessibility (axe, keyboard)         | Pass                                           | A3                                     |
+| Lighthouse (lab, localhost)                     | Recorded only                                  | A4                                     |
+| Browser engines (Chromium, Firefox, WebKit)     | 15 passed (automation, not real browsers)      | A5                                     |
+| Owner review of the baselines                   | **NOT VERIFIED** (pending; PR #67 stays draft) | §7                                     |
+| Real browsers and devices                       | **NOT VERIFIED**                               | §7                                     |
+| Screen readers                                  | **NOT VERIFIED**                               | §7                                     |
+
 ## A1. Landing visual baselines
 
 - Spec: `tests/e2e/landing-visual.spec.ts`. Full page plus 10 parts (navbar, 8 sections, footer).
@@ -46,7 +61,7 @@ Parity is enforced by the per-section E2E geometry assertions against the Figma 
 | FAQ, Pricing (dev), Final CTA | positions ±1; panel 1200 × 366                                      | design-values §16.7 (7 documented items)                       |
 | Footer                        | Increment 1 geometry                                                | Legal items are plain text (P07-D2)                            |
 
-No full-frame pixel overlay against the Figma frames was made in this pass. The visual baselines
+**Full-frame pixel overlay against the Figma frames: NOT VERIFIED** (not made in this pass). The visual baselines
 (A1) now protect the approved rendering against regressions.
 
 ## A3. Accessibility (automated)
@@ -94,9 +109,12 @@ Mobile: 412 × 823, RTT 150 ms, 1.6 Mbps, CPU × 4. Desktop: the `desktop` prese
     4. Cairo and Inter (30 + 47 KB, end at 1.8 and 2.1 s).
   - The **horizontal logo PNG (100 KB, served unoptimized by design, high priority)** downloads at
     the same time (0.7–3.0 s) and competes with the CSS and fonts on the slow link.
-  - Candidates for a separate, measured change: an optimized logo export with identical pixels (an
-    owner asset decision); profiling the 834 ms style and layout task; reducing the early script
-    requests (30 KB unused, 13 KB legacy polyfills); lazy-loading off-screen images (98 KB).
+  - **Future investigation items** (not started; no speculative optimization; no image asset changes
+    without owner approval):
+    1. the 100 KB horizontal logo PNG: an optimized export with identical pixels is an owner asset
+       decision;
+    2. the 834 ms main-thread style and layout task: profile before any change;
+    3. early script requests (30 KB unused, 13 KB legacy polyfills) and off-screen images (98 KB).
 - Limits: one or two runs per configuration on localhost; lab values vary between runs; the
   production Hero image is gated off, so the measured page has no Hero image.
 
@@ -116,6 +134,9 @@ guard) stays accepted; its `fixme` remains.
 
 - Last 40 CI runs: 2 flaky results, both fixed by test-only PRs: navigation guard (#62) and the
   animation settle helper (#63).
+- Increment 6 (2026-11-22): a one-off local hydration warning in the Landing visual capture (ar 768)
+  came from changing `loading` on header and footer logos before they hydrated. Fixed in the test
+  (wait for every image); stable 18/18 over 3 repeats, CI green.
 - The language-switch test never failed in CI; its single local failure is unexplained (ClickUp
   task "intermittent Landing language-switch E2E failure"). CI keeps a trace on the first retry.
 
@@ -177,6 +198,13 @@ guard) stays accepted; its `fixme` remains.
 5. English marketing approval (P07-D1).
 6. Commercial pricing approval (P07-D4, P07-D19, P07-D20).
 7. Social-share image and favicon.
-8. Accepted technical risks: W-1, G-1, R-2, typography differences.
+8. Accepted technical risks (register in PROGRESS.md):
+   - **W-1:** WebKit (Playwright) navigation guard, Leave after a cancelled Back reloads; `fixme`
+     kept.
+   - **G-1:** a second browser Back without interaction leaves a guarded page (browser rule; risk
+     accepted, conditional).
+   - **R-2:** the 404's first HTML is empty until hydration (no message without JavaScript).
+   - **R-3:** cross-browser coverage is engine automation, not real browsers or devices.
+   - **Typography:** font-stack line-wrap differences (plan §8f).
 
 No production gate is enabled; no legal page, price or commercial promise was added.
