@@ -2,7 +2,9 @@
 out/
 coverage/
 playwright-report/
+playwright-report-production/
 test-results/
+test-results-production/
 pnpm-lock.yaml
 next-env.d.ts
 

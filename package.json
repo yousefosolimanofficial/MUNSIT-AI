@@ -20,6 +20,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
+    "test:e2e:prod": "playwright test --config playwright.production.config.ts",
     "check": "tsc --noEmit && eslint . && depcruise src --config .dependency-cruiser.cjs && prettier . --check && vitest run && next build"
   },
   "dependencies": {
