@@ -82,7 +82,9 @@ Single resume point. A new session starts by reading this file, the latest phase
       Authentication gate hides every Landing authentication entry point and the Final CTA in
       production; development keeps them.
     - **Production smoke suite** (owner-approved 2026-11-22): `corepack pnpm test:e2e:prod`. It
-      runs in the required CI `e2e` job (QA report A7).
+      runs in the CI `e2e` job (QA report A7). `e2e` is not a required check yet (the ruleset
+      requires `check` only; owner action pending), so a failure is visible but does not block a
+      merge on its own.
   - **ClickUp:** set up 2026-11-19 (docs/project-management/clickup-workflow.md).
   - **Next:** the owner reviews the Increment 6 evidence (QA report) and the baselines. Owner
     decisions pending: Hero image for production, English copy, pricing, legal pages, Open Graph

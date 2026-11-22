@@ -150,8 +150,10 @@ guard) stays accepted; its `fixme` remains.
   `next start`.
 - **Self-check:** the suite first proves that it runs against a production build (`/dev/tokens`
   returns 404).
-- **Run:** `corepack pnpm test:e2e:prod`. In CI it is a step of the required `e2e` job, after the
-  development suite.
+- **Run:** `corepack pnpm test:e2e:prod`. In CI it is a step of the `e2e` job, after the development
+  suite. **`e2e` is not a required status check**: the `main-protection` ruleset requires `check`
+  only. Making `e2e` required is a pending owner action (ClickUp), so a failing production smoke
+  run is visible on the PR but does not block a merge by itself.
 - **Spec:** `tests/e2e-production/landing.prod.spec.ts`, 17 tests. At 1440, 768 and 390 it checks:
   - no Login, Register, forgot-password or reset-password link in the DOM;
   - no navbar or menu login, no Hero primary, no footer account column, no Final CTA and no
