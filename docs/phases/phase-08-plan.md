@@ -2,7 +2,7 @@
 
 - **Status:** **PLAN APPROVED (owner, 2026-11-23)** with decisions D-08-1 to D-08-10 (§13).
   Implementation has **not** started. Increment 1 starts only after the owner approves its
-  execution contract.
+  execution contract ([phase-08-increment-1-contract.md](phase-08-increment-1-contract.md)).
 - **Baseline:** `main` `2f6d328`. Phase 07 is CLOSED — IMPLEMENTATION COMPLETE — PRODUCTION
   RELEASE BLOCKED. CI `check` and `e2e` pass.
 - **Roadmap:** Phase 08, "UI-complete, not functional"; gate D-02.
