@@ -1106,17 +1106,22 @@ filters, for rendering cost, as the Landing does (P07-D17).
 
 ### 17.2 Components
 
-| Part                       | Values                                                                                                                                                                                                                                      |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Form card                  | Gap 28. Header gap 8: title `Auth/Heading/Form` Text Primary, description `Landing/Body/Large` Text Secondary. Fields gap 20. Footer centred, gap 6: `Landing/Body/Small` Text Secondary plus a link                                        |
-| Input (`191:20`)           | Label `Auth/Form/Label` Text Primary, gap 8. Field 52 high, radius 12, padding 0 / 16, gap 12, Obsidian fill, 1 px Neutral Slate border. Value `Auth/Form/Input` Text Primary; placeholder Muted Readable (Muted while focused or disabled) |
-| Input states               | Focus: Electric Sky border plus a 0 0 0 3 Electric Sky 22% ring. Error: Coral Pulse border, helper `Auth/Form/Helper` Coral Pulse. Disabled: Ink fill, field opacity 50%                                                                    |
-| Password (`191:50`)        | Same as Input, with the eye at the inline end: 20 × 20, Text Secondary; Visible adds a 1.6 slash                                                                                                                                            |
-| Primary button (`191:57`)  | 52 high, radius 12, Neutral Mist fill, `Auth/Button/Primary` Neutral Iron. Focus: Electric Sky border plus a 3 px Electric Sky 25% ring. Disabled: opacity 40%. Loading: gap 8, 18 px spinner (track Iron 25%, arc Iron)                    |
-| Text link (`191:62`)       | `Auth/Form/Label` Electric Sky, padding 2 / 0. Hover: Info Blue                                                                                                                                                                             |
-| Error banner               | Coral Pulse 8% fill, Coral Pulse 35% border, radius 12, padding 10 / 14, `Dashboard/Body Medium` Coral Pulse                                                                                                                                |
-| Result status icon         | 64 × 64, radius 20, Success Green 12% fill, Success Green 40% border, `check` 28 in Success Green                                                                                                                                           |
-| Validation rule (`191:72`) | Row gap 6: dot 6 × 6, then the label `Auth/Form/Helper`. Neutral: Muted Readable label, Muted dot. Valid: Success Green. Error: Coral Pulse. List gap 16, right-aligned in RTL, reading order length, case, digit                           |
+| Part                       | Values                                                                                                                                                                                                                                               |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Form card                  | Gap 28. Header gap 8: title `Auth/Heading/Form` Text Primary, description `Landing/Body/Large` Text Secondary. Fields gap 20. Footer centred, gap 6: `Landing/Body/Small` Text Secondary plus a link                                                 |
+| Input (`191:20`)           | Label `Auth/Form/Label` Text Primary, gap 8. Field 52 high, radius 12, padding 0 / 16, gap 12, Obsidian fill, 1 px Neutral Slate border. Value `Auth/Form/Input` Text Primary; placeholder Muted Readable (Muted while focused or disabled)          |
+| Input states               | Focus: Electric Sky border plus a 0 0 0 3 Electric Sky 22% ring. Error: Coral Pulse border, helper `Auth/Form/Helper` Coral Pulse. Disabled: Ink fill, field opacity 50%                                                                             |
+| Password (`191:50`)        | Same as Input, with the eye at the inline end: 20 × 20, Text Secondary; Visible adds a 1.6 slash                                                                                                                                                     |
+| Primary button (`191:57`)  | 52 high, radius 12, Neutral Mist fill, `Auth/Button/Primary` Neutral Iron. Focus: Electric Sky border plus a 3 px Electric Sky 25% ring. Disabled: opacity 40%. Loading: gap 8, 18 px spinner (track Iron 25%, arc Iron)                             |
+| Text link (`191:62`)       | `Auth/Form/Label` Electric Sky, padding 2 / 0. Hover: Info Blue                                                                                                                                                                                      |
+| Error banner               | Coral Pulse 8% fill, Coral Pulse 35% border, radius 12, padding 10 / 14, `Dashboard/Body Medium` Coral Pulse                                                                                                                                         |
+| Result status icon         | 64 × 64, radius 20, Success Green 12% fill, Success Green 40% border, `check` 28 in Success Green                                                                                                                                                    |
+| Validation rule (`191:72`) | Row gap 6: dot 6 × 6, then the label `Auth/Form/Helper`. Neutral: Muted Readable label, Muted dot. Valid: Success Green. Error: Coral Pulse. List gap 16, right-aligned in RTL, reading order length, case, digit (code adds a shape cue, see below) |
+
+**Validation rule shape cue (code, not Figma; owner review pending):** the Figma variants differ
+by colour only, so to meet WCAG 1.4.1 the marker also changes shape. Neutral keeps the 6 × 6 dot;
+Valid shows the official `check` icon and Error the official `x` icon, both 12 px. Colours and
+type are unchanged (contract §16.4).
 
 ### 17.3 Marketing photos (D-08-2)
 

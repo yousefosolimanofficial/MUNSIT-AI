@@ -6,7 +6,10 @@ Single resume point. A new session starts by reading this file, the latest phase
 - **Current phase:** 08 — Authentication UI — **IN PROGRESS** (plan approved 2026-11-23,
   decisions D-08-1 to D-08-10). **Increment 1 (Foundation): IN PROGRESS**, under its approved
   contract ([phases/phase-08-increment-1-contract.md](phases/phase-08-increment-1-contract.md)).
-  `PasswordRule` is offered to Eng. Mariam and waiting for her confirmation. Plan and Figma audit: [phases/phase-08-plan.md](phases/phase-08-plan.md).
+  All Increment 1 scope is implemented on draft PR #75 and **awaits owner approval** (contract
+  §16.4). `PasswordRule` was offered to Eng. Mariam; she did not confirm, so it was built
+  internally (I1-3 fallback; no starter package was issued). Plan and Figma audit:
+  [phases/phase-08-plan.md](phases/phase-08-plan.md).
   Production is unchanged (`AUTHENTICATION_AVAILABLE = false`).
 - **Phase 07:** Landing Page — **CLOSED — IMPLEMENTATION COMPLETE — PRODUCTION RELEASE BLOCKED** (Product Owner approval
   2026-11-23; P07-D26). The application is **not** production-ready; release-readiness

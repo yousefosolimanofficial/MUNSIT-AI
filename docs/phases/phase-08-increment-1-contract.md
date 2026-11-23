@@ -334,4 +334,53 @@ Each deviation was recorded during implementation.
   - unit and component (jsdom, jest-axe);
   - `tests/e2e/auth-foundation.spec.ts`;
   - a production smoke check that `/dev/auth` returns 404.
-- **Not yet:** `PasswordRule` (waiting for Eng. Mariam's confirmation, I1-3).
+- **`PasswordRule`:** added at finalization (§16.4).
+
+### 16.4 Finalization (owner decisions, 2026-11-23)
+
+| ID  | Decision                                                                                                                                                                         |
+| --- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| F-1 | **APPROVED** accessibility copy: "إظهار كلمة المرور", "إخفاء كلمة المرور", "متحقق", "غير متحقق"                                                                                  |
+| F-2 | `PasswordRule` offered to Eng. Mariam; no explicit confirmation was received, so it was built internally (I1-3 fallback). No starter package was issued and nothing was assigned |
+| F-3 | **ACCEPTED**: ADR-004 breakpoints (Mobile < 720, Tablet 720–1279, Desktop ≥ 1280), verified at 390, 720, 768, 1024, 1280 and 1440                                                |
+| F-4 | PR #75 stays a draft until every Increment 1 criterion passes; merge only with explicit owner approval                                                                           |
+
+**Implemented:**
+
+- `src/features/auth/components/PasswordRule.tsx`: `PasswordRule` (one `li`) and
+  `PasswordRuleList` (the `ul`, gap 16, wrapping, `aria-live="polite"`), with
+  `PasswordRule.test.tsx`;
+- `PasswordRulesDemo.tsx`: a preview-only client demo on `/dev/auth` (a password field linked to
+  the list with `aria-describedby`), replacing the static rule line.
+
+**Accessibility decisions:**
+
+- **Toggle (toggle-button pattern):** the accessible name stays "إظهار كلمة المرور" and
+  `aria-pressed` carries the state. A name that switches to "إخفاء كلمة المرور" while pressed would
+  contradict the pressed state, so the approved hide label stays in the messages but is not the
+  button's name. E2E checks that the name is constant across both states.
+- **Rule announcements:** each row ends with a visually hidden status word and is `aria-atomic`;
+  the list is a polite live region, so a change is read as the whole row ("حرف كبير وحرف صغير متحقق").
+  Screen readers that do not announce live changes still read the status word when they reach it.
+- **Not by colour alone (WCAG 1.4.1):** the Figma variants differ only by colour. The marker now
+  also changes shape: Neutral keeps the Figma 6 × 6 dot, Valid shows the official `check` icon and
+  Error the official `x` icon, both 12 px in the 12 px marker box. **Deviation from Figma**, for
+  owner review.
+
+**Responsive measurements (Chromium, `/dev/auth`, no horizontal overflow at any width, 320
+included):**
+
+| Width | Layout  | Visual and DOM order | Panel | Card | Notes                                               |
+| ----- | ------- | -------------------- | ----- | ---- | --------------------------------------------------- |
+| 390   | Mobile  | logo, form, panel    | 350   | 350  | Figma Mobile frame (20 side margins)                |
+| 720   | Tablet  | logo, panel, form    | 624   | 480  | First Tablet width; fluid, 48 side margins          |
+| 768   | Tablet  | logo, panel, form    | 672   | 480  | Figma Tablet frame                                  |
+| 1024  | Tablet  | logo, panel, form    | 928   | 480  | Fluid between frames (no Figma frame at this width) |
+| 1280  | Desktop | form, panel (row)    | 520   | 480  | Row 1096 centred (start 92); gap 96                 |
+| 1440  | Desktop | form, panel (row)    | 520   | 480  | Figma Desktop frame (start 172); gap 96             |
+
+Validation rule geometry at 1440 and 390: dot 6 × 6, marker–label gap 6, rule gap 16, type
+12 / 18; the first rule (length) is on the inline start.
+
+**Remaining deviations (for owner review):** the rule marker shapes above; the Tablet panel is fluid
+between 720 and 1279 (Figma defines only 768); and the §16.2 items.
