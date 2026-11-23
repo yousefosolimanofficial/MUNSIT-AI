@@ -1075,7 +1075,9 @@ no new token was added. Translucent tints, shadows and sizes are local constants
 
 ### 17.1 Layout
 
-Breakpoints follow ADR-004 (Mobile < 720 ≤ Tablet < 1280 ≤ Desktop).
+Breakpoints follow ADR-004 (Mobile < 720 ≤ Tablet < 1280 ≤ Desktop). Between 720 and 1279 the
+Tablet Marketing Panel stretches with the viewport (48 px side margins; owner-approved 2026-11-23,
+contract §16.5 F-6).
 
 | Part               | Desktop 1440                                    | Tablet 768                                | Mobile 390                                |
 | ------------------ | ----------------------------------------------- | ----------------------------------------- | ----------------------------------------- |
@@ -1118,7 +1120,7 @@ filters, for rendering cost, as the Landing does (P07-D17).
 | Result status icon         | 64 × 64, radius 20, Success Green 12% fill, Success Green 40% border, `check` 28 in Success Green                                                                                                                                                    |
 | Validation rule (`191:72`) | Row gap 6: dot 6 × 6, then the label `Auth/Form/Helper`. Neutral: Muted Readable label, Muted dot. Valid: Success Green. Error: Coral Pulse. List gap 16, right-aligned in RTL, reading order length, case, digit (code adds a shape cue, see below) |
 
-**Validation rule shape cue (code, not Figma; owner review pending):** the Figma variants differ
+**Validation rule shape cue (code, not Figma; owner-approved 2026-11-23, contract §16.5 F-5):** the Figma variants differ
 by colour only, so to meet WCAG 1.4.1 the marker also changes shape. Neutral keeps the 6 × 6 dot;
 Valid shows the official `check` icon and Error the official `x` icon, both 12 px. Colours and
 type are unchanged (contract §16.4).

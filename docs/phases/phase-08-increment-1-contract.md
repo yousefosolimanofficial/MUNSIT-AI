@@ -308,6 +308,7 @@ Each deviation was recorded during implementation.
   - the toggle names "إظهار كلمة المرور" and "إخفاء كلمة المرور";
   - the rule status words "متحقق" and "غير متحقق";
   - the development preview banner (development fixture only).
+  - The four labels were approved on 2026-11-23 (§16.4 F-1).
 - **E2E warm-up:** `/dev/auth` and `/en/dev/auth` were added to `tests/e2e/global-setup.ts`. A cold
   dev server failed under parallel workers with the known "Unexpected end of JSON input" compile
   race (2026-11-13).
@@ -364,8 +365,8 @@ Each deviation was recorded during implementation.
   Screen readers that do not announce live changes still read the status word when they reach it.
 - **Not by colour alone (WCAG 1.4.1):** the Figma variants differ only by colour. The marker now
   also changes shape: Neutral keeps the Figma 6 × 6 dot, Valid shows the official `check` icon and
-  Error the official `x` icon, both 12 px in the 12 px marker box. **Deviation from Figma**, for
-  owner review.
+  Error the official `x` icon, both 12 px in the 12 px marker box. **Deviation from Figma**,
+  approved by the owner (F-5, §16.5).
 
 **Responsive measurements (Chromium, `/dev/auth`, no horizontal overflow at any width, 320
 included):**
@@ -382,5 +383,12 @@ included):**
 Validation rule geometry at 1440 and 390: dot 6 × 6, marker–label gap 6, rule gap 16, type
 12 / 18; the first rule (length) is on the inline start.
 
-**Remaining deviations (for owner review):** the rule marker shapes above; the Tablet panel is fluid
-between 720 and 1279 (Figma defines only 768); and the §16.2 items.
+### 16.5 Owner approval of Increment 1 (2026-11-23)
+
+| ID  | Decision                                                                                                                       |
+| --- | ------------------------------------------------------------------------------------------------------------------------------ |
+| F-5 | **APPROVED**: the `PasswordRule` shape cue (dot, check `✓`, x `✕`) so that state is never shown by colour alone                |
+| F-6 | **APPROVED**: the Marketing Panel stretches fluidly across Tablet widths (720–1279; 48 px side margins, Figma frame 768 = 672) |
+| F-7 | **APPROVED**: Increment 1; PR #75 may merge once the required checks (`check`, `e2e`) pass on the exact head                   |
+
+The §16.2 deviations stand as recorded. No deviation is open for review.

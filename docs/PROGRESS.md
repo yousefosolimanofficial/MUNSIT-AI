@@ -4,10 +4,10 @@ Single resume point. A new session starts by reading this file, the latest phase
 [docs/references/MUNSIT_AI_Development_Roadmap_v1.0.md](references/MUNSIT_AI_Development_Roadmap_v1.0.md).
 
 - **Current phase:** 08 — Authentication UI — **IN PROGRESS** (plan approved 2026-11-23,
-  decisions D-08-1 to D-08-10). **Increment 1 (Foundation): IN PROGRESS**, under its approved
+  decisions D-08-1 to D-08-10). **Increment 1 (Foundation): COMPLETE** (PR #75), under its approved
   contract ([phases/phase-08-increment-1-contract.md](phases/phase-08-increment-1-contract.md)).
-  All Increment 1 scope is implemented on draft PR #75 and **awaits owner approval** (contract
-  §16.4). `PasswordRule` was offered to Eng. Mariam; she did not confirm, so it was built
+  All Increment 1 scope is implemented on PR #75 and **owner-approved** (2026-11-23, contract
+  §16.5). `PasswordRule` was offered to Eng. Mariam; she did not confirm, so it was built
   internally (I1-3 fallback; no starter package was issued). Plan and Figma audit:
   [phases/phase-08-plan.md](phases/phase-08-plan.md).
   Production is unchanged (`AUTHENTICATION_AVAILABLE = false`).
