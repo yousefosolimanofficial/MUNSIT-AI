@@ -7,12 +7,12 @@
 
 ## 1. Source
 
-| Item               | Value                                                                                                                            |
-| ------------------ | -------------------------------------------------------------------------------------------------------------------------------- |
-| Application source | `main` at `581fc19a4fc6485d0961ee894d0896f995eb2791` (PR #75, 2026-11-23)                                                        |
-| Package commit     | The head of `feature/devops-handoff-v1` when the package was made. The exact hash is in the handoff PR and the package manifest  |
-| Repository         | GitHub `yousefosolimanofficial/MUNSIT-AI` (access through the Frontend Lead)                                                     |
-| Changes after this | Listed in §9. Frontend work continues on `main`; rebuild from a newer commit only when the Frontend Lead announces a new version |
+| Item               | Value                                                                                                                                          |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| Application source | `main` at `581fc19a4fc6485d0961ee894d0896f995eb2791` (PR #75, 2026-11-23)                                                                      |
+| Package commit     | The `main` commit that merges this handoff (PR #76). The package is made from it with `git archive`; the exact hash is in the package manifest |
+| Repository         | GitHub `yousefosolimanofficial/MUNSIT-AI` (access through the Frontend Lead)                                                                   |
+| Changes after this | Listed in §9. Frontend work continues on `main`; rebuild from a newer commit only when the Frontend Lead announces a new version               |
 
 ## 2. Runtime versions
 
