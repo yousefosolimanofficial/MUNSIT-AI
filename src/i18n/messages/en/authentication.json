@@ -1,0 +1,135 @@
+{
+  "marketing": {
+    "login": {
+      "heading": "Welcome <highlight>back</highlight>! 👋",
+      "lead": "Ready to pick up where you left off?",
+      "body": [
+        "Your lectures, your summaries and everything you have learned are waiting in one place.",
+        "With Munsit AI, your journey toward deeper understanding and smarter studying continues."
+      ]
+    },
+    "register": {
+      "heading": "Your smarter journey starts <highlight>here!</highlight> 🚀",
+      "lead": "Every lecture is a chance to understand more.",
+      "body": [
+        "Create your Munsit AI account and turn your lectures into clear summaries, organized notes and easier review.",
+        "Start today, and make every piece of information count."
+      ]
+    },
+    "recovery": {
+      "heading": "No worries, <highlight>we'll get you</highlight> back! 🔐",
+      "lead": "Your learning journey continues.",
+      "body": [
+        "In a few simple steps you will recover your account and return to your lectures, summaries and notes right where you left off.",
+        "Everything you have learned is waiting for you."
+      ]
+    }
+  },
+  "login": {
+    "heading": "Welcome to Munsit",
+    "description": "Sign in and continue your learning journey with Munsit.",
+    "email": "Email",
+    "password": "Password",
+    "forgot": "Forgot your password?",
+    "submit": "Sign in",
+    "submitting": "Signing in...",
+    "noAccount": "Don't have an account yet?",
+    "register": "Create an account"
+  },
+  "register": {
+    "heading": "Start your journey with Munsit",
+    "description": "Create your account and start a smarter, easier learning experience.",
+    "name": "Full name",
+    "email": "Email",
+    "password": "Password",
+    "confirm": "Confirm password",
+    "submit": "Create an account",
+    "submitting": "Creating your account...",
+    "hasAccount": "Already have an account?",
+    "login": "Sign in",
+    "success": {
+      "heading": "Your account has been created",
+      "body": "You can now sign in and start your first lecture."
+    }
+  },
+  "forgot": {
+    "heading": "Forgot your password?",
+    "description": "Don't worry. Enter your email and we will send you a link to reset your password.",
+    "email": "Email",
+    "submit": "Send reset link",
+    "submitting": "Sending...",
+    "back": "Back to sign in",
+    "sent": {
+      "heading": "Link sent!",
+      "body": "We sent the reset link to your email. Check your inbox, and your spam folder if you can't find it.",
+      "resend": "Resend link"
+    }
+  },
+  "reset": {
+    "heading": "Reset your password",
+    "description": "Enter your new password and confirm it to continue.",
+    "password": "New password",
+    "confirm": "Confirm new password",
+    "submit": "Change password",
+    "submitting": "Updating...",
+    "back": "Back to sign in",
+    "updated": {
+      "heading": "Your password has been changed",
+      "body": "You can now sign in with your new password."
+    },
+    "invalidLink": {
+      "heading": "Invalid reset link",
+      "body": "This link is not valid or has already been used. Request a new link to continue.",
+      "request": "Request a new link"
+    },
+    "expiredLink": {
+      "heading": "This link has expired",
+      "body": "This link has expired. Request a new link to set your password.",
+      "request": "Request a new link"
+    }
+  },
+  "rules": {
+    "length": "At least <ltr>8</ltr> characters",
+    "case": "Upper and lower case letters",
+    "digit": "At least one number"
+  },
+  "validation": {
+    "nameRequired": "Enter your full name.",
+    "emailRequired": "Enter your email.",
+    "emailInvalid": "Enter a valid email address.",
+    "passwordRequired": "Enter your password.",
+    "confirmRequired": "Confirm your password.",
+    "newPasswordRequired": "Enter your new password.",
+    "confirmNewRequired": "Confirm your new password.",
+    "passwordRules": "The password does not meet the requirements.",
+    "mismatch": "The passwords do not match."
+  },
+  "errors": {
+    "invalidCredentials": "The email or password is incorrect. Try again.",
+    "failed": {
+      "register": "We couldn't create your account. Try again.",
+      "forgot": "We couldn't send the reset link. Try again.",
+      "reset": "Something went wrong while changing your password. Try again."
+    },
+    "unavailable": {
+      "login": "Sign-in is not available yet.",
+      "register": "Account creation is not available yet.",
+      "forgot": "Password recovery is not available yet.",
+      "reset": "Password reset is not available yet."
+    }
+  },
+  "password": {
+    "show": "Show password",
+    "hide": "Hide password"
+  },
+  "status": {
+    "met": "met",
+    "notMet": "not met"
+  },
+  "placeholders": {
+    "email": "name@example.com"
+  },
+  "common": {
+    "retry": "Try again"
+  }
+}

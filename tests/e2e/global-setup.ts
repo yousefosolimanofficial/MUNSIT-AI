@@ -20,6 +20,12 @@ const ROUTES_OK = Object.values(ROUTES).flatMap((path) => {
   return [sample, sample === "/" ? "/en" : `/en${sample}`];
 });
 
+/**
+ * Development-only preview routes that E2E specs open under parallel workers (not in the route
+ * registry). Phase 08 Increment 1: `/dev/auth` failed on a cold server without this.
+ */
+const DEV_ROUTES = ["/dev/auth", "/en/dev/auth"];
+
 /** Expected to answer 404 (the localized not-found page): warmed, not treated as a failure. */
 const ROUTES_404 = ["/warm-up-unknown-route", "/en/warm-up-unknown-route"];
 
@@ -36,5 +42,6 @@ export default async function globalSetup(config: FullConfig): Promise<void> {
   const baseURL = config.projects[0]?.use.baseURL;
   if (!baseURL) return;
   for (const route of ROUTES_OK) await warm(baseURL, route, "ok");
+  for (const route of DEV_ROUTES) await warm(baseURL, route, "ok");
   for (const route of ROUTES_404) await warm(baseURL, route, 404);
 }

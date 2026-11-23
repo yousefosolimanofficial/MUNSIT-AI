@@ -1,0 +1,85 @@
+/*
+ * MUNSIT AI — Authentication typography tokens (Phase 08 Increment 1).
+ *
+ * Source: docs/design-values.md §0.4.5 — the 12 local `Auth/*` text styles of the Figma file,
+ * verified 2026-11-23. None is invented.
+ *
+ * Same rules as typography.css and typography-landing.css: one Figma style = one utility; the name
+ * follows the Figma style (`Auth/Panel/Heading Compact` → `--text-auth-panel-heading-compact`); line
+ * heights are Figma percentages written as ratios; tracking is 0 (never tracked Arabic). Family comes
+ * from `font-sans` (Cairo for Arabic glyphs). Imported after typography-landing.css in globals.css.
+ */
+
+@theme static {
+  /* Auth/Heading/Form — Cairo SemiBold 600, 20 / 150% — form card title */
+  --text-auth-heading-form: 20px;
+  --text-auth-heading-form--line-height: 1.5;
+  --text-auth-heading-form--letter-spacing: 0px;
+  --text-auth-heading-form--font-weight: 600;
+
+  /* Auth/Panel/Heading — Cairo SemiBold 600, 26 / 140% — Forgot and Reset marketing heading */
+  --text-auth-panel-heading: 26px;
+  --text-auth-panel-heading--line-height: 1.4;
+  --text-auth-panel-heading--letter-spacing: 0px;
+  --text-auth-panel-heading--font-weight: 600;
+
+  /* Auth/Panel/Heading Relaxed — Cairo SemiBold 600, 26 / 155% — Register marketing heading */
+  --text-auth-panel-heading-relaxed: 26px;
+  --text-auth-panel-heading-relaxed--line-height: 1.55;
+  --text-auth-panel-heading-relaxed--letter-spacing: 0px;
+  --text-auth-panel-heading-relaxed--font-weight: 600;
+
+  /* Auth/Panel/Heading Compact — Cairo SemiBold 600, 26 / 130% — Login marketing heading */
+  --text-auth-panel-heading-compact: 26px;
+  --text-auth-panel-heading-compact--line-height: 1.3;
+  --text-auth-panel-heading-compact--letter-spacing: 0px;
+  --text-auth-panel-heading-compact--font-weight: 600;
+
+  /* Auth/Panel/Lead — Cairo SemiBold 600, 18 / 150% — Forgot and Reset marketing lead */
+  --text-auth-panel-lead: 18px;
+  --text-auth-panel-lead--line-height: 1.5;
+  --text-auth-panel-lead--letter-spacing: 0px;
+  --text-auth-panel-lead--font-weight: 600;
+
+  /* Auth/Panel/Lead Relaxed — Cairo SemiBold 600, 18 / 155% — Register marketing lead */
+  --text-auth-panel-lead-relaxed: 18px;
+  --text-auth-panel-lead-relaxed--line-height: 1.55;
+  --text-auth-panel-lead-relaxed--letter-spacing: 0px;
+  --text-auth-panel-lead-relaxed--font-weight: 600;
+
+  /* Auth/Panel/Lead Compact — Cairo SemiBold 600, 18 / 140% — Login marketing lead */
+  --text-auth-panel-lead-compact: 18px;
+  --text-auth-panel-lead-compact--line-height: 1.4;
+  --text-auth-panel-lead-compact--letter-spacing: 0px;
+  --text-auth-panel-lead-compact--font-weight: 600;
+
+  /* Auth/Panel/Body — Cairo Regular 400, 16 / 155% — marketing paragraphs */
+  --text-auth-panel-body: 16px;
+  --text-auth-panel-body--line-height: 1.55;
+  --text-auth-panel-body--letter-spacing: 0px;
+  --text-auth-panel-body--font-weight: 400;
+
+  /* Auth/Form/Label — Cairo Medium 500, 14 / 150% — field labels, text links */
+  --text-auth-form-label: 14px;
+  --text-auth-form-label--line-height: 1.5;
+  --text-auth-form-label--letter-spacing: 0px;
+  --text-auth-form-label--font-weight: 500;
+
+  /* Auth/Form/Input — Cairo Regular 400, 15 / 150% — field value and placeholder */
+  --text-auth-form-input: 15px;
+  --text-auth-form-input--line-height: 1.5;
+  --text-auth-form-input--letter-spacing: 0px;
+  --text-auth-form-input--font-weight: 400;
+
+  /* Auth/Form/Helper — Cairo Regular 400, 12 / 150% — field error, password rules */
+  --text-auth-form-helper: 12px;
+  --text-auth-form-helper--line-height: 1.5;
+  --text-auth-form-helper--letter-spacing: 0px;
+  --text-auth-form-helper--font-weight: 400;
+
+  /* Auth/Button/Primary — Cairo SemiBold 600, 16 / 150% — primary button label */
+  --text-auth-button-primary: 16px;
+  --text-auth-button-primary--line-height: 1.5;
+  --text-auth-button-primary--letter-spacing: 0px;
+  --text-auth-button-primary--font-weight: 600;
+}

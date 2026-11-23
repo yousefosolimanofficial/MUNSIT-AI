@@ -171,29 +171,36 @@ Read on Landing Desktop `5:3`, Tablet `200:527`, Mobile `200:683`. All tracking 
 | Landing/Footer/Legal            | Cairo      | Regular 400   | 12   | 140% |
 | Landing/Navigation/Tablet       | Cairo      | ExtraBold 800 | 15   | 140% |
 
-#### 0.4.5 Extracted, NOT yet tokens — `Auth/*` (Phase 08)
+#### 0.4.5 `Auth/*` (Phase 08) — tokens in `typography-auth.css`
 
-Read on Login Mobile `67:37`, Login Error Desktop `2467:75609`, Register Password Rules Desktop
-`2480:2226`, Register Success Desktop `2480:2534` (4 of 108 frames). All Cairo, tracking 0.
+Verified 2026-11-23 against the file's local text styles (`getLocalTextStylesAsync`; all 12
+`Auth/*` styles). All Cairo, tracking 0. Usage per family: Login panel = Compact, Register = Relaxed,
+Forgot and Reset = the plain `Auth/Panel/Heading` and `Auth/Panel/Lead`.
 
 | Figma style                | Weight       | Size | LH   |
 | -------------------------- | ------------ | ---- | ---- |
 | Auth/Heading/Form          | SemiBold 600 | 20   | 150% |
 | Auth/Panel/Heading Relaxed | SemiBold 600 | 26   | 155% |
 | Auth/Panel/Heading Compact | SemiBold 600 | 26   | 130% |
+| Auth/Panel/Heading         | SemiBold 600 | 26   | 140% |
 | Auth/Panel/Lead Relaxed    | SemiBold 600 | 18   | 155% |
 | Auth/Panel/Lead Compact    | SemiBold 600 | 18   | 140% |
+| Auth/Panel/Lead            | SemiBold 600 | 18   | 150% |
 | Auth/Panel/Body            | Regular 400  | 16   | 155% |
 | Auth/Form/Label            | Medium 500   | 14   | 150% |
 | Auth/Form/Input            | Regular 400  | 15   | 150% |
 | Auth/Form/Helper           | Regular 400  | 12   | 150% |
 | Auth/Button/Primary        | SemiBold 600 | 16   | 150% |
 
-Auth frames also bind `Landing/Body/Large`, `Landing/Body/Small` and `Dashboard/Body Medium`.
+Auth frames also bind `Landing/Body/Large` (form description), `Landing/Body/Small` (footer text)
+and `Dashboard/Body Medium` (form-level error banner). Text inside the `Auth / Input`, `Password
+Input`, `Text Link` and `Validation Rule` components is unbound in Figma but has exactly the values
+of `Auth/Form/Label` (label, link), `Auth/Form/Input` (value) and `Auth/Form/Helper` (helper, rule);
+those utilities are used.
 
 #### 0.4.6 Not inspected yet
 
-Module pages 04–14 (My Lectures … Profile & Settings) and the remaining Auth frames. Their
+Module pages 04–14 (My Lectures … Profile & Settings). Their
 bound styles are verified in each module's phase before use.
 
 ## 1. Motion
@@ -1057,3 +1064,68 @@ order are unchanged.
 
 The Showcase screenshot file (`public/landing/showcase/app-live-transcript.webp`) and its model
 entry are kept, unreferenced, as history.
+
+## 17. Authentication (Phase 08 Increment 1) — Figma values (read-only, 2026-11-23)
+
+The values were read from Figma page `5:5` "02 — Authentication" (Login `67:3` / `67:59` /
+`67:37`, Login Error `2467:75609`, Register `67:14`, Register Success `2480:2534`, and component
+sets `191:20`, `191:50`, `191:57`, `191:62`, `191:72`). Every colour maps to an existing token, so
+no new token was added. Translucent tints, shadows and sizes are local constants
+(`src/features/auth/components/auth-styles.ts`). Typography: §0.4.5.
+
+### 17.1 Layout
+
+Breakpoints follow ADR-004 (Mobile < 720 ≤ Tablet < 1280 ≤ Desktop).
+
+| Part               | Desktop 1440                                    | Tablet 768                                | Mobile 390                                |
+| ------------------ | ----------------------------------------------- | ----------------------------------------- | ----------------------------------------- |
+| Frame              | Void Black, row centred, gap 96                 | Column, padding 40 / 48 / 48 / 48, gap 32 | Column, padding 24 / 20 / 32 / 20, gap 24 |
+| Order              | Form column (Logo, card) · Marketing panel      | Logo · Panel · Card                       | Logo · Card · Panel                       |
+| Form column        | 480, gap 40, Logo 188 × 49 aligned to the start | —                                         | —                                         |
+| Marketing panel    | 520                                             | 672                                       | 350                                       |
+| Panel photo        | 520 × 350, `FILL`                               | 672 × 350                                 | 350 × 200                                 |
+| Panel copy padding | 28 / 32 / 32 / 32, gap 12, centred              | same                                      | 20 / 20 / 24 / 20                         |
+
+**Panel:**
+
+- Void Black fill, 1 px Neutral Slate border (inside), radius 24, drop shadow 0 24 48 −12 black 40%.
+- Heading `Auth/Panel/Heading*`, with the highlighted word in Electric Sky. Lead `Auth/Panel/Lead*`
+  in Text Primary. Body `Auth/Panel/Body` in Text Secondary.
+
+**Background glow:** three radial ellipses, each fading to transparent.
+
+| Glow      | Colour          | Desktop (offset from the panel) | Tablet                | Mobile                |
+| --------- | --------------- | ------------------------------- | --------------------- | --------------------- |
+| Cobalt    | Cobalt Edge 25% | 680 × 680 at −132, −68          | 691 × 500 at −48, −60 | 351 × 439 at −20, −68 |
+| Cyan      | Info Blue 12%   | 460 × 400 at 58, −128           | 461 × 300 at 259, 0   | 234 × 300 at 136, −8  |
+| Deep Blue | Deep Space 35%  | 650 × 500 at −92, 232           | 691 × 400 at −10, 170 | 351 × 400 at 0, 63    |
+
+Offsets are measured from the panel's physical left edge in RTL and implemented with `end-*`.
+Figma adds a layer blur of 140, 110 and 160; the implementation draws the gradients without blur
+filters, for rendering cost, as the Landing does (P07-D17).
+
+### 17.2 Components
+
+| Part                       | Values                                                                                                                                                                                                                                      |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Form card                  | Gap 28. Header gap 8: title `Auth/Heading/Form` Text Primary, description `Landing/Body/Large` Text Secondary. Fields gap 20. Footer centred, gap 6: `Landing/Body/Small` Text Secondary plus a link                                        |
+| Input (`191:20`)           | Label `Auth/Form/Label` Text Primary, gap 8. Field 52 high, radius 12, padding 0 / 16, gap 12, Obsidian fill, 1 px Neutral Slate border. Value `Auth/Form/Input` Text Primary; placeholder Muted Readable (Muted while focused or disabled) |
+| Input states               | Focus: Electric Sky border plus a 0 0 0 3 Electric Sky 22% ring. Error: Coral Pulse border, helper `Auth/Form/Helper` Coral Pulse. Disabled: Ink fill, field opacity 50%                                                                    |
+| Password (`191:50`)        | Same as Input, with the eye at the inline end: 20 × 20, Text Secondary; Visible adds a 1.6 slash                                                                                                                                            |
+| Primary button (`191:57`)  | 52 high, radius 12, Neutral Mist fill, `Auth/Button/Primary` Neutral Iron. Focus: Electric Sky border plus a 3 px Electric Sky 25% ring. Disabled: opacity 40%. Loading: gap 8, 18 px spinner (track Iron 25%, arc Iron)                    |
+| Text link (`191:62`)       | `Auth/Form/Label` Electric Sky, padding 2 / 0. Hover: Info Blue                                                                                                                                                                             |
+| Error banner               | Coral Pulse 8% fill, Coral Pulse 35% border, radius 12, padding 10 / 14, `Dashboard/Body Medium` Coral Pulse                                                                                                                                |
+| Result status icon         | 64 × 64, radius 20, Success Green 12% fill, Success Green 40% border, `check` 28 in Success Green                                                                                                                                           |
+| Validation rule (`191:72`) | Row gap 6: dot 6 × 6, then the label `Auth/Form/Helper`. Neutral: Muted Readable label, Muted dot. Valid: Success Green. Error: Coral Pulse. List gap 16, right-aligned in RTL, reading order length, case, digit                           |
+
+### 17.3 Marketing photos (D-08-2)
+
+The photos are the Figma originals, matched by image hash (the SHA-1 of the source bytes) and
+saved as PNG at source size. They are pixel-identical to the source: no regeneration, recolouring
+or cropping.
+
+| File                       | Figma image  | Node       | Source size | PNG SHA-256 (prefix) |
+| -------------------------- | ------------ | ---------- | ----------- | -------------------- |
+| `public/auth/login.png`    | `10ec5a97e7` | `2175:285` | 1200 × 896  | `b454ed02aab416ec`   |
+| `public/auth/register.png` | `53cf19a01a` | `2175:400` | 1200 × 896  | `79d62999fac89f85`   |
+| `public/auth/recovery.png` | `f246a9bb43` | `2175:408` | 1264 × 848  | `894312843bd97b21`   |
