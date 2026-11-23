@@ -7,8 +7,11 @@
  * unfinished modules. The `dev` namespace holds development-only fixtures for the temporary
  * /dev/tokens route and tests — never use it in product screens. The `landing` namespace's English
  * values are PROPOSED (Phase 07 P07-D1) and gated out of production until approved
- * (src/features/landing/model/gates.ts).
+ * (src/features/landing/model/gates.ts). The `authentication` namespace's English values are DRAFT
+ * (Phase 08 D-08-3, not approved); English Authentication is never enabled in production. (The file
+ * is not named `auth.json`: that name is reserved for credential files by the repository guard.)
  */
+import arAuthentication from "./ar/authentication.json";
 import arCommon from "./ar/common.json";
 import arDev from "./ar/dev.json";
 import arErrors from "./ar/errors.json";
@@ -17,6 +20,7 @@ import arNav from "./ar/nav.json";
 import arPages from "./ar/pages.json";
 import arPatterns from "./ar/patterns.json";
 import arShell from "./ar/shell.json";
+import enAuthentication from "./en/authentication.json";
 import enCommon from "./en/common.json";
 import enDev from "./en/dev.json";
 import enErrors from "./en/errors.json";
@@ -30,6 +34,7 @@ import type { AppLocale } from "../routing";
 
 export const MESSAGES = {
   ar: {
+    authentication: arAuthentication,
     common: arCommon,
     dev: arDev,
     nav: arNav,
@@ -40,6 +45,7 @@ export const MESSAGES = {
     shell: arShell,
   },
   en: {
+    authentication: enAuthentication,
     common: enCommon,
     dev: enDev,
     nav: enNav,

@@ -3,9 +3,13 @@
 Single resume point. A new session starts by reading this file, the latest phase report, and
 [docs/references/MUNSIT_AI_Development_Roadmap_v1.0.md](references/MUNSIT_AI_Development_Roadmap_v1.0.md).
 
-- **Current phase:** 08 — Authentication UI — **PLAN APPROVED** (owner, 2026-11-23; decisions
-  D-08-1 to D-08-10). Implementation has **not** started; Increment 1 waits for owner approval of
-  its execution contract. Plan and Figma audit: [phases/phase-08-plan.md](phases/phase-08-plan.md).
+- **Current phase:** 08 — Authentication UI — **IN PROGRESS** (plan approved 2026-11-23,
+  decisions D-08-1 to D-08-10). **Increment 1 (Foundation): COMPLETE** (PR #75), under its approved
+  contract ([phases/phase-08-increment-1-contract.md](phases/phase-08-increment-1-contract.md)).
+  All Increment 1 scope is implemented on PR #75 and **owner-approved** (2026-11-23, contract
+  §16.5). `PasswordRule` was offered to Eng. Mariam; she did not confirm, so it was built
+  internally (I1-3 fallback; no starter package was issued). Plan and Figma audit:
+  [phases/phase-08-plan.md](phases/phase-08-plan.md).
   Production is unchanged (`AUTHENTICATION_AVAILABLE = false`).
 - **Phase 07:** Landing Page — **CLOSED — IMPLEMENTATION COMPLETE — PRODUCTION RELEASE BLOCKED** (Product Owner approval
   2026-11-23; P07-D26). The application is **not** production-ready; release-readiness

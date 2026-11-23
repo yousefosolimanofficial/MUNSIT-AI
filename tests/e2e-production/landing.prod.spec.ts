@@ -40,6 +40,9 @@ test.describe("production configuration", () => {
   }) => {
     // /dev/* pages call notFound() in production builds only.
     expect((await request.get("/dev/tokens")).status()).toBe(404);
+    // Phase 08 Increment 1: the Authentication preview is development-only (D-08-4).
+    expect((await request.get("/dev/auth")).status()).toBe(404);
+    expect((await request.get("/en/dev/auth")).status()).toBe(404);
   });
 
   test("English Landing stays gated: /en is 404", async ({ request }) => {

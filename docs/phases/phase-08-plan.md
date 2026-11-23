@@ -280,7 +280,7 @@ use; nothing is invented.
 ## 7. Localization requirements
 
 - Arabic (`ar`) is the default and RTL; English (`en`) is LTR. The routes are unchanged.
-- All copy lives in `src/i18n/messages/{ar,en}/auth.json`, with key-parity tests. Components hold
+- All copy lives in `src/i18n/messages/{ar,en}/authentication.json`, with key-parity tests. Components hold
   no copy.
 - **Isolate LTR content inside RTL:** email values, placeholders such as `name@example.com`,
   numerals in rules ("8 أحرف"), and "AI".
@@ -291,14 +291,14 @@ use; nothing is invented.
 
 Each increment is one PR, merged only after owner review. Tasks are no longer than 3 days.
 
-| #   | Increment                 | Content                                                                                                                                                                                                                         | Depends on             |
-| --- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
-| 0   | Planning                  | This plan (docs only)                                                                                                                                                                                                           | —                      |
-| 1   | Auth foundation           | Dependencies (D-08-1); `features/auth` skeleton; `AuthAdapter` interface and fail-closed placeholder adapter; `AuthLayout` with assets; `auth.json` (ar, en proposed); the 7 components with unit tests; design values recorded | D-08-1, D-08-2, D-08-9 |
-| 2   | Login                     | Zod schema; all Login states; adapter call; error mapping                                                                                                                                                                       | 1, D-08-4, D-08-5      |
-| 3   | Register                  | Zod schema with password rules; all Register states; success view                                                                                                                                                               | 1, D-08-4              |
-| 4   | Forgot and Reset password | Both forms; Email sent; Invalid, Expired and Updated views; resend button UI only                                                                                                                                               | 1, D-08-4, D-08-7      |
-| 5   | Verification              | Route protection contract review (no guard code); visual baselines; axe; keyboard; flow navigation E2E; production 404 still holds; closure report                                                                              | 2–4, D-08-6, D-08-8    |
+| #   | Increment                 | Content                                                                                                                                                                                                                                | Depends on             |
+| --- | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
+| 0   | Planning                  | This plan (docs only)                                                                                                                                                                                                                  | —                      |
+| 1   | Auth foundation           | Dependencies (D-08-1); `features/auth` skeleton; `AuthAdapter` interface and fail-closed placeholder adapter; `AuthLayout` with assets; `authentication.json` (ar, en draft); the 7 components with unit tests; design values recorded | D-08-1, D-08-2, D-08-9 |
+| 2   | Login                     | Zod schema; all Login states; adapter call; error mapping                                                                                                                                                                              | 1, D-08-4, D-08-5      |
+| 3   | Register                  | Zod schema with password rules; all Register states; success view                                                                                                                                                                      | 1, D-08-4              |
+| 4   | Forgot and Reset password | Both forms; Email sent; Invalid, Expired and Updated views; resend button UI only                                                                                                                                                      | 1, D-08-4, D-08-7      |
+| 5   | Verification              | Route protection contract review (no guard code); visual baselines; axe; keyboard; flow navigation E2E; production 404 still holds; closure report                                                                                     | 2–4, D-08-6, D-08-8    |
 
 **How states are reviewed:**
 
@@ -358,7 +358,7 @@ Each increment is one PR, merged only after owner review. Tasks are no longer th
   result, with field-level errors, disabled and loading submit, no secrets logged, linked error
   text, correct autofill and an accessible show/hide toggle.
 - **Tests:** §10 passes, and the universal checks (Roadmap §4) pass.
-- **Copy:** all Auth copy lives in `auth.json`.
+- **Copy:** all Auth copy lives in `authentication.json`.
 - **Reporting:** Phase 08 is reported as **"UI-complete, not functional"** until Phase 21 and D-02
   are resolved.
 - **Production:** unchanged (Auth routes 404).

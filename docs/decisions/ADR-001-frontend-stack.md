@@ -68,19 +68,28 @@ repository).
 | `jest-axe`                    | 11.0.0  | Automated accessibility check per primitive in component tests (Roadmap Phase 03). No bundled types: a local declaration is used, because `@types/jest-axe` would pull `@types/jest` and `axe-core` 3.x. Depends on `axe-core` 4.12.1   |
 | `@axe-core/playwright`        | 4.14.0  | Accessibility scans of rendered pages in a real browser (E2E). Closes G-3. MPL-2.0. Peer `playwright-core` resolves to the installed 1.65.0. Depends on `axe-core` 4.14.0                                                               |
 
+### Added in Phase 08 (Increment 1)
+
+Approved by the owner on 2026-11-23 (D-08-1, [phase-08-plan.md](../phases/phase-08-plan.md) §13).
+They are runtime `dependencies` with exact pins, for the Authentication forms only. Each version is
+the newest release that is at least 14 days old (the Phase 03 rule): `react-hook-form` 7.92.0 and
+`@hookform/resolvers` 7.0.6 to 7.0.8 were younger, so they were skipped. The only new transitive
+package is `@standard-schema/utils` 0.3.0 (2024). `zod` 4.6.7 was already in the lockfile through
+`eslint-config-next`.
+
+| Package               | Version | Reason                                                                                       |
+| --------------------- | ------- | -------------------------------------------------------------------------------------------- |
+| `react-hook-form`     | 7.91.0  | Form state and blur validation (Roadmap §2.2 Forms)                                          |
+| `zod`                 | 4.6.7   | Schemas that double as types; validation produces message keys, never strings (Roadmap §2.2) |
+| `@hookform/resolvers` | 7.0.5   | `zodResolver`: connects Zod schemas to React Hook Form                                       |
+
 ### Deferred to the phase that needs them (not installed)
 
-Radix UI primitives, `class-variance-authority`, `tailwind-merge` (Phase 03); TanStack Query, Zustand (when server/session state appears); React Hook Form + Zod
-(first form); MSW (only if mock data is authorized). Testing Library, jsdom, `jest-axe` and
+Radix UI primitives, `class-variance-authority`, `tailwind-merge` (Phase 03); TanStack Query, Zustand (when server/session state appears); MSW (only if mock data is authorized). Testing Library, jsdom, `jest-axe` and
 `@axe-core/playwright` were added in Phase 03 (above).
 
-**Form libraries approved for Phase 08 (D-08-1, owner, 2026-11-23).**
-
-- **Packages:** `react-hook-form`, `zod` and `@hookform/resolvers`, as runtime dependencies for the
-  Authentication forms ([phase-08-plan.md](../phases/phase-08-plan.md) §13). No other form or
-  validation package is added.
-- **Not installed yet:** they arrive in Phase 08 Increment 1 as a separate `chore(deps)` commit.
-  The installed versions are recorded here at that point.
+**Form libraries (D-08-1, owner, 2026-11-23):** installed in Phase 08 Increment 1. See "Added in
+Phase 08" above.
 
 **Dialog without Radix (D-DL6, approved by the user 2026-11-15).** Dialog V1 uses the native
 `<dialog>` element with `showModal()`: top layer, page inertness, Esc and focus restoration come
