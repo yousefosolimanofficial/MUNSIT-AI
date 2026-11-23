@@ -1,5 +1,8 @@
 # Phase 07 — Landing Page — Plan
 
+- **Current status (2026-11-23):** **CLOSED — IMPLEMENTATION COMPLETE — PRODUCTION RELEASE BLOCKED** (Product Owner approval
+  2026-11-23; P07-D26; [phase-07-closure-report.md](phase-07-closure-report.md) §13). Production
+  release is blocked; release-readiness obligations stay open. The status lines below are the Increment 0 record.
 - **Status:** **Increment 0 (planning) COMPLETE** once PR #49 is merged; owner decisions
   P07-D1 to P07-D13 recorded on 2026-11-19 (§6). Phase 07 is **IN PROGRESS**. Increment 1 has
   **not** started.
@@ -125,6 +128,7 @@ placeholders.
 | P07-D23 | **Compact Landing navbar (2026-11-21).** The Desktop navbar becomes a compact top bar (owner visual refinement; a third-party navbar used for proportions only): 58 high, 32 from each viewport edge (1376 wide at 1440), radius 14, the same thin border and translucent glass; logo 30 high (artwork unchanged); links 14 / 500, gap 32 (destinations unchanged). Login and the EN/AR switch become solid white controls with the Ink label (36 high, radius 10, Mist on hover, the Landing focus ring) on Desktop and Tablet. The Tablet bar keeps its layout; the Mobile bar and menu sheet are unchanged. Details: [phase-07-navbar-refinement.md](phase-07-navbar-refinement.md)                                                                                                                                                                                                                                                                                                                                                                                                         | **APPROVED**                         |
 | P07-D24 | **Primary CTA label and Authentication gate (2026-11-21, final 2026-11-22; exception to the verbatim Figma copy).** "ابدأ مجانًا" ("start for free") is a commercial claim that has not been approved: the Hero and Final CTA primary label becomes "ابدأ الآن" (English, gated: "Get started"). Authentication is not operational (the Auth routes are Phase 04 placeholders; Phase 08 not started), so an explicit Authentication gate (`AUTHENTICATION_AVAILABLE = false`, `isAuthenticationAvailable`) **hides every public authentication entry point in production**: the navbar login (Desktop, Tablet, Mobile menu sheet), the Hero primary CTA, the footer account links (login, register) and the Final CTA section, whose only remaining action would be a link back to Features. Development and preview keep them all. The approved design and responsive layouts are otherwise unchanged; the Pricing Starter label (development only) is left to the pricing review. Details: [phase-07-cta-correction.md](phase-07-cta-correction.md). Linked to the commercial release blocker | **APPROVED**                         |
 | P07-D25 | **Unfinished Authentication placeholders in production (owner, 2026-11-22).** Hiding the Landing entry points (P07-D24) left `/login`, `/register`, `/forgot-password`, `/reset-password` (and `/en/…`) reachable and indexable in production. With the same gate (`AUTHENTICATION_AVAILABLE`, now in `src/config/availability.ts`), production returns 404 for the four Auth routes until Authentication is operational; development keeps the Phase 04 placeholders. Every Phase 04 placeholder is `noindex, nofollow`; the Landing stays indexable. Availability gating, not route protection (D-02, D-R12 unchanged). PR in review. Details: [phase-07-auth-placeholders.md](phase-07-auth-placeholders.md)                                                                                                                                                                                                                                                                                                                                                                                | **APPROVED** (scope)                 |
+| P07-D26 | **Phase 07 closure basis (owner, 2026-11-23).** Phase 07 is prepared for closure as **IMPLEMENTATION COMPLETE — PRODUCTION RELEASE BLOCKED**. Accepted: the Arabic Landing; the English visual layout (copy approval still pending, P07-D1); the static Hero implementation (production image activation still blocked, P07-D21); automated keyboard coverage for implementation closure; the approved per-section Figma comparisons and screenshot baselines as visual acceptance (no full-frame pixel overlay required). Moved to release readiness: hands-on keyboard testing, real Firefox and Safari, physical devices and screen readers; these stay **NOT VERIFIED**. Commercial pricing, legal pages and Authentication availability stay release blockers. Deferred functionality stays unavailable in production; no gate is activated without explicit approval. Resolves the Increment 6 plan §3 / §4 conflict (see that plan §4a). Not the closure sign-off: [phase-07-closure-report.md](phase-07-closure-report.md) §13                                                         | **APPROVED**; closed 2026-11-23      |
 
 **Section order (final, all breakpoints):**
 
@@ -394,6 +398,12 @@ stands in.
 | L-R6 | Real-browser differences (R-3)              | The Chromium suite plus the existing cross-browser pattern; real-device QA stays an R-3 obligation |
 
 ## 12. Definition of Done (Phase 07)
+
+> **Closure basis (P07-D26, 2026-11-23):** the items below are met, met by an explicit owner
+> decision, or deferred to release readiness and still open. Each item's status is in
+> [phase-07-closure-report.md](phase-07-closure-report.md) §12. English copy approval and the
+> production Hero image are **not met** and are deferred; no item is reported as passed without
+> evidence.
 
 - **Acceptance:** the Roadmap acceptance and tests are met at 1440/768/390 in ar and en (EN with
   approved copy).

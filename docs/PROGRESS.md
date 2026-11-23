@@ -3,7 +3,12 @@
 Single resume point. A new session starts by reading this file, the latest phase report, and
 [docs/references/MUNSIT_AI_Development_Roadmap_v1.0.md](references/MUNSIT_AI_Development_Roadmap_v1.0.md).
 
-- **Current phase:** 07 — Landing Page — **IN PROGRESS.**
+- **Current phase:** none active. Phase 08 (Authentication UI) has **not** started; it starts only
+  on the owner's instruction.
+- **Phase 07:** Landing Page — **CLOSED — IMPLEMENTATION COMPLETE — PRODUCTION RELEASE BLOCKED** (Product Owner approval
+  2026-11-23; P07-D26). The application is **not** production-ready; release-readiness
+  obligations stay open and NOT VERIFIED where untested. Closure report:
+  [phases/phase-07-closure-report.md](phases/phase-07-closure-report.md).
   - **Increment 0 (planning): COMPLETE** (PR #49). Owner decisions P07-D1 to P07-D13 are
     recorded (2026-11-19).
     - Plan: [phases/phase-07-plan.md](phases/phase-07-plan.md).
@@ -75,7 +80,7 @@ Single resume point. A new session starts by reading this file, the latest phase
     corrections: Tablet and Mobile description, and the heading, meet WCAG at every pixel. Image softness
     (666 × 412 source) remains a known limitation:
     [phases/phase-07-static-hero.md](phases/phase-07-static-hero.md).
-  - **Increment 6 (Verification and closure): IN PROGRESS** (technical QA plan approved by the owner
+  - **Increment 6 (Verification and closure): COMPLETE** (technical QA plan approved by the owner
     2026-11-21: [phases/phase-07-increment-6-plan.md](phases/phase-07-increment-6-plan.md)). Evidence:
     [phases/phase-07-qa-report.md](phases/phase-07-qa-report.md). Release readiness stays separate.
     - **P07-D24 merged** (PR #66, `66df53c`, 2026-11-22): primary label "ابدأ الآن"; the
@@ -90,9 +95,10 @@ Single resume point. A new session starts by reading this file, the latest phase
       for the current approved development and production configurations (QA report A1). This
       does not authorize production activation of gated features.
   - **ClickUp:** set up 2026-11-19 (docs/project-management/clickup-workflow.md).
-  - **Next:** manual evidence (real browsers, devices, screen readers; QA report §7). Owner
-    decisions pending: Hero image for production, English copy, pricing, legal pages and Open
-    Graph image. Favicon resolved (F-1, PR #70, `76954ed`).
+  - **Release readiness (open; closure report §11):**
+    Hero image, English copy, pricing, legal pages, Open Graph image, Authentication, hands-on
+    keyboard, real Firefox and Safari, devices and screen readers (NOT VERIFIED), and O-1. Favicon
+    resolved (F-1, PR #70, `76954ed`).
   - **Maintenance (recommended, not done):** add `.playwright-mcp/` (local output of the
     Playwright MCP browser tool: page snapshots and console logs) to `.gitignore` in a
     separate change; untracked, it fails `prettier --check` and lint.
