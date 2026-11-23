@@ -1,7 +1,7 @@
-# Phase 07 — Landing Page — Closure report (DRAFT)
+# Phase 07 — Landing Page — Closure report
 
-- **Status:** **Implementation complete — closure pending owner sign-off.** Phase 07 is **not**
-  closed. Production release is **blocked** (§10, §11).
+- **Status:** **CLOSED — IMPLEMENTATION COMPLETE — PRODUCTION RELEASE BLOCKED** (Product Owner approval, 2026-11-23; §13). Production
+  release is **blocked** (§10, §11). The application is **not** production-ready.
 - **Basis:** owner decision P07-D26 (2026-11-23, [phase-07-plan.md](phase-07-plan.md) §6). It
   defines how the phase closes and is not itself the sign-off.
 - **Prepared on:** `main` `5cb1f6d` (2026-11-23). There are no open pull requests. CI `check` and
@@ -187,7 +187,7 @@ How each Definition of Done item stands (plan §12, Roadmap Phase 07, universal 
 | Playwright screenshots, axe, Lighthouse recorded                | **Met**                                                                                                    |
 | Landing text in message files (DoD)                             | **Met**                                                                                                    |
 | RTL and LTR, 320 overflow, universal checks                     | **Met**                                                                                                    |
-| Closure report and PROGRESS.md                                  | **This draft**; finalised on sign-off                                                                      |
+| Closure report and PROGRESS.md                                  | **Met** (this report, signed off 2026-11-23; PROGRESS.md updated)                                          |
 | Phase 08 not started                                            | **Met**                                                                                                    |
 
 No incomplete criterion is reported as passed. Each one is either met, met by an explicit owner
@@ -195,11 +195,16 @@ decision, or deferred and still open.
 
 ## 13. Owner sign-off
 
-| Field                                                                   | Value       |
-| ----------------------------------------------------------------------- | ----------- |
-| Phase 07 closed as IMPLEMENTATION COMPLETE — PRODUCTION RELEASE BLOCKED | **PENDING** |
-| Signed by                                                               | —           |
-| Date                                                                    | —           |
+| Field                | Value                                                                    |
+| -------------------- | ------------------------------------------------------------------------ |
+| Decision             | **APPROVED**                                                             |
+| Status               | **IMPLEMENTATION COMPLETE — PRODUCTION RELEASE BLOCKED**                 |
+| Approval date        | November 23, 2026                                                        |
+| Approver role        | Product Owner                                                            |
+| Authorization source | Explicit Product Owner approval in the project working session           |
+| Also approved        | P07-D26, the Definition of Done clarification, the release handoff (§11) |
 
-The sign-off accepts the deferred obligations in §7 and §11 as release-readiness work. It does
-not activate any production gate and does not start Phase 08.
+The approval accepts the documented deferral of the obligations in §7 and §11 to release
+readiness. It does **not** mean they are complete, waived for launch or approved for production
+activation: they stay **OPEN** or **NOT VERIFIED**. It activates no production gate and does not
+start Phase 08.
