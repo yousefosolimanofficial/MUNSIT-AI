@@ -10,7 +10,7 @@
 | Item               | Value                                                                                                                            |
 | ------------------ | -------------------------------------------------------------------------------------------------------------------------------- |
 | Application source | `main` at `581fc19a4fc6485d0961ee894d0896f995eb2791` (PR #75, 2026-11-23)                                                        |
-| Package commit     | The commit that adds this file on `feature/devops-handoff-v1`. The exact hash is in §9 and in the handoff PR                     |
+| Package commit     | The commit that adds this file on `feature/devops-handoff-v1`. The exact hash is in the handoff PR and the package manifest      |
 | Repository         | GitHub `yousefosolimanofficial/MUNSIT-AI` (access through the Frontend Lead)                                                     |
 | Changes after this | Listed in §9. Frontend work continues on `main`; rebuild from a newer commit only when the Frontend Lead announces a new version |
 
