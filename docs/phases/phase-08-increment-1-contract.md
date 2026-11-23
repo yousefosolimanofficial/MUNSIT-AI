@@ -1,6 +1,7 @@
 # Phase 08 — Increment 1 — Authentication UI Foundation — Execution contract
 
-- **Status:** **PROPOSED, awaiting owner approval.** No implementation has started.
+- **Status:** **APPROVED** (owner, 2026-11-23; PR #74 merged as `f91c579`). Implementation in
+  progress on `phase/08-increment-1-foundation` (§16).
 - **Plan:** [phase-08-plan.md](phase-08-plan.md), approved 2026-11-23 with decisions D-08-1 to
   D-08-10.
 - **Baseline:** `main` after the Phase 08 planning PR (#73).
@@ -39,32 +40,32 @@ The architecture rules hold: `app → features → shared / api / state / i18n /
 design-system`. A feature never imports another feature, and `src/api` imports only `src/types`.
 Folders are created only because this increment needs them.
 
-| Path                                                            | Content                                                                               | Owner                                                                                  |
-| --------------------------------------------------------------- | ------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| `package.json`, `pnpm-lock.yaml`                                | `react-hook-form`, `zod`, `@hookform/resolvers` (separate `chore(deps)` commit)       | Claude Code (integration)                                                              |
-| `docs/decisions/ADR-001-frontend-stack.md`                      | Installed versions                                                                    | Claude Code                                                                            |
-| `src/types/auth.ts`                                             | Domain types: `AuthFailure`, `AuthResult`, `AuthSession`, route access contract (§10) | Claude Code                                                                            |
-| `src/api/adapters/auth.ts`                                      | `AuthAdapter` interface and `placeholderAuthAdapter` (fails closed, no network)       | Claude Code                                                                            |
-| `src/features/auth/index.ts`                                    | Public exports                                                                        | Claude Code                                                                            |
-| `src/features/auth/components/AuthLayout.tsx`                   | Background glow, marketing panel, form column, logo (§5)                              | Claude Code                                                                            |
-| `src/features/auth/components/AuthMarketingPanel.tsx`           | Photo and copy per screen family                                                      | Claude Code                                                                            |
-| `src/features/auth/components/AuthFormCard.tsx`                 | `Auth / Form Container`                                                               | Claude Code                                                                            |
-| `src/features/auth/components/AuthTextField.tsx`                | `Auth / Input`                                                                        | Claude Code                                                                            |
-| `src/features/auth/components/AuthPasswordField.tsx`            | `Auth / Password Input`, with the show/hide toggle                                    | Claude Code                                                                            |
-| `src/features/auth/components/AuthSubmitButton.tsx`             | `Auth / Primary Button`                                                               | Claude Code                                                                            |
-| `src/features/auth/components/AuthTextLink.tsx`                 | `Auth / Text Link`                                                                    | Claude Code                                                                            |
-| `src/features/auth/components/PasswordRule.tsx` and `.test.tsx` | `Auth / Validation Rule`                                                              | **Proposed for Eng. Mariam** (§13; only after her confirmation, otherwise Claude Code) |
-| `src/features/auth/components/AuthResultView.tsx`               | Result views (Email sent, Success, Updated, Invalid and Expired link)                 | Claude Code                                                                            |
-| `src/features/auth/model/password-rules.ts`                     | Single source of the password rules (§7)                                              | Claude Code                                                                            |
-| `src/features/auth/model/messages.ts`                           | Maps `AuthFailure` and Zod issues to message keys                                     | Claude Code                                                                            |
-| `src/features/auth/schemas/*.ts`                                | Zod field schemas (email, password, name); form schemas arrive in Increments 2–4      | Claude Code                                                                            |
-| `src/i18n/messages/ar/auth.json`, `en/auth.json`                | Copy (§8); English marked DRAFT                                                       | Claude Code                                                                            |
-| `src/app/[locale]/(auth)/layout.tsx`                            | Thin route-group layout that renders `AuthLayout`                                     | Claude Code                                                                            |
-| `src/app/[locale]/dev/auth/page.tsx`                            | Development-only preview (§9)                                                         | Claude Code                                                                            |
-| `public/auth/*`                                                 | The three marketing photos exported from Figma (D-08-2)                               | Claude Code                                                                            |
-| `src/design-system/icons/*`                                     | Eye and eye-off geometry imported from Figma (`Icon / Eye` in `191:50`)               | Claude Code                                                                            |
-| `docs/design-values.md`                                         | Auth values read from Figma (§12)                                                     | Claude Code                                                                            |
-| Tests next to each file; `tests/e2e/auth-foundation.spec.ts`    | §11                                                                                   | Claude Code (coordination)                                                             |
+| Path                                                                 | Content                                                                               | Owner                                                                                  |
+| -------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `package.json`, `pnpm-lock.yaml`                                     | `react-hook-form`, `zod`, `@hookform/resolvers` (separate `chore(deps)` commit)       | Claude Code (integration)                                                              |
+| `docs/decisions/ADR-001-frontend-stack.md`                           | Installed versions                                                                    | Claude Code                                                                            |
+| `src/types/auth.ts`                                                  | Domain types: `AuthFailure`, `AuthResult`, `AuthSession`, route access contract (§10) | Claude Code                                                                            |
+| `src/api/adapters/auth.ts`                                           | `AuthAdapter` interface and `placeholderAuthAdapter` (fails closed, no network)       | Claude Code                                                                            |
+| `src/features/auth/index.ts`                                         | Public exports                                                                        | Claude Code                                                                            |
+| `src/features/auth/components/AuthLayout.tsx`                        | Background glow, marketing panel, form column, logo (§5)                              | Claude Code                                                                            |
+| `src/features/auth/components/AuthMarketingPanel.tsx`                | Photo and copy per screen family                                                      | Claude Code                                                                            |
+| `src/features/auth/components/AuthFormCard.tsx`                      | `Auth / Form Container`                                                               | Claude Code                                                                            |
+| `src/features/auth/components/AuthTextField.tsx`                     | `Auth / Input`                                                                        | Claude Code                                                                            |
+| `src/features/auth/components/AuthPasswordField.tsx`                 | `Auth / Password Input`, with the show/hide toggle                                    | Claude Code                                                                            |
+| `src/features/auth/components/AuthSubmitButton.tsx`                  | `Auth / Primary Button`                                                               | Claude Code                                                                            |
+| `src/features/auth/components/AuthTextLink.tsx`                      | `Auth / Text Link`                                                                    | Claude Code                                                                            |
+| `src/features/auth/components/PasswordRule.tsx` and `.test.tsx`      | `Auth / Validation Rule`                                                              | **Proposed for Eng. Mariam** (§13; only after her confirmation, otherwise Claude Code) |
+| `src/features/auth/components/AuthResultView.tsx`                    | Result views (Email sent, Success, Updated, Invalid and Expired link)                 | Claude Code                                                                            |
+| `src/features/auth/model/password-rules.ts`                          | Single source of the password rules (§7)                                              | Claude Code                                                                            |
+| `src/features/auth/model/messages.ts`                                | Maps `AuthFailure` and Zod issues to message keys                                     | Claude Code                                                                            |
+| `src/features/auth/schemas/*.ts`                                     | Zod field schemas (email, password, name); form schemas arrive in Increments 2–4      | Claude Code                                                                            |
+| `src/i18n/messages/ar/authentication.json`, `en/authentication.json` | Copy (§8); English marked DRAFT                                                       | Claude Code                                                                            |
+| `src/app/[locale]/(auth)/layout.tsx`                                 | Thin route-group layout that renders `AuthLayout`                                     | Claude Code                                                                            |
+| `src/app/[locale]/dev/auth/page.tsx`                                 | Development-only preview (§9)                                                         | Claude Code                                                                            |
+| `public/auth/*`                                                      | The three marketing photos exported from Figma (D-08-2)                               | Claude Code                                                                            |
+| `src/design-system/icons/*`                                          | Eye and eye-off geometry imported from Figma (`Icon / Eye` in `191:50`)               | Claude Code                                                                            |
+| `docs/design-values.md`                                              | Auth values read from Figma (§12)                                                     | Claude Code                                                                            |
+| Tests next to each file; `tests/e2e/auth-foundation.spec.ts`         | §11                                                                                   | Claude Code (coordination)                                                             |
 
 ## 3. Reuse of existing shared code
 
@@ -83,7 +84,7 @@ Figma set. No shared component is copied or forked.
 ## 4. Component contracts
 
 All components are presentational. They render the state they are given; validation and
-submission live in the form (Increments 2–4). Copy arrives as props from `auth.json`.
+submission live in the form (Increments 2–4). Copy arrives as props from `authentication.json`.
 
 | Component           | Props (TypeScript, abridged)                                                                                           | States                                            |
 | ------------------- | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
@@ -127,7 +128,7 @@ submission live in the form (Increments 2–4). Copy arrives as props from `auth
 - **Schemas:**
   - live in `features/auth/schemas`;
   - produce message **keys**, never strings;
-  - `model/messages.ts` maps keys to `auth.json` copy.
+  - `model/messages.ts` maps keys to `authentication.json` copy.
 - **Password rules:**
   - defined once in `model/password-rules.ts`: at least 8 characters, upper and lower case, at
     least one digit (Figma);
@@ -137,7 +138,7 @@ submission live in the form (Increments 2–4). Copy arrives as props from `auth
   are invented. The only new copy is the unavailable-state message (§14).
 - **No secrets:** no form value is logged, persisted or put in a URL.
 
-## 8. Message-file structure (`auth.json`, ar and en)
+## 8. Message-file structure (`authentication.json`, ar and en)
 
 ```text
 auth.marketing.{login,register,recovery}.{heading,lead,body}
@@ -237,7 +238,7 @@ export const placeholderAuthAdapter: AuthAdapter; // every method: { ok: false, 
 | Accessibility         | The dot is decorative (`aria-hidden`). The state is not conveyed by colour alone: a visually hidden status ("met", "not met") from a `statusLabel` prop. No live region inside the component (the form owns announcements) |
 | Tests                 | Renders the label; each state applies its token classes; the dot is `aria-hidden`; the status text is present for valid and error; RTL and LTR render; axe has no violations                                               |
 | Acceptance            | Matches the three Figma variants; tokens only, no hard-coded colours; no copy inside the component; `corepack pnpm typecheck`, `lint`, `format:check` and `test` pass                                                      |
-| Not allowed           | Any other file, including `auth.json`, schemas and `password-rules.ts`; new dependencies; changes to shared components                                                                                                     |
+| Not allowed           | Any other file, including `authentication.json`, schemas and `password-rules.ts`; new dependencies; changes to shared components                                                                                           |
 | Delivery              | Offline workflow (TEAM_COLLABORATION.md): starter package from a pushed commit, delivery patch, integration branch `delivery/auth-password-rule-v1`                                                                        |
 
 The final prop list adds `statusLabel: string`; the contract is fixed before the starter package is
@@ -250,7 +251,7 @@ made. If Mariam does not confirm, Claude Code builds it within Increment 1.
 - The seven components and `AuthLayout` match their Figma sets at 1440, 768 and 390 (values from
   §12 recorded first), with tokens only.
 - The placeholder adapter fails closed with no network. No guard exists and nothing redirects.
-- `auth.json` holds all copy: Arabic is verbatim and English is DRAFT; key parity passes.
+- `authentication.json` holds all copy: Arabic is verbatim and English is DRAFT; key parity passes.
 - `/dev/auth` works in development, shows the preview banner, and returns 404 in production.
 - Production is unchanged: Auth routes 404, `AUTHENTICATION_AVAILABLE = false`, and all other
   gates untouched.
@@ -264,3 +265,73 @@ made. If Mariam does not confirm, Claude Code builds it within Increment 1.
 | I1-2 | Unavailable-state message wording (no Figma source); proposed: "تسجيل الدخول غير متاح حاليًا."    | Owner to approve or reword; the form-specific variants follow the same wording |
 | I1-3 | Offer `PasswordRule` to Eng. Mariam (§13)                                                        | Offer it; begin only after her confirmation                                    |
 | I1-4 | Marketing photo format: export from Figma at source size as PNG, then serve through `next/image` | Approve (composition and crop preserved; no regeneration)                      |
+
+## 16. Owner decisions and implementation record (2026-11-23)
+
+### 16.1 Decisions
+
+| ID   | Decision                                                                                                                                                               |
+| ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| I1-1 | Contract **APPROVED**                                                                                                                                                  |
+| I1-2 | **APPROVED WITH COPY REFINEMENT**: one unavailable message per operation (see below). English stays DRAFT; nothing simulates success                                   |
+| I1-3 | **APPROVED TO OFFER**: `PasswordRule` to Eng. Mariam, with the exact two-file boundary. Work waits for her explicit confirmation; otherwise it is built in Increment 1 |
+| I1-4 | **APPROVED**: the three photos as PNG at source size, served through `next/image`; sources recorded (design-values §17.3)                                              |
+
+The approved unavailable messages:
+
+- Login: "تسجيل الدخول غير متاح حاليًا."
+- Register: "إنشاء الحساب غير متاح حاليًا."
+- Forgot Password: "استعادة كلمة المرور غير متاحة حاليًا."
+- Reset Password: "إعادة تعيين كلمة المرور غير متاحة حاليًا."
+
+### 16.2 Deviations from §2 to §10
+
+Each deviation was recorded during implementation.
+
+- **Message file name:** the namespace is `authentication` (`authentication.json`). The repository's
+  secrets guard reserves the name of a credential file for the shorter name, so the file uses the
+  longer one. The content and structure are as in §8.
+- **No route-group layout:** each Auth screen uses a different marketing panel (Login, Register
+  or Recovery), so one `(auth)/layout.tsx` cannot choose it. A group layout would also restyle the
+  Phase 04 placeholders and break their tests. Each screen composes `AuthLayout` in its own
+  increment; Increment 1 shows it only on `/dev/auth`.
+- **Breakpoints:** ADR-004 (Tablet from 720, Desktop from 1280) instead of "Desktop from 1024".
+  The 1096 px two-column layout fits from 1280.
+- **Eye icon:** feature-local `AuthEyeIcon` (like the Landing `PauseIcon`). The Figma eye is a local
+  frame inside `Auth / Password Input`, not one of the official 24 × 24 `Icon / *` components, so
+  it is not added to the icon manifest.
+- **Password toggle:** one constant accessible name ("إظهار كلمة المرور") with `aria-pressed` for the
+  state, instead of two swapping labels (more robust for assistive technology).
+- **Typography:** all 12 `Auth/*` Figma styles exist as tokens (`typography-auth.css`, design-values
+  §0.4.5). There is no unstyled text.
+- **New accessibility copy, not in Figma** (proposed, for owner review):
+  - the toggle names "إظهار كلمة المرور" and "إخفاء كلمة المرور";
+  - the rule status words "متحقق" and "غير متحقق";
+  - the development preview banner (development fixture only).
+- **E2E warm-up:** `/dev/auth` and `/en/dev/auth` were added to `tests/e2e/global-setup.ts`. A cold
+  dev server failed under parallel workers with the known "Unexpected end of JSON input" compile
+  race (2026-11-13).
+
+### 16.3 Implemented (`phase/08-increment-1-foundation`)
+
+- **Dependencies:** `react-hook-form` 7.91.0, `zod` 4.6.7 and `@hookform/resolvers` 7.0.5, as a
+  separate `chore(deps)` commit with an ADR-001 update.
+- **Types and adapter:**
+  - `src/types/auth.ts`: failure, result and session types, plus the route protection contract
+    (types only).
+  - `src/api/adapters/auth.ts`: the interface and the fail-closed placeholder (no network, no
+    storage, frozen).
+- **Feature code:**
+  - components: `AuthLayout`, `AuthMarketingPanel`, `AuthFormCard` (with `AuthCardHeader`,
+    `AuthCardFooter` and `AuthErrorBanner`), `AuthTextField`, `AuthPasswordField`,
+    `AuthSubmitButton`, `AuthTextLink`, `AuthResultView` and `AuthEyeIcon`;
+  - model: `password-rules.ts`, `messages.ts` and `auth-images.ts`;
+  - schemas: `schemas/fields.ts`.
+- **Copy:** `authentication.json` (ar verbatim, en DRAFT), registered with key parity.
+- **Preview:** `/dev/auth` (404 in production), with a banner and the query options `family` and
+  `view`.
+- **Tests:**
+  - unit and component (jsdom, jest-axe);
+  - `tests/e2e/auth-foundation.spec.ts`;
+  - a production smoke check that `/dev/auth` returns 404.
+- **Not yet:** `PasswordRule` (waiting for Eng. Mariam's confirmation, I1-3).
