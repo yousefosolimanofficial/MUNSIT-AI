@@ -1,6 +1,7 @@
 # Phase 08 — Increment 2 (Login UI) — Execution contract
 
-> **Status: PROPOSED, for owner approval.** No implementation starts before approval. Base: `main`
+> **Status: APPROVED by the owner on 2026-11-23 (L-1 to L-5, §6.1).** Implementation starts only
+> after this contract is merged. Base: `main`
 > at `581fc19` (Increment 1 merged through PR #75). Plan:
 > [phase-08-plan.md](phase-08-plan.md) §8 row 2. ClickUp: Increment 2 task `123ru7v2z28`.
 
@@ -90,7 +91,7 @@ No new dependency. No change to `src/api`, `src/types`, `src/config` or the shar
   submits.
 - No timed transitions (the prototype's `AFTER_TIMEOUT` is not reproduced).
 
-## 6. Decisions requested
+## 6. Decisions
 
 | ID  | Decision                                                                                                                                                            | Recommendation                                                                                                      |
 | --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
@@ -99,6 +100,22 @@ No new dependency. No change to `src/api`, `src/types`, `src/config` or the shar
 | L-3 | Loading and Error reviewed only on `/dev/auth/login` with a preview-only fixture (the real route can only show "unavailable")                                       | Approve (as D-08-4)                                                                                                 |
 | L-4 | `/login` leaves the "placeholder page, no form" E2E list; its noindex and production-404 checks stay and move to the new spec. The other three routes are unchanged | Approve. This replaces an assertion, it does not weaken it                                                          |
 | L-5 | Mariam: no isolated component is left in Login (it is integration work, D-08-8)                                                                                     | No delegation in Increment 2                                                                                        |
+
+### 6.1 Owner approval (2026-11-23)
+
+The owner approved all five decisions as recommended:
+
+| ID  | Approved outcome                                                                                 |
+| --- | ------------------------------------------------------------------------------------------------ |
+| L-1 | This contract is approved                                                                        |
+| L-2 | The submit button stays enabled while the form is invalid; submit shows errors and focuses first |
+| L-3 | Loading and Error are reviewed only on `/dev/auth/login` with a preview-only fixture             |
+| L-4 | `/login` leaves the placeholder E2E list; its noindex and production-404 checks move to the spec |
+| L-5 | No delegation to Eng. Mariam in Increment 2                                                      |
+
+Conditions restated by the owner: authentication stays disabled in production; no real
+authentication or backend integration; the submit keeps the "unavailable" behaviour; no existing
+production gate changes. Implementation does not start until this contract is merged.
 
 ## 7. Tests
 
