@@ -87,6 +87,9 @@ commercial decision before launch.
 | W-1 (WebKit)              | Accepted; `fixme` skip                                                       | —            | Keep documented                                                                              |
 | Language-switch E2E flake | One unexplained failure; not reproduced (50/50 stress); unchanged            | Yes          | Monitor in CI; investigate with the CI trace if it recurs                                    |
 
+**Superseded in part by §4a (P07-D26):** the real-browser, device and screen-reader rows above
+are release-readiness evidence, not implementation-closure evidence. They stay NOT VERIFIED.
+
 ## 4. Proposed Increment 6 plan (execution only after owner approval)
 
 **A. Technical QA and regression** (owner: Yousef; ClickUp `pn4`, `pn5`, `pn6`)
@@ -145,6 +148,20 @@ production build, and records post-merge CI.
 with C and D items still open, if the owner accepts them as recorded release blockers. Public
 launch needs B, C and D complete, plus the project-level gates (R-3, screen readers,
 performance).
+
+## 4a. Closure versus release (P07-D26, owner, 2026-11-23)
+
+§3 listed real browsers, devices and screen readers as "evidence needed for closure", while §4
+allowed closure with release items open. The owner resolved the conflict in favour of §4.
+
+- **Implementation closure** may occur with deferred release obligations, provided the owner
+  accepts each one explicitly and it is recorded with a task
+  ([phase-07-closure-report.md](phase-07-closure-report.md) §11).
+- **Production launch** cannot occur while any mandatory release blocker is unresolved.
+- **Deferred tests** (hands-on keyboard, real Firefox and Safari, physical iPhone and Android,
+  NVDA, VoiceOver, TalkBack) remain **NOT VERIFIED**; they are not passes.
+- **Deferred functionality** (Authentication, the production Hero image, Pricing, English, legal
+  links, `og:image`) remains unavailable in production until its gate is approved.
 
 ## 5. Release blockers ranked by severity
 

@@ -3,7 +3,9 @@
 Single resume point. A new session starts by reading this file, the latest phase report, and
 [docs/references/MUNSIT_AI_Development_Roadmap_v1.0.md](references/MUNSIT_AI_Development_Roadmap_v1.0.md).
 
-- **Current phase:** 07 — Landing Page — **IN PROGRESS.**
+- **Current phase:** 07 — Landing Page — **IN PROGRESS: Implementation complete — closure
+  pending owner sign-off** (P07-D26, 2026-11-23). Production release is blocked. Draft closure
+  report: [phases/phase-07-closure-report.md](phases/phase-07-closure-report.md).
   - **Increment 0 (planning): COMPLETE** (PR #49). Owner decisions P07-D1 to P07-D13 are
     recorded (2026-11-19).
     - Plan: [phases/phase-07-plan.md](phases/phase-07-plan.md).
@@ -90,9 +92,10 @@ Single resume point. A new session starts by reading this file, the latest phase
       for the current approved development and production configurations (QA report A1). This
       does not authorize production activation of gated features.
   - **ClickUp:** set up 2026-11-19 (docs/project-management/clickup-workflow.md).
-  - **Next:** manual evidence (real browsers, devices, screen readers; QA report §7). Owner
-    decisions pending: Hero image for production, English copy, pricing, legal pages and Open
-    Graph image. Favicon resolved (F-1, PR #70, `76954ed`).
+  - **Next:** owner sign-off of the closure report (§13). Release readiness (closure report §11):
+    Hero image, English copy, pricing, legal pages, Open Graph image, Authentication, hands-on
+    keyboard, real Firefox and Safari, devices and screen readers (NOT VERIFIED), and O-1. Favicon
+    resolved (F-1, PR #70, `76954ed`).
   - **Maintenance (recommended, not done):** add `.playwright-mcp/` (local output of the
     Playwright MCP browser tool: page snapshots and console logs) to `.gitignore` in a
     separate change; untracked, it fails `prettier --check` and lint.
