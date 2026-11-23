@@ -12,6 +12,7 @@ export { AuthLayout, type AuthLayoutProps } from "./components/AuthLayout";
 export type { AuthMarketingCopy } from "./components/AuthMarketingPanel";
 export { AuthPasswordField } from "./components/AuthPasswordField";
 export { AuthResultView } from "./components/AuthResultView";
+export { PasswordRule, PasswordRuleList, type PasswordRuleState } from "./components/PasswordRule";
 export { AuthSubmitButton } from "./components/AuthSubmitButton";
 export { AuthTextField } from "./components/AuthTextField";
 export { AuthTextLink } from "./components/AuthTextLink";

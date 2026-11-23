@@ -12,6 +12,7 @@ import { AuthSubmitButton } from "./AuthSubmitButton";
 import { AuthTextField } from "./AuthTextField";
 import { AuthTextLink } from "./AuthTextLink";
 import { PasswordFieldDemo } from "./PasswordFieldDemo";
+import { PasswordRulesDemo } from "./PasswordRulesDemo";
 
 /*
  * Development-only preview of the Authentication foundation (`/dev/auth`; D-08-4, owner
@@ -115,6 +116,18 @@ export async function AuthFoundationPreview({
                 error={t("validation.passwordRequired")}
                 initiallyVisible
               />
+              <PasswordRulesDemo
+                label={t("register.password")}
+                toggleLabel={t("password.show")}
+                ruleLabels={{
+                  length: t.rich("rules.length", {
+                    ltr: (chunks: ReactNode) => <Ltr>{chunks}</Ltr>,
+                  }),
+                  case: t("rules.case"),
+                  digit: t("rules.digit"),
+                }}
+                statusLabels={{ met: t("status.met"), notMet: t("status.notMet") }}
+              />
               <p className="text-start">
                 <AuthTextLink href={ROUTES["auth.forgotPassword"]}>
                   {t("login.forgot")}
@@ -132,10 +145,6 @@ export async function AuthFoundationPreview({
               <AuthSubmitButton type="button" disabled loadingLabel={t("login.submitting")}>
                 {t("login.submit")}
               </AuthSubmitButton>
-              <p className="text-auth-form-helper text-text-secondary text-start">
-                {t.rich("rules.length", { ltr: (chunks: ReactNode) => <Ltr>{chunks}</Ltr> })} ·{" "}
-                {t("rules.case")} · {t("rules.digit")}
-              </p>
             </div>
           </AuthFormCard>
         )}
