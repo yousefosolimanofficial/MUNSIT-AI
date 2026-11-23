@@ -327,6 +327,10 @@ describe("AuthLayout (shared layout)", () => {
     }
     expect(screen.getAllByRole("heading")).toHaveLength(1);
     const panel = container.querySelectorAll("[data-auth-marketing]")[1] as HTMLElement;
-    expect(within(panel).getByText(arAuth.marketing.login.body[0] ?? "")).toBeTruthy();
+    // The Login body keeps the Figma line break ("\n", `whitespace-pre-line`); the text matcher
+    // collapses whitespace, so compare the collapsed copy.
+    const firstParagraph = (arAuth.marketing.login.body[0] ?? "").replace(/\s+/g, " ");
+    expect(within(panel).getByText(firstParagraph)).toBeTruthy();
+    expect(within(panel).getByText(firstParagraph).classList).toContain("whitespace-pre-line");
   });
 });

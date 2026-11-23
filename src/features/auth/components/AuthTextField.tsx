@@ -7,6 +7,7 @@ import {
   FIELD_ERROR,
   FIELD_FOCUS,
   FIELD_INPUT,
+  FIELD_INVALID,
   LTR_VALUE_IN_RTL,
 } from "./auth-styles";
 
@@ -27,6 +28,11 @@ export interface AuthTextFieldProps extends Omit<
   label: string;
   /** Inline error. Non-empty → Error state, `aria-invalid`, `aria-describedby`. */
   error?: string;
+  /**
+   * Rejected as a whole (Login Error): Coral Pulse 70% border and `aria-invalid`, no helper. The
+   * message is elsewhere (pass its id in `aria-describedby`). `error` takes precedence.
+   */
+  invalid?: boolean;
   /** The value reads left to right (email): `dir="ltr"`, aligned to the page start. */
   ltr?: boolean;
   ref?: Ref<HTMLInputElement>;
@@ -35,6 +41,7 @@ export interface AuthTextFieldProps extends Omit<
 export function AuthTextField({
   label,
   error,
+  invalid = false,
   ltr = false,
   id,
   disabled,
@@ -49,7 +56,13 @@ export function AuthTextField({
   const hasError = Boolean(error);
   const describedByIds = [describedBy, hasError ? errorId : undefined].filter(Boolean).join(" ");
 
-  const state = disabled ? FIELD_DISABLED : hasError ? FIELD_ERROR : FIELD_DEFAULT;
+  const state = disabled
+    ? FIELD_DISABLED
+    : hasError
+      ? FIELD_ERROR
+      : invalid
+        ? FIELD_INVALID
+        : FIELD_DEFAULT;
 
   return (
     <div
@@ -66,7 +79,7 @@ export function AuthTextField({
           id={inputId}
           disabled={disabled}
           dir={ltr ? "ltr" : undefined}
-          aria-invalid={hasError || undefined}
+          aria-invalid={hasError || invalid || undefined}
           aria-describedby={describedByIds || undefined}
           className={`${FIELD_INPUT} ${ltr ? LTR_VALUE_IN_RTL : "text-start"}`}
         />

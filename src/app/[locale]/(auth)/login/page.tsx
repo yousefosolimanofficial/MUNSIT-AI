@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 
-import { placeholderMetadata, RoutePlaceholder } from "@/app/[locale]/_components/RoutePlaceholder";
+import { placeholderMetadata } from "@/app/[locale]/_components/RoutePlaceholder";
+import { LoginScreen } from "@/features/auth";
 
 import { assertAuthRouteAvailable } from "../_lib/availability";
 
-/** Phase 04 placeholder (route key `auth.login`; path in `src/i18n/routes.ts`). Not implemented yet.
- * Production returns 404 until Authentication is available (P07-D25). */
+/** Login (route key `auth.login`; Phase 08 Increment 2). "UI-complete, not functional": the form
+ * uses the fail-closed placeholder adapter and always ends with "unavailable". Production returns
+ * 404 until Authentication is available (P07-D25). The metadata keeps the route title and
+ * `noindex, nofollow`. */
 export function generateMetadata(): Promise<Metadata> {
   assertAuthRouteAvailable();
   return placeholderMetadata("auth.login");
@@ -13,5 +16,9 @@ export function generateMetadata(): Promise<Metadata> {
 
 export default function Page() {
   assertAuthRouteAvailable();
-  return <RoutePlaceholder routeKey="auth.login" />;
+  return (
+    <main>
+      <LoginScreen />
+    </main>
+  );
 }

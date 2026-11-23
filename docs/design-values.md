@@ -1136,3 +1136,19 @@ or cropping.
 | `public/auth/login.png`    | `10ec5a97e7` | `2175:285` | 1200 × 896  | `b454ed02aab416ec`   |
 | `public/auth/register.png` | `53cf19a01a` | `2175:400` | 1200 × 896  | `79d62999fac89f85`   |
 | `public/auth/recovery.png` | `f246a9bb43` | `2175:408` | 1264 × 848  | `894312843bd97b21`   |
+
+### 17.4 Login screen (Phase 08 Increment 2, read-only, 2026-11-23)
+
+Frames: Default `67:3` / `67:59` / `67:37`, Password shown `2541:2980` / `3029` / `3077`, Loading
+`2480:2916` / `3880` / `4843`, Error `2467:75609` / `75701` / `75792`. Card values are the same at
+480 and 350 wide.
+
+| Part               | Values                                                                                                                                                       |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Card               | Gap 28: header 65, Fields at 93, button at 348 (Error: banner 44 at 348, button at 420), footer. Height 453 (Error 525)                                      |
+| Fields             | Gap 20: email 81, password 81, "forgot" row 25 with the link at the inline end (the left in RTL)                                                             |
+| Placeholders       | Email "name@example.com"; password hidden "••••••••", shown "اكتب كلمة المرور"; all Muted Readable, aligned RIGHT                                            |
+| Typed value        | Loading: "ahmed@example.com" in Text Primary, aligned LEFT                                                                                                   |
+| Loading            | Button State=Loading (`2542:2824`): label plus the 18 px spinner, gap 8, centred, spinner at the inline start; fields stay Default                           |
+| Error              | Banner between Fields and button (§17.2 values); both field borders Coral Pulse 70%, no helper; copy "البريد الإلكتروني أو كلمة المرور غير صحيحة. جرّب تاني." |
+| Panel body (Login) | Two lines per paragraph, explicit line break at every breakpoint                                                                                             |

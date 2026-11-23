@@ -73,10 +73,11 @@ export function AuthFormCard({
  * Coral Pulse 35% border, radius 12, padding 10 / 14, `Dashboard/Body Medium` Coral Pulse. An alert
  * region: rendered only while there is a message, so it is announced once.
  */
-export function AuthErrorBanner({ message }: { message?: string | null }) {
+export function AuthErrorBanner({ message, id }: { message?: string | null; id?: string }) {
   if (!message) return null;
   return (
     <div
+      id={id}
       role="alert"
       data-auth-error-banner=""
       className="rounded-md border border-solid border-accent-coral-pulse/35 bg-accent-coral-pulse/8 px-3.5 py-2.5 text-dashboard-body-medium text-accent-coral-pulse text-start"

@@ -39,10 +39,12 @@ const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 
 /**
  * Approved placeholder routes with a concrete sample URL (dynamic ids filled). The Landing is no
- * longer a placeholder (Phase 07); landing.spec.ts covers its structure, axe and viewports.
+ * longer a placeholder (Phase 07); landing.spec.ts covers its structure, axe and viewports. Login
+ * is no longer a placeholder (Phase 08 Increment 2, L-4); auth-login.spec.ts covers its title,
+ * direction, noindex, layout and axe.
  */
 const PLACEHOLDERS = Object.entries(ROUTES)
-  .filter(([key]) => !key.startsWith("dev.") && key !== "landing")
+  .filter(([key]) => !key.startsWith("dev.") && key !== "landing" && key !== "auth.login")
   .map(([key, path]) => ({ key, url: path.replace(/\[[^\]]+\]/g, "sample-1") }));
 
 function expectedTitle(locale: Locale, key: string): string {
