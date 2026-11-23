@@ -10,6 +10,9 @@ Single resume point. A new session starts by reading this file, the latest phase
   §16.5). `PasswordRule` was offered to Eng. Mariam; she did not confirm, so it was built
   internally (I1-3 fallback; no starter package was issued). Plan and Figma audit:
   [phases/phase-08-plan.md](phases/phase-08-plan.md).
+  **Increment 2 (Login UI): PLANNED**, execution contract proposed for owner approval
+  ([phases/phase-08-increment-2-contract.md](phases/phase-08-increment-2-contract.md),
+  decisions L-1 to L-5). Not started.
   Production is unchanged (`AUTHENTICATION_AVAILABLE = false`).
 - **DevOps handoff v1** (owner request 2026-11-23): initial testing package, not a release —
   [devops/HANDOFF.md](devops/HANDOFF.md), with `Dockerfile`, `.dockerignore` and `compose.yaml`.
