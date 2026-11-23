@@ -11,6 +11,10 @@ Single resume point. A new session starts by reading this file, the latest phase
   internally (I1-3 fallback; no starter package was issued). Plan and Figma audit:
   [phases/phase-08-plan.md](phases/phase-08-plan.md).
   Production is unchanged (`AUTHENTICATION_AVAILABLE = false`).
+- **DevOps handoff v1** (owner request 2026-11-23): initial testing package, not a release —
+  [devops/HANDOFF.md](devops/HANDOFF.md), with `Dockerfile`, `.dockerignore` and `compose.yaml`.
+  Any change to dependencies, versions, ports, variables or runtime configuration gets a new row
+  in its change log (§9), and DevOps is notified.
 - **Phase 07:** Landing Page — **CLOSED — IMPLEMENTATION COMPLETE — PRODUCTION RELEASE BLOCKED** (Product Owner approval
   2026-11-23; P07-D26). The application is **not** production-ready; release-readiness
   obligations stay open and NOT VERIFIED where untested. Closure report:

@@ -1,0 +1,26 @@
+# Keep the build context to the application source. Never send secrets, local state or build
+# output into an image.
+.git
+.github
+node_modules
+.next
+out
+coverage
+test-results
+test-results-production
+playwright-report
+playwright-report-production
+blob-report
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+.npmrc
+Research
+assets
+docs
+scripts
+*.md
+Dockerfile
+.dockerignore
+compose.yaml

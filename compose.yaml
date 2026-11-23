@@ -1,0 +1,13 @@
+# MUNSIT AI frontend: local DevOps test (initial handoff, NOT a release). docs/devops/HANDOFF.md.
+# Run: docker compose up --build   then open http://localhost:3000
+services:
+  frontend:
+    build:
+      context: .
+      args:
+        # Build-time value, inlined into the browser bundle (development | test | production).
+        NEXT_PUBLIC_APP_ENV: production
+    image: munsit-ai-frontend:handoff-v1
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
