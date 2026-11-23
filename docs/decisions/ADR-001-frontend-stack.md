@@ -74,6 +74,14 @@ Radix UI primitives, `class-variance-authority`, `tailwind-merge` (Phase 03); Ta
 (first form); MSW (only if mock data is authorized). Testing Library, jsdom, `jest-axe` and
 `@axe-core/playwright` were added in Phase 03 (above).
 
+**Form libraries approved for Phase 08 (D-08-1, owner, 2026-11-23).**
+
+- **Packages:** `react-hook-form`, `zod` and `@hookform/resolvers`, as runtime dependencies for the
+  Authentication forms ([phase-08-plan.md](../phases/phase-08-plan.md) §13). No other form or
+  validation package is added.
+- **Not installed yet:** they arrive in Phase 08 Increment 1 as a separate `chore(deps)` commit.
+  The installed versions are recorded here at that point.
+
 **Dialog without Radix (D-DL6, approved by the user 2026-11-15).** Dialog V1 uses the native
 `<dialog>` element with `showModal()`: top layer, page inertness, Esc and focus restoration come
 from the browser, so Radix Dialog (and any focus-trap package) is not added. The other Radix

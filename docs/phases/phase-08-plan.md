@@ -1,7 +1,8 @@
 # Phase 08 — Authentication UI — Plan
 
-- **Status:** **PLANNING ONLY (Increment 0).** Implementation has **not** started. It starts only
-  after the owner approves this plan and the decisions in §13.
+- **Status:** **PLAN APPROVED (owner, 2026-11-23)** with decisions D-08-1 to D-08-10 (§13).
+  Implementation has **not** started. Increment 1 starts only after the owner approves its
+  execution contract.
 - **Baseline:** `main` `2f6d328`. Phase 07 is CLOSED — IMPLEMENTATION COMPLETE — PRODUCTION
   RELEASE BLOCKED. CI `check` and `e2e` pass.
 - **Roadmap:** Phase 08, "UI-complete, not functional"; gate D-02.
@@ -20,8 +21,9 @@
 - **States:** loading, error and success, from Figma.
 - **Adapter:** a provider-agnostic `AuthAdapter` interface, with a **placeholder adapter that fails
   closed**.
-- **Route guard:** a mechanism wired to `getSession()`, enabled only with a real or an authorized
-  mock adapter (D-08-6).
+- **Route protection contract:** the future integration boundary and the route protection
+  contract are defined (types and documentation). **No guard is implemented or activated**, and no
+  user is redirected based on simulated authentication state (D-08-6).
 - **Flow map:** this document (§3).
 
 **Out of scope, Phase 21 and gate D-02:**
@@ -39,7 +41,7 @@
 | Forms and states | All Figma screens and states, client validation, accessible errors    | Unchanged UI; server error mapping                     |
 | Adapter          | `AuthAdapter` interface; placeholder adapter that always fails closed | Real adapter against the backend contract (D-02)       |
 | Session          | `getSession()` returns no session                                     | Real session model, storage and lifetime               |
-| Guard            | Mechanism present, off with the placeholder adapter (D-08-6)          | Enabled with the real adapter                          |
+| Guard            | Contract only (D-08-6); no guard code runs, no redirects              | Guard implemented and enabled with the real adapter    |
 | Reset link       | Renders the Invalid and Expired views from an adapter result          | Token verification, expiry rules                       |
 | Production       | Routes 404 (`AUTHENTICATION_AVAILABLE = false`)                       | Owner sets `AUTHENTICATION_AVAILABLE = true` (release) |
 
@@ -48,7 +50,18 @@
 - a real backend, real sessions, stored credentials or invented endpoints;
 - changing `AUTHENTICATION_AVAILABLE`;
 - copy that claims working sign-in;
-- logging or persisting passwords, tokens or form values.
+- logging or persisting passwords, tokens or form values;
+- simulating a successful sign-in or account creation outside an explicit development-only
+  visual preview (D-08-4).
+
+**UI-only behaviour (D-08-4):**
+
+- Forms validate on the client only.
+- Submitting creates no account, no session and no stored credential, and calls no endpoint.
+- The placeholder adapter returns "unavailable" without any network request, and the form shows
+  a clear unavailable-state message.
+- Success views appear only in explicit development-only previews. Those previews are labelled
+  as previews and are not evidence of backend functionality.
 
 ## 2. Screen inventory
 
@@ -285,15 +298,16 @@ Each increment is one PR, merged only after owner review. Tasks are no longer th
 | 2   | Login                     | Zod schema; all Login states; adapter call; error mapping                                                                                                                                                                       | 1, D-08-4, D-08-5      |
 | 3   | Register                  | Zod schema with password rules; all Register states; success view                                                                                                                                                               | 1, D-08-4              |
 | 4   | Forgot and Reset password | Both forms; Email sent; Invalid, Expired and Updated views; resend button UI only                                                                                                                                               | 1, D-08-4, D-08-7      |
-| 5   | Guard and verification    | Guard mechanism (off with the placeholder adapter); visual baselines; axe; keyboard; flow navigation E2E; production 404 still holds; closure report                                                                            | 2–4, D-08-6, D-08-8    |
+| 5   | Verification              | Route protection contract review (no guard code); visual baselines; axe; keyboard; flow navigation E2E; production 404 still holds; closure report                                                                              | 2–4, D-08-6, D-08-8    |
 
 **How states are reviewed:**
 
 - The placeholder adapter never succeeds, so Success, Email sent and Updated are not reachable by
   submitting.
 - They are covered by component tests.
-- For visual review, a development-only state preview is used, but only if the owner authorizes it
-  (D-08-4). It would be an adapter fixture and never reach production.
+- For visual review, an explicit development-only preview renders them (D-08-4, approved). It is
+  labelled as a preview, uses a preview-only adapter fixture, never reaches production and is not
+  evidence of backend functionality.
 
 ## 9. Acceptance criteria
 
@@ -321,19 +335,19 @@ Each increment is one PR, merged only after owner review. Tasks are no longer th
 | Unit       | Zod schemas (boundary values: empty, 7 / 8 characters, case, digit, mismatch); placeholder adapter fails closed; message key parity |
 | Component  | Each component's states; blur validation and error clearing; show/hide toggle; loading and double-submit guard; focus management    |
 | E2E (dev)  | Flow navigation for the §3.6 journeys; keyboard-only completion of each form; axe at 1440, 768, 390 and 320, ar and en              |
-| Visual     | Screenshot baselines per view at 1440, 768 and 390 (state preview only if D-08-4 is approved)                                       |
+| Visual     | Screenshot baselines per view at 1440, 768 and 390; success views through the development-only preview                              |
 | Production | Existing smoke tests: Auth routes 404, Landing entry points hidden (unchanged)                                                      |
-| Guard      | Redirect test only with an authorized adapter (Roadmap)                                                                             |
+| Guard      | None in Phase 08 (D-08-6); the redirect test belongs to the later integration with a real adapter                                   |
 
 ## 11. Risks and dependencies
 
 | ID           | Risk or dependency                                                                       | Mitigation                                                                   |
 | ------------ | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| D-02         | Provider, session, token storage, route protection and recovery rules are unresolved     | Adapter boundary; no wiring; guard off; "UI-complete, not functional"        |
+| D-02         | Provider, session, token storage, route protection and recovery rules are unresolved     | Adapter boundary; no wiring; no guard; "UI-complete, not functional"         |
 | R08-1        | The fail-closed result has no matching Figma message on Login (only invalid credentials) | D-08-4: choose a non-misleading message; never say the credentials are wrong |
 | R08-2        | Password rules in Figma may differ from the eventual backend policy                      | Rules as UI constants in one schema; Phase 21 aligns them                    |
 | R08-3        | Reset link token handling is undefined                                                   | Views driven by an adapter result; no token parsing beyond passing it on     |
-| R08-4        | The guard redirecting every `(app)` route would break development screens and tests      | Guard off with the placeholder adapter (D-08-6)                              |
+| R08-4        | A guard redirecting every `(app)` route would break development screens and tests        | No guard in Phase 08; contract only (D-08-6)                                 |
 | R08-5        | Image weight on Mobile (three photos)                                                    | Export at source size, `next/image` sizing; measure, not a target (D-12)     |
 | R08-6        | Typography fallback (Phase 07 §8f)                                                       | Same font stack; differences documented                                      |
 | Dependencies | React Hook Form and Zod are not installed (ADR-001 defers them to this phase)            | D-08-1: `chore(deps)` commit, ADR-001 update                                 |
@@ -351,17 +365,24 @@ Each increment is one PR, merged only after owner review. Tasks are no longer th
 - **Records:** the closure report is written and `PROGRESS.md` is updated. Phase 09 has not
   started.
 
-## 13. Decisions required from the owner (before Increment 1)
+## 13. Owner decisions (2026-11-23)
 
-| ID      | Decision                                                                                                                              | Recommendation                                                                                                                                    |
-| ------- | ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| D-08-1  | Add React Hook Form, Zod and `@hookform/resolvers` (Roadmap stack; ADR-001 deferred them to Phase 08)                                 | Approve; separate `chore(deps)` commit and ADR-001 update                                                                                         |
-| D-08-2  | Export the three Auth marketing photos from Figma at source size                                                                      | Approve, as approved imagery from the project file                                                                                                |
-| D-08-3  | English Auth copy: no English frames exist                                                                                            | Proposed translations, pending approval (as P07-D1); English stays development-only                                                               |
-| D-08-4  | What the fail-closed placeholder shows on submit; whether a development-only state preview may render Success, Email sent and Updated | Generic, non-misleading "service not available yet" message (new copy for approval) on every form; allow a dev-only preview as an adapter fixture |
-| D-08-5  | Login empty-field validation messages (no Login frames)                                                                               | Reuse the Register and Forgot messages verbatim                                                                                                   |
-| D-08-6  | Route guard: build the mechanism now but keep it off with the placeholder adapter                                                     | Approve; enable only with an authorized adapter                                                                                                   |
-| D-08-7  | The Email sent prototype link "عرض تجريبي: …"                                                                                         | Omit; it is a prototype affordance, not product UI                                                                                                |
-| D-08-8  | Module ownership of `features/auth` (Yousef or Mariam)                                                                                | Owner to assign                                                                                                                                   |
-| D-08-9  | Mobile and Tablet order (form after the panel on Tablet, before it on Mobile); marketing image as decorative                          | Follow Figma per breakpoint, with the DOM order matching the visual order; image `alt=""`                                                         |
-| D-08-10 | Items absent from the designs: Google sign-in, email verification, terms consent, remember me, language toggle                        | Not built in Phase 08; revisit with D-02                                                                                                          |
+| ID      | Decision                                                                                                                                                                                                                                                                                                                                                                               | Status                         |
+| ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------ |
+| D-08-1  | **Form libraries.** React Hook Form, Zod and `@hookform/resolvers`, with dependencies kept minimal. Installed in Increment 1 as a separate `chore(deps)` commit; ADR-001 records the decision                                                                                                                                                                                          | **APPROVED**                   |
+| D-08-2  | **Marketing assets.** Export the three approved photos from Figma (§3.9), preserving the original composition, approved cropping, brand colours and responsive use. No generated replacements                                                                                                                                                                                          | **APPROVED**                   |
+| D-08-3  | **English copy.** Draft translations for owner review only; not approved. English Authentication is never enabled in production                                                                                                                                                                                                                                                        | **DRAFT ONLY**                 |
+| D-08-4  | **Form submission.** Client-side validation only. No account, session or stored credential, and no invented endpoint. A clear unavailable-state message where appropriate. Success views only in explicit development-only previews, never presented as backend evidence                                                                                                               | **APPROVED WITH RESTRICTIONS** |
+| D-08-5  | **Validation messages.** Reuse approved wording where the meaning matches (Login empty fields reuse the Register and Forgot messages). All copy lives in message files; no inconsistent new messages                                                                                                                                                                                   | **APPROVED**                   |
+| D-08-6  | **Route guard.** Define the future integration boundary and the route protection contract now. No guard is implemented or activated in Phase 08, and nothing redirects from simulated state. The functional guard is a later integration dependency                                                                                                                                    | **MODIFIED APPROVAL**          |
+| D-08-7  | **Prototype demo link.** "عرض تجريبي: …" on Email sent is excluded                                                                                                                                                                                                                                                                                                                     | **APPROVED**                   |
+| D-08-8  | **Ownership.** Claude Code owns architecture, integration, technical contracts, test coordination and final implementation review. Eng. Mariam may receive isolated UI component tasks, each with explicit file ownership, a clear component API, acceptance criteria, test requirements and no overlapping edits. No task is assigned or treated as accepted without her confirmation | **APPROVED**                   |
+| D-08-9  | **Responsive behaviour.** Follow Figma per breakpoint and keep the Tablet and Mobile order (§3.7). DOM order matches visual order. Marketing images are decorative unless one carries essential information                                                                                                                                                                            | **APPROVED**                   |
+| D-08-10 | **Undesigned features.** No Google sign-in, email verification, OTP, remember me, terms checkbox, language toggle or other undesigned Authentication feature. Future decisions are tracked separately                                                                                                                                                                                  | **APPROVED**                   |
+
+**Still open:**
+
+- the unavailable-state message wording (new copy, not in Figma);
+- the English draft translations (D-08-3).
+
+Both are presented for owner approval in Increment 1; neither blocks the foundation work.
