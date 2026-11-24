@@ -6,9 +6,10 @@ import type { ButtonHTMLAttributes, ReactNode } from "react";
  * Neutral Iron `Auth/Button/Primary` label. Focus: Electric Sky border plus a 3 px Electric Sky 25%
  * ring (keyboard focus only). Disabled: 40% opacity.
  *
- * Loading keeps the size, shows the 18 px spinner (track Iron 25%, arc Iron) after the loading
- * label, sets `aria-busy`, and is disabled so a second submit cannot start. The spinner turns only
- * when motion is allowed (reduced motion: the static Figma spinner).
+ * Loading keeps the size and shows the 18 px spinner (track Iron 25%, arc Iron) at the inline start
+ * of the loading label (Figma `2542:2824`: the spinner sits on the right in RTL; Increment 2). It
+ * sets `aria-busy` and is disabled so a second submit cannot start. The spinner turns only when
+ * motion is allowed (reduced motion: the static Figma spinner).
  */
 
 export interface AuthSubmitButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -43,7 +44,6 @@ export function AuthSubmitButton({
     >
       {loading ? (
         <>
-          <span>{loadingLabel}</span>
           <svg
             width={18}
             height={18}
@@ -68,6 +68,7 @@ export function AuthSubmitButton({
               strokeLinecap="round"
             />
           </svg>
+          <span>{loadingLabel}</span>
         </>
       ) : (
         children

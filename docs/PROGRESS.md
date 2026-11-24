@@ -10,9 +10,10 @@ Single resume point. A new session starts by reading this file, the latest phase
   §16.5). `PasswordRule` was offered to Eng. Mariam; she did not confirm, so it was built
   internally (I1-3 fallback; no starter package was issued). Plan and Figma audit:
   [phases/phase-08-plan.md](phases/phase-08-plan.md).
-  **Increment 2 (Login UI): PLANNED, contract APPROVED** (owner, 2026-11-23, L-1 to L-5;
-  [phases/phase-08-increment-2-contract.md](phases/phase-08-increment-2-contract.md) §6.1).
-  Implementation starts only after the contract is merged. Not started.
+  **Increment 2 (Login UI): IN PROGRESS** — contract approved (L-1 to L-5) and merged (PR #77,
+  `cfc61de`); implementation on `phase/08-increment-2-login`, "UI-complete, not functional"
+  ([phases/phase-08-increment-2-contract.md](phases/phase-08-increment-2-contract.md) §9).
+  Increment 3 does not start before Increment 2 is complete and reviewed.
   Production is unchanged (`AUTHENTICATION_AVAILABLE = false`).
 - **DevOps handoff v1** (owner request 2026-11-23): initial testing package, not a release —
   [devops/HANDOFF.md](devops/HANDOFF.md), with `Dockerfile`, `.dockerignore` and `compose.yaml`.

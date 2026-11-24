@@ -8,8 +8,9 @@ import enPages from "../../src/i18n/messages/en/pages.json" with { type: "json" 
  * Every placeholder is `noindex, nofollow`; the Landing stays indexable.
  */
 
+// `/login` left this list in Phase 08 Increment 2 (L-4): it is the Login screen now; its noindex
+// and production-404 checks live in tests/e2e/auth-login.spec.ts and the production spec.
 const AUTH_ROUTES = [
-  { path: "/login", key: "auth_login" },
   { path: "/register", key: "auth_register" },
   { path: "/forgot-password", key: "auth_forgotPassword" },
   { path: "/reset-password", key: "auth_resetPassword" },

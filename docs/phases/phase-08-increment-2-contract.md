@@ -139,3 +139,23 @@ Gate: `corepack pnpm check`, `corepack pnpm test:e2e`, `corepack pnpm test:e2e:p
 - No value is logged or stored; the adapter is the only consumer of the values.
 - Production is unchanged: `/login` 404, `AUTHENTICATION_AVAILABLE = false`, gates untouched.
 - All §7 tests pass, with CI green on the exact PR head. PR merged only with owner approval.
+
+## 9. Implementation record (2026-11-23)
+
+Contract merged through PR #77 (`cfc61de`); implementation on `phase/08-increment-2-login`.
+Figma was read only (frames in §3), and every value below was read from the 12 Login frames.
+
+| ID   | Finding or decision                                                                                                                                                                                                                                                                                                                                                                              |
+| ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| I2-1 | **Adapter injection.** A Server Component cannot pass an adapter object (functions) to a Client Component. `LoginForm` therefore takes `adapter` as an optional prop that **defaults to `placeholderAuthAdapter`**; the route passes none. Only the development preview passes a fixture, through a client wrapper beside it (`src/app/[locale]/dev/auth/login/LoginPreviewForm.tsx`).           |
+| I2-2 | **Placeholders.** Figma shows "name@example.com" (email), "••••••••" (password hidden) and "اكتب كلمة المرور" (password shown, `2541:2980`). The last two were missing and were added verbatim as `placeholders.password` and `placeholders.passwordShown` (English DRAFT).                                                                                                                      |
+| I2-3 | **Error frame fields.** In `2467:75609` / `75701` / `75792` both fields carry a Coral Pulse 70% border and no helper. Implemented for `invalid-credentials` only (seen in the preview): `aria-invalid` plus `aria-describedby` pointing to the banner. "unavailable", the only result on the real route, is not the user's mistake, so the fields stay Default.                                  |
+| I2-4 | **Loading button.** The Figma `Auth / Primary Button` State=Loading variant (`2542:2824`, as L-2 clarified at the final review): label plus the 18 px spinner, gap 8, with the spinner at the inline start (the right in RTL). The Disabled variant is not used in Login. In the Figma Loading frames the fields stay Default, so they are not disabled; the button is disabled and `aria-busy`. |
+| I2-5 | **Typed email alignment.** The Loading frames align the typed "ahmed@example.com" LEFT, while the placeholder stays RIGHT (Default, Error). LTR fields now align a typed value to its own start (left) and the placeholder to the page start (right). This applies to the email and the password fields.                                                                                         |
+| I2-6 | **Marketing panel body.** Figma breaks each Login body paragraph into two lines with an explicit line break at every breakpoint. The Arabic Login copy keeps the breaks (`whitespace-pre-line`). Register and Recovery are checked in their own increments.                                                                                                                                      |
+| I2-7 | **Failures without Login copy.** Login copy exists for `unavailable` and `invalid-credentials` only. `rejected` (which `failureMessageKey` maps to a missing `errors.failed.login`), `invalid-link` and `expired-link` fail closed with the "unavailable" wording. No message is invented.                                                                                                       |
+
+Production is unchanged: `AUTHENTICATION_AVAILABLE = false`, `/login` keeps both
+`assertAuthRouteAvailable()` calls and returns 404 in production, and no gate, redirect, request or
+storage was added. No dependency, port, environment variable or runtime setting changed, so the
+DevOps handoff is unaffected.

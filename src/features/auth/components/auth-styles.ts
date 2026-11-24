@@ -21,6 +21,11 @@ export const FIELD_FOCUS =
 export const FIELD_DEFAULT = "border-neutral-slate bg-surface-obsidian";
 export const FIELD_ERROR = "border-accent-coral-pulse bg-surface-obsidian";
 export const FIELD_DISABLED = "border-neutral-slate bg-surface-ink opacity-50";
+/**
+ * Rejected credentials (Login Error `2467:75609`, Increment 2): both fields keep their content and
+ * get a Coral Pulse 70% border, without a helper (the form banner carries the message).
+ */
+export const FIELD_INVALID = "border-accent-coral-pulse/70 bg-surface-obsidian";
 
 /**
  * The value and placeholder: `Auth/Form/Input`. Placeholder Muted Readable (Default and Error),
@@ -31,9 +36,12 @@ export const FIELD_INPUT =
 
 /**
  * Left-to-right values (email, password) inside an RTL page: the input is `dir="ltr"` so the value
- * reads correctly, and stays aligned to the page start like the Figma placeholder.
+ * reads correctly. A typed value aligns to its own start, the left (Figma Login Loading
+ * `2480:2916` / `3880` / `4843`: "ahmed@example.com" LEFT), while the placeholder stays aligned to
+ * the page start, the right (Figma Default and Error: "name@example.com" RIGHT). Phase 08
+ * Increment 2 (contract §9).
  */
-export const LTR_VALUE_IN_RTL = "[[dir=rtl]_&]:text-right";
+export const LTR_VALUE_IN_RTL = "[[dir=rtl]_&]:placeholder-shown:text-right";
 
 /** Form column and card widths: 480 (Desktop, Tablet), fluid to 350 on Mobile. */
 export const CARD_WIDTH = "w-full max-w-[480px]";

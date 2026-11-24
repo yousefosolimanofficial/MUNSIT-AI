@@ -92,7 +92,10 @@ export function AuthMarketingPanel({
           <p className={`${HEADING[family]} text-text-primary`}>{copy.heading}</p>
           <p className={`${LEAD[family]} text-text-primary`}>{copy.lead}</p>
           {copy.body.map((paragraph) => (
-            <p key={paragraph} className="text-auth-panel-body text-text-secondary">
+            <p
+              key={paragraph}
+              className="whitespace-pre-line text-auth-panel-body text-text-secondary"
+            >
               {paragraph}
             </p>
           ))}

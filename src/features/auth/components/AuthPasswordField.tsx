@@ -10,6 +10,7 @@ import {
   FIELD_ERROR,
   FIELD_FOCUS,
   FIELD_INPUT,
+  FIELD_INVALID,
   FOCUS_RING,
   LTR_VALUE_IN_RTL,
 } from "./auth-styles";
@@ -31,6 +32,11 @@ export interface AuthPasswordFieldProps extends Omit<
 > {
   label: string;
   error?: string;
+  /**
+   * Rejected as a whole (Login Error): Coral Pulse 70% border and `aria-invalid`, no helper. The
+   * message is elsewhere (pass its id in `aria-describedby`). `error` takes precedence.
+   */
+  invalid?: boolean;
   /** Whether the password is shown as text. */
   visible: boolean;
   onVisibleChange: (visible: boolean) => void;
@@ -42,6 +48,7 @@ export interface AuthPasswordFieldProps extends Omit<
 export function AuthPasswordField({
   label,
   error,
+  invalid = false,
   visible,
   onVisibleChange,
   toggleLabel,
@@ -58,7 +65,13 @@ export function AuthPasswordField({
   const hasError = Boolean(error);
   const describedByIds = [describedBy, hasError ? errorId : undefined].filter(Boolean).join(" ");
 
-  const state = disabled ? FIELD_DISABLED : hasError ? FIELD_ERROR : FIELD_DEFAULT;
+  const state = disabled
+    ? FIELD_DISABLED
+    : hasError
+      ? FIELD_ERROR
+      : invalid
+        ? FIELD_INVALID
+        : FIELD_DEFAULT;
 
   return (
     <div
@@ -78,7 +91,7 @@ export function AuthPasswordField({
           dir="ltr"
           spellCheck={false}
           autoCapitalize="none"
-          aria-invalid={hasError || undefined}
+          aria-invalid={hasError || invalid || undefined}
           aria-describedby={describedByIds || undefined}
           className={`${FIELD_INPUT} ${LTR_VALUE_IN_RTL}`}
         />

@@ -127,7 +127,9 @@
     "notMet": "not met"
   },
   "placeholders": {
-    "email": "name@example.com"
+    "email": "name@example.com",
+    "password": "••••••••",
+    "passwordShown": "Enter your password"
   },
   "common": {
     "retry": "Try again"
