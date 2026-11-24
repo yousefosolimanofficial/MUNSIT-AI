@@ -10,10 +10,12 @@ Single resume point. A new session starts by reading this file, the latest phase
   §16.5). `PasswordRule` was offered to Eng. Mariam; she did not confirm, so it was built
   internally (I1-3 fallback; no starter package was issued). Plan and Figma audit:
   [phases/phase-08-plan.md](phases/phase-08-plan.md).
-  **Increment 2 (Login UI): IN PROGRESS** — contract approved (L-1 to L-5) and merged (PR #77,
-  `cfc61de`); implementation on `phase/08-increment-2-login`, "UI-complete, not functional"
-  ([phases/phase-08-increment-2-contract.md](phases/phase-08-increment-2-contract.md) §9).
-  Increment 3 does not start before Increment 2 is complete and reviewed.
+  **Increment 2 (Login UI): COMPLETE** (PR #78, merged as `d3e7c76` from the reviewed head
+  `9d96421`; post-merge CI run 45484982422 `check` and `e2e` green). "UI-complete, not
+  functional": `/login` always ends with "unavailable". Owner visual approval of all 12 Figma
+  comparisons on 2026-11-24
+  ([phases/phase-08-increment-2-contract.md](phases/phase-08-increment-2-contract.md) §10).
+  **Increment 3 (Register): NOT STARTED** — its plan goes to the owner for approval first.
   Production is unchanged (`AUTHENTICATION_AVAILABLE = false`).
 - **DevOps handoff v1** (owner request 2026-11-23): initial testing package, not a release —
   [devops/HANDOFF.md](devops/HANDOFF.md), with `Dockerfile`, `.dockerignore` and `compose.yaml`.
@@ -378,6 +380,12 @@ numerals and English runs inside Arabic text (direction isolation). See R-1, I-1
 | 7   | Final audit + phase report; G-1, G-2 implemented             | Done — approved (2026-11-13)   |
 
 ## Next action
+
+**2026-11-24:** Phase 08 Increment 2 (Login UI) is COMPLETE through PR #78 (`d3e7c76`).
+
+- **Recorded:** owner visual approval (contract §10); merge and post-merge CI evidence.
+- **Next:** the Increment 3 (Register) plan, for owner approval. No Register code before approval.
+- **Unchanged:** `AUTHENTICATION_AVAILABLE = false`; every Auth route returns 404 in production.
 
 **2026-11-19:** Phase 07 Increment 0 (planning) is COMPLETE through PR #49.
 
