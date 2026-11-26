@@ -1152,3 +1152,12 @@ Frames: Default `67:3` / `67:59` / `67:37`, Password shown `2541:2980` / `3029` 
 | Loading            | Button State=Loading (`2542:2824`): label plus the 18 px spinner, gap 8, centred, spinner at the inline start; fields stay Default                           |
 | Error              | Banner between Fields and button (§17.2 values); both field borders Coral Pulse 70%, no helper; copy "البريد الإلكتروني أو كلمة المرور غير صحيحة. جرّب تاني." |
 | Panel body (Login) | Two lines per paragraph, explicit line break at every breakpoint                                                                                             |
+
+### 17.6 Shared Auth states for Register and Recovery (read-only, 2026-11-26)
+
+| Part                | Values                                                                                                                                                                                                                                                                |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Status banner       | Register Failed `2480:2636`, Forgot Failed `2480:2869`, Reset Error `2480:659`: under the header, above the fields. 48 high, Coral Pulse 8% fill, 35% border, radius 14, padding 12 / 14, gap 10, `alert` 18 at the inline start, `Dashboard/Body Medium` Coral Pulse |
+| Result icon tones   | 64 × 64, radius 20, 12% fill, 40% border, icon 28. Success Green + `check` (Register Success, Reset Updated); Coral Pulse + `alert` (Reset Invalid link `2480:724`); Semantic Warning `#ffb020` + `alert` (Reset Expired link `2480:770`)                             |
+| Result without icon | Forgot Email sent `2467:75582`: header, primary action, text link                                                                                                                                                                                                     |
+| Primary-styled link | The primary action navigates in Register Success, Forgot Email sent, Reset Updated, Invalid and Expired link; same surface as `Auth / Primary Button`                                                                                                                 |

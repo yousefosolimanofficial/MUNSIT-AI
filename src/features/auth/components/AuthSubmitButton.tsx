@@ -1,5 +1,7 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 
+import { PRIMARY_BUTTON } from "./auth-styles";
+
 /*
  * `Auth / Primary Button` (Figma component set `191:57`: Default `191:51`, Focus `191:53`,
  * Disabled `191:55`, Loading `2542:2824`). 52 high, full width, radius 12, Neutral Mist with
@@ -19,9 +21,6 @@ export interface AuthSubmitButtonProps extends ButtonHTMLAttributes<HTMLButtonEl
   loadingLabel: string;
 }
 
-const BASE =
-  "flex h-[52px] w-full items-center justify-center gap-2 rounded-md border border-solid border-transparent bg-neutral-mist text-auth-button-primary text-neutral-iron transition-[box-shadow,border-color,opacity] duration-150 enabled:cursor-pointer focus-visible:border-accent-electric-sky focus-visible:shadow-[0_0_0_3px_rgba(99,161,255,0.25)] focus-visible:outline-none disabled:cursor-not-allowed";
-
 export function AuthSubmitButton({
   children,
   loading = false,
@@ -38,7 +37,7 @@ export function AuthSubmitButton({
       disabled={disabled || loading}
       aria-busy={loading || undefined}
       data-loading={loading ? "" : undefined}
-      className={[BASE, disabled && !loading ? "opacity-40" : "", className]
+      className={[PRIMARY_BUTTON, disabled && !loading ? "opacity-40" : "", className]
         .filter(Boolean)
         .join(" ")}
     >
