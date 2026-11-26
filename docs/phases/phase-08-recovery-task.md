@@ -7,8 +7,9 @@
 - **Branch:** Yousef integrates her deliveries on `feature/auth-recovery`, then opens a separate
   pull request to `main` (never mixed with Register). Mariam has no repository access: she works
   offline from a starter package ([TEAM_COLLABORATION.md](../TEAM_COLLABORATION.md) §4–§6).
-- **Baseline:** `main` after PR #81 (the shared status banner, result tones and primary link)
-  merges. The starter package is cut from that commit and recorded in the delivery log.
+- **Baseline:** `main` after PR #81 (the shared status banner, result tones, primary link,
+  per-family panel and toggle description) is approved and merges. The starter package is cut from
+  that commit and recorded in the delivery log; the handoff is prepared then (owner, 2026-11-26).
 - **Backend:** the backend API pack is **provisional**. There is no API integration in this task.
   Authentication stays disabled in production (`AUTHENTICATION_AVAILABLE = false`).
 
@@ -173,15 +174,15 @@ update) is written as a request in `DELIVERY.md` and applied by Yousef.
   - Each result view moves focus to its heading.
 - **Values:** the adapter receives only what it needs: the trimmed email for Forgot; for Reset, `{ token, password }` and never the confirmation (RC-4 for the token).
 
-## 6. Decisions left for the owner (do not guess)
+## 6. Decisions (RC-3 and RC-4 decided by the owner on 2026-11-26)
 
-| ID   | Decision                                                                                                                                               | Interim for the task                                                                                                                         |
-| ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| RC-1 | "Unavailable" on the real routes shown like Register R-3 (status banner, button unchanged)                                                             | Implement as R-3 (consistency); owner to confirm                                                                                             |
-| RC-2 | Email sent, Updated, Invalid and Expired views only on previews                                                                                        | Implement as preview only (as R-4)                                                                                                           |
-| RC-3 | **"إعادة إرسال الرابط" behaviour** (resend: what it does, limits, feedback) is product behaviour that Figma does not define                            | **Render it, inert:** a text-styled button that does nothing yet, with a code comment. No adapter call                                       |
-| RC-4 | **Reset link token** (security; R08-3): how the token reaches the page, its format and validation belong to the backend contract, which is provisional | **No token handling:** the route reads nothing from the URL; the form takes an optional `token` prop and passes `token ?? ""` to the adapter |
-| RC-5 | Typed values: Figma draws placeholders where values were typed, and the length rule as Valid while empty                                               | Follow the Login and Register patterns (I2-5, R-2)                                                                                           |
+| ID   | Decision                                                                                                                                                                              | Interim for the task                                                                                                                                                        |
+| ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| RC-1 | "Unavailable" on the real routes shown like Register R-3 (status banner, button unchanged)                                                                                            | Implement as R-3 (consistency); owner to confirm                                                                                                                            |
+| RC-2 | Email sent, Updated, Invalid and Expired views only on previews                                                                                                                       | Implement as preview only (as R-4)                                                                                                                                          |
+| RC-3 | **DECIDED (owner, 2026-11-26):** display "إعادة إرسال الرابط", but keep it inactive until the backend provides the functionality (no resend endpoint exists in the captured contract) | A text-styled control that is visibly present and does nothing: no adapter call, no Loading, no message. A code comment cites RC-3                                          |
+| RC-4 | **DECIDED (owner, 2026-11-26):** do not implement reset-token handling yet                                                                                                            | The route reads nothing from the URL; the form takes an optional `token` prop and passes `token ?? ""` to the adapter. No parsing, display, logging or storage of any token |
+| RC-5 | Typed values: Figma draws placeholders where values were typed, and the length rule as Valid while empty                                                                              | Follow the Login and Register patterns (I2-5, R-2)                                                                                                                          |
 
 ## 7. Accessibility (WCAG 2.2 AA)
 
