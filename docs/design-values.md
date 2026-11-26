@@ -1153,6 +1153,22 @@ Frames: Default `67:3` / `67:59` / `67:37`, Password shown `2541:2980` / `3029` 
 | Error              | Banner between Fields and button (§17.2 values); both field borders Coral Pulse 70%, no helper; copy "البريد الإلكتروني أو كلمة المرور غير صحيحة. جرّب تاني." |
 | Panel body (Login) | Two lines per paragraph, explicit line break at every breakpoint                                                                                             |
 
+### 17.5 Register screen (Phase 08 Increment 3 audit, read-only, 2026-11-24)
+
+The frames are listed in the Increment 3 contract §3.1. Values are the same at 480 and 350 wide
+unless stated.
+
+| Part          | Values                                                                                                                                                                                      |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Card          | Gap 28. Heights: Default, Shown, Loading 632; one helper 658; Required 736; Failed 708; Success 290                                                                                         |
+| Fields        | Gap 16: name 81 (107 with a helper), email, password, rules row 18, confirm                                                                                                                 |
+| Rules row     | Gap 16, aligned to the start (right in RTL); content 354 wide (clipped by 4 px at 390 in Figma)                                                                                             |
+| Status banner | Above the fields. 48 high, Coral Pulse 8% fill, Coral Pulse 35% border, radius 14, padding 12 / 14, gap 10; `alert` 18 Coral Pulse at the inline start; `Dashboard/Body Medium` Coral Pulse |
+| Button labels | "إنشاء حساب"; Loading "جاري إنشاء الحساب..." (State=Loading); Failed "إعادة المحاولة"                                                                                                       |
+| Success view  | Status icon 64 at y 0, header at 92, button at 185, footer at 265 (gap 28)                                                                                                                  |
+| Panel photo   | Desktop 520 × 350; **Tablet 672 × 240**; Mobile 350 × 200 (image `53cf19a01a`)                                                                                                              |
+| Panel copy    | Heading Cairo SemiBold 26 with "هنا!" in Electric Sky, lead SemiBold 18, body Regular 16 with explicit line breaks and one blank line                                                       |
+
 ### 17.6 Shared Auth states for Register and Recovery (read-only, 2026-11-26)
 
 | Part                | Values                                                                                                                                                                                                                                                                |
