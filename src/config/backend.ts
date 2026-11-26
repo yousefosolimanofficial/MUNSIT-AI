@@ -33,6 +33,12 @@ export function parseBackendEnv(raw: RawBackendEnv): BackendConfig | null {
   if (url.protocol !== "https:" && url.protocol !== "http:") {
     throw new Error("Invalid MUNSIT_API_BASE_URL: expected an absolute http(s) URL.");
   }
+  // Plain http only for a local backend; anything else must use https (credentials and tokens
+  // travel in these requests).
+  const local = ["localhost", "127.0.0.1", "[::1]"].includes(url.hostname);
+  if (url.protocol === "http:" && !local) {
+    throw new Error("Invalid MUNSIT_API_BASE_URL: https is required outside localhost.");
+  }
   if (url.username || url.password || url.search || url.hash) {
     throw new Error("Invalid MUNSIT_API_BASE_URL: no credentials, query or fragment allowed.");
   }

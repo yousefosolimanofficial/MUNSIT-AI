@@ -25,6 +25,7 @@ describe("parseBackendEnv (server-only backend configuration)", () => {
     for (const value of [
       "not a url",
       "ftp://api.example.test",
+      "http://api.example.test",
       "https://user:pass@api.example.test",
       "https://api.example.test/?key=1",
     ]) {

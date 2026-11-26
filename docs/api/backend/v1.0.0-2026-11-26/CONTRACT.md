@@ -68,17 +68,23 @@ development server's database; the Backend team may delete it.
 
 ## 5. Differences from the earlier Backend Pack
 
-**The earlier Backend Pack is not in the repository or on this machine**, so a field-by-field
-comparison could not be made. Only the difference the owner named can be stated:
+**Owner decision (2026-11-26):** the live contract above is the **current working integration
+reference**. The two contracts must not be mixed. The earlier pack's details below come from the
+owner's review; they will be checked line by line when the original ZIP is placed in the workspace.
 
-| Item              | Earlier Backend Pack (as reported by the owner) | Live contract (verified) | Impact                  |
-| ----------------- | ----------------------------------------------- | ------------------------ | ----------------------- |
-| Register path     | `/auth/register`                                | **`/register`**          | **Breaking**            |
-| Login path        | not verified                                    | `/login`                 | Unverified against pack |
-| Current-user path | not verified                                    | `/me`                    | Unverified against pack |
+| Item               | Earlier Backend Pack (owner-reported) | Live contract (verified 2026-11-26)                                        | Impact       |
+| ------------------ | ------------------------------------- | -------------------------------------------------------------------------- | ------------ |
+| Register path      | `/api/v1/auth/register`               | `POST /register` (no prefix)                                               | **Breaking** |
+| Login path         | `/api/v1/auth/login`                  | `POST /login`                                                              | **Breaking** |
+| Login body         | JSON credentials                      | `application/x-www-form-urlencoded`, `username` = email (JSON returns 422) | **Breaking** |
+| Name field         | `name`                                | `full_name`                                                                | **Breaking** |
+| User ID            | string                                | integer                                                                    | **Breaking** |
+| Auth response      | user and token together               | Register 201 → user only; Login 200 → `{ access_token, token_type }` only  | **Breaking** |
+| Current user       | (pack: session endpoint)              | `GET /me` with a bearer token                                              | Different    |
+| Logout and session | present                               | **absent**                                                                 | **Missing**  |
 
-Everything else in the pack (field names, status codes, token handling) is **NOT VERIFIED** against
-it. Send the pack and the remaining rows can be completed.
+**ZIP comparison: PENDING.** Field-by-field verification, plus anything else the pack defines, is
+completed when the ZIP is available. Nothing from the earlier pack is used in code.
 
 ## 6. Gaps against the frontend (for the owner and the Backend team)
 
