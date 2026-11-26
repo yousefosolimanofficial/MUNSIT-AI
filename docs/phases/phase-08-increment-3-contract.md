@@ -1,7 +1,7 @@
 # Phase 08 — Increment 3 (Register UI) — Execution contract
 
-> **Status: PROPOSED, for owner approval.** No Register code is written before approval. Base: `main`
-> at `d3e7c76` (Increment 2 merged through PR #78). Plan:
+> **Status: APPROVED to start (owner, 2026-11-26; §6.1).** R-6 wording stays open for the owner; an
+> interim that adds no copy is used. Base: `main` at `d3e7c76` (Increment 2 merged through PR #78). Plan:
 > [phase-08-plan.md](phase-08-plan.md) §8 row 3. ClickUp: Increment 3 task `123ru7v2z29`.
 
 ## 1. Goal
@@ -162,7 +162,7 @@ line breaks: three lines, a blank line, then "ابدأ النهارده، وخل
 
 No new dependency. No change to `src/api`, `src/types`, `src/config` or `src/shared`.
 
-## 6. Decisions requested
+## 6. Decisions
 
 | ID   | Decision                                                                                                                                                                                                                                                                                                                     | Recommendation                                                                             |
 | ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
@@ -178,6 +178,29 @@ No new dependency. No change to `src/api`, `src/types`, `src/config` or `src/sha
 | R-10 | **Panel per family.** Tablet photo 672 × 240 for Register (Login 350, unchanged); the Register body keeps Figma's line breaks and blank line                                                                                                                                                                                 | Approve (Figma values)                                                                     |
 | R-11 | `/register` leaves the "placeholder page" E2E lists (`auth-placeholders`, `routing`); its title, direction, noindex and production-404 checks move to the new spec                                                                                                                                                           | Approve (as L-4)                                                                           |
 | R-12 | **Delegation.** `AuthStatusBanner` is the only isolated new piece, but it is small and tightly linked to the form                                                                                                                                                                                                            | No delegation to Eng. Mariam in Increment 3                                                |
+
+### 6.1 Resolution (owner instruction, 2026-11-26)
+
+The owner started Register implementation and asked to resolve straightforward details with the
+approved Login and Auth Foundation patterns, leaving anything that materially affects security, API
+integration or product behaviour for approval. Work allocation (owner): Register is Yousef + Claude
+Code; Forgot and Reset are Eng. Mariam's (separate task and branch). The backend API pack is
+provisional: no API integration.
+
+| ID   | Outcome                                                                                                                                                                                                                                                                                                                  |
+| ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| R-1  | **Resolved:** implementation started by the owner                                                                                                                                                                                                                                                                        |
+| R-2  | **Resolved as recommended:** presentation only; it follows the Default and Password rules frames and Increment 1's `PasswordRule`                                                                                                                                                                                        |
+| R-3  | **Resolved as recommended:** the owner-approved "unavailable" copy (I1-2) shown in Figma's only server-result layout; the button keeps "إنشاء حساب" (no new behaviour)                                                                                                                                                   |
+| R-4  | **Resolved:** the owner asked for development-only success previews. The action is a plain link to `/login`, as in the Figma prototype (Success → Login); nothing is created or remembered                                                                                                                               |
+| R-5  | **Resolved, Option A:** `AuthResultView` as approved in Increment 1 (icon at the inline start)                                                                                                                                                                                                                           |
+| R-6  | **OPEN (copy):** the new string "إظهار تأكيد كلمة المرور" is not in Figma and is left for the owner. **Interim, no new copy:** both toggles keep the approved name "إظهار كلمة المرور" and each is described by its field's label (`aria-describedby`), so a screen reader hears "إظهار كلمة المرور … تأكيد كلمة المرور" |
+| R-7  | **Resolved as recommended:** CLAUDE.md RTL rule (Arabic text aligns to the start)                                                                                                                                                                                                                                        |
+| R-8  | **Resolved as recommended:** no horizontal overflow (Roadmap §4)                                                                                                                                                                                                                                                         |
+| R-9  | **Resolved as recommended:** CLAUDE.md "clear errors as soon as the value is valid"                                                                                                                                                                                                                                      |
+| R-10 | **Resolved:** Figma values                                                                                                                                                                                                                                                                                               |
+| R-11 | **Resolved:** as approved L-4                                                                                                                                                                                                                                                                                            |
+| R-12 | **Resolved:** the owner assigned Recovery, not Register, to Eng. Mariam                                                                                                                                                                                                                                                  |
 
 ## 7. Accessibility (WCAG 2.2 AA)
 
