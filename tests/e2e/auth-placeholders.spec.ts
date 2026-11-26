@@ -10,8 +10,8 @@ import enPages from "../../src/i18n/messages/en/pages.json" with { type: "json" 
 
 // `/login` left this list in Phase 08 Increment 2 (L-4): it is the Login screen now; its noindex
 // and production-404 checks live in tests/e2e/auth-login.spec.ts and the production spec.
+// `/register` left this list in Phase 08 Increment 3 (R-11, as L-4): auth-register.spec.ts covers it.
 const AUTH_ROUTES = [
-  { path: "/register", key: "auth_register" },
   { path: "/forgot-password", key: "auth_forgotPassword" },
   { path: "/reset-password", key: "auth_resetPassword" },
 ] as const;

@@ -24,7 +24,14 @@ const ROUTES_OK = Object.values(ROUTES).flatMap((path) => {
  * Development-only preview routes that E2E specs open under parallel workers (not in the route
  * registry). Phase 08 Increment 1: `/dev/auth` failed on a cold server without this.
  */
-const DEV_ROUTES = ["/dev/auth", "/en/dev/auth", "/dev/auth/login", "/en/dev/auth/login"];
+const DEV_ROUTES = [
+  "/dev/auth",
+  "/en/dev/auth",
+  "/dev/auth/login",
+  "/en/dev/auth/login",
+  "/dev/auth/register",
+  "/en/dev/auth/register",
+];
 
 /** Expected to answer 404 (the localized not-found page): warmed, not treated as a failure. */
 const ROUTES_404 = ["/warm-up-unknown-route", "/en/warm-up-unknown-route"];
