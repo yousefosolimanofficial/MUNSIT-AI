@@ -1,7 +1,7 @@
 # Phase 08 — Increment 2 (Login UI) — Execution contract
 
-> **Status: APPROVED by the owner on 2026-11-23 (L-1 to L-5, §6.1).** Implementation starts only
-> after this contract is merged. Base: `main`
+> **Status: COMPLETE.** Contract approved on 2026-11-23 (L-1 to L-5, §6.1); implementation merged
+> through PR #78 (`d3e7c76`) after the owner's visual approval on 2026-11-24 (§10). Base: `main`
 > at `581fc19` (Increment 1 merged through PR #75). Plan:
 > [phase-08-plan.md](phase-08-plan.md) §8 row 2. ClickUp: Increment 2 task `123ru7v2z28`.
 
@@ -159,3 +159,28 @@ Production is unchanged: `AUTHENTICATION_AVAILABLE = false`, `/login` keeps both
 `assertAuthRouteAvailable()` calls and returns 404 in production, and no gate, redirect, request or
 storage was added. No dependency, port, environment variable or runtime setting changed, so the
 DevOps handoff is unaffected.
+
+## 10. Owner visual approval and merge (2026-11-24)
+
+The owner reviewed the side-by-side comparison of all 12 Figma frames with the implementation
+(Default, Password shown, Loading and Error at 1440, 768 and 390; captured at each frame's size)
+and approved the Login UI visually. No further visual change was requested.
+
+**Accepted differences:**
+
+- the emoji is drawn by the operating system's emoji font;
+- minor Arabic font rendering differences between the browser and Figma (sizes and weights match);
+- Loading and Error keep the values the user typed, where Figma draws placeholders;
+- the Loading spinner is captured mid-turn, where Figma shows it static.
+
+**Merge evidence:**
+
+| Item                   | Value                                                                     |
+| ---------------------- | ------------------------------------------------------------------------- |
+| Reviewed head          | `9d96421` (PR #78); CI run 45279103845: `check` and `e2e` green           |
+| Merge                  | Squash, pinned to the reviewed head: `main` at `d3e7c76`                  |
+| Tree                   | Identical to `9d96421`                                                    |
+| Post-merge CI          | Run 45484982422 on `d3e7c76`: `check` and `e2e` green                     |
+| Production after merge | `AUTHENTICATION_AVAILABLE = false`; `/login` returns 404; no gate changed |
+
+Increment 2 is complete. Increment 3 (Register) starts with its own plan and owner approval.
