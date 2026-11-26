@@ -1182,3 +1182,8 @@ Also shared (2026-11-26): the Tablet panel photo is 672 × 240 for Register (`67
 (`67:73`, `2480:860`), 672 × 350 for Login; Desktop 350 and Mobile 200 for all. The Register and
 Recovery panel body is one text with explicit line breaks and one blank line (kept verbatim). Each
 password toggle is described by its field label (Increment 3 R-6 interim, no new copy).
+
+Register panel copy padding (read 2026-11-26 during the Register visual review): Mobile 28 / 20 /
+32 / 20 (`67:44`), Tablet 24 on every side (`67:66`), Desktop 28 / 32 / 32 / 32; Login and Recovery
+keep 20 / 20 / 24 / 20 on Mobile and 28 / 32 / 32 / 32 from Tablet. Desktop layout vertical padding
+32 keeps the tallest column (Register Required, 825) centred in 900 without scrolling.
