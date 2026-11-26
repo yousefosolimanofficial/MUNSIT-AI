@@ -65,6 +65,17 @@ const PHOTO_HEIGHT: Record<AuthFamily, string> = {
   recovery: "h-[200px] rail:h-[240px] xl:h-[350px]",
 };
 
+/**
+ * Copy padding per family (Figma `Auth / Marketing Copy`): Login and Recovery 20 / 20 / 24 / 20 on
+ * Mobile and 28 / 32 / 32 / 32 from Tablet; Register 28 / 20 / 32 / 20 on Mobile (`67:44`), 24 on
+ * every side on Tablet (`67:66`) and 28 / 32 / 32 / 32 on Desktop (`67:14`).
+ */
+const COPY_PADDING: Record<AuthFamily, string> = {
+  login: "px-5 pt-5 pb-6 rail:px-8 rail:pt-7 rail:pb-8",
+  register: "px-5 pt-7 pb-8 rail:p-6 xl:px-8 xl:pt-7 xl:pb-8",
+  recovery: "px-5 pt-5 pb-6 rail:px-8 rail:pt-7 rail:pb-8",
+};
+
 export function AuthMarketingPanel({
   family,
   copy,
@@ -98,7 +109,7 @@ export function AuthMarketingPanel({
             className="absolute inset-0 h-full w-full object-cover"
           />
         </div>
-        <div className="flex flex-col items-center gap-3 px-5 pt-5 pb-6 text-center rail:px-8 rail:pt-7 rail:pb-8">
+        <div className={`flex flex-col items-center gap-3 text-center ${COPY_PADDING[family]}`}>
           <p className={`${HEADING[family]} text-text-primary`}>{copy.heading}</p>
           <p className={`${LEAD[family]} text-text-primary`}>{copy.lead}</p>
           {copy.body.map((paragraph) => (
