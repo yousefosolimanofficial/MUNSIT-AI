@@ -1161,3 +1161,8 @@ Frames: Default `67:3` / `67:59` / `67:37`, Password shown `2541:2980` / `3029` 
 | Result icon tones   | 64 × 64, radius 20, 12% fill, 40% border, icon 28. Success Green + `check` (Register Success, Reset Updated); Coral Pulse + `alert` (Reset Invalid link `2480:724`); Semantic Warning `#ffb020` + `alert` (Reset Expired link `2480:770`)                             |
 | Result without icon | Forgot Email sent `2467:75582`: header, primary action, text link                                                                                                                                                                                                     |
 | Primary-styled link | The primary action navigates in Register Success, Forgot Email sent, Reset Updated, Invalid and Expired link; same surface as `Auth / Primary Button`                                                                                                                 |
+
+Also shared (2026-11-26): the Tablet panel photo is 672 × 240 for Register (`67:66`) and Recovery
+(`67:73`, `2480:860`), 672 × 350 for Login; Desktop 350 and Mobile 200 for all. The Register and
+Recovery panel body is one text with explicit line breaks and one blank line (kept verbatim). Each
+password toggle is described by its field label (Increment 3 R-6 interim, no new copy).

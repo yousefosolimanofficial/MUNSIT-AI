@@ -19,7 +19,9 @@ import {
  * `Auth / Password Input` (Figma component set `191:50`): State Default, Focus, Error, Disabled ×
  * Visibility Hidden, Visible (8 variants). Visibility is controlled by the parent form (`visible`,
  * `onVisibleChange`). The toggle is a real button: keyboard operable, never submits the form,
- * named by `toggleLabel` with `aria-pressed` for the state. The value is never logged or stored
+ * named by `toggleLabel` with `aria-pressed` for the state, and described by the field's label so
+ * two toggles on one form (Register, Reset) are told apart without new copy (Increment 3 R-6
+ * interim). The value is never logged or stored
  * here.
  *
  * Layout from Figma: the eye sits at the inline end of the field (left in RTL), 20 × 20, Text
@@ -62,6 +64,7 @@ export function AuthPasswordField({
   const generatedId = useId();
   const inputId = id ?? generatedId;
   const errorId = `${inputId}-error`;
+  const labelId = `${inputId}-label`;
   const hasError = Boolean(error);
   const describedByIds = [describedBy, hasError ? errorId : undefined].filter(Boolean).join(" ");
 
@@ -78,7 +81,11 @@ export function AuthPasswordField({
       data-auth-field=""
       className={["flex flex-col gap-2", className].filter(Boolean).join(" ")}
     >
-      <label htmlFor={inputId} className="text-auth-form-label text-text-primary text-start">
+      <label
+        id={labelId}
+        htmlFor={inputId}
+        className="text-auth-form-label text-text-primary text-start"
+      >
         {label}
       </label>
       <div className={`${FIELD_BOX} ${disabled ? "" : FIELD_FOCUS} ${state}`}>
@@ -100,6 +107,7 @@ export function AuthPasswordField({
           aria-label={toggleLabel}
           aria-pressed={visible}
           aria-controls={inputId}
+          aria-describedby={labelId}
           disabled={disabled}
           onClick={() => onVisibleChange(!visible)}
           className={`flex size-6 shrink-0 items-center justify-center rounded-sm text-text-secondary enabled:cursor-pointer enabled:hover:text-text-primary disabled:cursor-not-allowed ${FOCUS_RING}`}

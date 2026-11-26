@@ -8,8 +8,8 @@ import { PANEL_SHADOW } from "./auth-styles";
  * `Auth / Marketing Panel` and its `Auth / Background Glow` (Login `67:3` / `67:59` / `67:37`).
  *
  * Panel: Void Black, 1 px Neutral Slate border, radius 24 (`radius-2xl`), shadow 0 24 48 −12 black
- * 40%. Photo on top (350 high on Tablet and Desktop, 200 on Mobile; `object-cover`, the Figma
- * `FILL`), then the copy, centred, gap 12, padding 28 / 32 / 32 / 32 (Mobile 20 / 20 / 24 / 20).
+ * 40%. Photo on top (200 on Mobile, 350 on Desktop; Tablet 350 for Login and 240 for Register and
+ * Recovery; `object-cover`, the Figma `FILL`), then the copy, centred, gap 12, padding 28 / 32 / 32 / 32 (Mobile 20 / 20 / 24 / 20).
  * Width 520 on Desktop; the column width on Tablet (672 at 768) and Mobile (350 at 390).
  *
  * Copy styles per family (design-values §0.4.5): Login `Compact`, Register `Relaxed`, Forgot and
@@ -55,6 +55,16 @@ export interface AuthMarketingCopy {
   body: readonly string[];
 }
 
+/**
+ * Photo height per family (Figma): Mobile 200 and Desktop 350 for every family; Tablet 350 for
+ * Login (`67:59`) and 240 for Register (`67:66`) and Recovery (`67:73`, `2480:860`).
+ */
+const PHOTO_HEIGHT: Record<AuthFamily, string> = {
+  login: "h-[200px] rail:h-[350px]",
+  register: "h-[200px] rail:h-[240px] xl:h-[350px]",
+  recovery: "h-[200px] rail:h-[240px] xl:h-[350px]",
+};
+
 export function AuthMarketingPanel({
   family,
   copy,
@@ -78,7 +88,7 @@ export function AuthMarketingPanel({
       <div
         className={`overflow-hidden rounded-2xl border border-solid border-neutral-slate bg-surface-void-black ${PANEL_SHADOW}`}
       >
-        <div className="relative h-[200px] w-full rail:h-[350px]">
+        <div className={`relative w-full ${PHOTO_HEIGHT[family]}`}>
           <Image
             src={image.src}
             width={image.width}

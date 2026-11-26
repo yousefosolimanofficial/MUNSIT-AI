@@ -7,6 +7,8 @@ import { afterEach, describe, expect, it } from "vitest";
 import arAuth from "@/i18n/messages/ar/authentication.json";
 
 import { AuthButtonLink } from "./AuthButtonLink";
+import { AuthMarketingPanel } from "./AuthMarketingPanel";
+import { AuthPasswordField } from "./AuthPasswordField";
 import { AuthResultView } from "./AuthResultView";
 import { AuthStatusBanner } from "./AuthStatusBanner";
 
@@ -109,5 +111,50 @@ describe("AuthButtonLink", () => {
     expect(classes(link)).toContain("h-[52px]");
     expect(classes(link)).toContain("bg-neutral-mist");
     expect(classes(link)).toContain("text-neutral-iron");
+  });
+});
+
+describe("AuthPasswordField toggle description (R-6 interim)", () => {
+  it("each toggle keeps the approved name and is described by its own field label", () => {
+    render(
+      <>
+        <AuthPasswordField
+          label={arAuth.register.password}
+          visible={false}
+          onVisibleChange={() => undefined}
+          toggleLabel={arAuth.password.show}
+        />
+        <AuthPasswordField
+          label={arAuth.register.confirm}
+          visible={false}
+          onVisibleChange={() => undefined}
+          toggleLabel={arAuth.password.show}
+        />
+      </>,
+    );
+    const toggles = screen.getAllByRole("button", { name: arAuth.password.show });
+    expect(toggles).toHaveLength(2);
+    const descriptions = toggles.map(
+      (t) => document.getElementById(t.getAttribute("aria-describedby") ?? "")?.textContent,
+    );
+    expect(descriptions).toEqual([arAuth.register.password, arAuth.register.confirm]);
+  });
+});
+
+describe("AuthMarketingPanel photo height per family", () => {
+  const copy = { heading: "h", lead: "l", body: ["b"] };
+  it("Tablet 350 for Login, 240 for Register and Recovery; Desktop 350, Mobile 200", () => {
+    const heights = (["login", "register", "recovery"] as const).map((family) => {
+      const { container, unmount } = render(<AuthMarketingPanel family={family} copy={copy} />);
+      const photo = container.querySelector("img")?.parentElement;
+      const c = classes(photo ?? null);
+      unmount();
+      return c.filter((x) => /h-\[/.test(x));
+    });
+    expect(heights).toEqual([
+      ["h-[200px]", "rail:h-[350px]"],
+      ["h-[200px]", "rail:h-[240px]", "xl:h-[350px]"],
+      ["h-[200px]", "rail:h-[240px]", "xl:h-[350px]"],
+    ]);
   });
 });
