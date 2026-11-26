@@ -92,3 +92,24 @@ it. Send the pack and the remaining rows can be completed.
 | BC-6 | No Forgot or Reset endpoints                                                                                                          | The Recovery UI stays on the placeholder adapter                                                         |
 | BC-7 | No Register "duplicate email" copy exists in Figma                                                                                    | A product decision is needed before a real 400 can be shown                                              |
 | BC-8 | The server is a temporary Codespace                                                                                                   | A stable development URL is needed for integration testing                                               |
+
+## 7. Frontend integration infrastructure (this branch, not wired)
+
+| Piece                                | Role                                                                                                                                                                                                                                                                                                             |
+| ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/types/backend.ts`               | Types transcribed from §3, with the backend's field names                                                                                                                                                                                                                                                        |
+| `src/api/backend/client.ts` (+ test) | `createBackendClient({ baseUrl, timeoutMs, fetch })`: `register`, `login` (form-urlencoded), `me` (bearer); timeout; `BackendError` kinds `validation`, `conflict`, `unauthorized`, `rejected`, `server`, `network`, `timeout`, `unexpected`; no backend message text exposed; `cache: "no-store"`, no redirects |
+| `src/config/backend.ts` (+ test)     | Server-only `MUNSIT_API_BASE_URL` / `MUNSIT_API_TIMEOUT_MS`; `null` when unset; refuses to run in a browser                                                                                                                                                                                                      |
+
+**Not done, on purpose (owner decisions first):**
+
+- No screen uses the client. Login and Register keep the placeholder adapter, and
+  `AUTHENTICATION_AVAILABLE` stays `false`.
+- **Session architecture (BFF):** the browser must not hold the bearer token. The proposed shape is
+  a set of server route handlers or server actions that call this client, keep the token in an
+  `HttpOnly`, `Secure`, `SameSite=Lax` cookie (or a server session), and return only the user.
+  This needs:
+  - the token lifetime and refresh or logout behaviour from the backend (BC-5);
+  - a stable backend URL (BC-8);
+  - the duplicate-email copy (BC-7);
+  - owner approval of the session design (gate D-02).
