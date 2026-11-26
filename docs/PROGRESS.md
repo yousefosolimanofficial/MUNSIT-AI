@@ -15,7 +15,11 @@ Single resume point. A new session starts by reading this file, the latest phase
   functional": `/login` always ends with "unavailable". Owner visual approval of all 12 Figma
   comparisons on 2026-11-24
   ([phases/phase-08-increment-2-contract.md](phases/phase-08-increment-2-contract.md) §10).
-  **Increment 3 (Register): NOT STARTED** — its plan goes to the owner for approval first.
+  **Increment 3 (Register): IN PROGRESS** (owner, 2026-11-26) — Yousef + Claude Code; contract
+  PR #80, shared states PR #81, implementation draft PR #82.
+  **Recovery (Forgot, Reset): task READY TO SEND to Eng. Mariam, not assigned** until she confirms
+  (D-08-8) — [phases/phase-08-recovery-task.md](phases/phase-08-recovery-task.md); integration
+  branch `feature/auth-recovery`; baseline `main` after #81.
   Production is unchanged (`AUTHENTICATION_AVAILABLE = false`).
 - **DevOps handoff v1** (owner request 2026-11-23): initial testing package, not a release —
   [devops/HANDOFF.md](devops/HANDOFF.md), with `Dockerfile`, `.dockerignore` and `compose.yaml`.
