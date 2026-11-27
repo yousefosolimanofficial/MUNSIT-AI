@@ -1168,3 +1168,22 @@ unless stated.
 | Success view  | Status icon 64 at y 0, header at 92, button at 185, footer at 265 (gap 28)                                                                                                                  |
 | Panel photo   | Desktop 520 × 350; **Tablet 672 × 240**; Mobile 350 × 200 (image `53cf19a01a`)                                                                                                              |
 | Panel copy    | Heading Cairo SemiBold 26 with "هنا!" in Electric Sky, lead SemiBold 18, body Regular 16 with explicit line breaks and one blank line                                                       |
+
+### 17.6 Shared Auth states for Register and Recovery (read-only, 2026-11-26)
+
+| Part                | Values                                                                                                                                                                                                                                                                |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Status banner       | Register Failed `2480:2636`, Forgot Failed `2480:2869`, Reset Error `2480:659`: under the header, above the fields. 48 high, Coral Pulse 8% fill, 35% border, radius 14, padding 12 / 14, gap 10, `alert` 18 at the inline start, `Dashboard/Body Medium` Coral Pulse |
+| Result icon tones   | 64 × 64, radius 20, 12% fill, 40% border, icon 28. Success Green + `check` (Register Success, Reset Updated); Coral Pulse + `alert` (Reset Invalid link `2480:724`); Semantic Warning `#ffb020` + `alert` (Reset Expired link `2480:770`)                             |
+| Result without icon | Forgot Email sent `2467:75582`: header, primary action, text link                                                                                                                                                                                                     |
+| Primary-styled link | The primary action navigates in Register Success, Forgot Email sent, Reset Updated, Invalid and Expired link; same surface as `Auth / Primary Button`                                                                                                                 |
+
+Also shared (2026-11-26): the Tablet panel photo is 672 × 240 for Register (`67:66`) and Recovery
+(`67:73`, `2480:860`), 672 × 350 for Login; Desktop 350 and Mobile 200 for all. The Register and
+Recovery panel body is one text with explicit line breaks and one blank line (kept verbatim). Each
+password toggle is described by its field label (Increment 3 R-6 interim, no new copy).
+
+Register panel copy padding (read 2026-11-26 during the Register visual review): Mobile 28 / 20 /
+32 / 20 (`67:44`), Tablet 24 on every side (`67:66`), Desktop 28 / 32 / 32 / 32; Login and Recovery
+keep 20 / 20 / 24 / 20 on Mobile and 28 / 32 / 32 / 32 from Tablet. Desktop layout vertical padding
+32 keeps the tallest column (Register Required, 825) centred in 900 without scrolling.
