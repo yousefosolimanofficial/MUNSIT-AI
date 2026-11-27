@@ -1,6 +1,9 @@
-import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 
-import { parseBackendEnv } from "./backend";
+import { afterEach, describe, expect, it, vi } from "vitest";
+
+import { getBackendConfig, parseBackendEnv } from "./backend";
 
 describe("parseBackendEnv (server-only backend configuration)", () => {
   it("is optional: unset or blank → null", () => {
@@ -36,5 +39,33 @@ describe("parseBackendEnv (server-only backend configuration)", () => {
         parseBackendEnv({ MUNSIT_API_BASE_URL: "https://a.test", MUNSIT_API_TIMEOUT_MS: timeout }),
       ).toThrow();
     }
+  });
+});
+
+describe("server-only protection (PR-3)", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
+  });
+
+  it('imports "server-only" before any code, so a Client Component import fails the build', () => {
+    const source = readFileSync(fileURLToPath(new URL("./backend.ts", import.meta.url)), "utf8");
+    const firstStatement = source
+      .replace(/\/\*[\s\S]*?\*\//g, "")
+      .split("\n")
+      .map((line) => line.trim())
+      .find((line) => line !== "");
+    expect(firstStatement).toBe('import "server-only";');
+  });
+
+  it("still refuses to run in a browser at runtime", () => {
+    vi.stubGlobal("window", {});
+    expect(() => getBackendConfig()).toThrow("server-only");
+  });
+
+  it("reads the server environment on the server", () => {
+    vi.stubEnv("MUNSIT_API_BASE_URL", "https://api.example.test/");
+    vi.stubEnv("MUNSIT_API_TIMEOUT_MS", "");
+    expect(getBackendConfig()).toEqual({ baseUrl: "https://api.example.test", timeoutMs: 10_000 });
   });
 });

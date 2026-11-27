@@ -169,4 +169,64 @@ describe("createBackendClient", () => {
     expect(error.kind).toBe("timeout");
     expect(error.status).toBeNull();
   });
+
+  it("PR-1: the timeout still applies while the body is read (headers sent, body stalls)", async () => {
+    const stalled = createBackendClient({
+      baseUrl: BASE,
+      timeoutMs: 20,
+      fetch: ((_: RequestInfo | URL, init?: RequestInit) => {
+        const stream = new ReadableStream<Uint8Array>({
+          start(controller) {
+            // Headers arrive at once; the body never does, until the client aborts.
+            init?.signal?.addEventListener("abort", () =>
+              controller.error(new DOMException("aborted", "AbortError")),
+            );
+          },
+        });
+        return Promise.resolve(
+          new Response(stream, { status: 200, headers: { "Content-Type": "application/json" } }),
+        );
+      }) as typeof fetch,
+    });
+    const error = await failure(stalled.me("t"));
+    expect(error.kind).toBe("timeout");
+    expect(error.status).toBeNull();
+  });
+
+  it("PR-1: the timer is cleared once the body has been read", async () => {
+    vi.useFakeTimers();
+    try {
+      const { client } = clientWith(() => reply(200, USER));
+      await expect(client.me("t")).resolves.toEqual(USER);
+      expect(vi.getTimerCount()).toBe(0);
+      const failing = clientWith(() => reply(401, { detail: "x" }));
+      expect((await failure(failing.client.me("t"))).kind).toBe("unauthorized");
+      expect(vi.getTimerCount()).toBe(0);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("PR-1: a non-JSON error body (no abort) still maps by status, not as a timeout", async () => {
+    const { client } = clientWith(() => new Response("<html>Bad Gateway</html>", { status: 502 }));
+    const error = await failure(client.me("t"));
+    expect(error.kind).toBe("server");
+    expect(error.status).toBe(502);
+  });
+
+  it("PR-2: token_type must be bearer (case-insensitive); anything else fails closed", async () => {
+    for (const tokenType of ["bearer", "Bearer", "BEARER"]) {
+      const token = { access_token: "header.payload.signature", token_type: tokenType };
+      const { client } = clientWith(() => reply(200, token));
+      await expect(client.login({ username: USER.email, password: "x" })).resolves.toEqual(token);
+    }
+    for (const tokenType of ["mac", "", " bearer", "bearer-x"]) {
+      const { client } = clientWith(() =>
+        reply(200, { access_token: "header.payload.signature", token_type: tokenType }),
+      );
+      const error = await failure(client.login({ username: USER.email, password: "x" }));
+      expect(error.kind).toBe("unexpected");
+      expect(error.status).toBe(200);
+    }
+  });
 });

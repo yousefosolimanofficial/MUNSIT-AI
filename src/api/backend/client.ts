@@ -112,7 +112,9 @@ function isToken(value: unknown): value is BackendToken {
     v !== null &&
     typeof v.access_token === "string" &&
     v.access_token !== "" &&
-    typeof v.token_type === "string"
+    // Only a bearer token is usable (`Authorization: Bearer`); any other type fails closed (PR-2).
+    typeof v.token_type === "string" &&
+    v.token_type.toLowerCase() === "bearer"
   );
 }
 
@@ -132,27 +134,32 @@ export function createBackendClient(config: BackendClientConfig): BackendClient 
   ): Promise<T> {
     const url = new URL(path, base.href.endsWith("/") ? base : `${base.href}/`);
     const controller = new AbortController();
+    // One deadline for the whole exchange: it stays armed until the body has been read (PR-1),
+    // so a backend that sends headers and then stalls the body is still aborted.
     const timer = setTimeout(() => controller.abort(), timeoutMs);
     let response: Response;
-    try {
-      response = await doFetch(url, {
-        ...init,
-        headers: { Accept: "application/json", ...init.headers },
-        signal: controller.signal,
-        cache: "no-store",
-        redirect: "error",
-      });
-    } catch {
-      throw new BackendError(controller.signal.aborted ? "timeout" : "network", null);
-    } finally {
-      clearTimeout(timer);
-    }
-
     let body: unknown = null;
     try {
-      body = await response.json();
-    } catch {
-      body = null;
+      try {
+        response = await doFetch(url, {
+          ...init,
+          headers: { Accept: "application/json", ...init.headers },
+          signal: controller.signal,
+          cache: "no-store",
+          redirect: "error",
+        });
+      } catch {
+        throw new BackendError(controller.signal.aborted ? "timeout" : "network", null);
+      }
+      try {
+        body = await response.json();
+      } catch {
+        // An aborted body read is a timeout; an empty or non-JSON body is judged below.
+        if (controller.signal.aborted) throw new BackendError("timeout", null);
+        body = null;
+      }
+    } finally {
+      clearTimeout(timer);
     }
 
     if (response.status !== expected) {

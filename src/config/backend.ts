@@ -6,7 +6,12 @@
  * unset: the backend is optional, and nothing in the app depends on it yet (the UI keeps the
  * placeholder adapter; `AUTHENTICATION_AVAILABLE` stays false). The value is a URL, not a secret,
  * but it is never hard-coded: each environment sets its own (docs/devops/HANDOFF.md §5).
+ *
+ * `import "server-only"` makes the build fail if a Client Component imports this module (PR-3;
+ * Next.js 16 resolves it natively). Unit tests map it to an empty stub (vitest.config.ts).
  */
+
+import "server-only";
 
 export interface BackendConfig {
   /** Normalized absolute URL without a trailing slash. */

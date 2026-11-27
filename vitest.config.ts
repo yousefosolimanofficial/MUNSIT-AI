@@ -6,6 +6,9 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
+      // Next.js resolves `server-only` itself (the build fails on a Client Component import);
+      // Vitest is not Next.js, so tests load an empty stub instead.
+      "server-only": fileURLToPath(new URL("./tests/unit/stubs/server-only.ts", import.meta.url)),
     },
   },
   test: {
