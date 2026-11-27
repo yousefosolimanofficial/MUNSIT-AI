@@ -261,5 +261,14 @@ all 33 states and the current visual implementation. No further visual change wa
 **Head after the review:** `616acc4` only merges `main` after #81 (`c5a0290`) and records R-6 in
 §6.1. Its code is identical to the reviewed head `43ba4d2`; the only difference is this document.
 
-The merge is a squash pinned to the approved head, after the owner confirms. Production is
-unchanged: `AUTHENTICATION_AVAILABLE = false`, and `/register` returns 404 in production.
+**Merge evidence (owner confirmation 2026-11-27):**
+
+| Item                   | Value                                                                        |
+| ---------------------- | ---------------------------------------------------------------------------- |
+| Approved head          | `0b8ec4f` (PR #82); CI run 45994663226: `check` and `e2e` green              |
+| Merge                  | Squash, pinned to the approved head: `main` at `9c803de`                     |
+| Tree                   | Identical to `0b8ec4f`                                                       |
+| Post-merge CI          | Run 45998782917 on `9c803de`: `check` and `e2e` green                        |
+| Production after merge | `AUTHENTICATION_AVAILABLE = false`; `/register` returns 404; no gate changed |
+
+Increment 3 is complete. Recovery (Forgot, Reset) follows Eng. Mariam's task.
