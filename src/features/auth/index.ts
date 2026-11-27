@@ -11,13 +11,21 @@ export {
 export { AuthLayout, type AuthLayoutProps } from "./components/AuthLayout";
 export type { AuthMarketingCopy } from "./components/AuthMarketingPanel";
 export { AuthPasswordField } from "./components/AuthPasswordField";
-export { AuthResultView } from "./components/AuthResultView";
+export { AuthResultView, type AuthResultTone } from "./components/AuthResultView";
+export { AuthButtonLink } from "./components/AuthButtonLink";
+export { AuthStatusBanner } from "./components/AuthStatusBanner";
 export { PasswordRule, PasswordRuleList, type PasswordRuleState } from "./components/PasswordRule";
 export { AuthSubmitButton } from "./components/AuthSubmitButton";
 export { AuthTextField } from "./components/AuthTextField";
 export { AuthTextLink } from "./components/AuthTextLink";
 export { LoginForm, type LoginFormCopy, type LoginFormProps } from "./components/LoginForm";
 export { LoginScreen } from "./components/LoginScreen";
+export {
+  RegisterForm,
+  type RegisterFormCopy,
+  type RegisterFormProps,
+} from "./components/RegisterForm";
+export { RegisterScreen } from "./components/RegisterScreen";
 export { AuthFoundationPreview } from "./components/AuthFoundationPreview";
 export { AUTH_IMAGES, type AuthFamily } from "./model/auth-images";
 export { failureMessageKey, type AuthOperation } from "./model/messages";
@@ -33,3 +41,9 @@ export {
   type LoginValidationKey,
   type LoginValues,
 } from "./schemas/login";
+export {
+  REGISTER_VALIDATION_KEYS,
+  registerSchema,
+  type RegisterValidationKey,
+  type RegisterValues,
+} from "./schemas/register";

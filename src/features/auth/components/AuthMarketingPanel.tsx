@@ -8,8 +8,8 @@ import { PANEL_SHADOW } from "./auth-styles";
  * `Auth / Marketing Panel` and its `Auth / Background Glow` (Login `67:3` / `67:59` / `67:37`).
  *
  * Panel: Void Black, 1 px Neutral Slate border, radius 24 (`radius-2xl`), shadow 0 24 48 −12 black
- * 40%. Photo on top (350 high on Tablet and Desktop, 200 on Mobile; `object-cover`, the Figma
- * `FILL`), then the copy, centred, gap 12, padding 28 / 32 / 32 / 32 (Mobile 20 / 20 / 24 / 20).
+ * 40%. Photo on top (200 on Mobile, 350 on Desktop; Tablet 350 for Login and 240 for Register and
+ * Recovery; `object-cover`, the Figma `FILL`), then the copy, centred, gap 12, padding 28 / 32 / 32 / 32 (Mobile 20 / 20 / 24 / 20).
  * Width 520 on Desktop; the column width on Tablet (672 at 768) and Mobile (350 at 390).
  *
  * Copy styles per family (design-values §0.4.5): Login `Compact`, Register `Relaxed`, Forgot and
@@ -55,6 +55,27 @@ export interface AuthMarketingCopy {
   body: readonly string[];
 }
 
+/**
+ * Photo height per family (Figma): Mobile 200 and Desktop 350 for every family; Tablet 350 for
+ * Login (`67:59`) and 240 for Register (`67:66`) and Recovery (`67:73`, `2480:860`).
+ */
+const PHOTO_HEIGHT: Record<AuthFamily, string> = {
+  login: "h-[200px] rail:h-[350px]",
+  register: "h-[200px] rail:h-[240px] xl:h-[350px]",
+  recovery: "h-[200px] rail:h-[240px] xl:h-[350px]",
+};
+
+/**
+ * Copy padding per family (Figma `Auth / Marketing Copy`): Login and Recovery 20 / 20 / 24 / 20 on
+ * Mobile and 28 / 32 / 32 / 32 from Tablet; Register 28 / 20 / 32 / 20 on Mobile (`67:44`), 24 on
+ * every side on Tablet (`67:66`) and 28 / 32 / 32 / 32 on Desktop (`67:14`).
+ */
+const COPY_PADDING: Record<AuthFamily, string> = {
+  login: "px-5 pt-5 pb-6 rail:px-8 rail:pt-7 rail:pb-8",
+  register: "px-5 pt-7 pb-8 rail:p-6 xl:px-8 xl:pt-7 xl:pb-8",
+  recovery: "px-5 pt-5 pb-6 rail:px-8 rail:pt-7 rail:pb-8",
+};
+
 export function AuthMarketingPanel({
   family,
   copy,
@@ -78,7 +99,7 @@ export function AuthMarketingPanel({
       <div
         className={`overflow-hidden rounded-2xl border border-solid border-neutral-slate bg-surface-void-black ${PANEL_SHADOW}`}
       >
-        <div className="relative h-[200px] w-full rail:h-[350px]">
+        <div className={`relative w-full ${PHOTO_HEIGHT[family]}`}>
           <Image
             src={image.src}
             width={image.width}
@@ -88,7 +109,7 @@ export function AuthMarketingPanel({
             className="absolute inset-0 h-full w-full object-cover"
           />
         </div>
-        <div className="flex flex-col items-center gap-3 px-5 pt-5 pb-6 text-center rail:px-8 rail:pt-7 rail:pb-8">
+        <div className={`flex flex-col items-center gap-3 text-center ${COPY_PADDING[family]}`}>
           <p className={`${HEADING[family]} text-text-primary`}>{copy.heading}</p>
           <p className={`${LEAD[family]} text-text-primary`}>{copy.lead}</p>
           {copy.body.map((paragraph) => (

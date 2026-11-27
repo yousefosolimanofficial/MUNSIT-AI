@@ -15,11 +15,16 @@ Single resume point. A new session starts by reading this file, the latest phase
   functional": `/login` always ends with "unavailable". Owner visual approval of all 12 Figma
   comparisons on 2026-11-24
   ([phases/phase-08-increment-2-contract.md](phases/phase-08-increment-2-contract.md) §10).
-  **Increment 3 (Register): IN PROGRESS** (owner, 2026-11-26) — Yousef + Claude Code; contract
-  PR #80, shared states PR #81, implementation draft PR #82.
-  **Recovery (Forgot, Reset): task READY TO SEND to Eng. Mariam, not assigned** until she confirms
-  (D-08-8) — [phases/phase-08-recovery-task.md](phases/phase-08-recovery-task.md); integration
-  branch `feature/auth-recovery`; baseline `main` after #81.
+  **Increment 3 (Register): COMPLETE** (PR #82, merged as `9c803de` from the approved head
+  `0b8ec4f`; post-merge CI run 45998782917 `check` and `e2e` green). Contract PR #80, shared
+  states PR #81 (`c5a0290`). "UI-complete, not functional": `/register` always ends with
+  "unavailable". Owner visual approval of all 33 Figma states on 2026-11-27
+  ([phases/phase-08-increment-3-contract.md](phases/phase-08-increment-3-contract.md) §10); R-6
+  stays provisional.
+  **Recovery (Forgot, Reset): starter v8 SENT to Eng. Mariam (owner, 2026-11-27); acceptance and
+  implementation PENDING her confirmation; not assigned** until she confirms (D-08-8) —
+  [phases/phase-08-recovery-task.md](phases/phase-08-recovery-task.md); integration branch
+  `feature/auth-recovery`; baseline `c5a0290`.
   Production is unchanged (`AUTHENTICATION_AVAILABLE = false`).
 - **DevOps handoff v1** (owner request 2026-11-23): initial testing package, not a release —
   [devops/HANDOFF.md](devops/HANDOFF.md), with `Dockerfile`, `.dockerignore` and `compose.yaml`.
@@ -384,6 +389,13 @@ numerals and English runs inside Arabic text (direction isolation). See R-1, I-1
 | 7   | Final audit + phase report; G-1, G-2 implemented             | Done — approved (2026-11-13)   |
 
 ## Next action
+
+**2026-11-27:** Phase 08 Increment 3 (Register UI) is COMPLETE through PR #82 (`9c803de`).
+
+- **Recorded:** owner visual approval of all 33 states (contract §10); merge and post-merge CI evidence.
+- **Next:** Recovery (Forgot, Reset) stays with Eng. Mariam's task (PR #83), not assigned until she
+  confirms. The backend contract (PR #84) stays a draft until its implementation and security review.
+- **Unchanged:** `AUTHENTICATION_AVAILABLE = false`; every Auth route returns 404 in production.
 
 **2026-11-24:** Phase 08 Increment 2 (Login UI) is COMPLETE through PR #78 (`d3e7c76`).
 

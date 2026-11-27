@@ -12,7 +12,8 @@ import { CARD_WIDTH } from "./auth-styles";
  *
  * - Desktop: one centred row, gap 96. The form column (inline start, the right in RTL): Logo
  *   188 × 49 aligned to the start, gap 40, then the card (480). The marketing panel (520) at the
- *   inline end.
+ *   inline end. Vertical padding 32, so the tallest Figma column (Register Required, 825) stays
+ *   centred in a 900 high viewport without scrolling, as in `2480:2004`.
  * - Tablet: one column, padding 40 / 48 / 48, gap 32: Logo centred, the panel, then the card (480,
  *   centred).
  * - Mobile: one column, padding 24 / 20 / 32, gap 24: Logo centred, the card, then the panel.
@@ -35,7 +36,7 @@ export function AuthLayout({ family, marketing, children }: AuthLayoutProps) {
   return (
     <div
       data-auth-layout={family}
-      className="relative flex min-h-dvh flex-col items-center gap-6 overflow-x-clip bg-surface-void-black px-5 pt-6 pb-8 rail:gap-8 rail:px-12 rail:pt-10 rail:pb-12 xl:flex-row xl:justify-center xl:gap-24 xl:px-12 xl:py-10"
+      className="relative flex min-h-dvh flex-col items-center gap-6 overflow-x-clip bg-surface-void-black px-5 pt-6 pb-8 rail:gap-8 rail:px-12 rail:pt-10 rail:pb-12 xl:flex-row xl:justify-center xl:gap-24 xl:px-12 xl:py-8"
     >
       <div data-auth-logo="top" className="flex justify-center xl:hidden">
         <Logo variant="horizontal" height={49} preload />

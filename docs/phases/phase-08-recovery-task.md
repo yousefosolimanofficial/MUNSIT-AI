@@ -1,6 +1,6 @@
 # Phase 08 — Recovery UI task (Forgot Password, Reset Password) for Eng. Mariam
 
-- **Status: READY TO SEND. Not assigned.** The task is assigned only after Eng. Mariam confirms she
+- **Status: SENT (starter v8, owner confirmed 2026-11-27). Not assigned.** The task is assigned only after Eng. Mariam confirms she
   accepts it (D-08-8). Until then, nobody may treat it as accepted.
 - **Owner decision (2026-11-26):** Yousef + Claude Code build Login (done) and Register; Eng.
   Mariam builds Forgot Password and Reset Password.
