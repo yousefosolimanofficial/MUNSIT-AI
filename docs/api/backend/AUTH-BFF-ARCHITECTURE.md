@@ -291,7 +291,7 @@ The client matches the captured contract for every path, body, status and field,
 - no backend text exposed;
 - no logging.
 
-**Findings to fix before the client is used (not changed yet):**
+**Findings (2026-11-27). Update: PR-1, PR-2 and PR-3 are fixed with tests, and PR-5 is done (`main` merged). See [INTEGRATION-MAPPING.md](v1.0.0-2026-11-26/INTEGRATION-MAPPING.md) §4:**
 
 | ID   | Finding                                                                                                                                                                                   | Severity |
 | ---- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
