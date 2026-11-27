@@ -241,3 +241,25 @@ provisional: no API integration.
 - **Values:** nothing is logged or stored; the adapter is the only consumer of the values; the confirmation is never sent.
 - **Production unchanged:** `/register` returns 404, `AUTHENTICATION_AVAILABLE = false`, no gate touched.
 - **Merge:** all §8 tests pass with CI green on the exact PR head; the PR is merged only with owner approval after the visual review.
+
+## 10. Owner visual approval (2026-11-27)
+
+The owner reviewed the side-by-side comparison of all 33 Figma frames with the implementation
+(11 states at 1440, 768 and 390; captured at each frame's size on head `43ba4d2`) and approved
+all 33 states and the current visual implementation. No further visual change was requested.
+
+**Accepted differences:**
+
+- Mobile is 23 px taller in every state because the password-rules row wraps (R-8; Figma clips it by 4 px);
+- the password rules follow R-2 (neutral while empty), where Figma draws "8 أحرف على الأقل" as met;
+- typed values are kept where Figma draws placeholder dots; the Arabic name is right-aligned (R-7);
+  email and password values are left-aligned (I2-5);
+- browser text rendering and the operating system's emoji font (as accepted for Login);
+- R-6 stays provisional: both toggles keep "إظهار كلمة المرور", each described by its field label;
+  the candidate string "إظهار تأكيد كلمة المرور" stays unused.
+
+**Head after the review:** `616acc4` only merges `main` after #81 (`c5a0290`) and records R-6 in
+§6.1. Its code is identical to the reviewed head `43ba4d2`; the only difference is this document.
+
+The merge is a squash pinned to the approved head, after the owner confirms. Production is
+unchanged: `AUTHENTICATION_AVAILABLE = false`, and `/register` returns 404 in production.
