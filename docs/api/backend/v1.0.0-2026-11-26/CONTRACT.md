@@ -111,7 +111,7 @@ completed when the ZIP is available. Nothing from the earlier pack is used in co
 
 - No screen uses the client. Login and Register keep the placeholder adapter, and
   `AUTHENTICATION_AVAILABLE` stays `false`.
-- **Session architecture (BFF):** the browser must not hold the bearer token. The proposed shape is
+- **Session architecture (BFF):** proposed in full in [AUTH-BFF-ARCHITECTURE.md](../AUTH-BFF-ARCHITECTURE.md) (for owner approval). The browser must not hold the bearer token. The proposed shape is
   a set of server route handlers or server actions that call this client, keep the token in an
   `HttpOnly`, `Secure`, `SameSite=Lax` cookie (or a server session), and return only the user.
   This needs:
