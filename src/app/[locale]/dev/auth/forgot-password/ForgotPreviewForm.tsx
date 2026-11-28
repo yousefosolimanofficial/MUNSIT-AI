@@ -5,7 +5,7 @@ import {
   ForgotPasswordForm,
   type ForgotPasswordFormProps,
   type ForgotPasswordInitialState,
-} from "@/features/auth/components/ForgotPasswordForm";
+} from "@/features/auth";
 
 /*
  * Preview-only adapter fixtures for `/dev/auth/forgot-password` (START_HERE §5, RC-2; D-08-4).

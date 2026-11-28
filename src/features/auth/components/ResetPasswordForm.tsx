@@ -38,7 +38,7 @@ import { PasswordRuleList, type PasswordRuleState } from "./PasswordRule";
  * optional `token` prop is passed through as `token ?? ""` and is never parsed, shown, logged or
  * stored.
  *
- * Card (gap 28): header, the status banner (above the fields), Fields (gap 16: new password, the
+ * Card (gap 28): header, the status banner (above the fields), Fields (gap 14: new password, the
  * rules row, confirm), the button ("إعادة المحاولة" after `rejected`), the centred "back to
  * login" link. The Updated, Invalid link and Expired link views replace the card and are reachable
  * only with preview adapter fixtures (RC-2); each heading takes focus.
@@ -259,9 +259,9 @@ export function ResetPasswordForm({
         className="flex flex-col gap-7"
       >
         <AuthStatusBanner id={bannerId} message={message} />
-        {/* Fields gap 16 (START_HERE §2.3; owner review 2026-11-27). The Figma frames place the
-            rules at y 95 (a 14 gap), so the card is 4 px taller than the Figma 434. */}
-        <div className="flex flex-col gap-4">
+        {/* Fields gap 14, as drawn in Figma (rules at y 95 = 81 + 14; owner decision 2026-11-28,
+            design-values.md §17). Keeps the Reset card at the Figma 434. */}
+        <div className="flex flex-col gap-3.5">
           <AuthPasswordField
             {...register("newPassword", {
               // Register R-9: once the confirmation has been touched, a change to the new

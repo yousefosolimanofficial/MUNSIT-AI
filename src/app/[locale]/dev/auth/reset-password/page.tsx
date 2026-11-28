@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { getLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 
-import { ResetPasswordScreen } from "@/features/auth/components/ResetPasswordScreen";
+import { ResetPasswordScreen } from "@/features/auth";
 
 import { ResetPreviewForm, type ResetPreviewState } from "./ResetPreviewForm";
 

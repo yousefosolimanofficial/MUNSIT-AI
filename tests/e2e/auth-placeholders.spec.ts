@@ -1,40 +1,16 @@
 import { expect, test } from "./test";
-import arPages from "../../src/i18n/messages/ar/pages.json" with { type: "json" };
-import enPages from "../../src/i18n/messages/en/pages.json" with { type: "json" };
 
 /*
- * P07-D25 (owner, 2026-11-22): development keeps the Phase 04 Auth placeholders (production
- * returns 404 until Authentication is available; tests/e2e-production/auth-routes.prod.spec.ts).
- * Every placeholder is `noindex, nofollow`; the Landing stays indexable.
+ * P07-D25 (owner, 2026-11-22): production returns 404 for every Auth route until Authentication is
+ * available (tests/e2e-production/auth-routes.prod.spec.ts). Every Auth route is
+ * `noindex, nofollow`; the Landing stays indexable.
+ *
+ * No Auth placeholder is left in development. Each route left this file when its screen landed,
+ * and its own spec now covers the title, direction, noindex and layout:
+ * `/login` (Phase 08 Increment 2, L-4): auth-login.spec.ts;
+ * `/register` (Increment 3, R-11): auth-register.spec.ts;
+ * `/forgot-password` and `/reset-password` (Recovery UI): auth-recovery.spec.ts.
  */
-
-// `/login` left this list in Phase 08 Increment 2 (L-4): it is the Login screen now; its noindex
-// and production-404 checks live in tests/e2e/auth-login.spec.ts and the production spec.
-// `/register` left this list in Phase 08 Increment 3 (R-11, as L-4): auth-register.spec.ts covers it.
-const AUTH_ROUTES = [
-  { path: "/forgot-password", key: "auth_forgotPassword" },
-  { path: "/reset-password", key: "auth_resetPassword" },
-] as const;
-
-for (const { prefix, locale, pages } of [
-  { prefix: "", locale: "ar", pages: arPages },
-  { prefix: "/en", locale: "en", pages: enPages },
-] as const) {
-  test.describe(`Auth placeholders in development (${locale})`, () => {
-    for (const { path, key } of AUTH_ROUTES) {
-      test(`${prefix}${path}: placeholder page, noindex, no form`, async ({ page }) => {
-        const response = await page.goto(`${prefix}${path}`);
-        expect(response?.status()).toBe(200);
-        await expect(page.getByRole("heading", { level: 1 })).toHaveText(pages.titles[key]);
-        await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
-          "content",
-          "noindex, nofollow",
-        );
-        await expect(page.locator("form, input")).toHaveCount(0);
-      });
-    }
-  });
-}
 
 test("the Landing has no robots restriction", async ({ page }) => {
   await page.goto("/");

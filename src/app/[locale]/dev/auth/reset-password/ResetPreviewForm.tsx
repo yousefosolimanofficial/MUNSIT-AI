@@ -5,7 +5,7 @@ import {
   ResetPasswordForm,
   type ResetPasswordFormProps,
   type ResetPasswordInitialState,
-} from "@/features/auth/components/ResetPasswordForm";
+} from "@/features/auth";
 import type { AuthResult } from "@/types/auth";
 
 /*

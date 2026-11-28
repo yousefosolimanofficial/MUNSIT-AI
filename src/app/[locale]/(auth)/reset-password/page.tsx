@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { placeholderMetadata } from "@/app/[locale]/_components/RoutePlaceholder";
-import { ResetPasswordScreen } from "@/features/auth/components/ResetPasswordScreen";
+import { ResetPasswordScreen } from "@/features/auth";
 
 import { assertAuthRouteAvailable } from "../_lib/availability";
 
@@ -9,8 +9,7 @@ import { assertAuthRouteAvailable } from "../_lib/availability";
  * functional": the form uses the fail-closed placeholder adapter and always ends with
  * "unavailable". RC-4: the page reads nothing from the URL (no token handling yet). Production
  * returns 404 until Authentication is available (P07-D25). The metadata keeps the route title and
- * `noindex, nofollow`. The screen is imported by path; Yousef adds the
- * `src/features/auth/index.ts` export at integration. */
+ * `noindex, nofollow`. */
 export function generateMetadata(): Promise<Metadata> {
   assertAuthRouteAvailable();
   return placeholderMetadata("auth.resetPassword");

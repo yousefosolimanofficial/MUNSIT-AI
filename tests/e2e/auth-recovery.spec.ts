@@ -70,11 +70,8 @@ const FIGMA_DESCRIPTION_LINES: Record<string, number> = {
 };
 const LINE = 27; // `Landing/Body/Large` line box
 const RULES_ROW = 18;
-/**
- * Reset Fields use the START_HERE §2.3 gap of 16 (owner review, 2026-11-27); the Figma frames
- * place the rules at a gap of 14, so every Reset form card is 2 × 2 = 4 px taller than Figma.
- */
-const RESET_FIELDS_GAP_DELTA = 4;
+// Reset Fields use the Figma gap of 14 (owner decision, 2026-11-28), so Reset form cards match
+// the Figma heights with no gap compensation.
 
 /*
  * Card height against Figma, with a documented wrap compensation (DELIVERY.md "Known
@@ -114,8 +111,7 @@ async function expectCardHeight(
     expect(extraRules, "the rules row fits on one line at 480").toBe(0);
     if (!allowWrapAt480) expect(extraLines, "no extra description line at 480").toBe(0);
   }
-  const gapDelta = m.rulesHeight === null ? 0 : RESET_FIELDS_GAP_DELTA;
-  const expected = figmaHeight + gapDelta + extraLines * LINE + extraRules;
+  const expected = figmaHeight + extraLines * LINE + extraRules;
   expect(
     Math.abs(m.height - expected),
     `card height ${m.height} vs Figma ${figmaHeight} + wrap ${expected - figmaHeight}`,
