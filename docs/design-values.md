@@ -1187,3 +1187,12 @@ Register panel copy padding (read 2026-11-26 during the Register visual review):
 32 / 20 (`67:44`), Tablet 24 on every side (`67:66`), Desktop 28 / 32 / 32 / 32; Login and Recovery
 keep 20 / 20 / 24 / 20 on Mobile and 28 / 32 / 32 / 32 from Tablet. Desktop layout vertical padding
 32 keeps the tallest column (Register Required, 825) centred in 900 without scrolling.
+
+### 17.7 Recovery screens (Phase 08 Recovery UI, owner decisions 2026-11-28)
+
+| Part               | Values                                                                                                                                                                                                                                                                                  |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Reset Fields gap   | **14**, as drawn in Figma: the rules row sits at y 95 = input 81 + 14 (`2480:345`, `2480:1366`). The Recovery task doc listed "gap 16", which cannot give the Figma card height; the owner chose the Figma value (2026-11-28)                                                           |
+| Reset card heights | Figma heights, no gap compensation: Default, Shown, Loading 434; Required 486; Mismatch 460; Error 510 (1440 and 768). Invalid link, Expired link and Updated as Figma                                                                                                                  |
+| Text wrapping      | Natural wrapping accepted (owner, 2026-11-28) wherever all content stays readable: at 390 each description and the rules row may wrap (+27 per line, +22 per rules row); at 480 the Invalid-link and Email sent bodies break one word earlier than Figma. No explicit line breaks added |
+| Decisions kept     | RC-1 (unavailable shown in the status banner), RC-3 (resend shown, inactive), RC-4 (no reset-token handling), RC-5 (rules Neutral while the field is empty)                                                                                                                             |
