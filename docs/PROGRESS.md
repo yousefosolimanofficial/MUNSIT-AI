@@ -26,7 +26,10 @@ Single resume point. A new session starts by reading this file, the latest phase
   integrated by Yousef. "UI-complete, not functional": both forms always end with "unavailable".
   Owner visual approval on 2026-11-28
   ([phases/phase-08-increment-4-closure.md](phases/phase-08-increment-4-closure.md) §3).
-  **Increment 5 (Verification): NOT STARTED.**
+  **Increment 5 (Verification): IMPLEMENTED — in owner review** (draft PR #89; plan PR #88,
+  `46257fa`). Tests and docs only. Closure report:
+  [phases/phase-08-closure-report.md](phases/phase-08-closure-report.md). Phase 08 closes only
+  after the owner approves and #89 is merged.
   Production is unchanged (`AUTHENTICATION_AVAILABLE = false`).
 - **DevOps handoff v1** (owner request 2026-11-23): initial testing package, not a release —
   [devops/HANDOFF.md](devops/HANDOFF.md), with `Dockerfile`, `.dockerignore` and `compose.yaml`.
@@ -391,6 +394,15 @@ numerals and English runs inside Arabic text (direction isolation). See R-1, I-1
 | 7   | Final audit + phase report; G-1, G-2 implemented             | Done — approved (2026-11-13)   |
 
 ## Next action
+
+**2026-11-28:** Phase 08 Increment 5 (Verification) is implemented on draft PR #89.
+
+- **Done:** 27 Arabic baselines; Auth flow navigation (ar, en); accessibility at 320 (ar, en);
+  Firefox and WebKit smoke; route-protection contract review; production smoke; closure report.
+- **Next:** owner review of #89 and its `-chromium-linux` baselines, then merge and Phase 08 sign-off.
+  Phase 09 does not start before that.
+- **Unresolved, not Phase 08:** `/verify-email` and OTP have no design (I-03). PR #84 stays a draft.
+- **Unchanged:** `AUTHENTICATION_AVAILABLE = false`; every Auth route returns 404 in production.
 
 **2026-11-28:** Phase 08 Increment 4 (Forgot and Reset Password) is COMPLETE through PR #86 (`3ea0122`).
 
