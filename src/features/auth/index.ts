@@ -20,6 +20,12 @@ export { AuthTextField } from "./components/AuthTextField";
 export { AuthTextLink } from "./components/AuthTextLink";
 export { LoginForm, type LoginFormCopy, type LoginFormProps } from "./components/LoginForm";
 export { LoginScreen } from "./components/LoginScreen";
+export {
+  RegisterForm,
+  type RegisterFormCopy,
+  type RegisterFormProps,
+} from "./components/RegisterForm";
+export { RegisterScreen } from "./components/RegisterScreen";
 export { AuthFoundationPreview } from "./components/AuthFoundationPreview";
 export { AUTH_IMAGES, type AuthFamily } from "./model/auth-images";
 export { failureMessageKey, type AuthOperation } from "./model/messages";
@@ -35,3 +41,9 @@ export {
   type LoginValidationKey,
   type LoginValues,
 } from "./schemas/login";
+export {
+  REGISTER_VALIDATION_KEYS,
+  registerSchema,
+  type RegisterValidationKey,
+  type RegisterValues,
+} from "./schemas/register";
