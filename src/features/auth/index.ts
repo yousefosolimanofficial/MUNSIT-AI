@@ -26,6 +26,20 @@ export {
   type RegisterFormProps,
 } from "./components/RegisterForm";
 export { RegisterScreen } from "./components/RegisterScreen";
+export {
+  ForgotPasswordForm,
+  type ForgotPasswordFormCopy,
+  type ForgotPasswordFormProps,
+  type ForgotPasswordInitialState,
+} from "./components/ForgotPasswordForm";
+export { ForgotPasswordScreen } from "./components/ForgotPasswordScreen";
+export {
+  ResetPasswordForm,
+  type ResetPasswordFormCopy,
+  type ResetPasswordFormProps,
+  type ResetPasswordInitialState,
+} from "./components/ResetPasswordForm";
+export { ResetPasswordScreen } from "./components/ResetPasswordScreen";
 export { AuthFoundationPreview } from "./components/AuthFoundationPreview";
 export { AUTH_IMAGES, type AuthFamily } from "./model/auth-images";
 export { failureMessageKey, type AuthOperation } from "./model/messages";
@@ -47,3 +61,17 @@ export {
   type RegisterValidationKey,
   type RegisterValues,
 } from "./schemas/register";
+export {
+  FORGOT_PASSWORD_VALIDATION_KEYS,
+  forgotPasswordSchema,
+  type ForgotPasswordOutput,
+  type ForgotPasswordValidationKey,
+  type ForgotPasswordValues,
+} from "./schemas/forgot-password";
+export {
+  RESET_PASSWORD_VALIDATION_KEYS,
+  resetPasswordSchema,
+  type ResetPasswordOutput,
+  type ResetPasswordValidationKey,
+  type ResetPasswordValues,
+} from "./schemas/reset-password";

@@ -31,6 +31,10 @@ const DEV_ROUTES = [
   "/en/dev/auth/login",
   "/dev/auth/register",
   "/en/dev/auth/register",
+  "/dev/auth/forgot-password",
+  "/en/dev/auth/forgot-password",
+  "/dev/auth/reset-password",
+  "/en/dev/auth/reset-password",
 ];
 
 /** Expected to answer 404 (the localized not-found page): warmed, not treated as a failure. */

@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 
-import { placeholderMetadata, RoutePlaceholder } from "@/app/[locale]/_components/RoutePlaceholder";
+import { placeholderMetadata } from "@/app/[locale]/_components/RoutePlaceholder";
+import { ForgotPasswordScreen } from "@/features/auth";
 
 import { assertAuthRouteAvailable } from "../_lib/availability";
 
-/** Phase 04 placeholder (route key `auth.forgotPassword`; path in `src/i18n/routes.ts`). Not implemented yet.
- * Production returns 404 until Authentication is available (P07-D25). */
+/** Forgot Password (route key `auth.forgotPassword`; Phase 08 Recovery UI). "UI-complete, not
+ * functional": the form uses the fail-closed placeholder adapter and always ends with
+ * "unavailable". Production returns 404 until Authentication is available (P07-D25). The metadata
+ * keeps the route title and `noindex, nofollow`. */
 export function generateMetadata(): Promise<Metadata> {
   assertAuthRouteAvailable();
   return placeholderMetadata("auth.forgotPassword");
@@ -13,5 +16,9 @@ export function generateMetadata(): Promise<Metadata> {
 
 export default function Page() {
   assertAuthRouteAvailable();
-  return <RoutePlaceholder routeKey="auth.forgotPassword" />;
+  return (
+    <main>
+      <ForgotPasswordScreen />
+    </main>
+  );
 }
