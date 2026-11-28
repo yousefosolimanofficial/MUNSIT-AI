@@ -21,6 +21,12 @@ Single resume point. A new session starts by reading this file, the latest phase
   "unavailable". Owner visual approval of all 33 Figma states on 2026-11-27
   ([phases/phase-08-increment-3-contract.md](phases/phase-08-increment-3-contract.md) §10); R-6
   stays provisional.
+  **Increment 4 (Forgot and Reset Password): COMPLETE** (PR #86, merged as `3ea0122` from the
+  approved head `f9f25fb`; post-merge CI run 46168746602 `check` and `e2e` green). Eng. Mariam's Recovery delivery v1,
+  integrated by Yousef. "UI-complete, not functional": both forms always end with "unavailable".
+  Owner visual approval on 2026-11-28
+  ([phases/phase-08-increment-4-closure.md](phases/phase-08-increment-4-closure.md) §3).
+  **Increment 5 (Verification): NOT STARTED.**
   Production is unchanged (`AUTHENTICATION_AVAILABLE = false`).
 - **DevOps handoff v1** (owner request 2026-11-23): initial testing package, not a release —
   [devops/HANDOFF.md](devops/HANDOFF.md), with `Dockerfile`, `.dockerignore` and `compose.yaml`.
@@ -385,6 +391,13 @@ numerals and English runs inside Arabic text (direction isolation). See R-1, I-1
 | 7   | Final audit + phase report; G-1, G-2 implemented             | Done — approved (2026-11-13)   |
 
 ## Next action
+
+**2026-11-28:** Phase 08 Increment 4 (Forgot and Reset Password) is COMPLETE through PR #86 (`3ea0122`).
+
+- **Recorded:** owner visual approval (closure record §3); delivery, merge and post-merge CI evidence.
+- **Next:** Increment 5 (Verification), its plan for owner approval first. Phase 08 stays IN
+  PROGRESS until Increment 5 and the closure report. The backend contract (PR #84) stays a draft.
+- **Unchanged:** `AUTHENTICATION_AVAILABLE = false`; every Auth route returns 404 in production.
 
 **2026-11-27:** Phase 08 Increment 3 (Register UI) is COMPLETE through PR #82 (`9c803de`).
 
