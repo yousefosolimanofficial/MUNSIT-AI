@@ -53,6 +53,17 @@ The frontend reads exactly **one** variable today (`src/config/env.ts`, `.env.ex
 | --------------------- | -------- | --------------------------------------- | --------------------------------------------------------------------------------- |
 | `NEXT_PUBLIC_APP_ENV` | Yes      | `development`, `test`, **`production`** | **Build time.** Inlined into the browser bundle; a change needs a new build/image |
 
+**Optional, server-only (added with the backend client, `feature/api-contract`; not used by any
+page yet):**
+
+| Variable                | Required | Values                                                | When it is read                                                          |
+| ----------------------- | -------- | ----------------------------------------------------- | ------------------------------------------------------------------------ |
+| `MUNSIT_API_BASE_URL`   | No       | Absolute http(s) backend URL, no credentials or query | **Runtime, server only** (`src/config/backend.ts`); never in the browser |
+| `MUNSIT_API_TIMEOUT_MS` | No       | Integer 1000–60000 (default 10000)                    | Runtime, server only                                                     |
+
+Leave both **unset** for the current testing package: nothing calls the backend, and
+Authentication stays disabled in production.
+
 Set by the runtime, not by DevOps configuration: `NODE_ENV` (`production` under `next start`),
 `PORT` (§4) and `NEXT_TELEMETRY_DISABLED=1` (set in the image).
 
@@ -141,6 +152,7 @@ same Node.js and pnpm versions.
 The Frontend Lead updates this table, and notifies DevOps, whenever a dependency, the Node.js or
 pnpm version, a port, an environment variable or the runtime configuration changes.
 
-| Version | Date       | Source commit | Change                                                                       |
-| ------- | ---------- | ------------- | ---------------------------------------------------------------------------- |
-| v1      | 2026-11-23 | `581fc19`     | Initial testing package: Node 24.22.3, pnpm 12.18.0, port 3000, one variable |
+| Version   | Date       | Source commit                       | Change                                                                                                                                                                                                                              |
+| --------- | ---------- | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| v1        | 2026-11-23 | `581fc19`                           | Initial testing package: Node 24.22.3, pnpm 12.18.0, port 3000, one variable                                                                                                                                                        |
+| (pending) | 2026-11-26 | `feature/api-contract` (not merged) | Two **optional, server-only** variables (`MUNSIT_API_BASE_URL`, `MUNSIT_API_TIMEOUT_MS`) for the typed backend client; unused by any page. No dependency, port, Node or build change. The v1 package stays valid and is not rebuilt |

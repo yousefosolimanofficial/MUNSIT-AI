@@ -67,9 +67,10 @@ module.exports = {
     {
       name: "not-to-unresolvable",
       severity: "error",
-      comment: "Imports must resolve.",
+      comment:
+        "Imports must resolve. `server-only` is the exception: Next.js resolves it itself and fails the build when a Client Component imports a server-only module.",
       from: {},
-      to: { couldNotResolve: true },
+      to: { couldNotResolve: true, pathNot: "^server-only$" },
     },
     {
       name: "no-dev-deps-in-app-code",

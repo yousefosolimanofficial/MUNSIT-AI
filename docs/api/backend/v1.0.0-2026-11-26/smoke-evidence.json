@@ -1,0 +1,132 @@
+{
+  "base_url": "https://shiny-journey-5v9w55pjv5qvfp4q5-8000.app.github.dev",
+  "run_at_utc": "2026-11-26T20:51:03Z",
+  "test_account": "munsit-frontend-smoke-…@example.com",
+  "steps": [
+    {
+      "step": "register (new)",
+      "status": 201,
+      "ms": 4546,
+      "response_shape": {
+        "id": "int",
+        "full_name": "str",
+        "email": "str"
+      },
+      "email_matches_test_account": true,
+      "full_name_echo": "Munsit Frontend Smoke Test",
+      "id_type": "int"
+    },
+    {
+      "step": "register (same email again)",
+      "status": 400,
+      "ms": 1141,
+      "response_shape": {
+        "detail": "str"
+      },
+      "detail": "البريد الإلكتروني مسجل بالفعل"
+    },
+    {
+      "step": "register (invalid email)",
+      "status": 422,
+      "ms": 1294,
+      "response_shape": {
+        "detail": [
+          {
+            "type": "str",
+            "loc": ["str"],
+            "msg": "str",
+            "input": "str",
+            "ctx": {
+              "reason": "str"
+            }
+          }
+        ]
+      },
+      "detail": [
+        {
+          "loc": ["body", "email"],
+          "type": "value_error",
+          "msg": "value is not a valid email address: An email address must have an @-sign."
+        }
+      ]
+    },
+    {
+      "step": "login (correct)",
+      "status": 200,
+      "ms": 5269,
+      "response_shape": {
+        "access_token": "str",
+        "token_type": "str"
+      },
+      "token_type": "bearer",
+      "access_token": "<redacted, 181 chars, 3 dot-separated parts>"
+    },
+    {
+      "step": "login (wrong password)",
+      "status": 401,
+      "ms": 5726,
+      "response_shape": {
+        "detail": "str"
+      },
+      "detail": "بيانات الدخول غير صحيحة"
+    },
+    {
+      "step": "login (JSON body instead of form)",
+      "status": 422,
+      "ms": 1655,
+      "response_shape": {
+        "detail": [
+          {
+            "type": "str",
+            "loc": ["str"],
+            "msg": "str",
+            "input": "NoneType"
+          }
+        ]
+      },
+      "detail": [
+        {
+          "loc": ["body", "username"],
+          "type": "missing",
+          "msg": "Field required"
+        },
+        {
+          "loc": ["body", "password"],
+          "type": "missing",
+          "msg": "Field required"
+        }
+      ]
+    },
+    {
+      "step": "me (with bearer)",
+      "status": 200,
+      "ms": 1428,
+      "response_shape": {
+        "id": "int",
+        "full_name": "str",
+        "email": "str"
+      },
+      "email_matches_test_account": true,
+      "full_name_echo": "Munsit Frontend Smoke Test",
+      "id_type": "int"
+    },
+    {
+      "step": "me (no token)",
+      "status": 401,
+      "ms": 2032,
+      "response_shape": {
+        "detail": "str"
+      },
+      "detail": "Not authenticated"
+    },
+    {
+      "step": "me (invalid token)",
+      "status": 401,
+      "ms": 1080,
+      "response_shape": {
+        "detail": "str"
+      },
+      "detail": "توكن غير صالح"
+    }
+  ]
+}

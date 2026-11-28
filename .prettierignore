@@ -10,3 +10,6 @@ next-env.d.ts
 
 # Approved source documents are copied verbatim; never reformat them.
 docs/references/
+
+# Captured backend contracts are kept byte-for-byte as retrieved (sha256 recorded); never reformat.
+docs/api/backend/**/openapi.json
